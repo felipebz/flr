@@ -47,7 +47,7 @@ public class UnknownCharacterChannelTest {
 
   @Test
   public void shouldConsumeEofCharacter() {
-    assertThat(channel.consume(new CodeReader(""), null)).isFalse();
+    assertThat(channel.consume(new CodeReader(""), mockLexer())).isFalse();
   }
 
   private void check(String input, Channel<Lexer> channel, TokenType expectedTokenType, String expectedTokenValue, Lexer lexer) {

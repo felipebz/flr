@@ -36,7 +36,7 @@ public class JsonNodeBuilder implements NodeBuilder {
    * The whitespace token is dropped, and only the first one is returned.
    */
   @Override
-  public Object createNonTerminal(GrammarRuleKey ruleKey, Rule rule, List<Object> children, int startIndex, int endIndex) {
+  public Object createNonTerminal(GrammarRuleKey ruleKey, Rule rule, List<? extends Object> children, int startIndex, int endIndex) {
     for (Object child : children) {
       if (child instanceof InternalSyntaxToken) {
         return child;

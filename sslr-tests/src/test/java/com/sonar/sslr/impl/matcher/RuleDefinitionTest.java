@@ -27,6 +27,7 @@ import static com.sonar.sslr.test.lexer.MockHelper.mockToken;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
+import static org.mockito.Mockito.mock;
 
 public class RuleDefinitionTest {
 
@@ -50,10 +51,10 @@ public class RuleDefinitionTest {
   @Test
   public void testSkipFromAst() {
     RuleDefinition ruleBuilder = new RuleDefinition("MyRule");
-    assertThat(ruleBuilder.hasToBeSkippedFromAst(null)).isFalse();
+    assertThat(ruleBuilder.hasToBeSkippedFromAst(mock(AstNode.class))).isFalse();
 
     ruleBuilder.skip();
-    assertThat(ruleBuilder.hasToBeSkippedFromAst(null)).isTrue();
+    assertThat(ruleBuilder.hasToBeSkippedFromAst(mock(AstNode.class))).isTrue();
   }
 
   @Test
