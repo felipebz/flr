@@ -1,6 +1,6 @@
 /*
  * SonarSource Language Recognizer
- * Copyright (C) 2010-2021 SonarSource SA
+ * Copyright (C) 2010-2019 SonarSource SA
  * mailto:info AT sonarsource DOT com
  *
  * This program is free software; you can redistribute it and/or
@@ -17,17 +17,17 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.sonar.sslr.benchmarks;
+package org.sonar.sslr.benchmarks
 
-class Strings {
-  private Strings() {
-  }
+import org.fest.assertions.Assertions
+import org.junit.Test
 
-  public static String repeat(String string, int count) {
-    StringBuilder sb = new StringBuilder();
-    for (int i = 0; i < count; i++) {
-      sb.append(string);
+class ZeroOrMoreExpressionBenchmarkTest {
+    @Test
+    fun test() {
+        val benchmark = ZeroOrMoreExpressionBenchmark()
+        benchmark.setup()
+        Assertions.assertThat(benchmark.zeroOrMore()).isTrue()
+        Assertions.assertThat(benchmark.optionalOneOrMore()).isTrue()
     }
-    return sb.toString();
-  }
 }

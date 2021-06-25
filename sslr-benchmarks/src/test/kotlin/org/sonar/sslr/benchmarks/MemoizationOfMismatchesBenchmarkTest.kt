@@ -1,6 +1,6 @@
 /*
  * SonarSource Language Recognizer
- * Copyright (C) 2010-2021 SonarSource SA
+ * Copyright (C) 2010-2019 SonarSource SA
  * mailto:info AT sonarsource DOT com
  *
  * This program is free software; you can redistribute it and/or
@@ -17,21 +17,17 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.sonar.sslr.benchmarks;
+package org.sonar.sslr.benchmarks
 
-import org.junit.Test;
+import org.fest.assertions.Assertions
+import org.junit.Test
 
-import static org.fest.assertions.Assertions.assertThat;
-
-public class OneOrMoreExpressionBenchmarkTest {
-
-  @Test
-  public void test() {
-    OneOrMoreExpressionBenchmark benchmark = new OneOrMoreExpressionBenchmark();
-    benchmark.setup();
-
-    assertThat(benchmark.oneOrMore()).isTrue();
-    assertThat(benchmark.usingZeroOrMore()).isTrue();
-  }
-
+class MemoizationOfMismatchesBenchmarkTest {
+    @Test
+    fun test() {
+        val benchmark = MemoizationOfMismatchesBenchmark()
+        benchmark.setup()
+        Assertions.assertThat(benchmark.required()).isTrue()
+        Assertions.assertThat(benchmark.notRequired()).isTrue()
+    }
 }
