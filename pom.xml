@@ -69,7 +69,7 @@
     <sonar.exclusions>target/generated-sources/**</sonar.exclusions>
     <gitRepositoryName>sslr</gitRepositoryName>
     <version.release.plugin>2.5.3</version.release.plugin>
-    <kotlin.version>1.5.10</kotlin.version>
+    <kotlin.version>1.5.20</kotlin.version>
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
 
     <!-- FIXME: warnings on javadoc should be fixed -->
