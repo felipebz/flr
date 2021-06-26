@@ -71,19 +71,19 @@ class GrammarBuilderInterceptor<T>(private val b: LexerlessGrammarBuilder) : Met
         return null
     }
 
-    override fun <U> firstOf(vararg methods: U): U? {
+    override fun <U> firstOf(vararg methods: U?): U? {
         val expression: ParsingExpression = FirstOfExpression(*pop(methods.size))
         expressionStack.push(expression)
         return null
     }
 
-    override fun <U> optional(method: U): Optional<U>? {
+    override fun <U> optional(method: U): Optional<U> {
         val expression = pop()
         val grammarRuleKey: GrammarRuleKey = DummyGrammarRuleKey("optional", expression)
         optionals.add(grammarRuleKey)
         b.rule(grammarRuleKey).`is`(b.optional(expression))
         invokeRule(grammarRuleKey)
-        return null
+        return Optional.absent()
     }
 
     override fun <U> oneOrMore(method: U): List<U>? {

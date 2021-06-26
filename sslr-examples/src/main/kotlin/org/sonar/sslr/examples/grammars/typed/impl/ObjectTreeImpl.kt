@@ -1,6 +1,6 @@
 /*
  * SonarSource Language Recognizer
- * Copyright (C) 2010-2019 SonarSource SA
+ * Copyright (C) 2010-2021 SonarSource SA
  * mailto:info AT sonarsource DOT com
  *
  * This program is free software; you can redistribute it and/or
@@ -17,21 +17,26 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package com.sonar.sslr.api.typed
+package org.sonar.sslr.examples.grammars.typed.impl
 
-import com.sonar.sslr.api.AstNode
-import org.sonar.sslr.grammar.GrammarRuleKey
+import org.sonar.sslr.examples.grammars.typed.api.ObjectTree
+import org.sonar.sslr.examples.grammars.typed.api.PairTree
+import org.sonar.sslr.examples.grammars.typed.api.SyntaxToken
 
-/**
- * @since 1.21
- */
-interface GrammarBuilder<T> {
-    fun <U> nonterminal(): NonterminalBuilder<U>
-    fun <U> nonterminal(ruleKey: GrammarRuleKey): NonterminalBuilder<U>
-    fun <U> firstOf(vararg methods: U?): U?
-    fun <U> optional(method: U): Optional<U>
-    fun <U> oneOrMore(method: U): List<U>?
-    fun <U> zeroOrMore(method: U): Optional<List<U>>?
-    fun invokeRule(ruleKey: GrammarRuleKey): AstNode?
-    fun token(ruleKey: GrammarRuleKey): T
+class ObjectTreeImpl(
+    private val openCurlyBraceToken: SyntaxToken,
+    private val pairs: SyntaxList<PairTree?>?,
+    private val closeCurlyBraceToken: SyntaxToken
+) : ObjectTree {
+    override fun openCurlyBraceToken(): SyntaxToken {
+        return openCurlyBraceToken
+    }
+
+    override fun pairs(): SyntaxList<PairTree?>? {
+        return pairs
+    }
+
+    override fun closeCurlyBraceToken(): SyntaxToken {
+        return closeCurlyBraceToken
+    }
 }
