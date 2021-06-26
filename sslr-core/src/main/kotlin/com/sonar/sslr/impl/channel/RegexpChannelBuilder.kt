@@ -84,7 +84,7 @@ object RegexpChannelBuilder {
     }
 
     @JvmStatic
-    fun or(vararg regexpPiece: String?): String {
+    fun or(vararg regexpPiece: String): String {
         val result = StringBuilder()
         result.append("(")
         for (i in regexpPiece.indices) {
