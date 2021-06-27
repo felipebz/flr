@@ -36,7 +36,6 @@ class Lexer private constructor(builder: Builder) {
     private val charset: Charset
     private val configuration: CodeReaderConfiguration
     private val channelDispatcher: ChannelDispatcher<Lexer>?
-    private val preprocessors: Array<Preprocessor>
     private val trivia: MutableList<Trivia> = LinkedList()
     private var _tokens: MutableList<Token> = ArrayList()
 
@@ -87,7 +86,6 @@ class Lexer private constructor(builder: Builder) {
     private fun lex(reader: Reader): List<Token> {
         checkNotNull(channelDispatcher) { "the channel dispatcher should be set" }
         _tokens = ArrayList()
-        initPreprocessors()
         val code = CodeReader(reader, configuration)
         return try {
             channelDispatcher.consume(code, this)
@@ -100,50 +98,12 @@ class Lexer private constructor(builder: Builder) {
                     .setColumn(code.getColumnPosition())
                     .build()
             )
-            preprocess()
             tokens
         } catch (e: Exception) {
             throw LexerException(
                 "Unable to lex source code at line : " + code.getLinePosition() + " and column : "
                         + code.getColumnPosition() + " in file : " + uri, e
             )
-        }
-    }
-
-    private fun preprocess() {
-        for (preprocessor in preprocessors) {
-            preprocess(preprocessor)
-        }
-    }
-
-    private fun preprocess(preprocessor: Preprocessor) {
-        val remainingTokens = Collections.unmodifiableList(ArrayList(tokens))
-        _tokens.clear()
-        var i = 0
-        while (i < remainingTokens.size) {
-            val action = preprocessor.process(remainingTokens.subList(i, remainingTokens.size))
-            checkNotNull(action) { "A preprocessor cannot return a null PreprocessorAction" }
-            addTrivia(action.getTriviaToInject())
-            for (j in 0 until action.getNumberOfConsumedTokens()) {
-                val removedToken = remainingTokens[i]
-                i++
-                addTrivia(removedToken.trivia)
-            }
-            for (tokenToInject in action.getTokensToInject()) {
-                addToken(tokenToInject)
-            }
-            if (action.getNumberOfConsumedTokens() == 0) {
-                val removedToken = remainingTokens[i]
-                i++
-                addTrivia(removedToken.trivia)
-                addToken(removedToken)
-            }
-        }
-    }
-
-    private fun initPreprocessors() {
-        for (preprocessor in preprocessors) {
-            preprocessor.init()
         }
     }
 
@@ -175,7 +135,6 @@ class Lexer private constructor(builder: Builder) {
 
     class Builder {
         var charset: Charset = Charset.defaultCharset()
-        val preprocessors: MutableList<Preprocessor> = ArrayList()
         val configuration = CodeReaderConfiguration()
         private val channels: MutableList<Channel<Lexer>> = ArrayList()
         private var failIfNoChannelToConsumeOneCharacter = false
@@ -185,12 +144,6 @@ class Lexer private constructor(builder: Builder) {
 
         fun withCharset(charset: Charset): Builder {
             this.charset = charset
-            return this
-        }
-
-        @Deprecated("in 1.20 - use your own preprocessor instead")
-        fun withPreprocessor(preprocessor: Preprocessor): Builder {
-            preprocessors.add(preprocessor)
             return this
         }
 
@@ -224,7 +177,6 @@ class Lexer private constructor(builder: Builder) {
 
     init {
         charset = builder.charset
-        preprocessors = builder.preprocessors.toTypedArray()
         configuration = builder.configuration
         channelDispatcher = builder.channelDispatcher
         try {

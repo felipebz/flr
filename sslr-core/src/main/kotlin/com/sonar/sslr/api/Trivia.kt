@@ -23,29 +23,20 @@ import java.util.*
 
 class Trivia private constructor(
     private val kind: TriviaKind,
-    val preprocessingDirective: PreprocessingDirective?,
     vararg tokens: Token
 ) {
     enum class TriviaKind {
-        COMMENT, PREPROCESSOR, SKIPPED_TEXT
+        COMMENT, SKIPPED_TEXT
     }
 
     val tokens: List<Token> = listOf(*tokens)
-
-    private constructor(kind: TriviaKind, vararg tokens: Token) : this(kind, null, *tokens)
 
     val token: Token
         get() = tokens[0]
     val isComment: Boolean
         get() = kind == TriviaKind.COMMENT
-    val isPreprocessor: Boolean
-        get() = kind == TriviaKind.PREPROCESSOR
     val isSkippedText: Boolean
         get() = kind == TriviaKind.SKIPPED_TEXT
-
-    fun hasPreprocessingDirective(): Boolean {
-        return preprocessingDirective != null
-    }
 
     override fun toString(): String {
         return when {
@@ -79,18 +70,6 @@ class Trivia private constructor(
 
         fun createSkippedText(vararg tokens: Token): Trivia {
             return Trivia(TriviaKind.SKIPPED_TEXT, *tokens)
-        }
-
-        fun createPreprocessingToken(preprocessingToken: Token): Trivia {
-            return Trivia(TriviaKind.PREPROCESSOR, preprocessingToken)
-        }
-
-        fun createPreprocessingDirective(preprocessingDirective: PreprocessingDirective): Trivia {
-            return Trivia(TriviaKind.PREPROCESSOR, preprocessingDirective)
-        }
-
-        fun createPreprocessingDirective(ast: AstNode, grammar: Grammar): Trivia {
-            return createPreprocessingDirective(PreprocessingDirective.create(ast, grammar))
         }
     }
 

@@ -127,14 +127,6 @@ class ActionParserTest {
 
     @Test
     @Throws(Exception::class)
-    fun unknown_trivia() {
-        assertThrows("Unexpected trivia kind", IllegalStateException::class.java) {
-            parse(MyGrammarKeys.NUMERIC, "#preprocessor 42", Numeric::class.java)
-        }
-    }
-
-    @Test
-    @Throws(Exception::class)
     fun rootRule() {
         Assertions.assertThat(parser(MyGrammarKeys.OPERATOR).rootRule()).isEqualTo(MyGrammarKeys.OPERATOR)
     }
@@ -182,7 +174,6 @@ class ActionParserTest {
         b.rule(MyGrammarKeys.MINUS).`is`(b.regexp("-"))
         b.rule(MyGrammarKeys.NUMERIC_TOKEN).`is`(
             b.optional(b.commentTrivia(b.regexp("/\\*[\\s\\S]*?\\*/"))),
-            b.optional(TriviaExpression(TriviaKind.PREPROCESSOR, PatternExpression("\\#[a-z]+"))),
             b.optional(b.skippedTrivia(b.regexp("\\s+"))),
             b.regexp("[0-9]+")
         )

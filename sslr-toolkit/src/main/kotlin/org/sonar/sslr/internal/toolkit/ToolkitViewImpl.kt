@@ -436,12 +436,7 @@ class ToolkitViewImpl(presenter: ToolkitPresenter) : JFrame(), ToolkitView {
                 }
             } else if (astNode.hasToken() && astNode.token.hasTrivia()) {
                 for (trivia in astNode.token.trivia) {
-                    val childTreeNode = DefaultMutableTreeNode(trivia)
-                    if (trivia.hasPreprocessingDirective()) {
-                        val preprocessingDirective = checkNotNull(trivia.preprocessingDirective)
-                        childTreeNode.add(getTreeNode(checkNotNull(preprocessingDirective.getAst())))
-                    }
-                    treeNode.add(childTreeNode)
+                    treeNode.add(DefaultMutableTreeNode(trivia))
                 }
             }
             return treeNode
