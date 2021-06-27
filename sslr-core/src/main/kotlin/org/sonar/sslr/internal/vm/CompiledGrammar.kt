@@ -23,24 +23,12 @@ import org.sonar.sslr.grammar.GrammarRuleKey
 import org.sonar.sslr.internal.matchers.Matcher
 
 class CompiledGrammar(
-    private val instructions: Array<Instruction>,
+    val instructions: Array<Instruction>,
     private val rules: Map<GrammarRuleKey, CompilableGrammarRule>,
-    private val rootRuleKey: GrammarRuleKey?,
-    private val rootRuleOffset: Int
+    val rootRuleKey: GrammarRuleKey,
+    val rootRuleOffset: Int
 ) {
-    fun getInstructions(): Array<Instruction> {
-        return instructions
-    }
-
-    fun getMatcher(ruleKey: GrammarRuleKey?): Matcher? {
+    fun getMatcher(ruleKey: GrammarRuleKey): Matcher? {
         return rules[ruleKey]
-    }
-
-    fun getRootRuleKey(): GrammarRuleKey? {
-        return rootRuleKey
-    }
-
-    fun getRootRuleOffset(): Int {
-        return rootRuleOffset
     }
 }

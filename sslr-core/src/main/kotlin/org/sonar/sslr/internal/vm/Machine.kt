@@ -205,8 +205,8 @@ class Machine private constructor(
         fun parse(tokens: List<Token>, grammar: CompiledGrammar): ParseNode {
             val inputTokens: Array<Token> = tokens.toTypedArray()
             val errorLocatingHandler = ErrorLocatingHandler()
-            val machine = Machine(CharArray(0), inputTokens, grammar.getInstructions(), errorLocatingHandler)
-            machine.execute(grammar.getMatcher(grammar.getRootRuleKey()), grammar.getRootRuleOffset(), grammar.getInstructions())
+            val machine = Machine(CharArray(0), inputTokens, grammar.instructions, errorLocatingHandler)
+            machine.execute(grammar.getMatcher(grammar.rootRuleKey), grammar.rootRuleOffset, grammar.instructions)
             return if (machine.matched) {
                 machine.stack.subNodes()[0]
             } else {
@@ -225,10 +225,10 @@ class Machine private constructor(
 
         @JvmStatic
         fun parse(input: CharArray, grammar: CompiledGrammar): ParsingResult {
-            val instructions = grammar.getInstructions()
+            val instructions = grammar.instructions
             val errorLocatingHandler = ErrorLocatingHandler()
             val machine = Machine(input, emptyArray(), instructions, errorLocatingHandler)
-            machine.execute(grammar.getMatcher(grammar.getRootRuleKey()), grammar.getRootRuleOffset(), instructions)
+            machine.execute(grammar.getMatcher(grammar.rootRuleKey), grammar.rootRuleOffset, instructions)
             return if (machine.matched) {
                 ParsingResult(
                     ImmutableInputBuffer(checkNotNull(machine.input)),
