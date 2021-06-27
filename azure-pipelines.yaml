@@ -15,7 +15,15 @@ steps:
       path: $(MAVEN_CACHE_FOLDER)
     displayName: Cache Maven local repo
 
+  - task: SonarQubePrepare@4
+    inputs:
+      SonarQube: 'SonarQube'
+      scannerMode: 'Other'
+
   - task: Maven@3
     inputs:
+      goals: 'org.jacoco:jacoco-maven-plugin:prepare-agent package'
+      options: '-Dsonar.branch.name='
       jdkVersionOption: 1.11
+      sonarQubeRunAnalysis: true
       mavenOptions: '$(MAVEN_OPTS)'
