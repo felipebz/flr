@@ -20,7 +20,6 @@
 package org.sonar.sslr.internal.toolkit
 
 import com.sonar.sslr.api.AstNode
-import org.sonar.sslr.internal.toolkit.CssLoader.css
 import java.awt.*
 import java.awt.event.FocusAdapter
 import java.awt.event.FocusEvent
@@ -32,10 +31,7 @@ import javax.swing.event.DocumentListener
 import javax.swing.text.BadLocationException
 import javax.swing.text.DefaultCaret
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter
-import javax.swing.text.html.HTMLDocument
 import javax.swing.tree.*
-import kotlin.math.max
-import kotlin.math.min
 
 class ToolkitViewImpl(presenter: ToolkitPresenter) : JFrame(), ToolkitView {
     @Transient
@@ -94,8 +90,8 @@ class ToolkitViewImpl(presenter: ToolkitPresenter) : JFrame(), ToolkitView {
         tabbedPane.add("Configuration", configurationScrollPane)
         configurationOuterPanel.add(configurationInnerPanel, BorderLayout.NORTH)
         configurationOuterPanel.add(Box.createGlue(), BorderLayout.CENTER)
-        sourceCodeEditorPane.contentType = "text/html"
         sourceCodeEditorPane.isEditable = true
+        sourceCodeEditorPane.font = Font.decode("Monospaced")
         (sourceCodeEditorPane.caret as DefaultCaret).updatePolicy = DefaultCaret.UPDATE_WHEN_ON_EDT
         sourceCodeEditorPane.document.addDocumentListener(object : DocumentListener {
             override fun removeUpdate(e: DocumentEvent) {
@@ -152,18 +148,11 @@ class ToolkitViewImpl(presenter: ToolkitPresenter) : JFrame(), ToolkitView {
         }
     }
 
-    override fun displayHighlightedSourceCode(htmlHighlightedSourceCode: String?) {
+    override fun displaySourceCode(newSourceCode: String) {
         try {
             sourceCodeTextCursorMovedEventDisabled = true
-            Objects.requireNonNull(htmlHighlightedSourceCode)
-            val sb = StringBuilder()
-            sb.append("<html><head><style type=\"text/css\">")
-            sb.append(css)
-            sb.append("</style></head><body><pre class=\"code\" id=\"code\">")
-            sb.append(htmlHighlightedSourceCode)
-            sb.append("</pre></body></html>")
-            sourceCodeEditorPane.text = sb.toString()
-            lineOffsets = LineOffsets(sourceCode)
+            sourceCodeEditorPane.text = newSourceCode
+            lineOffsets = LineOffsets(newSourceCode)
         } finally {
             sourceCodeTextCursorMovedEventDisabled = false
         }
@@ -178,8 +167,7 @@ class ToolkitViewImpl(presenter: ToolkitPresenter) : JFrame(), ToolkitView {
         }
     }
 
-    override fun displayXml(xml: String?) {
-        Objects.requireNonNull(xml)
+    override fun displayXml(xml: String) {
         xmlTextArea.text = xml
     }
 
@@ -199,27 +187,8 @@ class ToolkitViewImpl(presenter: ToolkitPresenter) : JFrame(), ToolkitView {
     }
 
     override val sourceCode: String
-        get() {
-            val startOffset = codeElementStartOffset
-            val endOffset = codeElementEndOffset
-            return try {
-                sourceCodeEditorPane.getText(startOffset, endOffset - startOffset - 1)
-            } catch (e: BadLocationException) {
-                throw RuntimeException(e)
-            }
-        }
-    private val codeElementStartOffset: Int
-        get() {
-            val htmlDocument = sourceCodeEditorPane.document as HTMLDocument
-            val codeElement = htmlDocument.getElement("code")
-            return codeElement.startOffset
-        }
-    private val codeElementEndOffset: Int
-        get() {
-            val htmlDocument = sourceCodeEditorPane.document as HTMLDocument
-            val codeElement = htmlDocument.getElement("code")
-            return codeElement.endOffset
-        }
+        get() = sourceCodeEditorPane.text
+
     override val xPath: String
         get() = xpathTextArea.text
 
@@ -261,20 +230,13 @@ class ToolkitViewImpl(presenter: ToolkitPresenter) : JFrame(), ToolkitView {
         }
         val startToken = astNode.token
         val endToken = checkNotNull(astNode.lastToken)
-        val startOffset = getValidDocumentOffsetFromSourceCodeOffset(lineOffsets.getStartOffset(startToken))
-        val endOffset = getValidDocumentOffsetFromSourceCodeOffset(lineOffsets.getEndOffset(endToken))
+        val startOffset = lineOffsets.getStartOffset(startToken)
+        val endOffset = lineOffsets.getEndOffset(endToken)
         try {
             sourceCodeEditorPane.highlighter.addHighlight(startOffset, endOffset, highlighter)
         } catch (e: BadLocationException) {
             throw RuntimeException(e)
         }
-    }
-
-    private fun getValidDocumentOffsetFromSourceCodeOffset(offset: Int): Int {
-        var result = max(offset, 0)
-        result += codeElementStartOffset
-        result = min(result, codeElementEndOffset)
-        return result
     }
 
     override fun clearAstSelections() {
@@ -330,7 +292,7 @@ class ToolkitViewImpl(presenter: ToolkitPresenter) : JFrame(), ToolkitView {
 
     override val astNodeFollowingCurrentSourceCodeTextCursorPosition: AstNode?
         get() {
-            val currentOffset = sourceCodeEditorPane.caretPosition - codeElementStartOffset
+            val currentOffset = sourceCodeEditorPane.caretPosition
             return getFollowingAstNode(astTree.model.root as DefaultMutableTreeNode?, currentOffset)
         }
 

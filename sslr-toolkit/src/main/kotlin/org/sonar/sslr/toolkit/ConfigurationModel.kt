@@ -20,7 +20,6 @@
 package org.sonar.sslr.toolkit
 
 import com.sonar.sslr.impl.Parser
-import org.sonar.colorizer.Tokenizer
 import java.nio.charset.Charset
 
 /**
@@ -61,11 +60,4 @@ interface ConfigurationModel {
      * @return A parser for the current configuration
      */
     val parser: Parser<*>?
-
-    /**
-     * Gets tokenizers reflecting the current configuration state.
-     *
-     * @return Tokenizers for the current configuration
-     */
-    val tokenizers: List<Tokenizer>?
 }

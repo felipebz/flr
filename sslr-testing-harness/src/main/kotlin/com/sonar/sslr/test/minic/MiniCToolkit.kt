@@ -20,7 +20,6 @@
 package com.sonar.sslr.test.minic
 
 import com.sonar.sslr.impl.Parser
-import org.sonar.colorizer.Tokenizer
 import org.sonar.sslr.toolkit.AbstractConfigurationModel
 import org.sonar.sslr.toolkit.ConfigurationProperty
 import org.sonar.sslr.toolkit.Toolkit
@@ -64,11 +63,6 @@ object MiniCToolkit {
         override fun doGetParser(): Parser<*> {
             updateConfiguration()
             return MiniCParser.create()
-        }
-
-        override fun doGetTokenizers(): List<Tokenizer> {
-            updateConfiguration()
-            return MiniCColorizer.getTokenizers()
         }
 
         companion object {

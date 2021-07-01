@@ -20,7 +20,6 @@
 package org.sonar.sslr.toolkit
 
 import com.sonar.sslr.impl.Parser
-import org.sonar.colorizer.Tokenizer
 import java.nio.charset.Charset
 
 /**
@@ -34,7 +33,6 @@ import java.nio.charset.Charset
 abstract class AbstractConfigurationModel : ConfigurationModel {
     private var updatedFlag = true
     private var internalParser: Parser<*>? = null
-    private var internalTokenizers: List<Tokenizer>? = null
 
     override fun setUpdatedFlag() {
         updatedFlag = true
@@ -43,7 +41,6 @@ abstract class AbstractConfigurationModel : ConfigurationModel {
     private fun ensureUpToDate() {
         if (updatedFlag) {
             internalParser = doGetParser()
-            internalTokenizers = doGetTokenizers()
         }
         updatedFlag = false
     }
@@ -64,12 +61,6 @@ abstract class AbstractConfigurationModel : ConfigurationModel {
             return internalParser
         }
 
-    override val tokenizers: List<Tokenizer>?
-        get() {
-            ensureUpToDate()
-            return internalTokenizers
-        }
-
     /**
      * Gets a parser instance reflecting the current configuration state.
      * This method will not be called twice in a row without a change in the configuration state.
@@ -77,12 +68,4 @@ abstract class AbstractConfigurationModel : ConfigurationModel {
      * @return A parser for the current configuration
      */
     abstract fun doGetParser(): Parser<*>?
-
-    /**
-     * Gets tokenizers reflecting the current configuration state.
-     * This method will not be called twice in a row without a change in the configuration state.
-     *
-     * @return Tokenizers for the current configuration
-     */
-    abstract fun doGetTokenizers(): List<Tokenizer>?
 }

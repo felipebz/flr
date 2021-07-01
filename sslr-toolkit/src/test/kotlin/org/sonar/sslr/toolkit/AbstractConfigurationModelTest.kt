@@ -24,8 +24,6 @@ import com.sonar.sslr.impl.Parser
 import org.fest.assertions.Assertions
 import org.junit.Test
 import org.mockito.Mockito.mock
-import org.mockito.kotlin.mock
-import org.sonar.colorizer.Tokenizer
 
 class AbstractConfigurationModelTest {
     @Test
@@ -69,40 +67,8 @@ class AbstractConfigurationModelTest {
         Assertions.assertThat(model.parser).isEqualTo(p2)
     }
 
-    @Test
-    fun tokenizers_should_return_parser_instance() {
-        val model = MyConfigurationModel()
-        val t: List<Tokenizer> = mock()
-        model.setTokenizers(t)
-        Assertions.assertThat(model.tokenizers).isEqualTo(t)
-    }
-
-    @Test
-    fun tokenizers_should_return_same_parser_instance_when_flag_not_set() {
-        val model = MyConfigurationModel()
-        val t: List<Tokenizer> = mock()
-        model.setTokenizers(t)
-        Assertions.assertThat(model.tokenizers).isEqualTo(t)
-        val t2: List<Tokenizer> = mock()
-        model.setTokenizers(t2)
-        Assertions.assertThat(model.tokenizers).isEqualTo(t)
-    }
-
-    @Test
-    fun tokenizers_should_return_different_parser_instance_when_flag_set() {
-        val model = MyConfigurationModel()
-        val t: List<Tokenizer> = mock()
-        model.setTokenizers(t)
-        Assertions.assertThat(model.tokenizers).isEqualTo(t)
-        val t2: List<Tokenizer> = mock()
-        model.setTokenizers(t2)
-        model.setUpdatedFlag()
-        Assertions.assertThat(model.tokenizers).isEqualTo(t2)
-    }
-
     private class MyConfigurationModel : AbstractConfigurationModel() {
         private var internalParser: Parser<out Grammar>? = null
-        private var internalTokenizers: List<Tokenizer>? = null
 
         fun setParser(parser: Parser<out Grammar>?) {
             internalParser = parser
@@ -110,14 +76,6 @@ class AbstractConfigurationModelTest {
 
         override fun doGetParser(): Parser<*>? {
             return internalParser
-        }
-
-        fun setTokenizers(tokenizers: List<Tokenizer>?) {
-            internalTokenizers = tokenizers
-        }
-
-        override fun doGetTokenizers(): List<Tokenizer>? {
-            return internalTokenizers
         }
 
         override val properties: List<ConfigurationProperty>

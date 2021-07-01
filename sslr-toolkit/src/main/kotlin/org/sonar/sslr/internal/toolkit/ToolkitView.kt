@@ -55,7 +55,7 @@ interface ToolkitView {
      *
      * @param htmlHighlightedSourceCode The HTML highlighted source code
      */
-    fun displayHighlightedSourceCode(htmlHighlightedSourceCode: String?)
+    fun displaySourceCode(newSourceCode: String)
 
     /**
      * Display the abstract syntax tree view starting from a given node.
@@ -69,7 +69,7 @@ interface ToolkitView {
      *
      * @param xml The string to display
      */
-    fun displayXml(xml: String?)
+    fun displayXml(xml: String)
 
     /**
      * Get the current source code editor scrollbars' position point.

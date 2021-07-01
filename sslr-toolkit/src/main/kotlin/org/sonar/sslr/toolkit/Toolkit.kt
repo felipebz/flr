@@ -19,8 +19,6 @@
  */
 package org.sonar.sslr.toolkit
 
-import com.sonar.sslr.impl.Parser
-import org.sonar.colorizer.Tokenizer
 import org.sonar.sslr.internal.toolkit.SourceCodeModel
 import org.sonar.sslr.internal.toolkit.ToolkitPresenter
 import org.sonar.sslr.internal.toolkit.ToolkitViewImpl
@@ -31,29 +29,6 @@ import javax.swing.UIManager
 class Toolkit(title: String?, configurationModel: ConfigurationModel) {
     private val title: String?
     private val configurationModel: ConfigurationModel
-
-    /**
-     * Create a Toolkit with a title, a static parser and static tokenizers.
-     *
-     * @param parser
-     * @param tokenizers
-     * @param title
-     *
-     */
-    @Deprecated("in 1.17, use {@link #Toolkit(String, ConfigurationModel)} instead.")
-    constructor(parser: Parser<*>, tokenizers: List<Tokenizer>?, title: String?) : this(
-        title,
-        object : AbstractConfigurationModel() {
-            override val properties: List<ConfigurationProperty> = emptyList()
-
-            override fun doGetTokenizers(): List<Tokenizer>? {
-                return tokenizers
-            }
-
-            override fun doGetParser(): Parser<*> {
-                return parser
-            }
-        })
 
     fun run() {
         SwingUtilities.invokeLater {

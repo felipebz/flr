@@ -21,7 +21,7 @@ package com.sonar.sslr.test.minic
 
 import com.sonar.sslr.api.*
 import com.sonar.sslr.impl.Parser
-import org.apache.commons.io.FileUtils
+import java.io.File
 
 object MiniCParser {
     private val P = create()
@@ -32,8 +32,8 @@ object MiniCParser {
 
     @JvmStatic
     fun parseFile(filePath: String): AstNode {
-        val file = FileUtils.toFile(MiniCParser::class.java.getResource(filePath))
-        if (file == null || !file.exists()) {
+        val file = File(MiniCParser::class.java.getResource(filePath).path)
+        if (!file.exists()) {
             throw AssertionError("The file \"$filePath\" does not exist.")
         }
         return P.parse(file)

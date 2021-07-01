@@ -67,7 +67,7 @@ class ToolkitPresenter(private val configurationModel: ConfigurationModel, priva
         checkInitialized()
         initUncaughtExceptionsHandler()
         view.setTitle(title)
-        view.displayHighlightedSourceCode("")
+        view.displaySourceCode("")
         view.displayAst(null)
         view.displayXml("")
         view.disableXPathEvaluateButton()
@@ -80,7 +80,7 @@ class ToolkitPresenter(private val configurationModel: ConfigurationModel, priva
         if (fileToParse != null) {
             view.clearConsole()
             try {
-                view.displayHighlightedSourceCode(
+                view.displaySourceCode(
                     String(
                         Files.readAllBytes(Paths.get(fileToParse.path)),
                         configurationModel.charset
@@ -90,7 +90,7 @@ class ToolkitPresenter(private val configurationModel: ConfigurationModel, priva
                 throw RuntimeException(e)
             }
             model.setSourceCode(fileToParse, configurationModel.charset)
-            view.displayHighlightedSourceCode(model.highlightedSourceCode)
+            view.displaySourceCode(model.sourceCode)
             view.displayAst(model.astNode)
             view.displayXml(model.xml)
             view.scrollSourceCodeTo(Point(0, 0))
@@ -104,7 +104,7 @@ class ToolkitPresenter(private val configurationModel: ConfigurationModel, priva
         val sourceCode = view.sourceCode
         model.setSourceCode(sourceCode)
         val sourceCodeScrollbarPosition = view.sourceCodeScrollbarPosition
-        view.displayHighlightedSourceCode(model.highlightedSourceCode)
+        view.displaySourceCode(model.sourceCode)
         view.displayAst(model.astNode)
         view.displayXml(model.xml)
         view.scrollSourceCodeTo(sourceCodeScrollbarPosition)

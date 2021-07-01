@@ -21,12 +21,9 @@ package org.sonar.sslr.internal.toolkit
 
 import com.sonar.sslr.api.AstNode
 import com.sonar.sslr.impl.ast.AstXmlPrinter
-import org.sonar.colorizer.HtmlOptions
-import org.sonar.colorizer.HtmlRenderer
 import org.sonar.sslr.toolkit.ConfigurationModel
 import java.io.File
 import java.io.IOException
-import java.io.StringReader
 import java.nio.charset.Charset
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -34,8 +31,8 @@ import java.util.*
 
 class SourceCodeModel(configurationModel: ConfigurationModel) {
     private val configurationModel: ConfigurationModel
-    private val htmlRenderer = HtmlRenderer(HtmlOptions(false, null, false))
-    private lateinit var sourceCode: String
+    lateinit var sourceCode: String
+        private set
     lateinit var astNode: AstNode
         private set
 
@@ -52,9 +49,6 @@ class SourceCodeModel(configurationModel: ConfigurationModel) {
         astNode = configurationModel.parser!!.parse(sourceCode!!)
         this.sourceCode = sourceCode
     }
-
-    val highlightedSourceCode: String
-        get() = htmlRenderer.render(StringReader(sourceCode), configurationModel.tokenizers)
 
     val xml: String
         get() = AstXmlPrinter.print(astNode)

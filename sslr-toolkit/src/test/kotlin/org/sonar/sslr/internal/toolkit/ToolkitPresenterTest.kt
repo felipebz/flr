@@ -19,7 +19,6 @@
  */
 package org.sonar.sslr.internal.toolkit
 
-import com.google.common.collect.ImmutableList
 import com.sonar.sslr.api.AstNode
 import com.sonar.sslr.api.GenericTokenType
 import com.sonar.sslr.api.Token
@@ -103,7 +102,7 @@ class ToolkitPresenterTest {
         Mockito.`when`(property2.description).thenReturn("description2")
         Mockito.`when`(property2.value).thenReturn("default2")
         val configurationModel = Mockito.mock(ConfigurationModel::class.java)
-        Mockito.`when`(configurationModel.properties).thenReturn(ImmutableList.of(property1, property2))
+        Mockito.`when`(configurationModel.properties).thenReturn(listOf(property1, property2))
         presenter = ToolkitPresenter(configurationModel, Mockito.mock(SourceCodeModel::class.java))
         presenter.setView(view)
         presenter.initConfigurationTab()
@@ -125,7 +124,7 @@ class ToolkitPresenterTest {
         presenter.run("my_mocked_title")
         Assertions.assertThat(Thread.currentThread().uncaughtExceptionHandler is ThreadGroup).isFalse()
         Mockito.verify(view).setTitle("my_mocked_title")
-        Mockito.verify(view).displayHighlightedSourceCode("")
+        Mockito.verify(view).displaySourceCode("")
         Mockito.verify(view).displayAst(null)
         Mockito.verify(view).displayXml("")
         Mockito.verify(view).disableXPathEvaluateButton()
@@ -171,7 +170,7 @@ class ToolkitPresenterTest {
         Mockito.`when`(view.pickFileToParse()).thenReturn(file)
         val model = Mockito.mock(SourceCodeModel::class.java)
         val astNode = Mockito.mock(AstNode::class.java)
-        Mockito.`when`(model.highlightedSourceCode).thenReturn("my_mocked_highlighted_source_code")
+        Mockito.`when`(model.sourceCode).thenReturn("my_mocked_highlighted_source_code")
         Mockito.`when`(model.astNode).thenReturn(astNode)
         Mockito.`when`(model.xml).thenReturn("my_mocked_xml")
         val presenter = ToolkitPresenter(
@@ -185,7 +184,7 @@ class ToolkitPresenterTest {
         presenter.onSourceCodeOpenButtonClick()
         Mockito.verify(view).pickFileToParse()
         Mockito.verify(view).clearConsole()
-        Mockito.verify(view).displayHighlightedSourceCode("my_mocked_highlighted_source_code")
+        Mockito.verify(view).displaySourceCode("my_mocked_highlighted_source_code")
         Mockito.verify(model).setSourceCode(file, StandardCharsets.UTF_8)
         Mockito.verify(view).displayAst(astNode)
         Mockito.verify(view).displayXml("my_mocked_xml")
@@ -216,7 +215,7 @@ class ToolkitPresenterTest {
             throw AssertionError("Expected an exception")
         } catch (e: RuntimeException) {
             Mockito.verify(view).clearConsole()
-            Mockito.verify(view).displayHighlightedSourceCode("parse_error.txt")
+            Mockito.verify(view).displaySourceCode("parse_error.txt")
         }
     }
 
@@ -231,7 +230,7 @@ class ToolkitPresenterTest {
         Mockito.verify(view).pickFileToParse()
         Mockito.verify(view, Mockito.never()).clearConsole()
         Mockito.verify(model, Mockito.never()).setSourceCode(any(), any())
-        Mockito.verify(view, Mockito.never()).displayHighlightedSourceCode(ArgumentMatchers.anyString())
+        Mockito.verify(view, Mockito.never()).displaySourceCode(ArgumentMatchers.anyString())
         Mockito.verify(view, Mockito.never()).displayAst(any())
         Mockito.verify(view, Mockito.never()).displayXml(ArgumentMatchers.anyString())
         Mockito.verify(view, Mockito.never()).scrollSourceCodeTo(any<Point>())
@@ -245,7 +244,7 @@ class ToolkitPresenterTest {
         val point = Mockito.mock(Point::class.java)
         Mockito.`when`(view.sourceCodeScrollbarPosition).thenReturn(point)
         val model = Mockito.mock(SourceCodeModel::class.java)
-        Mockito.`when`(model.highlightedSourceCode).thenReturn("my_mocked_highlighted_source_code")
+        Mockito.`when`(model.sourceCode).thenReturn("my_mocked_highlighted_source_code")
         val astNode = Mockito.mock(AstNode::class.java)
         Mockito.`when`(model.astNode).thenReturn(astNode)
         Mockito.`when`(model.xml).thenReturn("my_mocked_xml")
@@ -255,7 +254,7 @@ class ToolkitPresenterTest {
         Mockito.verify(view).clearConsole()
         Mockito.verify(view).sourceCode
         Mockito.verify(model).setSourceCode("my_mocked_source")
-        Mockito.verify(view).displayHighlightedSourceCode("my_mocked_highlighted_source_code")
+        Mockito.verify(view).displaySourceCode("my_mocked_highlighted_source_code")
         view.displayAst(astNode)
         view.displayXml("my_mocked_xml")
         view.scrollSourceCodeTo(point)
@@ -388,7 +387,7 @@ class ToolkitPresenterTest {
         Mockito.`when`(view.getConfigurationPropertyValue("name")).thenReturn("foo")
         Mockito.`when`(property.validate("foo")).thenReturn("")
         val configurationModel = Mockito.mock(ConfigurationModel::class.java)
-        Mockito.`when`(configurationModel.properties).thenReturn(ImmutableList.of(property))
+        Mockito.`when`(configurationModel.properties).thenReturn(listOf(property))
         val presenter = ToolkitPresenter(
             configurationModel, Mockito.mock(
                 SourceCodeModel::class.java
@@ -412,7 +411,7 @@ class ToolkitPresenterTest {
         Mockito.`when`(view.getConfigurationPropertyValue("name")).thenReturn("foo")
         Mockito.`when`(property.validate("foo")).thenReturn("The value foo is forbidden!")
         val configurationModel = Mockito.mock(ConfigurationModel::class.java)
-        Mockito.`when`(configurationModel.properties).thenReturn(ImmutableList.of(property))
+        Mockito.`when`(configurationModel.properties).thenReturn(listOf(property))
         val presenter = ToolkitPresenter(
             configurationModel, Mockito.mock(
                 SourceCodeModel::class.java
