@@ -65,4 +65,43 @@ subprojects {
         this.header = File(this.project.rootDir, "LICENSE_HEADER")
         this.include("**/*.kt")
     }
+
+    publishing {
+        publications {
+            create<MavenPublication>("maven") {
+                from(components["java"])
+                pom {
+                    description.set(project.description)
+                    organization {
+                        name.set("SonarSource")
+                        url.set("http://www.sonarsource.com")
+                    }
+                    licenses {
+                        license {
+                            name.set("GNU LGPL 3")
+                            url.set("http://www.gnu.org/licenses/lgpl.txt")
+                            distribution.set("repo")
+                        }
+                    }
+                    scm {
+                        url.set("https://github.com/SonarSource/sslr")
+                    }
+                    developers {
+                        developer {
+                            id.set("dbolkensteyn")
+                            name.set("Dinesh Bolkensteyn")
+                            email.set("dinesh.bolkensteyn@sonarsource.com")
+                            organization.set("SonarSource")
+                        }
+                        developer {
+                            id.set("godin")
+                            name.set("Evgeny Mandrikov")
+                            email.set("evgeny.mandrikov@sonarsource.com")
+                            organization.set("SonarSource")
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
