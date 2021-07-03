@@ -58,7 +58,6 @@ class SyntaxTreeCreator<T>(
     private fun visitNonTerminal(node: ParseNode): Any? {
         val rule = node.getMatcher() as MutableParsingRule
         val ruleKey = rule.ruleKey
-        val method = mapping.actionForRuleKey(ruleKey)
         val children = node.getChildren()
         return if (mapping.hasMethodForRuleKey(ruleKey)) {
             // TODO Drop useless intermediate nodes
@@ -72,6 +71,7 @@ class SyntaxTreeCreator<T>(
                 Optional.of(visit(children[0]))
             }
         } else {
+            val method = mapping.actionForRuleKey(ruleKey)
             val convertedChildren = children.map { visit(it) }
             if (mapping.isOneOrMoreRule(ruleKey)) {
                 convertedChildren
