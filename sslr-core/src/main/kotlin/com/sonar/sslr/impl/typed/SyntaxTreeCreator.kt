@@ -59,22 +59,20 @@ class SyntaxTreeCreator<T>(
         val rule = node.getMatcher() as MutableParsingRule
         val ruleKey = rule.ruleKey
         val method = mapping.actionForRuleKey(ruleKey)
+        val children = node.getChildren()
         return if (mapping.hasMethodForRuleKey(ruleKey)) {
             // TODO Drop useless intermediate nodes
-            check(node.getChildren().size == 1)
-            visit(node.getChildren()[0])
+            check(children.size == 1)
+            visit(children[0])
         } else if (mapping.isOptionalRule(ruleKey)) {
-            check(node.getChildren().size <= 1)
-            if (node.getChildren().isEmpty()) {
+            check(children.size <= 1)
+            if (children.isEmpty()) {
                 Optional.absent<Any>()
             } else {
-                Optional.of(visit(node.getChildren()[0]))
+                Optional.of(visit(children[0]))
             }
         } else {
-            val convertedChildren: MutableList<Any?> = ArrayList()
-            for (child in node.getChildren()) {
-                convertedChildren.add(visit(child))
-            }
+            val convertedChildren = children.map { visit(it) }
             if (mapping.isOneOrMoreRule(ruleKey)) {
                 convertedChildren
             } else if (mapping.isZeroOrMoreRule(ruleKey)) {
