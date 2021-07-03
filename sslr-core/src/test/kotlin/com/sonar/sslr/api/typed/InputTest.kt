@@ -19,7 +19,7 @@
  */
 package com.sonar.sslr.api.typed
 
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Test
 import java.io.File
 
@@ -27,25 +27,25 @@ class InputTest {
     @Test
     fun input() {
         val input = CharArray(0)
-        Assertions.assertThat(Input(input).input()).isSameAs(input)
+        assertThat(Input(input).input()).isSameAs(input)
     }
 
     @Test
     fun uri() {
         val uri = File("tests://something").toURI()
-        Assertions.assertThat(Input("".toCharArray(), uri).uri()).isSameAs(uri)
+        assertThat(Input("".toCharArray(), uri).uri()).isSameAs(uri)
     }
 
     @Test
     fun substring() {
         val input = Input("abc".toCharArray())
-        Assertions.assertThat(input.substring(0, 3)).isEqualTo("abc")
-        Assertions.assertThat(input.substring(0, 2)).isEqualTo("ab")
-        Assertions.assertThat(input.substring(0, 1)).isEqualTo("a")
-        Assertions.assertThat(input.substring(0, 0)).isEqualTo("")
-        Assertions.assertThat(input.substring(1, 3)).isEqualTo("bc")
-        Assertions.assertThat(input.substring(2, 3)).isEqualTo("c")
-        Assertions.assertThat(input.substring(3, 3)).isEqualTo("")
+        assertThat(input.substring(0, 3)).isEqualTo("abc")
+        assertThat(input.substring(0, 2)).isEqualTo("ab")
+        assertThat(input.substring(0, 1)).isEqualTo("a")
+        assertThat(input.substring(0, 0)).isEqualTo("")
+        assertThat(input.substring(1, 3)).isEqualTo("bc")
+        assertThat(input.substring(2, 3)).isEqualTo("c")
+        assertThat(input.substring(3, 3)).isEqualTo("")
     }
 
     @Test
@@ -87,8 +87,8 @@ class InputTest {
     companion object {
         private fun assertLineAndColumn(string: String, index: Int, expectedLine: Int, expectedColumn: Int) {
             val location = Input(string.toCharArray()).lineAndColumnAt(index)
-            Assertions.assertThat(location[0]).isEqualTo(expectedLine)
-            Assertions.assertThat(location[1]).isEqualTo(expectedColumn)
+            assertThat(location[0]).isEqualTo(expectedLine)
+            assertThat(location[1]).isEqualTo(expectedColumn)
         }
     }
 }

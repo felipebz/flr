@@ -19,24 +19,24 @@
  */
 package org.sonar.sslr.internal.vm
 
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Test
-import org.mockito.Mockito
-import org.sonar.sslr.internal.vm.Machine
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 
 class ErrorLocatingHandlerTest {
     private val errorLocatingHandler = ErrorLocatingHandler()
     @Test
     fun should_find_location_of_error() {
-        val machine = Mockito.mock(Machine::class.java)
-        Mockito.`when`(machine.getIndex()).thenReturn(1)
+        val machine = mock<Machine>()
+        whenever(machine.getIndex()).thenReturn(1)
         errorLocatingHandler.onBacktrack(machine)
-        Assertions.assertThat(errorLocatingHandler.getErrorIndex()).isEqualTo(1)
-        Mockito.`when`(machine.getIndex()).thenReturn(3)
+        assertThat(errorLocatingHandler.getErrorIndex()).isEqualTo(1)
+        whenever(machine.getIndex()).thenReturn(3)
         errorLocatingHandler.onBacktrack(machine)
-        Assertions.assertThat(errorLocatingHandler.getErrorIndex()).isEqualTo(3)
-        Mockito.`when`(machine.getIndex()).thenReturn(2)
+        assertThat(errorLocatingHandler.getErrorIndex()).isEqualTo(3)
+        whenever(machine.getIndex()).thenReturn(2)
         errorLocatingHandler.onBacktrack(machine)
-        Assertions.assertThat(errorLocatingHandler.getErrorIndex()).isEqualTo(3)
+        assertThat(errorLocatingHandler.getErrorIndex()).isEqualTo(3)
     }
 }

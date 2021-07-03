@@ -19,7 +19,7 @@
  */
 package org.sonar.sslr.internal.vm
 
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Test
 import org.sonar.sslr.internal.vm.Instruction.Companion.choice
 import org.sonar.sslr.internal.vm.Instruction.Companion.commit
@@ -32,9 +32,9 @@ class FirstOfExpressionTest {
             SubExpression(4, 5),
             SubExpression(6)
         )
-        Assertions.assertThat(expression.toString()).isEqualTo("FirstOf[SubExpression, SubExpression, SubExpression]")
+        assertThat(expression.toString()).isEqualTo("FirstOf[SubExpression, SubExpression, SubExpression]")
         val instructions = expression.compile(CompilationHandler())
-        Assertions.assertThat(instructions).isEqualTo(
+        assertThat(instructions).isEqualTo(
             arrayOf(
                 choice(5),
                 SubExpression.mockInstruction(1),

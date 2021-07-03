@@ -20,9 +20,9 @@
 package org.sonar.sslr.internal.vm
 
 import com.sonar.sslr.api.GenericTokenType
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Test
-import org.mockito.Mockito
+import org.mockito.kotlin.mock
 import org.sonar.sslr.internal.vm.Instruction.Companion.call
 import org.sonar.sslr.internal.vm.Instruction.Companion.ignoreErrors
 import org.sonar.sslr.internal.vm.Instruction.Companion.jump
@@ -32,9 +32,9 @@ class TokenExpressionTest {
     @Test
     fun should_compile() {
         val expression = TokenExpression(GenericTokenType.IDENTIFIER, SubExpression(1, 2))
-        Assertions.assertThat(expression.toString()).isEqualTo("Token IDENTIFIER[SubExpression]")
+        assertThat(expression.toString()).isEqualTo("Token IDENTIFIER[SubExpression]")
         val instructions = expression.compile(CompilationHandler())
-        Assertions.assertThat(instructions).isEqualTo(
+        assertThat(instructions).isEqualTo(
             arrayOf(
                 call(2, expression),
                 jump(5),
@@ -48,12 +48,8 @@ class TokenExpressionTest {
 
     @Test
     fun should_implement_Matcher() {
-        val expression = TokenExpression(
-            GenericTokenType.IDENTIFIER, Mockito.mock(
-                ParsingExpression::class.java
-            )
-        )
+        val expression = TokenExpression(GenericTokenType.IDENTIFIER, mock())
         // Important for AstCreator
-        Assertions.assertThat(expression.getTokenType()).isSameAs(GenericTokenType.IDENTIFIER)
+        assertThat(expression.getTokenType()).isSameAs(GenericTokenType.IDENTIFIER)
     }
 }

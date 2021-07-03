@@ -19,11 +19,10 @@
  */
 package com.sonar.sslr.impl.typed
 
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Assert.assertThrows
 import org.junit.Test
-import org.mockito.Mockito
-import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.*
 import org.sonar.sslr.grammar.GrammarRuleKey
 import org.sonar.sslr.grammar.LexerlessGrammarBuilder
 import org.sonar.sslr.internal.grammar.MutableParsingRule
@@ -33,36 +32,34 @@ import org.sonar.sslr.internal.vm.ParsingExpression
 class DelayedRuleInvocationExpressionTest {
     @Test
     fun should_compile_rule_keys() {
-        val b = Mockito.spy(LexerlessGrammarBuilder.create())
-        val ruleKey = Mockito.mock(GrammarRuleKey::class.java)
+        val b = spy(LexerlessGrammarBuilder.create())
+        val ruleKey = mock<GrammarRuleKey>()
         val expression = DelayedRuleInvocationExpression(b, ruleKey)
-        val compiler = Mockito.mock(CompilationHandler::class.java)
+        val compiler = mock<CompilationHandler>()
         expression.compile(compiler)
-        Mockito.verify(b).rule(ruleKey)
+        verify(b).rule(ruleKey)
         val ruleExpression = argumentCaptor<ParsingExpression>()
-        Mockito.verify(compiler).compile(ruleExpression.capture())
-        Assertions.assertThat(ruleExpression.allValues).hasSize(1)
-        Assertions.assertThat((ruleExpression.firstValue as MutableParsingRule).ruleKey).isSameAs(ruleKey)
+        verify(compiler).compile(ruleExpression.capture())
+        assertThat(ruleExpression.allValues).hasSize(1)
+        assertThat((ruleExpression.firstValue as MutableParsingRule).ruleKey).isSameAs(ruleKey)
     }
 
     @Test
     @Throws(Exception::class)
     fun should_compile_methods() {
-        val b = Mockito.spy(LexerlessGrammarBuilder.create())
-        val ruleKey = Mockito.mock(GrammarRuleKey::class.java)
+        val b = spy(LexerlessGrammarBuilder.create())
+        val ruleKey = mock<GrammarRuleKey>()
         val method = DelayedRuleInvocationExpressionTest::class.java.getDeclaredMethod("FOO")
-        val grammarBuilderInterceptor = Mockito.mock(
-            GrammarBuilderInterceptor::class.java
-        )
-        Mockito.`when`(grammarBuilderInterceptor.ruleKeyForMethod(method)).thenReturn(ruleKey)
+        val grammarBuilderInterceptor = mock<GrammarBuilderInterceptor<Any>>()
+        whenever(grammarBuilderInterceptor.ruleKeyForMethod(method)).thenReturn(ruleKey)
         val expression = DelayedRuleInvocationExpression(b, grammarBuilderInterceptor, method)
-        val compiler = Mockito.mock(CompilationHandler::class.java)
+        val compiler = mock<CompilationHandler>()
         expression.compile(compiler)
-        Mockito.verify(b).rule(ruleKey)
+        verify(b).rule(ruleKey)
         val ruleExpression =    argumentCaptor<ParsingExpression>()
-        Mockito.verify(compiler).compile(ruleExpression.capture())
-        Assertions.assertThat(ruleExpression.allValues).hasSize(1)
-        Assertions.assertThat((ruleExpression.firstValue as MutableParsingRule).ruleKey).isSameAs(ruleKey)
+        verify(compiler).compile(ruleExpression.capture())
+        assertThat(ruleExpression.allValues).hasSize(1)
+        assertThat((ruleExpression.firstValue as MutableParsingRule).ruleKey).isSameAs(ruleKey)
     }
 
     @Test
@@ -70,33 +67,21 @@ class DelayedRuleInvocationExpressionTest {
     fun should_fail_when_method_is_not_mapped() {
         assertThrows("Cannot find the rule key corresponding to the invoked method: FOO()", IllegalStateException::class.java) {
             val method = DelayedRuleInvocationExpressionTest::class.java.getDeclaredMethod("FOO")
-            DelayedRuleInvocationExpression(
-                LexerlessGrammarBuilder.create(), Mockito.mock(
-                    GrammarBuilderInterceptor::class.java
-                ), method
-            ).compile(Mockito.mock(CompilationHandler::class.java))
+            DelayedRuleInvocationExpression(LexerlessGrammarBuilder.create(), mock(), method).compile(mock())
         }
     }
 
     @Test
     @Throws(Exception::class)
     fun test_toString() {
-        val ruleKey = Mockito.mock(GrammarRuleKey::class.java)
-        Mockito.`when`(ruleKey.toString()).thenReturn("foo")
-        Assertions.assertThat(
-            DelayedRuleInvocationExpression(
-                Mockito.mock(
-                    LexerlessGrammarBuilder::class.java
-                ), ruleKey
-            ).toString()
+        val ruleKey = mock<GrammarRuleKey>()
+        whenever(ruleKey.toString()).thenReturn("foo")
+        assertThat(
+            DelayedRuleInvocationExpression(mock(), ruleKey).toString()
         ).isEqualTo("foo")
         val method = DelayedRuleInvocationExpressionTest::class.java.getDeclaredMethod("FOO")
-        Assertions.assertThat(
-            DelayedRuleInvocationExpression(
-                Mockito.mock(
-                    LexerlessGrammarBuilder::class.java
-                ), Mockito.mock(GrammarBuilderInterceptor::class.java), method
-            ).toString()
+        assertThat(
+            DelayedRuleInvocationExpression(mock(), mock(), method).toString()
         ).isEqualTo("FOO()")
     }
 

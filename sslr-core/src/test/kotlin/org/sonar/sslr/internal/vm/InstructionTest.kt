@@ -19,10 +19,10 @@
  */
 package org.sonar.sslr.internal.vm
 
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Assert.assertThrows
 import org.junit.Test
-import org.mockito.Mockito
+import org.mockito.kotlin.*
 import org.sonar.sslr.grammar.GrammarException
 import org.sonar.sslr.internal.matchers.Matcher
 import org.sonar.sslr.internal.vm.Instruction.*
@@ -33,121 +33,112 @@ import org.sonar.sslr.internal.vm.Instruction.Companion.commit
 import org.sonar.sslr.internal.vm.Instruction.Companion.commitVerify
 import org.sonar.sslr.internal.vm.Instruction.Companion.jump
 import org.sonar.sslr.internal.vm.Instruction.Companion.predicateChoice
-import org.sonar.sslr.internal.vm.Machine
 
 class InstructionTest {
-    private val machine = Mockito.mock(Machine::class.java)
+    private val machine = mock<Machine>()
     @Test
     fun jump() {
         val instruction = jump(42)
-        Assertions.assertThat(instruction).isInstanceOf(JumpInstruction::class.java)
-        Assertions.assertThat(instruction.toString()).isEqualTo("Jump 42")
-        Assertions.assertThat(instruction == jump(42)).isTrue()
-        Assertions.assertThat(instruction == jump(13)).isFalse()
-        Assertions.assertThat(instruction == Any()).isFalse()
-        Assertions.assertThat(instruction.hashCode()).isEqualTo(42)
+        assertThat(instruction).isInstanceOf(JumpInstruction::class.java)
+        assertThat(instruction.toString()).isEqualTo("Jump 42")
+        assertThat(instruction == jump(42)).isTrue()
+        assertThat(instruction == jump(13)).isFalse()
+        assertThat(instruction == Any()).isFalse()
+        assertThat(instruction.hashCode()).isEqualTo(42)
         instruction.execute(machine)
-        val inOrder = Mockito.inOrder(machine)
+        val inOrder = inOrder(machine)
         inOrder.verify(machine).jump(42)
-        Mockito.verifyNoMoreInteractions(machine)
+        verifyNoMoreInteractions(machine)
     }
 
     @Test
     fun call() {
-        val matcher = Mockito.mock(
-            Matcher::class.java
-        )
+        val matcher = mock<Matcher>()
         val instruction = call(42, matcher)
-        Assertions.assertThat(instruction).isInstanceOf(CallInstruction::class.java)
-        Assertions.assertThat(instruction.toString()).isEqualTo("Call 42")
-        Assertions.assertThat(instruction == call(42, matcher)).isTrue()
-        Assertions.assertThat(
-            instruction == call(
-                42, Mockito.mock(
-                    Matcher::class.java
-                )
-            )
-        ).isFalse()
-        Assertions.assertThat(instruction == call(13, matcher)).isFalse()
-        Assertions.assertThat(instruction == Any()).isFalse()
-        Assertions.assertThat(instruction.hashCode()).isEqualTo(42)
+        assertThat(instruction).isInstanceOf(CallInstruction::class.java)
+        assertThat(instruction.toString()).isEqualTo("Call 42")
+        assertThat(instruction == call(42, matcher)).isTrue()
+        assertThat(instruction == call(42, mock())).isFalse()
+        assertThat(instruction == call(13, matcher)).isFalse()
+        assertThat(instruction == Any()).isFalse()
+        assertThat(instruction.hashCode()).isEqualTo(42)
         instruction.execute(machine)
-        val inOrder = Mockito.inOrder(machine)
+        val inOrder = inOrder(machine)
         inOrder.verify(machine).pushReturn(1, matcher, 42)
-        Mockito.verifyNoMoreInteractions(machine)
+        verifyNoMoreInteractions(machine)
     }
 
     @Test
     fun choice() {
         val instruction = choice(42)
-        Assertions.assertThat(instruction).isInstanceOf(ChoiceInstruction::class.java)
-        Assertions.assertThat(instruction.toString()).isEqualTo("Choice 42")
-        Assertions.assertThat(instruction == choice(42)).isTrue()
-        Assertions.assertThat(instruction == choice(13)).isFalse()
-        Assertions.assertThat(instruction == Any()).isFalse()
-        Assertions.assertThat(instruction.hashCode()).isEqualTo(42)
+        assertThat(instruction).isInstanceOf(ChoiceInstruction::class.java)
+        assertThat(instruction.toString()).isEqualTo("Choice 42")
+        assertThat(instruction == choice(42)).isTrue()
+        assertThat(instruction == choice(13)).isFalse()
+        assertThat(instruction == Any()).isFalse()
+        assertThat(instruction.hashCode()).isEqualTo(42)
         instruction.execute(machine)
-        val inOrder = Mockito.inOrder(machine)
+        val inOrder = inOrder(machine)
         inOrder.verify(machine).pushBacktrack(42)
         inOrder.verify(machine).jump(1)
-        Mockito.verifyNoMoreInteractions(machine)
+        verifyNoMoreInteractions(machine)
     }
 
     @Test
     fun predicateChoice() {
         val instruction = predicateChoice(42)
-        Assertions.assertThat(instruction).isInstanceOf(PredicateChoiceInstruction::class.java)
-        Assertions.assertThat(instruction.toString()).isEqualTo("PredicateChoice 42")
-        Assertions.assertThat(instruction == predicateChoice(42)).isTrue()
-        Assertions.assertThat(instruction == predicateChoice(13)).isFalse()
-        Assertions.assertThat(instruction == Any()).isFalse()
-        Assertions.assertThat(instruction.hashCode()).isEqualTo(42)
+        assertThat(instruction).isInstanceOf(PredicateChoiceInstruction::class.java)
+        assertThat(instruction.toString()).isEqualTo("PredicateChoice 42")
+        assertThat(instruction == predicateChoice(42)).isTrue()
+        assertThat(instruction == predicateChoice(13)).isFalse()
+        assertThat(instruction == Any()).isFalse()
+        assertThat(instruction.hashCode()).isEqualTo(42)
         instruction.execute(machine)
-        val inOrder = Mockito.inOrder(machine)
+        val inOrder = inOrder(machine)
         inOrder.verify(machine).pushBacktrack(42)
         inOrder.verify(machine).setIgnoreErrors(true)
         inOrder.verify(machine).jump(1)
-        Mockito.verifyNoMoreInteractions(machine)
+        verifyNoMoreInteractions(machine)
     }
 
     @Test
     fun commit() {
         val instruction = commit(42)
-        Assertions.assertThat(instruction).isInstanceOf(CommitInstruction::class.java)
-        Assertions.assertThat(instruction.toString()).isEqualTo("Commit " + 42)
-        Assertions.assertThat(instruction == commit(42)).isTrue()
-        Assertions.assertThat(instruction == commit(13)).isFalse()
-        Assertions.assertThat(instruction == Any()).isFalse()
-        Assertions.assertThat(instruction.hashCode()).isEqualTo(42)
+        assertThat(instruction).isInstanceOf(CommitInstruction::class.java)
+        assertThat(instruction.toString()).isEqualTo("Commit " + 42)
+        assertThat(instruction == commit(42)).isTrue()
+        assertThat(instruction == commit(13)).isFalse()
+        assertThat(instruction == Any()).isFalse()
+        assertThat(instruction.hashCode()).isEqualTo(42)
         val stack = MachineStack().getOrCreateChild()
-        Mockito.`when`(machine.peek()).thenReturn(stack)
+        whenever(machine.peek()).thenReturn(stack)
         instruction.execute(machine)
-        val inOrder = Mockito.inOrder(machine)
-        inOrder.verify(machine, Mockito.times(2)).peek()
+        val inOrder = inOrder(machine)
+        inOrder.verify(machine, times(2)).peek()
         inOrder.verify(machine).pop()
         inOrder.verify(machine).jump(42)
-        Mockito.verifyNoMoreInteractions(machine)
+        verifyNoMoreInteractions(machine)
     }
 
     @Test
     fun commitVerify() {
         val instruction = commitVerify(42)
-        Assertions.assertThat(instruction).isInstanceOf(CommitVerifyInstruction::class.java)
-        Assertions.assertThat(instruction.toString()).isEqualTo("CommitVerify " + 42)
-        Assertions.assertThat(instruction == commitVerify(42)).isTrue()
-        Assertions.assertThat(instruction == commitVerify(13)).isFalse()
-        Assertions.assertThat(instruction == Any()).isFalse()
-        Assertions.assertThat(instruction.hashCode()).isEqualTo(42)
+        assertThat(instruction).isInstanceOf(CommitVerifyInstruction::class.java)
+        assertThat(instruction.toString()).isEqualTo("CommitVerify " + 42)
+        assertThat(instruction == commitVerify(42)).isTrue()
+        assertThat(instruction == commitVerify(13)).isFalse()
+        assertThat(instruction == Any()).isFalse()
+        assertThat(instruction.hashCode()).isEqualTo(42)
         val stack = MachineStack().getOrCreateChild()
-        Mockito.`when`(machine.peek()).thenReturn(stack)
-        Mockito.`when`(machine.getIndex()).thenReturn(13)
+        whenever(machine.peek()).thenReturn(stack)
+        whenever(machine.getIndex()).thenReturn(13)
         instruction.execute(machine)
-        val inOrder = Mockito.inOrder(machine)
+        val inOrder = inOrder(machine)
         inOrder.verify(machine).getIndex()
-        inOrder.verify(machine, Mockito.times(3)).peek()
+        inOrder.verify(machine, times(3)).peek()
         inOrder.verify(machine).pop()
         inOrder.verify(machine).jump(42)
-        Mockito.verifyNoMoreInteractions(machine)
+        verifyNoMoreInteractions(machine)
     }
 
     @Test
@@ -155,8 +146,8 @@ class InstructionTest {
         val instruction = commitVerify(42)
         val stack = MachineStack().getOrCreateChild()
         stack.setIndex(13)
-        Mockito.`when`(machine.peek()).thenReturn(stack)
-        Mockito.`when`(machine.getIndex()).thenReturn(13)
+        whenever(machine.peek()).thenReturn(stack)
+        whenever(machine.getIndex()).thenReturn(13)
         assertThrows("The inner part of ZeroOrMore and OneOrMore must not allow empty matches", GrammarException::class.java) {
             instruction.execute(machine)
         }
@@ -165,97 +156,97 @@ class InstructionTest {
     @Test
     fun ret() {
         val instruction = Instruction.ret()
-        Assertions.assertThat(instruction).isInstanceOf(RetInstruction::class.java)
-        Assertions.assertThat(instruction.toString()).isEqualTo("Ret")
-        Assertions.assertThat(instruction).`as`("singleton").isSameAs(Instruction.ret())
-        val stack = Mockito.mock(MachineStack::class.java)
-        Mockito.`when`(stack.address()).thenReturn(42)
-        Mockito.`when`(stack.isIgnoreErrors()).thenReturn(true)
-        Mockito.`when`(machine.peek()).thenReturn(stack)
+        assertThat(instruction).isInstanceOf(RetInstruction::class.java)
+        assertThat(instruction.toString()).isEqualTo("Ret")
+        assertThat(instruction).`as`("singleton").isSameAs(Instruction.ret())
+        val stack = mock<MachineStack>()
+        whenever(stack.address()).thenReturn(42)
+        whenever(stack.isIgnoreErrors()).thenReturn(true)
+        whenever(machine.peek()).thenReturn(stack)
         instruction.execute(machine)
-        val inOrder = Mockito.inOrder(machine)
+        val inOrder = inOrder(machine)
         inOrder.verify(machine).createNode()
         inOrder.verify(machine).peek()
         inOrder.verify(machine).setIgnoreErrors(true)
         inOrder.verify(machine).setAddress(42)
         inOrder.verify(machine).popReturn()
-        Mockito.verifyNoMoreInteractions(machine)
+        verifyNoMoreInteractions(machine)
     }
 
     @Test
     fun backtrack() {
         val instruction = Instruction.backtrack()
-        Assertions.assertThat(instruction).isInstanceOf(BacktrackInstruction::class.java)
-        Assertions.assertThat(instruction.toString()).isEqualTo("Backtrack")
-        Assertions.assertThat(instruction).`as`("singleton").isSameAs(Instruction.backtrack())
+        assertThat(instruction).isInstanceOf(BacktrackInstruction::class.java)
+        assertThat(instruction.toString()).isEqualTo("Backtrack")
+        assertThat(instruction).`as`("singleton").isSameAs(Instruction.backtrack())
         instruction.execute(machine)
-        val inOrder = Mockito.inOrder(machine)
+        val inOrder = inOrder(machine)
         inOrder.verify(machine).backtrack()
-        Mockito.verifyNoMoreInteractions(machine)
+        verifyNoMoreInteractions(machine)
     }
 
     @Test
     fun end() {
         val instruction = Instruction.end()
-        Assertions.assertThat(instruction).isInstanceOf(EndInstruction::class.java)
-        Assertions.assertThat(instruction.toString()).isEqualTo("End")
-        Assertions.assertThat(instruction).`as`("singleton").isSameAs(Instruction.end())
+        assertThat(instruction).isInstanceOf(EndInstruction::class.java)
+        assertThat(instruction.toString()).isEqualTo("End")
+        assertThat(instruction).`as`("singleton").isSameAs(Instruction.end())
         instruction.execute(machine)
-        val inOrder = Mockito.inOrder(machine)
+        val inOrder = inOrder(machine)
         inOrder.verify(machine).setAddress(-1)
-        Mockito.verifyNoMoreInteractions(machine)
+        verifyNoMoreInteractions(machine)
     }
 
     @Test
     fun failTwice() {
         val instruction = Instruction.failTwice()
-        Assertions.assertThat(instruction).isInstanceOf(FailTwiceInstruction::class.java)
-        Assertions.assertThat(instruction.toString()).isEqualTo("FailTwice")
-        Assertions.assertThat(instruction).`as`("singleton").isSameAs(Instruction.failTwice())
-        val stack = Mockito.mock(MachineStack::class.java)
-        Mockito.`when`(stack.index()).thenReturn(13)
-        Mockito.`when`(machine.peek()).thenReturn(stack)
+        assertThat(instruction).isInstanceOf(FailTwiceInstruction::class.java)
+        assertThat(instruction.toString()).isEqualTo("FailTwice")
+        assertThat(instruction).`as`("singleton").isSameAs(Instruction.failTwice())
+        val stack = mock<MachineStack>()
+        whenever(stack.index()).thenReturn(13)
+        whenever(machine.peek()).thenReturn(stack)
         instruction.execute(machine)
-        val inOrder = Mockito.inOrder(machine)
+        val inOrder = inOrder(machine)
         inOrder.verify(machine).peek()
         inOrder.verify(machine).setIndex(13)
         inOrder.verify(machine).pop()
         inOrder.verify(machine).backtrack()
-        Mockito.verifyNoMoreInteractions(machine)
+        verifyNoMoreInteractions(machine)
     }
 
     @Test
     fun backCommit() {
         val instruction = backCommit(42)
-        Assertions.assertThat(instruction).isInstanceOf(BackCommitInstruction::class.java)
-        Assertions.assertThat(instruction.toString()).isEqualTo("BackCommit 42")
-        Assertions.assertThat(instruction == backCommit(42)).isTrue()
-        Assertions.assertThat(instruction == backCommit(13)).isFalse()
-        Assertions.assertThat(instruction == Any()).isFalse()
-        Assertions.assertThat(instruction.hashCode()).isEqualTo(42)
-        val stack = Mockito.mock(MachineStack::class.java)
-        Mockito.`when`(stack.index()).thenReturn(13)
-        Mockito.`when`(stack.isIgnoreErrors()).thenReturn(true)
-        Mockito.`when`(machine.peek()).thenReturn(stack)
+        assertThat(instruction).isInstanceOf(BackCommitInstruction::class.java)
+        assertThat(instruction.toString()).isEqualTo("BackCommit 42")
+        assertThat(instruction == backCommit(42)).isTrue()
+        assertThat(instruction == backCommit(13)).isFalse()
+        assertThat(instruction == Any()).isFalse()
+        assertThat(instruction.hashCode()).isEqualTo(42)
+        val stack = mock<MachineStack>()
+        whenever(stack.index()).thenReturn(13)
+        whenever(stack.isIgnoreErrors()).thenReturn(true)
+        whenever(machine.peek()).thenReturn(stack)
         instruction.execute(machine)
-        val inOrder = Mockito.inOrder(machine)
+        val inOrder = inOrder(machine)
         inOrder.verify(machine).peek()
         inOrder.verify(machine).setIndex(13)
         inOrder.verify(machine).setIgnoreErrors(true)
         inOrder.verify(machine).pop()
         inOrder.verify(machine).jump(42)
-        Mockito.verifyNoMoreInteractions(machine)
+        verifyNoMoreInteractions(machine)
     }
 
     @Test
     fun ignoreErrors() {
         val instruction = Instruction.ignoreErrors()
-        Assertions.assertThat(instruction).isInstanceOf(IgnoreErrorsInstruction::class.java)
-        Assertions.assertThat(instruction.toString()).isEqualTo("IgnoreErrors")
-        Assertions.assertThat(instruction).`as`("singleton").isSameAs(Instruction.ignoreErrors())
+        assertThat(instruction).isInstanceOf(IgnoreErrorsInstruction::class.java)
+        assertThat(instruction.toString()).isEqualTo("IgnoreErrors")
+        assertThat(instruction).`as`("singleton").isSameAs(Instruction.ignoreErrors())
         instruction.execute(machine)
-        Mockito.verify(machine).setIgnoreErrors(true)
-        Mockito.verify(machine).jump(1)
-        Mockito.verifyNoMoreInteractions(machine)
+        verify(machine).setIgnoreErrors(true)
+        verify(machine).jump(1)
+        verifyNoMoreInteractions(machine)
     }
 }

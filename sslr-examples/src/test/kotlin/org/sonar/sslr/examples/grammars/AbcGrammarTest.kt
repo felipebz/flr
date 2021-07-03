@@ -21,13 +21,13 @@ package org.sonar.sslr.examples.grammars
 
 import org.junit.Test
 import org.sonar.sslr.examples.grammars.AbcGrammar.Companion.createGrammar
-import org.sonar.sslr.tests.Assertions
+import org.sonar.sslr.tests.Assertions.assertThat
 
 class AbcGrammarTest {
     private val g = createGrammar()
     @Test
     fun test() {
-        Assertions.assertThat(g.rule(AbcGrammar.S))
+        assertThat(g.rule(AbcGrammar.S))
             .matches("abc")
             .matches("aabbcc")
             .matches("aaabbbccc")

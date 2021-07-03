@@ -94,26 +94,26 @@ class CodeBufferTest {
     fun testStartAndStopRecording() {
         val reader = CodeBuffer("123456", defaulConfiguration)
         reader.pop()
-        junit.framework.Assert.assertEquals("", reader.stopRecording().toString())
+        Assert.assertEquals("", reader.stopRecording().toString())
         reader.startRecording()
         reader.pop()
         reader.pop()
         reader.peek()
-        junit.framework.Assert.assertEquals("23", reader.stopRecording().toString())
-        junit.framework.Assert.assertEquals("", reader.stopRecording().toString())
+        Assert.assertEquals("23", reader.stopRecording().toString())
+        Assert.assertEquals("", reader.stopRecording().toString())
     }
 
     @Test
     fun testCharAt() {
         val reader = CodeBuffer("123456", defaulConfiguration)
-        junit.framework.Assert.assertEquals('1', reader[0])
-        junit.framework.Assert.assertEquals('6', reader[5])
+        Assert.assertEquals('1', reader[0])
+        Assert.assertEquals('6', reader[5])
     }
 
     @Test
     fun testCharAtIndexOutOfBoundsException() {
         val reader = CodeBuffer("12345", defaulConfiguration)
-        junit.framework.Assert.assertEquals(reader[5], (-1).toChar())
+        Assert.assertEquals(reader[5], (-1).toChar())
     }
 
     @Test
@@ -121,9 +121,9 @@ class CodeBufferTest {
         val configuration = CodeReaderConfiguration()
         configuration.setTabWidth(4)
         val reader = CodeBuffer("pa\n\tc", configuration)
-        junit.framework.Assert.assertEquals('\n', reader[2])
-        junit.framework.Assert.assertEquals('\t', reader[3])
-        junit.framework.Assert.assertEquals('c', reader[4])
+        Assert.assertEquals('\n', reader[2])
+        Assert.assertEquals('\t', reader[3])
+        Assert.assertEquals('c', reader[4])
         Assert.assertThat(reader.getColumnPosition(), Is.`is`(0))
         Assert.assertThat(reader.getLinePosition(), Is.`is`(1))
         reader.pop() // p
@@ -152,12 +152,12 @@ class CodeBufferTest {
         configuration.setCodeReaderFilters(ReplaceNumbersFilter())
         val code = CodeBuffer("abcd12efgh34", configuration)
         // test #charAt
-        junit.framework.Assert.assertEquals('a', code[0])
-        junit.framework.Assert.assertEquals('-', code[4])
-        junit.framework.Assert.assertEquals('-', code[5])
-        junit.framework.Assert.assertEquals('e', code[6])
-        junit.framework.Assert.assertEquals('-', code[10])
-        junit.framework.Assert.assertEquals('-', code[11])
+        Assert.assertEquals('a', code[0])
+        Assert.assertEquals('-', code[4])
+        Assert.assertEquals('-', code[5])
+        Assert.assertEquals('e', code[6])
+        Assert.assertEquals('-', code[10])
+        Assert.assertEquals('-', code[11])
         // test peek and pop
         Assert.assertThat(code.peek().toChar(), Is.`is`('a'))
         Assert.assertThat(code.pop().toChar(), Is.`is`('a'))
@@ -197,12 +197,12 @@ class CodeBufferTest {
         configuration.setCodeReaderFilters(ReplaceNumbersFilter(), ReplaceCharFilter())
         val code = CodeBuffer("abcd12efgh34", configuration)
         // test #charAt
-        junit.framework.Assert.assertEquals('*', code[0])
-        junit.framework.Assert.assertEquals('-', code[4])
-        junit.framework.Assert.assertEquals('-', code[5])
-        junit.framework.Assert.assertEquals('*', code[6])
-        junit.framework.Assert.assertEquals('-', code[10])
-        junit.framework.Assert.assertEquals('-', code[11])
+        Assert.assertEquals('*', code[0])
+        Assert.assertEquals('-', code[4])
+        Assert.assertEquals('-', code[5])
+        Assert.assertEquals('*', code[6])
+        Assert.assertEquals('-', code[10])
+        Assert.assertEquals('-', code[11])
         // test peek and pop
         Assert.assertThat(code.peek().toChar(), Is.`is`('*'))
         Assert.assertThat(code.pop().toChar(), Is.`is`('*'))
@@ -228,12 +228,12 @@ class CodeBufferTest {
         configuration.setCodeReaderFilters(ChannelCodeReaderFilter(Any(), WindowingChannel()))
         val code = CodeBuffer("0123456789\nABCDEFGHIJ", configuration)
         // test #charAt
-        junit.framework.Assert.assertEquals('2', code[0])
-        junit.framework.Assert.assertEquals('7', code[5])
-        junit.framework.Assert.assertEquals('\n', code[6])
-        junit.framework.Assert.assertEquals('C', code[7])
-        junit.framework.Assert.assertEquals('H', code[12])
-        junit.framework.Assert.assertEquals(-1, code.intAt(13))
+        Assert.assertEquals('2', code[0])
+        Assert.assertEquals('7', code[5])
+        Assert.assertEquals('\n', code[6])
+        Assert.assertEquals('C', code[7])
+        Assert.assertEquals('H', code[12])
+        Assert.assertEquals(-1, code.intAt(13))
         // test peek and pop
         Assert.assertThat(code.peek().toChar(), Is.`is`('2'))
         Assert.assertThat(code.pop().toChar(), Is.`is`('2'))

@@ -19,21 +19,21 @@
  */
 package org.sonar.sslr.internal.grammar
 
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Test
-import org.mockito.Mockito
+import org.mockito.kotlin.mock
 import org.sonar.sslr.grammar.GrammarRuleKey
 import org.sonar.sslr.internal.vm.CompilableGrammarRule
 
 class MutableGrammarTest {
     @Test
     fun test() {
-        val ruleKey = Mockito.mock(GrammarRuleKey::class.java)
-        val rule = Mockito.mock(CompilableGrammarRule::class.java)
-        val rootRuleKey = Mockito.mock(GrammarRuleKey::class.java)
-        val rootRule = Mockito.mock(CompilableGrammarRule::class.java)
+        val ruleKey = mock<GrammarRuleKey>()
+        val rule = mock<CompilableGrammarRule>()
+        val rootRuleKey = mock<GrammarRuleKey>()
+        val rootRule = mock<CompilableGrammarRule>()
         val grammar = MutableGrammar(mapOf(Pair(ruleKey, rule), Pair(rootRuleKey, rootRule)), rootRuleKey)
-        Assertions.assertThat(grammar.rule(ruleKey)).isSameAs(rule)
-        Assertions.assertThat(grammar.getRootRule()).isSameAs(rootRule)
+        assertThat(grammar.rule(ruleKey)).isSameAs(rule)
+        assertThat(grammar.getRootRule()).isSameAs(rootRule)
     }
 }

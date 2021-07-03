@@ -20,7 +20,7 @@
 package org.sonar.sslr.examples.grammars
 
 import org.junit.Test
-import org.sonar.sslr.tests.Assertions
+import org.sonar.sslr.tests.Assertions.assertThat
 import java.util.regex.Pattern
 import java.util.regex.PatternSyntaxException
 
@@ -28,7 +28,7 @@ class RegularExpressionGrammarTest {
     private val g = RegularExpressionGrammar.create()
     @Test
     fun character_class() {
-        Assertions.assertThat(g.rule(RegularExpressionGrammar.CHARACTER_CLASS)) /* simple class */
+        assertThat(g.rule(RegularExpressionGrammar.CHARACTER_CLASS)) /* simple class */
             .matches(correct("[abc]"))
             .matches(correct("[&]"))
             .matches(correct("[\\^]"))
@@ -54,7 +54,7 @@ class RegularExpressionGrammarTest {
 
     @Test
     fun atom() {
-        Assertions.assertThat(g.rule(RegularExpressionGrammar.ATOM)) /* character */
+        assertThat(g.rule(RegularExpressionGrammar.ATOM)) /* character */
             .matches(correct("a"))
             .matches(correct("]")) /* character class */
             .matches(correct("[a-z]")) /* any character */
@@ -72,7 +72,7 @@ class RegularExpressionGrammarTest {
 
     @Test
     fun term() {
-        Assertions.assertThat(g.rule(RegularExpressionGrammar.TERM)) /* atom */
+        assertThat(g.rule(RegularExpressionGrammar.TERM)) /* atom */
             .matches(correct("a")) /* atom with quantifier */
             .matches(correct("a++")) /* capturing group */
             .matches(correct("()")) /* non-capturing group */
@@ -83,7 +83,7 @@ class RegularExpressionGrammarTest {
 
     @Test
     fun alternation() {
-        Assertions.assertThat(g.rule(RegularExpressionGrammar.ALTERNATION))
+        assertThat(g.rule(RegularExpressionGrammar.ALTERNATION))
             .matches("")
             .matches(correct("a|b"))
             .matches(correct("a|b|c"))
@@ -92,7 +92,7 @@ class RegularExpressionGrammarTest {
 
     @Test
     fun quantifier() {
-        Assertions.assertThat(g.rule(RegularExpressionGrammar.QUANTIFIER)) /* greedy */
+        assertThat(g.rule(RegularExpressionGrammar.QUANTIFIER)) /* greedy */
             .matches("*")
             .matches("+")
             .matches("?")

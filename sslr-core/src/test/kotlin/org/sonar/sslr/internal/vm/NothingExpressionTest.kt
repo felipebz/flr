@@ -19,24 +19,25 @@
  */
 package org.sonar.sslr.internal.vm
 
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Test
-import org.mockito.Mockito
-import org.sonar.sslr.internal.vm.Machine
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
 
 class NothingExpressionTest {
     private val expression = NothingExpression.INSTANCE
-    private val machine = Mockito.mock(Machine::class.java)
+    private val machine = mock<Machine>()
     @Test
     fun should_compile() {
-        Assertions.assertThat(expression.compile(CompilationHandler())).containsOnly(expression)
-        Assertions.assertThat(expression.toString()).isEqualTo("Nothing")
+        assertThat(expression.compile(CompilationHandler())).containsOnly(expression)
+        assertThat(expression.toString()).isEqualTo("Nothing")
     }
 
     @Test
     fun should_backtrack() {
         expression.execute(machine)
-        Mockito.verify(machine).backtrack()
-        Mockito.verifyNoMoreInteractions(machine)
+        verify(machine).backtrack()
+        verifyNoMoreInteractions(machine)
     }
 }

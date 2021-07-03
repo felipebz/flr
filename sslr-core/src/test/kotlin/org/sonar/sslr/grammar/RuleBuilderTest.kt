@@ -22,8 +22,7 @@ package org.sonar.sslr.grammar
 import org.junit.Assert.assertThrows
 import org.junit.Test
 import org.mockito.Mockito
-import org.mockito.kotlin.any
-import org.mockito.kotlin.mock
+import org.mockito.kotlin.*
 import org.sonar.sslr.grammar.GrammarBuilder.RuleBuilder
 import org.sonar.sslr.grammar.GrammarException
 import org.sonar.sslr.internal.vm.CompilableGrammarRule
@@ -32,33 +31,33 @@ import org.sonar.sslr.internal.vm.ParsingExpression
 class RuleBuilderTest {
 
     private val b = mock<GrammarBuilder>(defaultAnswer = Mockito.CALLS_REAL_METHODS)
-    private val delegate = Mockito.mock(CompilableGrammarRule::class.java)
+    private val delegate = mock<CompilableGrammarRule>()
     private val ruleBuilder = RuleBuilder(b, delegate)
     @Test
     fun test_is() {
-        val e1 = Mockito.mock(ParsingExpression::class.java)
-        val e2 = Mockito.mock(ParsingExpression::class.java)
-        Mockito.`when`(b.convertToExpression(e1)).thenReturn(e2)
+        val e1 = mock<ParsingExpression>()
+        val e2 = mock<ParsingExpression>()
+        whenever(b.convertToExpression(e1)).thenReturn(e2)
         ruleBuilder.`is`(e1)
-        Mockito.verify(delegate).expression = e2
+        verify(delegate).expression = e2
     }
 
     @Test
     fun test_is2() {
-        val e1 = Mockito.mock(ParsingExpression::class.java)
-        val e2 = Mockito.mock(ParsingExpression::class.java)
-        val e3 = Mockito.mock(ParsingExpression::class.java)
-        Mockito.`when`(b.convertToExpression(any())).thenReturn(e3)
+        val e1 = mock<ParsingExpression>()
+        val e2 = mock<ParsingExpression>()
+        val e3 = mock<ParsingExpression>()
+        whenever(b.convertToExpression(any())).thenReturn(e3)
         ruleBuilder.`is`(e1, e2)
-        Mockito.verify(delegate).expression = e3
+        verify(delegate).expression = e3
     }
 
     @Test
     fun should_fail_to_redefine() {
-        val e = Mockito.mock(ParsingExpression::class.java)
-        Mockito.`when`(delegate.expression).thenReturn(e)
-        val ruleKey = Mockito.mock(GrammarRuleKey::class.java)
-        Mockito.`when`(delegate.ruleKey).thenReturn(ruleKey)
+        val e = mock<ParsingExpression>()
+        whenever(delegate.expression).thenReturn(e)
+        val ruleKey = mock<GrammarRuleKey>()
+        whenever(delegate.ruleKey).thenReturn(ruleKey)
         assertThrows("The rule '$ruleKey' has already been defined somewhere in the grammar.", GrammarException::class.java) {
             ruleBuilder.`is`(e)
         }
@@ -66,40 +65,40 @@ class RuleBuilderTest {
 
     @Test
     fun test_override() {
-        val e1 = Mockito.mock(ParsingExpression::class.java)
-        val e2 = Mockito.mock(ParsingExpression::class.java)
-        val e3 = Mockito.mock(ParsingExpression::class.java)
-        Mockito.`when`(b.convertToExpression(e1)).thenReturn(e1)
-        Mockito.`when`(b.convertToExpression(e2)).thenReturn(e3)
+        val e1 = mock<ParsingExpression>()
+        val e2 = mock<ParsingExpression>()
+        val e3 = mock<ParsingExpression>()
+        whenever(b.convertToExpression(e1)).thenReturn(e1)
+        whenever(b.convertToExpression(e2)).thenReturn(e3)
         ruleBuilder.`is`(e1)
         ruleBuilder.override(e2)
-        val inOrder = Mockito.inOrder(delegate)
+        val inOrder = inOrder(delegate)
         inOrder.verify(delegate).expression = e1
         inOrder.verify(delegate).expression = e3
     }
 
     @Test
     fun test_override2() {
-        val e1 = Mockito.mock(ParsingExpression::class.java)
-        val e2 = Mockito.mock(ParsingExpression::class.java)
-        val e3 = Mockito.mock(ParsingExpression::class.java)
-        Mockito.`when`(b.convertToExpression(e1)).thenReturn(e1)
+        val e1 = mock<ParsingExpression>()
+        val e2 = mock<ParsingExpression>()
+        val e3 = mock<ParsingExpression>()
+        whenever(b.convertToExpression(e1)).thenReturn(e1)
         ruleBuilder.`is`(e1)
-        Mockito.verify(delegate).expression = e1
-        Mockito.`when`(b.convertToExpression(any())).thenReturn(e3)
+        verify(delegate).expression = e1
+        whenever(b.convertToExpression(any())).thenReturn(e3)
         ruleBuilder.override(e1, e2)
-        Mockito.verify(delegate).expression = e3
+        verify(delegate).expression = e3
     }
 
     @Test
     fun test_skip() {
         ruleBuilder.skip()
-        Mockito.verify(delegate).skip()
+        verify(delegate).skip()
     }
 
     @Test
     fun test_skipIfOneChild() {
         ruleBuilder.skipIfOneChild()
-        Mockito.verify(delegate).skipIfOneChild()
+        verify(delegate).skipIfOneChild()
     }
 }

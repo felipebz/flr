@@ -23,7 +23,7 @@ import com.sonar.sslr.api.AstNode
 import com.sonar.sslr.api.TokenType
 import com.sonar.sslr.test.lexer.LexerMatchers.hasToken
 import com.sonar.sslr.test.lexer.MockHelper.mockLexer
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Assert
 import org.junit.Test
 import org.sonar.sslr.channel.CodeReader
@@ -44,12 +44,12 @@ class PunctuatorChannelTest {
         Assert.assertThat(lexer.tokens, hasToken("==", MyPunctuatorAndOperator.EQUAL_OP))
         Assert.assertThat(channel, consume("*=,", lexer))
         Assert.assertThat(lexer.tokens, hasToken("*=", MyPunctuatorAndOperator.MUL_ASSIGN))
-        Assertions.assertThat(channel.consume(CodeReader("!"), lexer)).isFalse()
+        assertThat(channel.consume(CodeReader("!"), lexer)).isFalse()
     }
 
     @Test
     fun testNotConsumeWord() {
-        Assertions.assertThat(channel.consume(CodeReader("word"), lexer)).isFalse()
+        assertThat(channel.consume(CodeReader("word"), lexer)).isFalse()
     }
 
     private enum class MyPunctuatorAndOperator(override val value: String) : TokenType {

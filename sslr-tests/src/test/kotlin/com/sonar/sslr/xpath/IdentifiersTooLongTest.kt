@@ -22,7 +22,7 @@ package com.sonar.sslr.xpath
 import com.sonar.sslr.api.AstNode
 import com.sonar.sslr.test.minic.MiniCParser.parseFile
 import com.sonar.sslr.xpath.api.AstNodeXPathQuery.Companion.create
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 
@@ -38,19 +38,19 @@ class IdentifiersTooLongTest {
     fun valuesTest() {
         val xpath = create<AstNode>("//IDENTIFIER[string-length(@tokenValue) > 10]")
         val nodes = xpath.selectNodes(fileNode)
-        Assertions.assertThat(nodes.size).isEqualTo(3)
-        Assertions.assertThat(nodes[0].tokenValue).isEqualTo("aaaaaaaaa11")
-        Assertions.assertThat(nodes[0].tokenLine).isEqualTo(3)
-        Assertions.assertThat(nodes[1].tokenValue).isEqualTo("bbbbbbbbbbbbb15")
-        Assertions.assertThat(nodes[1].tokenLine).isEqualTo(10)
-        Assertions.assertThat(nodes[2].tokenValue).isEqualTo("ccccccccc11")
-        Assertions.assertThat(nodes[2].tokenLine).isEqualTo(12)
+        assertThat(nodes.size).isEqualTo(3)
+        assertThat(nodes[0].tokenValue).isEqualTo("aaaaaaaaa11")
+        assertThat(nodes[0].tokenLine).isEqualTo(3)
+        assertThat(nodes[1].tokenValue).isEqualTo("bbbbbbbbbbbbb15")
+        assertThat(nodes[1].tokenLine).isEqualTo(10)
+        assertThat(nodes[2].tokenValue).isEqualTo("ccccccccc11")
+        assertThat(nodes[2].tokenLine).isEqualTo(12)
     }
 
     @Test
     fun noResultValuesTest() {
         val xpath = create<AstNode>("//IDENTIFIER[string-length(@tokenValue) > 50]")
         val nodes = xpath.selectNodes(fileNode)
-        Assertions.assertThat(nodes.size).isEqualTo(0)
+        assertThat(nodes.size).isEqualTo(0)
     }
 }

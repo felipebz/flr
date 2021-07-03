@@ -20,9 +20,10 @@
 package org.sonar.sslr.internal.vm.lexerful
 
 import com.sonar.sslr.api.Token
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Test
-import org.mockito.Mockito
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 
 class LexerfulParseErrorFormatterTest {
     @Test
@@ -41,15 +42,15 @@ class LexerfulParseErrorFormatterTest {
             .append("    5: \n")
             .append("    6:    end\n")
             .toString()
-        Assertions.assertThat(LexerfulParseErrorFormatter().format(tokens, 1)).isEqualTo(expected)
+        assertThat(LexerfulParseErrorFormatter().format(tokens, 1)).isEqualTo(expected)
     }
 
     companion object {
         private fun token(line: Int, column: Int, value: String): Token {
-            val token = Mockito.mock(Token::class.java)
-            Mockito.`when`(token.line).thenReturn(line)
-            Mockito.`when`(token.column).thenReturn(column)
-            Mockito.`when`(token.originalValue).thenReturn(value)
+            val token = mock<Token>()
+            whenever(token.line).thenReturn(line)
+            whenever(token.column).thenReturn(column)
+            whenever(token.originalValue).thenReturn(value)
             return token
         }
     }

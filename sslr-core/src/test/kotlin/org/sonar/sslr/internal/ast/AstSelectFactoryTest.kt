@@ -20,9 +20,9 @@
 package org.sonar.sslr.internal.ast
 
 import com.sonar.sslr.api.AstNode
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Test
-import org.mockito.Mockito
+import org.mockito.kotlin.mock
 import org.sonar.sslr.internal.ast.select.AstSelectFactory.create
 import org.sonar.sslr.internal.ast.select.AstSelectFactory.empty
 import org.sonar.sslr.internal.ast.select.AstSelectFactory.select
@@ -33,30 +33,30 @@ import org.sonar.sslr.internal.ast.select.SingleAstSelect
 class AstSelectFactoryTest {
     @Test
     fun test_select() {
-        Assertions.assertThat(select(null) as Any).isInstanceOf(
+        assertThat(select(null) as Any).isInstanceOf(
             EmptyAstSelect::class.java
         )
-        Assertions.assertThat(select(Mockito.mock(AstNode::class.java)) as Any).isInstanceOf(
+        assertThat(select(mock()) as Any).isInstanceOf(
             SingleAstSelect::class.java
         )
     }
 
     @Test
     fun test_create() {
-        val node1 = Mockito.mock(AstNode::class.java)
-        val node2 = Mockito.mock(AstNode::class.java)
-        Assertions.assertThat(create(listOf()) as Any).isSameAs(empty())
-        Assertions.assertThat(create(listOf(node1)) as Any).isInstanceOf(
+        val node1 = mock<AstNode>()
+        val node2 = mock<AstNode>()
+        assertThat(create(listOf()) as Any).isSameAs(empty())
+        assertThat(create(listOf(node1)) as Any).isInstanceOf(
             SingleAstSelect::class.java
         )
-        Assertions.assertThat(create(listOf(node1, node2)) as Any).isInstanceOf(
+        assertThat(create(listOf(node1, node2)) as Any).isInstanceOf(
             ListAstSelect::class.java
         )
     }
 
     @Test
     fun test_empty() {
-        Assertions.assertThat(empty() as Any).isInstanceOf(EmptyAstSelect::class.java)
-        Assertions.assertThat(empty() as Any).isSameAs(empty())
+        assertThat(empty() as Any).isInstanceOf(EmptyAstSelect::class.java)
+        assertThat(empty() as Any).isSameAs(empty())
     }
 }

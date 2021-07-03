@@ -22,12 +22,11 @@ package com.sonar.sslr.api
 import com.sonar.sslr.api.Grammar.Companion.getAllRuleFields
 import com.sonar.sslr.api.Grammar.Companion.getRuleFields
 import com.sonar.sslr.impl.matcher.RuleDefinition
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Assert.assertThrows
 import org.junit.Test
-import org.mockito.Mockito
+import org.mockito.kotlin.mock
 import org.sonar.sslr.grammar.GrammarException
-import org.sonar.sslr.grammar.GrammarRuleKey
 import org.sonar.sslr.internal.grammar.MutableParsingRule
 import org.sonar.sslr.parser.LexerlessGrammar
 import java.lang.reflect.Field
@@ -39,7 +38,7 @@ class GrammarTest {
         val ruleFields: List<Field> = getRuleFields(
             MyGrammar::class.java
         )
-        Assertions.assertThat(ruleFields.size).isEqualTo(1)
+        assertThat(ruleFields.size).isEqualTo(1)
     }
 
     @Test
@@ -47,13 +46,13 @@ class GrammarTest {
         val ruleFields = getAllRuleFields(
             MyGrammar::class.java
         )
-        Assertions.assertThat(ruleFields.size).isEqualTo(5)
+        assertThat(ruleFields.size).isEqualTo(5)
     }
 
     @Test
     fun method_rule_should_throw_exception_by_default() {
         assertThrows(UnsupportedOperationException::class.java) {
-            MyGrammar().rule(Mockito.mock(GrammarRuleKey::class.java))
+            MyGrammar().rule(mock())
         }
     }
 
@@ -66,7 +65,7 @@ class GrammarTest {
         val grammar: Grammar = MyGrammar()
         for (ruleField in ruleFields) {
             ruleField.isAccessible = true
-            Assertions.assertThat(ruleField[grammar])
+            assertThat(ruleField[grammar])
                 .`as`("Current rule name = " + ruleField.name).isNotNull.isInstanceOf(
                 RuleDefinition::class.java
             )
@@ -82,7 +81,7 @@ class GrammarTest {
         val grammar: LexerlessGrammar = MyLexerlessGrammar()
         for (ruleField in ruleFields) {
             ruleField.isAccessible = true
-            Assertions.assertThat(ruleField[grammar])
+            assertThat(ruleField[grammar])
                 .`as`("Current rule name = " + ruleField.name).isNotNull.isInstanceOf(
                 MutableParsingRule::class.java
             )
@@ -125,12 +124,12 @@ class GrammarTest {
     }
 
     private class IllegalGrammar : Grammar() {
-        override fun getRootRule(): Rule? {
+        override fun getRootRule(): Rule {
             return rootRule
         }
 
         companion object {
-            private val rootRule = Mockito.mock(Rule::class.java)
+            private val rootRule = mock<Rule>()
         }
     }
 }

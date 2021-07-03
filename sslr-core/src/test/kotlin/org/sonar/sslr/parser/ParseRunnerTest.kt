@@ -20,7 +20,7 @@
 package org.sonar.sslr.parser
 
 import com.sonar.sslr.api.GenericTokenType
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Test
 import org.sonar.sslr.internal.grammar.MutableParsingRule
 import org.sonar.sslr.parser.GrammarOperators.endOfInput
@@ -34,10 +34,10 @@ class ParseRunnerTest {
         val rule = MutableParsingRule("rule").`is`("foo", "bar")
         val runner = ParseRunner(rule)
         val result = runner.parse("foo".toCharArray())
-        Assertions.assertThat(result.isMatched()).isFalse()
+        assertThat(result.isMatched()).isFalse()
         val parseError = checkNotNull(result.getParseError())
         println(ParseErrorFormatter().format(parseError))
-        Assertions.assertThat(parseError.getErrorIndex()).isEqualTo(3)
+        assertThat(parseError.getErrorIndex()).isEqualTo(3)
     }
 
     @Test
@@ -46,10 +46,10 @@ class ParseRunnerTest {
         val rule = MutableParsingRule("rule").`is`("foo", endOfInput)
         val runner = ParseRunner(rule)
         val result = runner.parse("foo bar".toCharArray())
-        Assertions.assertThat(result.isMatched()).isFalse()
+        assertThat(result.isMatched()).isFalse()
         val parseError = checkNotNull(result.getParseError())
         println(ParseErrorFormatter().format(parseError))
-        Assertions.assertThat(parseError.getErrorIndex()).isEqualTo(3)
+        assertThat(parseError.getErrorIndex()).isEqualTo(3)
     }
 
     @Test
@@ -58,10 +58,10 @@ class ParseRunnerTest {
         val rule = MutableParsingRule("rule").`is`(nextNot(subRule), "bar")
         val runner = ParseRunner(rule)
         val result = runner.parse("baz".toCharArray())
-        Assertions.assertThat(result.isMatched()).isFalse()
+        assertThat(result.isMatched()).isFalse()
         val parseError = checkNotNull(result.getParseError())
         println(ParseErrorFormatter().format(parseError))
-        Assertions.assertThat(parseError.getErrorIndex()).isEqualTo(0)
+        assertThat(parseError.getErrorIndex()).isEqualTo(0)
     }
 
     @Test
@@ -69,10 +69,10 @@ class ParseRunnerTest {
         val rule = MutableParsingRule("rule").`is`(nextNot("foo"))
         val runner = ParseRunner(rule)
         val result = runner.parse("foo".toCharArray())
-        Assertions.assertThat(result.isMatched()).isFalse()
+        assertThat(result.isMatched()).isFalse()
         val parseError = checkNotNull(result.getParseError())
         println(ParseErrorFormatter().format(parseError))
-        Assertions.assertThat(parseError.getErrorIndex()).isEqualTo(0)
+        assertThat(parseError.getErrorIndex()).isEqualTo(0)
     }
 
     @Test
@@ -81,10 +81,10 @@ class ParseRunnerTest {
         val rule = MutableParsingRule("rule").`is`(GrammarOperators.next(subRule), "bar")
         val runner = ParseRunner(rule)
         val result = runner.parse("baz".toCharArray())
-        Assertions.assertThat(result.isMatched()).isFalse()
+        assertThat(result.isMatched()).isFalse()
         val parseError = checkNotNull(result.getParseError())
         println(ParseErrorFormatter().format(parseError))
-        Assertions.assertThat(parseError.getErrorIndex()).isEqualTo(0)
+        assertThat(parseError.getErrorIndex()).isEqualTo(0)
     }
 
     @Test
@@ -93,10 +93,10 @@ class ParseRunnerTest {
         val rule = MutableParsingRule("rule").`is`(token(GenericTokenType.IDENTIFIER, subRule), "bar")
         val runner = ParseRunner(rule)
         val result = runner.parse("baz".toCharArray())
-        Assertions.assertThat(result.isMatched()).isFalse()
+        assertThat(result.isMatched()).isFalse()
         val parseError = checkNotNull(result.getParseError())
         println(ParseErrorFormatter().format(parseError))
-        Assertions.assertThat(parseError.getErrorIndex()).isEqualTo(0)
+        assertThat(parseError.getErrorIndex()).isEqualTo(0)
     }
 
     @Test
@@ -105,10 +105,10 @@ class ParseRunnerTest {
         val rule = MutableParsingRule("rule").`is`(skippedTrivia(subRule), "bar")
         val runner = ParseRunner(rule)
         val result = runner.parse("baz".toCharArray())
-        Assertions.assertThat(result.isMatched()).isFalse()
+        assertThat(result.isMatched()).isFalse()
         val parseError = checkNotNull(result.getParseError())
         println(ParseErrorFormatter().format(parseError))
-        Assertions.assertThat(parseError.getErrorIndex()).isEqualTo(0)
+        assertThat(parseError.getErrorIndex()).isEqualTo(0)
     }
 
     @Test
@@ -118,9 +118,9 @@ class ParseRunnerTest {
         val rule = MutableParsingRule("rule").`is`(GrammarOperators.firstOf(subRule1, subRule2))
         val runner = ParseRunner(rule)
         val result = runner.parse("baz".toCharArray())
-        Assertions.assertThat(result.isMatched()).isFalse()
+        assertThat(result.isMatched()).isFalse()
         val parseError = checkNotNull(result.getParseError())
         println(ParseErrorFormatter().format(parseError))
-        Assertions.assertThat(parseError.getErrorIndex()).isEqualTo(0)
+        assertThat(parseError.getErrorIndex()).isEqualTo(0)
     }
 }

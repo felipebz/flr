@@ -21,50 +21,40 @@ package org.sonar.sslr.toolkit
 
 import com.sonar.sslr.api.Grammar
 import com.sonar.sslr.impl.Parser
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Test
-import org.mockito.Mockito.mock
+import org.mockito.kotlin.mock
 
 class AbstractConfigurationModelTest {
     @Test
     fun parser_should_return_parser_instance() {
         val model = MyConfigurationModel()
-        val p = mock(
-            Parser::class.java
-        )
+        val p = mock<Parser<Grammar>>()
         model.setParser(p)
-        Assertions.assertThat(model.parser).isEqualTo(p)
+        assertThat(model.parser).isEqualTo(p)
     }
 
     @Test
     fun parser_should_return_same_parser_instance_when_flag_not_set() {
         val model = MyConfigurationModel()
-        val p = mock(
-            Parser::class.java
-        )
+        val p = mock<Parser<Grammar>>()
         model.setParser(p)
-        Assertions.assertThat(model.parser).isEqualTo(p)
-        val p2 = mock(
-            Parser::class.java
-        )
+        assertThat(model.parser).isEqualTo(p)
+        val p2 = mock<Parser<Grammar>>()
         model.setParser(p2)
-        Assertions.assertThat(model.parser).isEqualTo(p)
+        assertThat(model.parser).isEqualTo(p)
     }
 
     @Test
     fun parser_should_return_different_parser_instance_when_flag_set() {
         val model = MyConfigurationModel()
-        val p = mock(
-            Parser::class.java
-        )
+        val p = mock<Parser<Grammar>>()
         model.setParser(p)
-        Assertions.assertThat(model.parser).isEqualTo(p)
-        val p2 = mock(
-            Parser::class.java
-        )
+        assertThat(model.parser).isEqualTo(p)
+        val p2 = mock<Parser<Grammar>>()
         model.setParser(p2)
         model.setUpdatedFlag()
-        Assertions.assertThat(model.parser).isEqualTo(p2)
+        assertThat(model.parser).isEqualTo(p2)
     }
 
     private class MyConfigurationModel : AbstractConfigurationModel() {

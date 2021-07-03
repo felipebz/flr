@@ -21,7 +21,7 @@ package org.sonar.sslr.examples.grammars.typed
 
 import com.sonar.sslr.api.RecognitionException
 import com.sonar.sslr.api.typed.ActionParser
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Test
 import org.sonar.sslr.examples.grammars.typed.api.*
 import java.nio.charset.StandardCharsets
@@ -78,63 +78,63 @@ class JsonGrammarTest {
     @Throws(Exception::class)
     fun `object`() {
         var tree = (parser.parse("{}") as JsonTree).arrayOrObject() as ObjectTree
-        Assertions.assertThat(tree.openCurlyBraceToken().value()).isEqualTo("{")
-        Assertions.assertThat(tree.closeCurlyBraceToken().value()).isEqualTo("}")
-        Assertions.assertThat(tree.pairs()).isNull()
+        assertThat(tree.openCurlyBraceToken().value()).isEqualTo("{")
+        assertThat(tree.closeCurlyBraceToken().value()).isEqualTo("}")
+        assertThat(tree.pairs()).isNull()
         tree = (parser.parse("{ \"string\" : true }") as JsonTree).arrayOrObject() as ObjectTree
 
         val pairs = tree.pairs()
-        Assertions.assertThat(pairs).isNotNull
+        assertThat(pairs).isNotNull
         checkNotNull(pairs)
-        Assertions.assertThat(pairs.next()).isNull()
+        assertThat(pairs.next()).isNull()
         val pair = checkNotNull(pairs.element())
-        Assertions.assertThat(pair.name().token().value()).isEqualTo("\"string\"")
-        Assertions.assertThat((pair.value() as BuiltInValueTree).token().value()).isEqualTo("true")
-        Assertions.assertThat(pair.colonToken().value()).isEqualTo(":")
+        assertThat(pair.name().token().value()).isEqualTo("\"string\"")
+        assertThat((pair.value() as BuiltInValueTree).token().value()).isEqualTo("true")
+        assertThat(pair.colonToken().value()).isEqualTo(":")
         parser.parse("{ \"string\" : true, \"string\" : false }")
     }
 
     @Test
     fun array() {
         var tree = (parser.parse("[]") as JsonTree).arrayOrObject() as ArrayTree
-        Assertions.assertThat(checkNotNull(tree.openBracketToken()).value()).isEqualTo("[")
-        Assertions.assertThat(checkNotNull(tree.closeBracketToken()).value()).isEqualTo("]")
-        Assertions.assertThat(tree.values()).isNull()
+        assertThat(checkNotNull(tree.openBracketToken()).value()).isEqualTo("[")
+        assertThat(checkNotNull(tree.closeBracketToken()).value()).isEqualTo("]")
+        assertThat(tree.values()).isNull()
         tree = (parser.parse("[ true, false ]") as JsonTree).arrayOrObject() as ArrayTree
 
 
         val values = tree.values()
-        Assertions.assertThat(values).isNotNull
+        assertThat(values).isNotNull
         checkNotNull(values)
-        Assertions.assertThat(values).isNotNull
-        Assertions.assertThat(values.element()).isInstanceOf(BuiltInValueTree::class.java)
-        Assertions.assertThat(checkNotNull(values.commaToken()).value()).isEqualTo(",")
-        Assertions.assertThat(checkNotNull(values.next()).element()).isInstanceOf(BuiltInValueTree::class.java)
+        assertThat(values).isNotNull
+        assertThat(values.element()).isInstanceOf(BuiltInValueTree::class.java)
+        assertThat(checkNotNull(values.commaToken()).value()).isEqualTo(",")
+        assertThat(checkNotNull(values.next()).element()).isInstanceOf(BuiltInValueTree::class.java)
     }
 
     @Test
     fun json() {
         var tree = parser.parse("{}")
-        Assertions.assertThat(tree).isInstanceOf(JsonTree::class.java)
-        Assertions.assertThat((tree as JsonTree).arrayOrObject()).isInstanceOf(ObjectTree::class.java)
+        assertThat(tree).isInstanceOf(JsonTree::class.java)
+        assertThat((tree as JsonTree).arrayOrObject()).isInstanceOf(ObjectTree::class.java)
         tree = parser.parse("[]")
-        Assertions.assertThat(tree).isInstanceOf(JsonTree::class.java)
-        Assertions.assertThat((tree as JsonTree).arrayOrObject()).isInstanceOf(ArrayTree::class.java)
+        assertThat(tree).isInstanceOf(JsonTree::class.java)
+        assertThat((tree as JsonTree).arrayOrObject()).isInstanceOf(ArrayTree::class.java)
     }
 
     private fun assertValue(code: String, c: Class<*>) {
         val tree = parser.parse("[ $code ]") as JsonTree
         val values = (tree.arrayOrObject() as ArrayTree).values()
         val value = checkNotNull(values).element()
-        Assertions.assertThat(value).isInstanceOf(c)
+        assertThat(value).isInstanceOf(c)
     }
 
     private fun assertLiteral(code: String) {
         val tree = parser.parse("[ $code ]") as JsonTree
         val values = (tree.arrayOrObject() as ArrayTree).values()
         val value = checkNotNull(values).element()
-        Assertions.assertThat(value).isInstanceOf(LiteralTree::class.java)
-        Assertions.assertThat((value as LiteralTree).token().value()).isEqualTo(code)
+        assertThat(value).isInstanceOf(LiteralTree::class.java)
+        assertThat((value as LiteralTree).token().value()).isEqualTo(code)
     }
 
     companion object {

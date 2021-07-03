@@ -19,7 +19,7 @@
  */
 package org.sonar.sslr.internal.vm
 
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Test
 import org.sonar.sslr.internal.vm.Instruction.Companion.choice
 import org.sonar.sslr.internal.vm.Instruction.Companion.commitVerify
@@ -29,7 +29,7 @@ class ZeroOrMoreExpressionTest {
     fun should_compile() {
         val expression = ZeroOrMoreExpression(SubExpression(1, 2))
         val instructions = expression.compile(CompilationHandler())
-        Assertions.assertThat(instructions).isEqualTo(
+        assertThat(instructions).isEqualTo(
             arrayOf(
                 choice(4),
                 SubExpression.mockInstruction(1),

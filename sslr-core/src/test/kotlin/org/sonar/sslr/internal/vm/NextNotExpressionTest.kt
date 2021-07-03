@@ -19,7 +19,7 @@
  */
 package org.sonar.sslr.internal.vm
 
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Test
 import org.sonar.sslr.internal.vm.Instruction.Companion.failTwice
 import org.sonar.sslr.internal.vm.Instruction.Companion.predicateChoice
@@ -28,9 +28,9 @@ class NextNotExpressionTest {
     @Test
     fun should_compile() {
         val expression = NextNotExpression(SubExpression(1, 2))
-        Assertions.assertThat(expression.toString()).isEqualTo("NextNot[SubExpression]")
+        assertThat(expression.toString()).isEqualTo("NextNot[SubExpression]")
         val instructions = expression.compile(CompilationHandler())
-        Assertions.assertThat(instructions).isEqualTo(
+        assertThat(instructions).isEqualTo(
             arrayOf(
                 predicateChoice(4),
                 SubExpression.mockInstruction(1),

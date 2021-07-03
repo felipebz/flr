@@ -20,91 +20,94 @@
 package org.sonar.sslr.internal.vm.lexerful
 
 import com.sonar.sslr.api.Token
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Test
-import org.mockito.Mockito
+import org.mockito.kotlin.inOrder
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.whenever
 import org.sonar.sslr.internal.vm.CompilationHandler
 import org.sonar.sslr.internal.vm.Machine
 
 class AdjacentExpressionTest {
     private val expression = AdjacentExpression.INSTANCE
-    private val machine = Mockito.mock(Machine::class.java)
+    private val machine = mock<Machine>()
     @Test
     fun should_compile() {
-        Assertions.assertThat(expression.compile(CompilationHandler())).containsOnly(expression)
-        Assertions.assertThat(expression.toString()).isEqualTo("Adjacent")
+        assertThat(expression.compile(CompilationHandler())).containsOnly(expression)
+        assertThat(expression.toString()).isEqualTo("Adjacent")
     }
 
     @Test
     fun should_match() {
-        val previousToken = Mockito.mock(Token::class.java)
-        Mockito.`when`(previousToken.value).thenReturn("foo")
-        Mockito.`when`(previousToken.line).thenReturn(42)
-        Mockito.`when`(previousToken.column).thenReturn(13)
-        val nextToken = Mockito.mock(Token::class.java)
-        Mockito.`when`(nextToken.line).thenReturn(42)
-        Mockito.`when`(nextToken.column).thenReturn(13 + 3)
-        Mockito.`when`(machine.getIndex()).thenReturn(1)
-        Mockito.`when`(machine.tokenAt(-1)).thenReturn(previousToken)
-        Mockito.`when`(machine.tokenAt(0)).thenReturn(nextToken)
+        val previousToken = mock<Token>()
+        whenever(previousToken.value).thenReturn("foo")
+        whenever(previousToken.line).thenReturn(42)
+        whenever(previousToken.column).thenReturn(13)
+        val nextToken = mock<Token>()
+        whenever(nextToken.line).thenReturn(42)
+        whenever(nextToken.column).thenReturn(13 + 3)
+        whenever(machine.getIndex()).thenReturn(1)
+        whenever(machine.tokenAt(-1)).thenReturn(previousToken)
+        whenever(machine.tokenAt(0)).thenReturn(nextToken)
         expression.execute(machine)
-        val inOrder = Mockito.inOrder(machine)
+        val inOrder = inOrder(machine)
         inOrder.verify(machine).getIndex()
         inOrder.verify(machine).tokenAt(-1)
         inOrder.verify(machine).tokenAt(0)
         inOrder.verify(machine).jump(1)
-        Mockito.verifyNoMoreInteractions(machine)
+        verifyNoMoreInteractions(machine)
     }
 
     @Test
     fun should_backtrack() {
-        val previousToken = Mockito.mock(Token::class.java)
-        Mockito.`when`(previousToken.value).thenReturn("foo")
-        Mockito.`when`(previousToken.line).thenReturn(42)
-        Mockito.`when`(previousToken.column).thenReturn(13)
-        val nextToken = Mockito.mock(Token::class.java)
-        Mockito.`when`(nextToken.line).thenReturn(42 + 1)
-        Mockito.`when`(nextToken.column).thenReturn(13 + 3)
-        Mockito.`when`(machine.getIndex()).thenReturn(1)
-        Mockito.`when`(machine.tokenAt(-1)).thenReturn(previousToken)
-        Mockito.`when`(machine.tokenAt(0)).thenReturn(nextToken)
+        val previousToken = mock<Token>()
+        whenever(previousToken.value).thenReturn("foo")
+        whenever(previousToken.line).thenReturn(42)
+        whenever(previousToken.column).thenReturn(13)
+        val nextToken = mock<Token>()
+        whenever(nextToken.line).thenReturn(42 + 1)
+        whenever(nextToken.column).thenReturn(13 + 3)
+        whenever(machine.getIndex()).thenReturn(1)
+        whenever(machine.tokenAt(-1)).thenReturn(previousToken)
+        whenever(machine.tokenAt(0)).thenReturn(nextToken)
         expression.execute(machine)
-        val inOrder = Mockito.inOrder(machine)
+        val inOrder = inOrder(machine)
         inOrder.verify(machine).getIndex()
         inOrder.verify(machine).tokenAt(-1)
         inOrder.verify(machine).tokenAt(0)
         inOrder.verify(machine).backtrack()
-        Mockito.verifyNoMoreInteractions(machine)
+        verifyNoMoreInteractions(machine)
     }
 
     @Test
     fun should_backtrack2() {
-        val previousToken = Mockito.mock(Token::class.java)
-        Mockito.`when`(previousToken.value).thenReturn("foo")
-        Mockito.`when`(previousToken.line).thenReturn(42)
-        Mockito.`when`(previousToken.column).thenReturn(13)
-        val nextToken = Mockito.mock(Token::class.java)
-        Mockito.`when`(nextToken.line).thenReturn(13)
-        Mockito.`when`(nextToken.column).thenReturn(42)
-        Mockito.`when`(machine.getIndex()).thenReturn(1)
-        Mockito.`when`(machine.tokenAt(-1)).thenReturn(previousToken)
-        Mockito.`when`(machine.tokenAt(0)).thenReturn(nextToken)
+        val previousToken = mock<Token>()
+        whenever(previousToken.value).thenReturn("foo")
+        whenever(previousToken.line).thenReturn(42)
+        whenever(previousToken.column).thenReturn(13)
+        val nextToken = mock<Token>()
+        whenever(nextToken.line).thenReturn(13)
+        whenever(nextToken.column).thenReturn(42)
+        whenever(machine.getIndex()).thenReturn(1)
+        whenever(machine.tokenAt(-1)).thenReturn(previousToken)
+        whenever(machine.tokenAt(0)).thenReturn(nextToken)
         expression.execute(machine)
-        val inOrder = Mockito.inOrder(machine)
+        val inOrder = inOrder(machine)
         inOrder.verify(machine).getIndex()
         inOrder.verify(machine).tokenAt(-1)
         inOrder.verify(machine).tokenAt(0)
         inOrder.verify(machine).backtrack()
-        Mockito.verifyNoMoreInteractions(machine)
+        verifyNoMoreInteractions(machine)
     }
 
     @Test
     fun should_backtrack3() {
-        Mockito.`when`(machine.getIndex()).thenReturn(0)
+        whenever(machine.getIndex()).thenReturn(0)
         expression.execute(machine)
-        val inOrder = Mockito.inOrder(machine)
+        val inOrder = inOrder(machine)
         inOrder.verify(machine).getIndex()
         inOrder.verify(machine).backtrack()
-        Mockito.verifyNoMoreInteractions(machine)
+        verifyNoMoreInteractions(machine)
     }
 }

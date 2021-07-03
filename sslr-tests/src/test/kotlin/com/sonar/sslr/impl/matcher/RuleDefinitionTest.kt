@@ -22,10 +22,10 @@ package com.sonar.sslr.impl.matcher
 import com.sonar.sslr.api.AstNode
 import com.sonar.sslr.api.GenericTokenType
 import com.sonar.sslr.test.lexer.MockHelper.mockToken
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Assert
 import org.junit.Test
-import org.mockito.Mockito
+import org.mockito.kotlin.mock
 
 class RuleDefinitionTest {
     @Test
@@ -53,9 +53,9 @@ class RuleDefinitionTest {
     @Test
     fun testSkipFromAst() {
         val ruleBuilder = RuleDefinition("MyRule")
-        Assertions.assertThat(ruleBuilder.hasToBeSkippedFromAst(Mockito.mock(AstNode::class.java))).isFalse()
+        assertThat(ruleBuilder.hasToBeSkippedFromAst(mock())).isFalse()
         ruleBuilder.skip()
-        Assertions.assertThat(ruleBuilder.hasToBeSkippedFromAst(Mockito.mock(AstNode::class.java))).isTrue()
+        assertThat(ruleBuilder.hasToBeSkippedFromAst(mock())).isTrue()
     }
 
     @Test
@@ -68,8 +68,8 @@ class RuleDefinitionTest {
         parent.addChild(child1)
         parent.addChild(child2)
         child1.addChild(child2)
-        Assertions.assertThat(ruleBuilder.hasToBeSkippedFromAst(parent)).isFalse()
-        Assertions.assertThat(ruleBuilder.hasToBeSkippedFromAst(child2)).isFalse()
-        Assertions.assertThat(ruleBuilder.hasToBeSkippedFromAst(child1)).isTrue()
+        assertThat(ruleBuilder.hasToBeSkippedFromAst(parent)).isFalse()
+        assertThat(ruleBuilder.hasToBeSkippedFromAst(child2)).isFalse()
+        assertThat(ruleBuilder.hasToBeSkippedFromAst(child1)).isTrue()
     }
 }

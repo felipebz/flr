@@ -22,19 +22,19 @@ package org.sonar.sslr.internal.vm.lexerful
 import com.sonar.sslr.api.GenericTokenType
 import com.sonar.sslr.api.Token
 import com.sonar.sslr.api.TokenType
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Test
-import org.mockito.Mockito
+import org.mockito.kotlin.*
 import org.sonar.sslr.internal.vm.CompilationHandler
 import org.sonar.sslr.internal.vm.Machine
 
 class TillNewLineExpressionTest {
     private val expression = TillNewLineExpression.INSTANCE
-    private val machine = Mockito.mock(Machine::class.java)
+    private val machine = mock<Machine>()
     @Test
     fun should_compile() {
-        Assertions.assertThat(expression.compile(CompilationHandler())).containsOnly(expression)
-        Assertions.assertThat(expression.toString()).isEqualTo("TillNewLine")
+        assertThat(expression.compile(CompilationHandler())).containsOnly(expression)
+        assertThat(expression.toString()).isEqualTo("TillNewLine")
     }
 
     @Test
@@ -42,19 +42,19 @@ class TillNewLineExpressionTest {
         val token1 = token(GenericTokenType.IDENTIFIER, 1)
         val token2 = token(GenericTokenType.IDENTIFIER, 1)
         val token3 = token(GenericTokenType.IDENTIFIER, 2)
-        Mockito.`when`(machine.tokenAt(0)).thenReturn(token1)
-        Mockito.`when`(machine.tokenAt(1)).thenReturn(token2)
-        Mockito.`when`(machine.tokenAt(2)).thenReturn(token3)
+        whenever(machine.tokenAt(0)).thenReturn(token1)
+        whenever(machine.tokenAt(1)).thenReturn(token2)
+        whenever(machine.tokenAt(2)).thenReturn(token3)
         expression.execute(machine)
-        val inOrder = Mockito.inOrder(machine)
+        val inOrder = inOrder(machine)
         inOrder.verify(machine).getIndex()
         inOrder.verify(machine).tokenAt(0)
         inOrder.verify(machine).tokenAt(1)
         inOrder.verify(machine).tokenAt(2)
         // Number of created nodes must be equal to the number of consumed tokens (2):
-        inOrder.verify(machine, Mockito.times(2)).createLeafNode(expression, 1)
+        inOrder.verify(machine, times(2)).createLeafNode(expression, 1)
         inOrder.verify(machine).jump(1)
-        Mockito.verifyNoMoreInteractions(machine)
+        verifyNoMoreInteractions(machine)
     }
 
     @Test
@@ -63,29 +63,29 @@ class TillNewLineExpressionTest {
         val token1 = token(GenericTokenType.IDENTIFIER, 1)
         val token2 = token(GenericTokenType.IDENTIFIER, 1)
         val token3 = token(GenericTokenType.EOF, 1)
-        Mockito.`when`(machine.getIndex()).thenReturn(1)
-        Mockito.`when`(machine.tokenAt(-1)).thenReturn(token0)
-        Mockito.`when`(machine.tokenAt(0)).thenReturn(token1)
-        Mockito.`when`(machine.tokenAt(1)).thenReturn(token2)
-        Mockito.`when`(machine.tokenAt(2)).thenReturn(token3)
+        whenever(machine.getIndex()).thenReturn(1)
+        whenever(machine.tokenAt(-1)).thenReturn(token0)
+        whenever(machine.tokenAt(0)).thenReturn(token1)
+        whenever(machine.tokenAt(1)).thenReturn(token2)
+        whenever(machine.tokenAt(2)).thenReturn(token3)
         expression.execute(machine)
-        val inOrder = Mockito.inOrder(machine)
+        val inOrder = inOrder(machine)
         inOrder.verify(machine).getIndex()
         inOrder.verify(machine).tokenAt(-1)
         inOrder.verify(machine).tokenAt(0)
         inOrder.verify(machine).tokenAt(1)
         inOrder.verify(machine).tokenAt(2)
         // Number of created nodes must be equal to the number of consumed tokens (2):
-        inOrder.verify(machine, Mockito.times(2)).createLeafNode(expression, 1)
+        inOrder.verify(machine, times(2)).createLeafNode(expression, 1)
         inOrder.verify(machine).jump(1)
-        Mockito.verifyNoMoreInteractions(machine)
+        verifyNoMoreInteractions(machine)
     }
 
     companion object {
         private fun token(tokenType: TokenType, line: Int): Token {
-            val token = Mockito.mock(Token::class.java)
-            Mockito.`when`(token.line).thenReturn(line)
-            Mockito.`when`(token.type).thenReturn(tokenType)
+            val token = mock<Token>()
+            whenever(token.line).thenReturn(line)
+            whenever(token.type).thenReturn(tokenType)
             return token
         }
     }

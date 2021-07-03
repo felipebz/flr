@@ -20,7 +20,7 @@
 package com.sonar.sslr.impl.typed
 
 import com.sonar.sslr.impl.typed.Interceptor.create
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -130,7 +130,7 @@ class InterceptorTest {
         val thrown = Assert.assertThrows(
             IllegalAccessError::class.java
         ) { create(NonPublicClass::class.java, arrayOf(), arrayOf(), methodInterceptor) }
-        Assertions.assertThat(thrown.message) // Note that details of the message are different between JDK versions
+        assertThat(thrown.message) // Note that details of the message are different between JDK versions
             .startsWith("class GeneratedBySSLR cannot access its superclass com.sonar.sslr.impl.typed.InterceptorTest\$NonPublicClass")
     }
 
@@ -144,7 +144,7 @@ class InterceptorTest {
         val thrown = Assert.assertThrows(
             VerifyError::class.java
         ) { create(PublicFinalMethod::class.java, arrayOf(), arrayOf(), methodInterceptor) }
-        Assertions.assertThat(thrown.message) // Note that details of the message are different between JDK versions
+        assertThat(thrown.message) // Note that details of the message are different between JDK versions
             .startsWith("class GeneratedBySSLR overrides final method")
     }
 

@@ -19,6 +19,7 @@
  */
 package org.sonar.sslr.tests
 
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Test
 import java.lang.reflect.Constructor
 
@@ -27,7 +28,7 @@ class AssertionsTest {
     @Throws(Exception::class)
     fun private_constructor() {
         val constructor: Constructor<*> = Assertions::class.java.getDeclaredConstructor()
-        org.fest.assertions.Assertions.assertThat(constructor.isAccessible).isFalse()
+        assertThat(constructor.isAccessible).isFalse()
         constructor.isAccessible = true
         constructor.newInstance()
     }

@@ -21,7 +21,7 @@ package com.sonar.sslr.test.minic.integration
 
 import com.sonar.sslr.test.minic.MiniCParser
 import org.apache.commons.io.FileUtils
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Test
 import java.io.File
 
@@ -30,7 +30,7 @@ class MiniCOwnExamplesTest {
     @Throws(Exception::class)
     fun test() {
         val files = FileUtils.listFiles(File("src/test/resources/MiniCIntegration"), null, true)
-        Assertions.assertThat(files).isNotEmpty
+        assertThat(files).isNotEmpty
         for (file in files) {
             try {
                 parser.parse(file)

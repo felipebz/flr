@@ -20,7 +20,7 @@
 package org.sonar.sslr.examples.grammars
 
 import org.junit.Test
-import org.sonar.sslr.tests.Assertions
+import org.sonar.sslr.tests.Assertions.assertThat
 
 class RecursiveGrammarTest {
     private val grammar = RecursiveGrammar.create()
@@ -33,6 +33,6 @@ class RecursiveGrammarTest {
         for (i in 0..99999) {
             sb.append(')')
         }
-        Assertions.assertThat(grammar.rule(RecursiveGrammar.S)).matches(sb.toString())
+        assertThat(grammar.rule(RecursiveGrammar.S)).matches(sb.toString())
     }
 }

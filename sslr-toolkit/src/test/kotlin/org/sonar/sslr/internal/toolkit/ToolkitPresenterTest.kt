@@ -22,287 +22,251 @@ package org.sonar.sslr.internal.toolkit
 import com.sonar.sslr.api.AstNode
 import com.sonar.sslr.api.GenericTokenType
 import com.sonar.sslr.api.Token
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Assert.assertThrows
 import org.junit.Test
 import org.mockito.ArgumentMatchers
-import org.mockito.Mockito
-import org.mockito.kotlin.any
+import org.mockito.ArgumentMatchers.anyString
+import org.mockito.kotlin.*
 import org.sonar.sslr.toolkit.ConfigurationModel
 import org.sonar.sslr.toolkit.ConfigurationProperty
 import java.awt.Point
 import java.io.File
 import java.io.PrintWriter
 import java.net.URI
-import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
 
 class ToolkitPresenterTest {
     @Test
     fun checkInitializedBad() {
         assertThrows("the view must be set before the presenter can be ran", IllegalStateException::class.java) {
-            val presenter = ToolkitPresenter(
-                Mockito.mock(ConfigurationModel::class.java), Mockito.mock(
-                    SourceCodeModel::class.java
-                )
-            )
+            val presenter = ToolkitPresenter(mock(), mock())
             presenter.checkInitialized()
         }
     }
 
     @Test
     fun checkInitializedGood() {
-        val presenter = ToolkitPresenter(
-            Mockito.mock(ConfigurationModel::class.java), Mockito.mock(
-                SourceCodeModel::class.java
-            )
-        )
-        presenter.setView(Mockito.mock(ToolkitView::class.java))
+        val presenter = ToolkitPresenter(mock(), mock())
+        presenter.setView(mock())
         presenter.checkInitialized()
     }
 
     @Test
     @Throws(InterruptedException::class)
     fun initUncaughtExceptionsHandler() {
-        val view = Mockito.mock(ToolkitView::class.java)
-        val presenter = ToolkitPresenter(
-            Mockito.mock(ConfigurationModel::class.java), Mockito.mock(
-                SourceCodeModel::class.java
-            )
-        )
+        val view = mock<ToolkitView>()
+        val presenter = ToolkitPresenter(mock(), mock())
+
         presenter.setView(view)
         presenter.initUncaughtExceptionsHandler()
         val uncaughtExceptionHandler = Thread.currentThread().uncaughtExceptionHandler
-        Assertions.assertThat(uncaughtExceptionHandler is ThreadGroup).isFalse()
-        val e = Mockito.mock(Throwable::class.java)
+        assertThat(uncaughtExceptionHandler is ThreadGroup).isFalse()
+        val e = mock<Throwable>()
         uncaughtExceptionHandler.uncaughtException(null, e)
-        Mockito.verify(e).printStackTrace(ArgumentMatchers.any(PrintWriter::class.java))
-        Mockito.verify(view).appendToConsole(ArgumentMatchers.anyString())
-        Mockito.verify(view).setFocusOnConsoleView()
+        verify(e).printStackTrace(ArgumentMatchers.any(PrintWriter::class.java))
+        verify(view).appendToConsole(anyString())
+        verify(view).setFocusOnConsoleView()
     }
 
     @Test
     fun initConfigurationTab() {
-        val view = Mockito.mock(ToolkitView::class.java)
-        var presenter = ToolkitPresenter(
-            Mockito.mock(ConfigurationModel::class.java), Mockito.mock(
-                SourceCodeModel::class.java
-            )
-        )
+        val view = mock<ToolkitView>()
+        var presenter = ToolkitPresenter(mock(), mock())
         presenter.setView(view)
         presenter.initConfigurationTab()
-        Mockito.verify(view, Mockito.never()).addConfigurationProperty(Mockito.anyString(), Mockito.anyString())
-        Mockito.verify(view, Mockito.never()).setConfigurationPropertyValue(Mockito.anyString(), Mockito.anyString())
-        val property1 = Mockito.mock(ConfigurationProperty::class.java)
-        Mockito.`when`(property1.name).thenReturn("property1")
-        Mockito.`when`(property1.description).thenReturn("description1")
-        Mockito.`when`(property1.value).thenReturn("default1")
-        val property2 = Mockito.mock(ConfigurationProperty::class.java)
-        Mockito.`when`(property2.name).thenReturn("property2")
-        Mockito.`when`(property2.description).thenReturn("description2")
-        Mockito.`when`(property2.value).thenReturn("default2")
-        val configurationModel = Mockito.mock(ConfigurationModel::class.java)
-        Mockito.`when`(configurationModel.properties).thenReturn(listOf(property1, property2))
-        presenter = ToolkitPresenter(configurationModel, Mockito.mock(SourceCodeModel::class.java))
+        verify(view, never()).addConfigurationProperty(anyString(), anyString())
+        verify(view, never()).setConfigurationPropertyValue(anyString(), anyString())
+        val property1 = mock<ConfigurationProperty>()
+        whenever(property1.name).thenReturn("property1")
+        whenever(property1.description).thenReturn("description1")
+        whenever(property1.value).thenReturn("default1")
+        val property2 = mock<ConfigurationProperty>()
+        whenever(property2.name).thenReturn("property2")
+        whenever(property2.description).thenReturn("description2")
+        whenever(property2.value).thenReturn("default2")
+        val configurationModel = mock<ConfigurationModel>()
+        whenever(configurationModel.properties).thenReturn(listOf(property1, property2))
+        presenter = ToolkitPresenter(configurationModel, mock())
         presenter.setView(view)
         presenter.initConfigurationTab()
-        Mockito.verify(view).addConfigurationProperty("property1", "description1")
-        Mockito.verify(view).setConfigurationPropertyValue("property1", "default1")
-        Mockito.verify(view).addConfigurationProperty("property2", "description2")
-        Mockito.verify(view).setConfigurationPropertyValue("property2", "default2")
+        verify(view).addConfigurationProperty("property1", "description1")
+        verify(view).setConfigurationPropertyValue("property1", "default1")
+        verify(view).addConfigurationProperty("property2", "description2")
+        verify(view).setConfigurationPropertyValue("property2", "default2")
     }
 
     @Test
     fun run() {
-        val view = Mockito.mock(ToolkitView::class.java)
-        val presenter = ToolkitPresenter(
-            Mockito.mock(ConfigurationModel::class.java), Mockito.mock(
-                SourceCodeModel::class.java
-            )
-        )
+        val view = mock<ToolkitView>()
+        val presenter = ToolkitPresenter(mock(), mock())
         presenter.setView(view)
         presenter.run("my_mocked_title")
-        Assertions.assertThat(Thread.currentThread().uncaughtExceptionHandler is ThreadGroup).isFalse()
-        Mockito.verify(view).setTitle("my_mocked_title")
-        Mockito.verify(view).displaySourceCode("")
-        Mockito.verify(view).displayAst(null)
-        Mockito.verify(view).displayXml("")
-        Mockito.verify(view).disableXPathEvaluateButton()
-        Mockito.verify(view).run()
+        assertThat(Thread.currentThread().uncaughtExceptionHandler is ThreadGroup).isFalse()
+        verify(view).setTitle("my_mocked_title")
+        verify(view).displaySourceCode("")
+        verify(view).displayAst(null)
+        verify(view).displayXml("")
+        verify(view).disableXPathEvaluateButton()
+        verify(view).run()
     }
 
     @Test
     fun run_should_call_initConfigurationTab() {
-        val view = Mockito.mock(ToolkitView::class.java)
-        var presenter = ToolkitPresenter(
-            Mockito.mock(ConfigurationModel::class.java), Mockito.mock(
-                SourceCodeModel::class.java
-            )
-        )
+        val view = mock<ToolkitView>()
+        var presenter = ToolkitPresenter(mock(), mock())
         presenter.setView(view)
         presenter.run("my_mocked_title")
-        Mockito.verify(view, Mockito.never()).addConfigurationProperty(Mockito.anyString(), Mockito.anyString())
-        val configurationModel = Mockito.mock(ConfigurationModel::class.java)
-        Mockito.`when`(configurationModel.properties).thenReturn(
+        verify(view, never()).addConfigurationProperty(anyString(), anyString())
+        val configurationModel = mock<ConfigurationModel>()
+        whenever(configurationModel.properties).thenReturn(
             listOf(ConfigurationProperty("", "", ""))
         )
-        presenter = ToolkitPresenter(configurationModel, Mockito.mock(SourceCodeModel::class.java))
+        presenter = ToolkitPresenter(configurationModel, mock())
         presenter.setView(view)
         presenter.run("my_mocked_title")
-        Mockito.verify(view).addConfigurationProperty(ArgumentMatchers.anyString(), ArgumentMatchers.anyString())
+        verify(view).addConfigurationProperty(anyString(), anyString())
     }
 
     @Test
     fun runFailsWithoutView() {
         assertThrows(IllegalStateException::class.java) {
-            ToolkitPresenter(
-                Mockito.mock(ConfigurationModel::class.java), Mockito.mock(
-                    SourceCodeModel::class.java
-                )
-            ).run("foo")
+            ToolkitPresenter(mock(), mock()).run("foo")
         }
     }
 
     @Test
     fun onSourceCodeOpenButtonClick() {
-        val view = Mockito.mock(ToolkitView::class.java)
+        val view = mock<ToolkitView>()
         val file = File("src/test/resources/parse_error.txt")
-        Mockito.`when`(view.pickFileToParse()).thenReturn(file)
-        val model = Mockito.mock(SourceCodeModel::class.java)
-        val astNode = Mockito.mock(AstNode::class.java)
-        Mockito.`when`(model.sourceCode).thenReturn("my_mocked_highlighted_source_code")
-        Mockito.`when`(model.astNode).thenReturn(astNode)
-        Mockito.`when`(model.xml).thenReturn("my_mocked_xml")
+        whenever(view.pickFileToParse()).thenReturn(file)
+        val model = mock<SourceCodeModel>()
+        val astNode = mock<AstNode>()
+        whenever(model.sourceCode).thenReturn("my_mocked_highlighted_source_code")
+        whenever(model.astNode).thenReturn(astNode)
+        whenever(model.xml).thenReturn("my_mocked_xml")
         val presenter = ToolkitPresenter(
-            (Mockito.`when`(
-                Mockito.mock(
-                    ConfigurationModel::class.java
-                ).charset
-            ).thenReturn(StandardCharsets.UTF_8).getMock<Any>() as ConfigurationModel), model
+            whenever(mock<ConfigurationModel>().charset).thenReturn(StandardCharsets.UTF_8).getMock(),
+            model
         )
         presenter.setView(view)
         presenter.onSourceCodeOpenButtonClick()
-        Mockito.verify(view).pickFileToParse()
-        Mockito.verify(view).clearConsole()
-        Mockito.verify(view).displaySourceCode("my_mocked_highlighted_source_code")
-        Mockito.verify(model).setSourceCode(file, StandardCharsets.UTF_8)
-        Mockito.verify(view).displayAst(astNode)
-        Mockito.verify(view).displayXml("my_mocked_xml")
-        Mockito.verify(view).scrollSourceCodeTo(Point(0, 0))
-        Mockito.verify(view).setFocusOnAbstractSyntaxTreeView()
-        Mockito.verify(view).enableXPathEvaluateButton()
+        verify(view).pickFileToParse()
+        verify(view).clearConsole()
+        verify(view).displaySourceCode("my_mocked_highlighted_source_code")
+        verify(model).setSourceCode(file, StandardCharsets.UTF_8)
+        verify(view).displayAst(astNode)
+        verify(view).displayXml("my_mocked_xml")
+        verify(view).scrollSourceCodeTo(Point(0, 0))
+        verify(view).setFocusOnAbstractSyntaxTreeView()
+        verify(view).enableXPathEvaluateButton()
     }
 
     @Test
     fun onSourceCodeOpenButtonClick_with_parse_error_should_clear_console_and_display_code() {
-        val view = Mockito.mock(ToolkitView::class.java)
+        val view = mock<ToolkitView>()
         val file = File("src/test/resources/parse_error.txt")
-        Mockito.`when`(view.pickFileToParse()).thenReturn(file)
-        val model = Mockito.mock(SourceCodeModel::class.java)
-        Mockito.doThrow(RuntimeException("Parse error")).`when`(model).setSourceCode(
-            any(), Mockito.any(Charset::class.java)
-        )
+        whenever(view.pickFileToParse()).thenReturn(file)
+        val model = mock<SourceCodeModel>()
+        doThrow(RuntimeException("Parse error")).`when`(model).setSourceCode(any(), any())
         val presenter = ToolkitPresenter(
-            (Mockito.`when`(
-                Mockito.mock(
-                    ConfigurationModel::class.java
-                ).charset
-            ).thenReturn(StandardCharsets.UTF_8).getMock<Any>() as ConfigurationModel), model
+            whenever(mock<ConfigurationModel>().charset).thenReturn(StandardCharsets.UTF_8).getMock(),
+            model
         )
         presenter.setView(view)
         try {
             presenter.onSourceCodeOpenButtonClick()
             throw AssertionError("Expected an exception")
         } catch (e: RuntimeException) {
-            Mockito.verify(view).clearConsole()
-            Mockito.verify(view).displaySourceCode("parse_error.txt")
+            verify(view).clearConsole()
+            verify(view).displaySourceCode("parse_error.txt")
         }
     }
 
     @Test
     fun onSourceCodeOpenButtonClick_should_no_operation_when_no_file() {
-        val view = Mockito.mock(ToolkitView::class.java)
-        Mockito.`when`(view.pickFileToParse()).thenReturn(null)
-        val model = Mockito.mock(SourceCodeModel::class.java)
-        val presenter = ToolkitPresenter(Mockito.mock(ConfigurationModel::class.java), model)
+        val view = mock<ToolkitView>()
+        whenever(view.pickFileToParse()).thenReturn(null)
+        val model = mock<SourceCodeModel>()
+        val presenter = ToolkitPresenter(mock(), model)
         presenter.setView(view)
         presenter.onSourceCodeOpenButtonClick()
-        Mockito.verify(view).pickFileToParse()
-        Mockito.verify(view, Mockito.never()).clearConsole()
-        Mockito.verify(model, Mockito.never()).setSourceCode(any(), any())
-        Mockito.verify(view, Mockito.never()).displaySourceCode(ArgumentMatchers.anyString())
-        Mockito.verify(view, Mockito.never()).displayAst(any())
-        Mockito.verify(view, Mockito.never()).displayXml(ArgumentMatchers.anyString())
-        Mockito.verify(view, Mockito.never()).scrollSourceCodeTo(any<Point>())
-        Mockito.verify(view, Mockito.never()).enableXPathEvaluateButton()
+        verify(view).pickFileToParse()
+        verify(view, never()).clearConsole()
+        verify(model, never()).setSourceCode(any(), any())
+        verify(view, never()).displaySourceCode(anyString())
+        verify(view, never()).displayAst(any())
+        verify(view, never()).displayXml(anyString())
+        verify(view, never()).scrollSourceCodeTo(any<Point>())
+        verify(view, never()).enableXPathEvaluateButton()
     }
 
     @Test
     fun onSourceCodeParseButtonClick() {
-        val view = Mockito.mock(ToolkitView::class.java)
-        Mockito.`when`(view.sourceCode).thenReturn("my_mocked_source")
-        val point = Mockito.mock(Point::class.java)
-        Mockito.`when`(view.sourceCodeScrollbarPosition).thenReturn(point)
-        val model = Mockito.mock(SourceCodeModel::class.java)
-        Mockito.`when`(model.sourceCode).thenReturn("my_mocked_highlighted_source_code")
-        val astNode = Mockito.mock(AstNode::class.java)
-        Mockito.`when`(model.astNode).thenReturn(astNode)
-        Mockito.`when`(model.xml).thenReturn("my_mocked_xml")
-        val presenter = ToolkitPresenter(Mockito.mock(ConfigurationModel::class.java), model)
+        val view = mock<ToolkitView>()
+        whenever(view.sourceCode).thenReturn("my_mocked_source")
+        val point = mock<Point>()
+        whenever(view.sourceCodeScrollbarPosition).thenReturn(point)
+        val model = mock<SourceCodeModel>()
+        whenever(model.sourceCode).thenReturn("my_mocked_highlighted_source_code")
+        val astNode = mock<AstNode>()
+        whenever(model.astNode).thenReturn(astNode)
+        whenever(model.xml).thenReturn("my_mocked_xml")
+        val presenter = ToolkitPresenter(mock(), model)
         presenter.setView(view)
         presenter.onSourceCodeParseButtonClick()
-        Mockito.verify(view).clearConsole()
-        Mockito.verify(view).sourceCode
-        Mockito.verify(model).setSourceCode("my_mocked_source")
-        Mockito.verify(view).displaySourceCode("my_mocked_highlighted_source_code")
+        verify(view).clearConsole()
+        verify(view).sourceCode
+        verify(model).setSourceCode("my_mocked_source")
+        verify(view).displaySourceCode("my_mocked_highlighted_source_code")
         view.displayAst(astNode)
         view.displayXml("my_mocked_xml")
         view.scrollSourceCodeTo(point)
-        Mockito.verify(view).setFocusOnAbstractSyntaxTreeView()
-        Mockito.verify(view).enableXPathEvaluateButton()
+        verify(view).setFocusOnAbstractSyntaxTreeView()
+        verify(view).enableXPathEvaluateButton()
     }
 
     @Test
     fun onXPathEvaluateButtonClickAstNodeResults() {
-        val view = Mockito.mock(ToolkitView::class.java)
-        Mockito.`when`(view.xPath).thenReturn("//foo")
-        val model = Mockito.mock(SourceCodeModel::class.java)
+        val view = mock<ToolkitView>()
+        whenever(view.xPath).thenReturn("//foo")
+        val model = mock<SourceCodeModel>()
         val astNode = AstNode(GenericTokenType.IDENTIFIER, "foo", null)
-        Mockito.`when`(model.astNode).thenReturn(astNode)
-        val presenter = ToolkitPresenter(Mockito.mock(ConfigurationModel::class.java), model)
+        whenever(model.astNode).thenReturn(astNode)
+        val presenter = ToolkitPresenter(mock(), model)
         presenter.setView(view)
         presenter.onXPathEvaluateButtonClick()
-        Mockito.verify(view).clearAstSelections()
-        Mockito.verify(view).clearSourceCodeHighlights()
-        Mockito.verify(view).selectAstNode(astNode)
-        Mockito.verify(view).highlightSourceCode(astNode)
-        Mockito.verify(view).scrollAstTo(astNode)
+        verify(view).clearAstSelections()
+        verify(view).clearSourceCodeHighlights()
+        verify(view).selectAstNode(astNode)
+        verify(view).highlightSourceCode(astNode)
+        verify(view).scrollAstTo(astNode)
     }
 
     @Test
     fun onXPathEvaluateButtonClickScrollToFirstAstNode() {
-        val view = Mockito.mock(ToolkitView::class.java)
-        Mockito.`when`(view.xPath).thenReturn("//foo")
-        val model = Mockito.mock(SourceCodeModel::class.java)
+        val view = mock<ToolkitView>()
+        whenever(view.xPath).thenReturn("//foo")
+        val model = mock<SourceCodeModel>()
         val astNode = AstNode(GenericTokenType.IDENTIFIER, "foo", null)
         val childAstNode = AstNode(GenericTokenType.IDENTIFIER, "foo", null)
         astNode.addChild(childAstNode)
-        Mockito.`when`(model.astNode).thenReturn(astNode)
-        val presenter = ToolkitPresenter(Mockito.mock(ConfigurationModel::class.java), model)
+        whenever(model.astNode).thenReturn(astNode)
+        val presenter = ToolkitPresenter(mock(), model)
         presenter.setView(view)
         presenter.onXPathEvaluateButtonClick()
-        Mockito.verify(view).scrollAstTo(astNode)
-        Mockito.verify(view, Mockito.never()).scrollAstTo(childAstNode)
-        Mockito.verify(view).scrollSourceCodeTo(astNode)
-        Mockito.verify(view, Mockito.never()).scrollSourceCodeTo(childAstNode)
+        verify(view).scrollAstTo(astNode)
+        verify(view, never()).scrollAstTo(childAstNode)
+        verify(view).scrollSourceCodeTo(astNode)
+        verify(view, never()).scrollSourceCodeTo(childAstNode)
     }
 
     @Test
     @Throws(Exception::class)
     fun onXPathEvaluateButtonClickStringResult() {
-        val view = Mockito.mock(ToolkitView::class.java)
-        Mockito.`when`(view.xPath).thenReturn("//foo/@tokenValue")
-        val model = Mockito.mock(SourceCodeModel::class.java)
+        val view = mock<ToolkitView>()
+        whenever(view.xPath).thenReturn("//foo/@tokenValue")
+        val model = mock<SourceCodeModel>()
         val token = Token.builder()
             .setType(GenericTokenType.IDENTIFIER)
             .setValueAndOriginalValue("bar")
@@ -311,129 +275,105 @@ class ToolkitPresenterTest {
             .setColumn(1)
             .build()
         val astNode = AstNode(GenericTokenType.IDENTIFIER, "foo", token)
-        Mockito.`when`(model.astNode).thenReturn(astNode)
-        val presenter = ToolkitPresenter(Mockito.mock(ConfigurationModel::class.java), model)
+        whenever(model.astNode).thenReturn(astNode)
+        val presenter = ToolkitPresenter(mock(), model)
         presenter.setView(view)
         presenter.onXPathEvaluateButtonClick()
-        Mockito.verify(view).clearConsole()
-        Mockito.verify(view).clearAstSelections()
-        Mockito.verify(view).clearSourceCodeHighlights()
-        Mockito.verify(view, Mockito.never()).selectAstNode(any())
-        Mockito.verify(view, Mockito.never()).highlightSourceCode(any())
-        Mockito.verify(view).scrollAstTo(null)
-        Mockito.verify(view).scrollSourceCodeTo(null as AstNode?)
-        Mockito.verify(view).setFocusOnAbstractSyntaxTreeView()
+        verify(view).clearConsole()
+        verify(view).clearAstSelections()
+        verify(view).clearSourceCodeHighlights()
+        verify(view, never()).selectAstNode(any())
+        verify(view, never()).highlightSourceCode(any())
+        verify(view).scrollAstTo(null)
+        verify(view).scrollSourceCodeTo(null as AstNode?)
+        verify(view).setFocusOnAbstractSyntaxTreeView()
     }
 
     @Test
     fun onSourceCodeKeyTyped() {
-        val view = Mockito.mock(ToolkitView::class.java)
-        val presenter = ToolkitPresenter(
-            Mockito.mock(ConfigurationModel::class.java), Mockito.mock(
-                SourceCodeModel::class.java
-            )
-        )
+        val view = mock<ToolkitView>()
+        val presenter = ToolkitPresenter(mock(), mock())
         presenter.setView(view)
         presenter.onSourceCodeKeyTyped()
-        Mockito.verify(view).displayAst(null)
-        Mockito.verify(view).displayXml("")
-        Mockito.verify(view).clearSourceCodeHighlights()
-        Mockito.verify(view).disableXPathEvaluateButton()
+        verify(view).displayAst(null)
+        verify(view).displayXml("")
+        verify(view).clearSourceCodeHighlights()
+        verify(view).disableXPathEvaluateButton()
     }
 
     @Test
     fun onSourceCodeTextCursorMoved() {
-        val view = Mockito.mock(ToolkitView::class.java)
-        val astNode = Mockito.mock(AstNode::class.java)
-        Mockito.`when`(view.astNodeFollowingCurrentSourceCodeTextCursorPosition).thenReturn(astNode)
-        val presenter = ToolkitPresenter(
-            Mockito.mock(ConfigurationModel::class.java), Mockito.mock(
-                SourceCodeModel::class.java
-            )
-        )
+        val view = mock<ToolkitView>()
+        val astNode = mock<AstNode>()
+        whenever(view.astNodeFollowingCurrentSourceCodeTextCursorPosition).thenReturn(astNode)
+        val presenter = ToolkitPresenter(mock(), mock())
         presenter.setView(view)
         presenter.onSourceCodeTextCursorMoved()
-        Mockito.verify(view).clearAstSelections()
-        Mockito.verify(view).selectAstNode(astNode)
-        Mockito.verify(view).scrollAstTo(astNode)
+        verify(view).clearAstSelections()
+        verify(view).selectAstNode(astNode)
+        verify(view).scrollAstTo(astNode)
     }
 
     @Test
     fun onAstSelectionChanged() {
-        val view = Mockito.mock(ToolkitView::class.java)
-        val firstAstNode = Mockito.mock(AstNode::class.java)
-        val secondAstNode = Mockito.mock(AstNode::class.java)
-        Mockito.`when`(view.selectedAstNodes).thenReturn(listOf(firstAstNode, secondAstNode))
-        val presenter = ToolkitPresenter(
-            Mockito.mock(ConfigurationModel::class.java), Mockito.mock(
-                SourceCodeModel::class.java
-            )
-        )
+        val view = mock<ToolkitView>()
+        val firstAstNode = mock<AstNode>()
+        val secondAstNode = mock<AstNode>()
+        whenever(view.selectedAstNodes).thenReturn(listOf(firstAstNode, secondAstNode))
+        val presenter = ToolkitPresenter(mock(), mock())
         presenter.setView(view)
         presenter.onAstSelectionChanged()
-        Mockito.verify(view).clearSourceCodeHighlights()
-        Mockito.verify(view).highlightSourceCode(firstAstNode)
-        Mockito.verify(view).highlightSourceCode(secondAstNode)
-        Mockito.verify(view).scrollSourceCodeTo(firstAstNode)
-        Mockito.verify(view, Mockito.never()).scrollSourceCodeTo(secondAstNode)
+        verify(view).clearSourceCodeHighlights()
+        verify(view).highlightSourceCode(firstAstNode)
+        verify(view).highlightSourceCode(secondAstNode)
+        verify(view).scrollSourceCodeTo(firstAstNode)
+        verify(view, never()).scrollSourceCodeTo(secondAstNode)
     }
 
     @Test
     fun onConfigurationPropertyFocusLost_when_validation_successes() {
-        val view = Mockito.mock(ToolkitView::class.java)
-        val property = Mockito.mock(ConfigurationProperty::class.java)
-        Mockito.`when`(property.name).thenReturn("name")
-        Mockito.`when`(property.description).thenReturn("description")
-        Mockito.`when`(view.getConfigurationPropertyValue("name")).thenReturn("foo")
-        Mockito.`when`(property.validate("foo")).thenReturn("")
-        val configurationModel = Mockito.mock(ConfigurationModel::class.java)
-        Mockito.`when`(configurationModel.properties).thenReturn(listOf(property))
-        val presenter = ToolkitPresenter(
-            configurationModel, Mockito.mock(
-                SourceCodeModel::class.java
-            )
-        )
+        val view = mock<ToolkitView>()
+        val property = mock<ConfigurationProperty>()
+        whenever(property.name).thenReturn("name")
+        whenever(property.description).thenReturn("description")
+        whenever(view.getConfigurationPropertyValue("name")).thenReturn("foo")
+        whenever(property.validate("foo")).thenReturn("")
+        val configurationModel = mock<ConfigurationModel>()
+        whenever(configurationModel.properties).thenReturn(listOf(property))
+        val presenter = ToolkitPresenter(configurationModel, mock())
         presenter.setView(view)
         presenter.onConfigurationPropertyFocusLost("name")
-        Mockito.verify(view).setConfigurationPropertyErrorMessage("name", "")
-        Mockito.verify(view, Mockito.never()).setFocusOnConfigurationPropertyField(Mockito.anyString())
-        Mockito.verify(view, Mockito.never()).setFocusOnConfigurationView()
-        Mockito.verify(property).value = "foo"
-        Mockito.verify(configurationModel).setUpdatedFlag()
+        verify(view).setConfigurationPropertyErrorMessage("name", "")
+        verify(view, never()).setFocusOnConfigurationPropertyField(anyString())
+        verify(view, never()).setFocusOnConfigurationView()
+        verify(property).value = "foo"
+        verify(configurationModel).setUpdatedFlag()
     }
 
     @Test
     fun onConfigurationPropertyFocusLost_when_validation_fails() {
-        val view = Mockito.mock(ToolkitView::class.java)
-        val property = Mockito.mock(ConfigurationProperty::class.java)
-        Mockito.`when`(property.name).thenReturn("name")
-        Mockito.`when`(property.description).thenReturn("description")
-        Mockito.`when`(view.getConfigurationPropertyValue("name")).thenReturn("foo")
-        Mockito.`when`(property.validate("foo")).thenReturn("The value foo is forbidden!")
-        val configurationModel = Mockito.mock(ConfigurationModel::class.java)
-        Mockito.`when`(configurationModel.properties).thenReturn(listOf(property))
-        val presenter = ToolkitPresenter(
-            configurationModel, Mockito.mock(
-                SourceCodeModel::class.java
-            )
-        )
+        val view = mock<ToolkitView>()
+        val property = mock<ConfigurationProperty>()
+        whenever(property.name).thenReturn("name")
+        whenever(property.description).thenReturn("description")
+        whenever(view.getConfigurationPropertyValue("name")).thenReturn("foo")
+        whenever(property.validate("foo")).thenReturn("The value foo is forbidden!")
+        val configurationModel = mock<ConfigurationModel>()
+        whenever(configurationModel.properties).thenReturn(listOf(property))
+        val presenter = ToolkitPresenter(configurationModel, mock())
         presenter.setView(view)
         presenter.onConfigurationPropertyFocusLost("name")
-        Mockito.verify(view).setConfigurationPropertyErrorMessage("name", "The value foo is forbidden!")
-        Mockito.verify(view).setFocusOnConfigurationPropertyField("name")
-        Mockito.verify(view).setFocusOnConfigurationView()
-        Mockito.verify(property, Mockito.never()).value = "foo"
-        Mockito.verify(configurationModel, Mockito.never()).setUpdatedFlag()
+        verify(view).setConfigurationPropertyErrorMessage("name", "The value foo is forbidden!")
+        verify(view).setFocusOnConfigurationPropertyField("name")
+        verify(view).setFocusOnConfigurationView()
+        verify(property, never()).value = "foo"
+        verify(configurationModel, never()).setUpdatedFlag()
     }
 
     @Test
     fun onConfigurationPropertyFocusLost_with_invalid_name() {
-        val view = Mockito.mock(ToolkitView::class.java)
-        val presenter = ToolkitPresenter(
-            Mockito.mock(ConfigurationModel::class.java), Mockito.mock(
-                SourceCodeModel::class.java
-            )
-        )
+        val view = mock<ToolkitView>()
+        val presenter = ToolkitPresenter(mock(), mock())
         presenter.setView(view)
         assertThrows("No such configuration property: name", IllegalArgumentException::class.java) {
             presenter.onConfigurationPropertyFocusLost("name")

@@ -19,56 +19,58 @@
  */
 package org.sonar.sslr.internal.vm
 
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Test
-import org.mockito.Mockito
-import org.sonar.sslr.internal.vm.Machine
+import org.mockito.kotlin.inOrder
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.whenever
 
 class StringExpressionTest {
     private val expression = StringExpression("foo")
-    private val machine = Mockito.mock(Machine::class.java)
+    private val machine = mock<Machine>()
     @Test
     fun should_compile() {
-        Assertions.assertThat(expression.compile(CompilationHandler())).containsOnly(expression)
-        Assertions.assertThat(expression.toString()).isEqualTo("String foo")
+        assertThat(expression.compile(CompilationHandler())).containsOnly(expression)
+        assertThat(expression.toString()).isEqualTo("String foo")
     }
 
     @Test
     fun should_match() {
-        Mockito.`when`(machine.length).thenReturn(3)
-        Mockito.`when`(machine[0]).thenReturn('f')
-        Mockito.`when`(machine[1]).thenReturn('o')
-        Mockito.`when`(machine[2]).thenReturn('o')
+        whenever(machine.length).thenReturn(3)
+        whenever(machine[0]).thenReturn('f')
+        whenever(machine[1]).thenReturn('o')
+        whenever(machine[2]).thenReturn('o')
         expression.execute(machine)
-        val inOrder = Mockito.inOrder(machine)
+        val inOrder = inOrder(machine)
         inOrder.verify(machine).length
         inOrder.verify(machine)[0]
         inOrder.verify(machine)[1]
         inOrder.verify(machine)[2]
         inOrder.verify(machine).createLeafNode(expression, 3)
         inOrder.verify(machine).jump(1)
-        Mockito.verifyNoMoreInteractions(machine)
+        verifyNoMoreInteractions(machine)
     }
 
     @Test
     fun should_backtrack() {
-        Mockito.`when`(machine.length).thenReturn(0)
+        whenever(machine.length).thenReturn(0)
         expression.execute(machine)
-        val inOrder = Mockito.inOrder(machine)
+        val inOrder = inOrder(machine)
         inOrder.verify(machine).length
         inOrder.verify(machine).backtrack()
-        Mockito.verifyNoMoreInteractions(machine)
+        verifyNoMoreInteractions(machine)
     }
 
     @Test
     fun should_backtrack2() {
-        Mockito.`when`(machine.length).thenReturn(3)
-        Mockito.`when`(machine[0]).thenReturn('b')
+        whenever(machine.length).thenReturn(3)
+        whenever(machine[0]).thenReturn('b')
         expression.execute(machine)
-        val inOrder = Mockito.inOrder(machine)
+        val inOrder = inOrder(machine)
         inOrder.verify(machine).length
         inOrder.verify(machine)[0]
         inOrder.verify(machine).backtrack()
-        Mockito.verifyNoMoreInteractions(machine)
+        verifyNoMoreInteractions(machine)
     }
 }

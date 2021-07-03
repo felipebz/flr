@@ -19,7 +19,7 @@
  */
 package org.sonar.sslr.internal.matchers
 
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Test
 import org.sonar.sslr.internal.matchers.TextUtils.escape
 import org.sonar.sslr.internal.matchers.TextUtils.trimTrailingLineSeparatorFrom
@@ -28,25 +28,25 @@ import java.lang.reflect.Constructor
 class TextUtilsTest {
     @Test
     fun should_escape() {
-        Assertions.assertThat(escape('\r')).isEqualTo("\\r")
-        Assertions.assertThat(escape('\n')).isEqualTo("\\n")
-        Assertions.assertThat(escape('\u000C')).isEqualTo("\\f")
-        Assertions.assertThat(escape('\t')).isEqualTo("\\t")
-        Assertions.assertThat(escape('"')).isEqualTo("\\\"")
-        Assertions.assertThat(escape('\\')).isEqualTo("\\")
+        assertThat(escape('\r')).isEqualTo("\\r")
+        assertThat(escape('\n')).isEqualTo("\\n")
+        assertThat(escape('\u000C')).isEqualTo("\\f")
+        assertThat(escape('\t')).isEqualTo("\\t")
+        assertThat(escape('"')).isEqualTo("\\\"")
+        assertThat(escape('\\')).isEqualTo("\\")
     }
 
     @Test
     fun should_trim_trailing_line_separator() {
-        Assertions.assertThat(trimTrailingLineSeparatorFrom("\r\n")).isEqualTo("")
-        Assertions.assertThat(trimTrailingLineSeparatorFrom("\r\nfoo\r\n")).isEqualTo("\r\nfoo")
+        assertThat(trimTrailingLineSeparatorFrom("\r\n")).isEqualTo("")
+        assertThat(trimTrailingLineSeparatorFrom("\r\nfoo\r\n")).isEqualTo("\r\nfoo")
     }
 
     @Test
     @Throws(Exception::class)
     fun private_constructor() {
         val constructor: Constructor<*> = TextUtils::class.java.getDeclaredConstructor()
-        Assertions.assertThat(constructor.isAccessible).isFalse()
+        assertThat(constructor.isAccessible).isFalse()
         constructor.isAccessible = true
         constructor.newInstance()
     }

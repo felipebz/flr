@@ -23,7 +23,7 @@ import com.sonar.sslr.api.AstNode
 import com.sonar.sslr.test.minic.MiniCGrammar
 import com.sonar.sslr.test.minic.MiniCParser.parseFile
 import com.sonar.sslr.xpath.api.AstNodeXPathQuery.Companion.create
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 
@@ -41,8 +41,8 @@ class IfSMustUseBracesTest {
             "//IF_STATEMENT/STATEMENT[not(COMPOUND_STATEMENT)]/..|//ELSE_CLAUSE/STATEMENT[not(COMPOUND_STATEMENT)]/.."
         )
         val nodes = xpath.selectNodes(fileNode)
-        Assertions.assertThat(nodes.size).isEqualTo(2)
-        Assertions.assertThat(nodes[0]).isEqualTo(xpath.selectSingleNode(fileNode))
+        assertThat(nodes.size).isEqualTo(2)
+        assertThat(nodes[0]).isEqualTo(xpath.selectSingleNode(fileNode))
     }
 
     @Test
@@ -51,10 +51,10 @@ class IfSMustUseBracesTest {
             "//IF_STATEMENT/STATEMENT[not(COMPOUND_STATEMENT)]/..|//ELSE_CLAUSE/STATEMENT[not(COMPOUND_STATEMENT)]/.."
         )
         val nodes = xpath.selectNodes(fileNode)
-        Assertions.assertThat(nodes.size).isEqualTo(2)
-        Assertions.assertThat(nodes[0].`is`(MiniCGrammar.IF_STATEMENT)).isTrue()
-        Assertions.assertThat(nodes[0].tokenLine).isEqualTo(3)
-        Assertions.assertThat(nodes[1].`is`(MiniCGrammar.ELSE_CLAUSE)).isTrue()
-        Assertions.assertThat(nodes[1].tokenLine).isEqualTo(16)
+        assertThat(nodes.size).isEqualTo(2)
+        assertThat(nodes[0].`is`(MiniCGrammar.IF_STATEMENT)).isTrue()
+        assertThat(nodes[0].tokenLine).isEqualTo(3)
+        assertThat(nodes[1].`is`(MiniCGrammar.ELSE_CLAUSE)).isTrue()
+        assertThat(nodes[1].tokenLine).isEqualTo(16)
     }
 }

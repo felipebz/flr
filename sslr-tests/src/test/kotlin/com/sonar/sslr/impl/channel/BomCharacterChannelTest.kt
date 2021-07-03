@@ -20,7 +20,7 @@
 package com.sonar.sslr.impl.channel
 
 import com.sonar.sslr.impl.Lexer.Companion.builder
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Test
 import org.sonar.sslr.channel.CodeReader
 
@@ -29,13 +29,13 @@ class BomCharacterChannelTest {
     private val channel = BomCharacterChannel()
     @Test
     fun shouldConsumeBomCharacter() {
-        Assertions.assertThat(channel.consume(CodeReader("\uFEFF"), lexer)).isTrue()
-        Assertions.assertThat(lexer.tokens.size).isEqualTo(0)
+        assertThat(channel.consume(CodeReader("\uFEFF"), lexer)).isTrue()
+        assertThat(lexer.tokens.size).isEqualTo(0)
     }
 
     @Test
     fun shouldNotConsumeOtherCharacters() {
-        Assertions.assertThat(channel.consume(CodeReader(" "), lexer)).isFalse()
-        Assertions.assertThat(lexer.tokens.size).isEqualTo(0)
+        assertThat(channel.consume(CodeReader(" "), lexer)).isFalse()
+        assertThat(lexer.tokens.size).isEqualTo(0)
     }
 }

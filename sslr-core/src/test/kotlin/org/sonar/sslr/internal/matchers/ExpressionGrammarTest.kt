@@ -20,7 +20,7 @@
 package org.sonar.sslr.internal.matchers
 
 import com.sonar.sslr.impl.ast.AstXmlPrinter.Companion.print
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.sonar.sslr.internal.matchers.AstCreator.Companion.create
@@ -41,9 +41,9 @@ class ExpressionGrammarTest {
         val input = inputString.toCharArray()
         val parseRunner = ParseRunner(grammar.root)
         val result = parseRunner.parse(input)
-        Assertions.assertThat(result.isMatched()).isTrue()
+        assertThat(result.isMatched()).isTrue()
         ParseTreePrinter.print(result.getParseTreeRoot(), input)
-        Assertions.assertThat(ParseTreePrinter.leafsToString(result.getParseTreeRoot(), input)).`as`("full-fidelity")
+        assertThat(ParseTreePrinter.leafsToString(result.getParseTreeRoot(), input)).`as`("full-fidelity")
             .isEqualTo(inputString)
     }
 
@@ -53,10 +53,10 @@ class ExpressionGrammarTest {
         val input = inputString.toCharArray()
         val parseRunner = ParseRunner(grammar.root)
         val result = parseRunner.parse(input)
-        Assertions.assertThat(result.isMatched()).isFalse()
+        assertThat(result.isMatched()).isFalse()
         val parseError = checkNotNull(result.getParseError())
         print(ParseErrorFormatter().format(parseError))
-        Assertions.assertThat(parseError.getErrorIndex()).isEqualTo(6)
+        assertThat(parseError.getErrorIndex()).isEqualTo(6)
     }
 
     @Test
@@ -65,7 +65,7 @@ class ExpressionGrammarTest {
         val input = inputString.toCharArray()
         val parseRunner = ParseRunner(grammar.expression)
         val result = parseRunner.parse(input)
-        Assertions.assertThat(result.isMatched()).isTrue()
+        assertThat(result.isMatched()).isTrue()
     }
 
     @Test
@@ -76,9 +76,9 @@ class ExpressionGrammarTest {
         grammar.plus.mock()
         val parseRunner = ParseRunner(grammar.root)
         val result = parseRunner.parse(input)
-        Assertions.assertThat(result.isMatched()).isTrue()
+        assertThat(result.isMatched()).isTrue()
         ParseTreePrinter.print(result.getParseTreeRoot(), input)
-        Assertions.assertThat(ParseTreePrinter.leafsToString(result.getParseTreeRoot(), input)).`as`("full-fidelity")
+        assertThat(ParseTreePrinter.leafsToString(result.getParseTreeRoot(), input)).`as`("full-fidelity")
             .isEqualTo(inputString)
     }
 
@@ -93,17 +93,17 @@ class ExpressionGrammarTest {
         val astNode = create(result, LocatedText(null, inputString.toCharArray()))
         println(astNode.tokens)
         println(print(astNode))
-        Assertions.assertThat(astNode.tokens).hasSize(7)
+        assertThat(astNode.tokens).hasSize(7)
         val firstToken = astNode.token
-        Assertions.assertThat(firstToken.line).isEqualTo(1)
-        Assertions.assertThat(firstToken.column).isEqualTo(0)
-        Assertions.assertThat(firstToken.value).isEqualTo("20")
-        Assertions.assertThat(firstToken.originalValue).isEqualTo("20")
+        assertThat(firstToken.line).isEqualTo(1)
+        assertThat(firstToken.column).isEqualTo(0)
+        assertThat(firstToken.value).isEqualTo("20")
+        assertThat(firstToken.originalValue).isEqualTo("20")
         val tokenWithTrivia = checkNotNull(astNode.getFirstDescendant(grammar.mul)).token
-        Assertions.assertThat(tokenWithTrivia.line).isEqualTo(1)
-        Assertions.assertThat(tokenWithTrivia.column).isEqualTo(3)
-        Assertions.assertThat(tokenWithTrivia.trivia).hasSize(1)
-        Assertions.assertThat(tokenWithTrivia.value).isEqualTo("*")
-        Assertions.assertThat(tokenWithTrivia.originalValue).isEqualTo("*")
+        assertThat(tokenWithTrivia.line).isEqualTo(1)
+        assertThat(tokenWithTrivia.column).isEqualTo(3)
+        assertThat(tokenWithTrivia.trivia).hasSize(1)
+        assertThat(tokenWithTrivia.value).isEqualTo("*")
+        assertThat(tokenWithTrivia.originalValue).isEqualTo("*")
     }
 }

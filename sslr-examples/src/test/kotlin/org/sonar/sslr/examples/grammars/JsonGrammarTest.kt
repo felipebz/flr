@@ -20,19 +20,19 @@
 package org.sonar.sslr.examples.grammars
 
 import org.junit.Test
-import org.sonar.sslr.tests.Assertions
+import org.sonar.sslr.tests.Assertions.assertThat
 
 class JsonGrammarTest {
     private val g = JsonGrammar.create()
     @Test
     fun whitespace() {
-        Assertions.assertThat(g.rule(JsonGrammar.WHITESPACE))
+        assertThat(g.rule(JsonGrammar.WHITESPACE))
             .matches(" \n\r\t\u000C")
     }
 
     @Test
     fun number() {
-        Assertions.assertThat(g.rule(JsonGrammar.NUMBER))
+        assertThat(g.rule(JsonGrammar.NUMBER))
             .matches("1234567890")
             .matches("-1234567890")
             .matches("0")
@@ -46,7 +46,7 @@ class JsonGrammarTest {
 
     @Test
     fun string() {
-        Assertions.assertThat(g.rule(JsonGrammar.STRING))
+        assertThat(g.rule(JsonGrammar.STRING))
             .matches("\"\"")
             .matches("\"\\\"\"")
             .matches("\"\\\\\"")
@@ -62,7 +62,7 @@ class JsonGrammarTest {
 
     @Test
     fun value() {
-        Assertions.assertThat(g.rule(JsonGrammar.VALUE))
+        assertThat(g.rule(JsonGrammar.VALUE))
             .matches("\"string\"")
             .matches("{}")
             .matches("[]")
@@ -74,7 +74,7 @@ class JsonGrammarTest {
 
     @Test
     fun `object`() {
-        Assertions.assertThat(g.rule(JsonGrammar.OBJECT))
+        assertThat(g.rule(JsonGrammar.OBJECT))
             .matches("{ }")
             .matches("{ \"string\" : true }")
             .matches("{ \"string\" : true, \"string\" : false }")
@@ -82,7 +82,7 @@ class JsonGrammarTest {
 
     @Test
     fun array() {
-        Assertions.assertThat(g.rule(JsonGrammar.ARRAY))
+        assertThat(g.rule(JsonGrammar.ARRAY))
             .matches("[ ]")
             .matches("[ true ]")
             .matches("[ true, false ]")
@@ -90,7 +90,7 @@ class JsonGrammarTest {
 
     @Test
     fun json() {
-        Assertions.assertThat(g.rule(JsonGrammar.JSON))
+        assertThat(g.rule(JsonGrammar.JSON))
             .matches("{}")
             .matches("[]")
     }

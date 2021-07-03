@@ -23,15 +23,11 @@ import com.sonar.sslr.api.AstNode
 import com.sonar.sslr.api.AstNodeType
 import com.sonar.sslr.api.GenericTokenType
 import com.sonar.sslr.api.RecognitionException
-import com.sonar.sslr.api.Trivia.TriviaKind
-import junit.framework.Assert
-import org.fest.assertions.Assertions
-import org.junit.Assert.assertThrows
+import org.junit.Assert
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Test
 import org.sonar.sslr.grammar.GrammarRuleKey
 import org.sonar.sslr.grammar.LexerlessGrammarBuilder
-import org.sonar.sslr.internal.vm.PatternExpression
-import org.sonar.sslr.internal.vm.TriviaExpression
 import java.io.File
 import java.nio.charset.StandardCharsets
 import java.nio.file.NoSuchFileException
@@ -46,28 +42,28 @@ class ActionParserTest {
     @Test
     @Throws(Exception::class)
     fun basic() {
-        Assertions.assertThat(parse(MyGrammarKeys.NUMERIC, "42", Numeric::class.java).toString()).isEqualTo("42")
+        assertThat(parse(MyGrammarKeys.NUMERIC, "42", Numeric::class.java).toString()).isEqualTo("42")
     }
 
     @Test
     @Throws(Exception::class)
     fun firstOf() {
-        Assertions.assertThat(parse(MyGrammarKeys.OPERATOR, "+", Operator::class.java).toString()).isEqualTo("+")
-        Assertions.assertThat(parse(MyGrammarKeys.OPERATOR, "-", Operator::class.java).toString()).isEqualTo("-")
+        assertThat(parse(MyGrammarKeys.OPERATOR, "+", Operator::class.java).toString()).isEqualTo("+")
+        assertThat(parse(MyGrammarKeys.OPERATOR, "-", Operator::class.java).toString()).isEqualTo("-")
         assertNotParse(MyGrammarKeys.OPERATOR, "x")
     }
 
     @Test
     @Throws(Exception::class)
     fun optional() {
-        Assertions.assertThat(parse(MyGrammarKeys.UNARY_EXP, "42", UnaryExp::class.java).toString()).isEqualTo("42")
-        Assertions.assertThat(parse(MyGrammarKeys.UNARY_EXP, "+42", UnaryExp::class.java).toString()).isEqualTo("+ 42")
+        assertThat(parse(MyGrammarKeys.UNARY_EXP, "42", UnaryExp::class.java).toString()).isEqualTo("42")
+        assertThat(parse(MyGrammarKeys.UNARY_EXP, "+42", UnaryExp::class.java).toString()).isEqualTo("+ 42")
     }
 
     @Test
     @Throws(Exception::class)
     fun oneOrMore() {
-        Assertions.assertThat(parse(MyGrammarKeys.NUMERIC_LIST, "42 7", NumericList::class.java).toString())
+        assertThat(parse(MyGrammarKeys.NUMERIC_LIST, "42 7", NumericList::class.java).toString())
             .isEqualTo("[42, 7]")
         assertNotParse(MyGrammarKeys.NUMERIC_LIST, "")
     }
@@ -75,14 +71,14 @@ class ActionParserTest {
     @Test
     @Throws(Exception::class)
     fun zeroOrMore() {
-        Assertions.assertThat(
+        assertThat(
             parse(
                 MyGrammarKeys.POTENTIALLY_EMPTY_NUMERIC_LIST,
                 "42 7",
                 NumericList::class.java
             ).toString()
         ).isEqualTo("[42, 7]")
-        Assertions.assertThat(
+        assertThat(
             parse(
                 MyGrammarKeys.POTENTIALLY_EMPTY_NUMERIC_LIST,
                 "",
@@ -94,7 +90,7 @@ class ActionParserTest {
     @Test
     @Throws(Exception::class)
     fun skipped_astnode() {
-        Assertions.assertThat(parse(MyGrammarKeys.NUMERIC_WITH_EOF, "42", Numeric::class.java).toString())
+        assertThat(parse(MyGrammarKeys.NUMERIC_WITH_EOF, "42", Numeric::class.java).toString())
             .isEqualTo("42")
     }
 
@@ -104,9 +100,9 @@ class ActionParserTest {
         val numeric = parse(MyGrammarKeys.NUMERIC, "42", Numeric::class.java)
         val firstChild = checkNotNull(numeric.firstChild)
         val type = firstChild.token.type
-        Assertions.assertThat(type.hasToBeSkippedFromAst(null)).isFalse()
-        Assertions.assertThat(type.value).isEqualTo("TOKEN")
-        Assertions.assertThat(type.toString()).isNotNull
+        assertThat(type.hasToBeSkippedFromAst(null)).isFalse()
+        assertThat(type.value).isEqualTo("TOKEN")
+        assertThat(type.toString()).isNotNull
     }
 
     @Test
@@ -115,20 +111,20 @@ class ActionParserTest {
         val numeric = parse(MyGrammarKeys.NUMERIC, "/* myComment */42", Numeric::class.java)
         val firstChild = checkNotNull(numeric.firstChild)
         val trivia = firstChild.token.trivia[0]
-        Assertions.assertThat(trivia.isComment).isTrue()
-        Assertions.assertThat(trivia.token.originalValue).isEqualTo("/* myComment */")
+        assertThat(trivia.isComment).isTrue()
+        assertThat(trivia.token.originalValue).isEqualTo("/* myComment */")
     }
 
     @Test
     @Throws(Exception::class)
     fun skipped_text() {
-        Assertions.assertThat(parse(MyGrammarKeys.NUMERIC, "  42", Numeric::class.java).toString()).isEqualTo("42")
+        assertThat(parse(MyGrammarKeys.NUMERIC, "  42", Numeric::class.java).toString()).isEqualTo("42")
     }
 
     @Test
     @Throws(Exception::class)
     fun rootRule() {
-        Assertions.assertThat(parser(MyGrammarKeys.OPERATOR).rootRule()).isEqualTo(MyGrammarKeys.OPERATOR)
+        assertThat(parser(MyGrammarKeys.OPERATOR).rootRule()).isEqualTo(MyGrammarKeys.OPERATOR)
     }
 
     @Test
@@ -136,7 +132,7 @@ class ActionParserTest {
     fun parse_file() {
         val parser = parser(MyGrammarKeys.UNARY_EXP)
         val node = parser.parse(File("src/test/resources/typed/42.txt"))
-        Assertions.assertThat(node).isInstanceOf(UnaryExp::class.java)
+        assertThat(node).isInstanceOf(UnaryExp::class.java)
     }
 
     @Test
@@ -147,20 +143,20 @@ class ActionParserTest {
             parser.parse(File("unknown"))
             Assert.fail("expceted exception")
         } catch (e: RuntimeException) {
-            Assertions.assertThat(e.cause).isInstanceOf(NoSuchFileException::class.java)
+            assertThat(e.cause).isInstanceOf(NoSuchFileException::class.java)
         }
     }
 
     @Test
     @Throws(Exception::class)
     fun more_than_one_call_to_the_same_action_method() {
-        Assertions.assertThat(parse(MyGrammarKeys.NUMERIC, "42", Numeric::class.java).toString()).isEqualTo("42")
-        Assertions.assertThat(parse(MyGrammarKeys.NUMERIC2, "42", Numeric::class.java).toString()).isEqualTo("42")
+        assertThat(parse(MyGrammarKeys.NUMERIC, "42", Numeric::class.java).toString()).isEqualTo("42")
+        assertThat(parse(MyGrammarKeys.NUMERIC2, "42", Numeric::class.java).toString()).isEqualTo("42")
     }
 
     private fun <T : AstNode> parse(ruleKey: GrammarRuleKey, toParse: String, expectedClass: Class<T>): T {
         val astNode = parse(ruleKey, toParse)
-        Assertions.assertThat(astNode).isInstanceOf(expectedClass)
+        assertThat(astNode).isInstanceOf(expectedClass)
         return astNode as T
     }
 

@@ -19,11 +19,11 @@
  */
 package org.sonar.sslr.internal.vm
 
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Assert.assertThrows
 import org.junit.Test
-import org.mockito.Mockito
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import org.sonar.sslr.grammar.GrammarException
 import org.sonar.sslr.internal.matchers.Matcher
 
@@ -39,74 +39,70 @@ class MachineTest {
     @Test
     fun test_initial_state() {
         val machine = Machine("", arrayOf(mock(), mock()))
-        Assertions.assertThat(machine.getAddress()).isEqualTo(0)
-        Assertions.assertThat(machine.getIndex()).isEqualTo(0)
-        Assertions.assertThat(machine.peek().isEmpty()).isTrue()
+        assertThat(machine.getAddress()).isEqualTo(0)
+        assertThat(machine.getIndex()).isEqualTo(0)
+        assertThat(machine.peek().isEmpty()).isTrue()
     }
 
     @Test
     fun should_jump() {
         val machine = Machine("", arrayOf(mock(), mock()))
-        Assertions.assertThat(machine.getAddress()).isEqualTo(0)
+        assertThat(machine.getAddress()).isEqualTo(0)
         machine.jump(42)
-        Assertions.assertThat(machine.getAddress()).isEqualTo(42)
+        assertThat(machine.getAddress()).isEqualTo(42)
         machine.jump(13)
-        Assertions.assertThat(machine.getAddress()).isEqualTo(42 + 13)
+        assertThat(machine.getAddress()).isEqualTo(42 + 13)
     }
 
     @Test
     fun should_advanceIndex() {
         val machine = Machine("foo bar", arrayOf(mock(), mock()))
-        Assertions.assertThat(machine.getIndex()).isEqualTo(0)
-        Assertions.assertThat(machine.length).isEqualTo(7)
-        Assertions.assertThat(machine[0]).isEqualTo('f')
-        Assertions.assertThat(machine[1]).isEqualTo('o')
+        assertThat(machine.getIndex()).isEqualTo(0)
+        assertThat(machine.length).isEqualTo(7)
+        assertThat(machine[0]).isEqualTo('f')
+        assertThat(machine[1]).isEqualTo('o')
         machine.advanceIndex(3)
-        Assertions.assertThat(machine.getIndex()).isEqualTo(3)
-        Assertions.assertThat(machine.length).isEqualTo(4)
-        Assertions.assertThat(machine[0]).isEqualTo(' ')
-        Assertions.assertThat(machine[1]).isEqualTo('b')
+        assertThat(machine.getIndex()).isEqualTo(3)
+        assertThat(machine.length).isEqualTo(4)
+        assertThat(machine[0]).isEqualTo(' ')
+        assertThat(machine[1]).isEqualTo('b')
         machine.advanceIndex(1)
-        Assertions.assertThat(machine.getIndex()).isEqualTo(4)
-        Assertions.assertThat(machine.length).isEqualTo(3)
-        Assertions.assertThat(machine[0]).isEqualTo('b')
-        Assertions.assertThat(machine[1]).isEqualTo('a')
+        assertThat(machine.getIndex()).isEqualTo(4)
+        assertThat(machine.length).isEqualTo(3)
+        assertThat(machine[0]).isEqualTo('b')
+        assertThat(machine[1]).isEqualTo('a')
     }
 
     @Test
     fun should_pushReturn() {
         val machine = Machine("foo", arrayOf(mock(), mock(), mock()))
-        val matcher = Mockito.mock(
-            Matcher::class.java
-        )
+        val matcher = mock<Matcher>()
         machine.advanceIndex(1)
         machine.jump(1)
         val previousStack = machine.peek()
         machine.pushReturn(2, matcher, 1)
-        Assertions.assertThat(machine.getAddress()).`as`("new address").isEqualTo(2)
-        Assertions.assertThat(machine.peek()).isNotSameAs(previousStack)
-        Assertions.assertThat(machine.peek().parent()).isSameAs(previousStack)
-        Assertions.assertThat(machine.peek().index()).`as`("current index").isEqualTo(1)
-        Assertions.assertThat(machine.peek().address()).`as`("return address").isEqualTo(1 + 2)
-        Assertions.assertThat(machine.peek().matcher()).isSameAs(matcher)
+        assertThat(machine.getAddress()).`as`("new address").isEqualTo(2)
+        assertThat(machine.peek()).isNotSameAs(previousStack)
+        assertThat(machine.peek().parent()).isSameAs(previousStack)
+        assertThat(machine.peek().index()).`as`("current index").isEqualTo(1)
+        assertThat(machine.peek().address()).`as`("return address").isEqualTo(1 + 2)
+        assertThat(machine.peek().matcher()).isSameAs(matcher)
     }
 
     @Test
     fun should_detect_left_recursion() {
         val machine = Machine("foo", arrayOf(mock(), mock()))
-        val matcher = Mockito.mock(
-            Matcher::class.java
-        )
+        val matcher = mock<Matcher>()
         machine.advanceIndex(1)
         machine.pushReturn(0, matcher, 1)
-        Assertions.assertThat(machine.peek().calledAddress()).isEqualTo(1)
-        Assertions.assertThat(machine.peek().leftRecursion()).isEqualTo(-1)
+        assertThat(machine.peek().calledAddress()).isEqualTo(1)
+        assertThat(machine.peek().leftRecursion()).isEqualTo(-1)
 
         // same rule, but another index of input sequence
         machine.advanceIndex(1)
         machine.pushReturn(0, matcher, 0)
-        Assertions.assertThat(machine.peek().calledAddress()).isEqualTo(1)
-        Assertions.assertThat(machine.peek().leftRecursion()).isEqualTo(1)
+        assertThat(machine.peek().calledAddress()).isEqualTo(1)
+        assertThat(machine.peek().leftRecursion()).isEqualTo(1)
 
         // same rule and index of input sequence
         assertThrows("Left recursion has been detected, involved rule: $matcher", GrammarException::class.java) {
@@ -121,11 +117,11 @@ class MachineTest {
         machine.jump(42)
         val previousStack = machine.peek()
         machine.pushBacktrack(13)
-        Assertions.assertThat(machine.peek()).isNotSameAs(previousStack)
-        Assertions.assertThat(machine.peek().parent()).isSameAs(previousStack)
-        Assertions.assertThat(machine.peek().index()).`as`("current index").isEqualTo(1)
-        Assertions.assertThat(machine.peek().address()).`as`("backtrack address").isEqualTo(42 + 13)
-        Assertions.assertThat(machine.peek().matcher()).isNull()
+        assertThat(machine.peek()).isNotSameAs(previousStack)
+        assertThat(machine.peek().parent()).isSameAs(previousStack)
+        assertThat(machine.peek().index()).`as`("current index").isEqualTo(1)
+        assertThat(machine.peek().address()).`as`("backtrack address").isEqualTo(42 + 13)
+        assertThat(machine.peek().matcher()).isNull()
     }
 
     @Test
@@ -133,81 +129,71 @@ class MachineTest {
         val machine = Machine("", arrayOf(mock(), mock()))
         val previousStack = machine.peek()
         machine.pushBacktrack(13)
-        Assertions.assertThat(machine.peek()).isNotSameAs(previousStack)
+        assertThat(machine.peek()).isNotSameAs(previousStack)
         machine.pop()
-        Assertions.assertThat(machine.peek()).isSameAs(previousStack)
+        assertThat(machine.peek()).isSameAs(previousStack)
     }
 
     @Test
     fun should_fail() {
         val machine = Machine("", arrayOf(mock(), mock(), mock()))
-        val matcher = Mockito.mock(
-            Matcher::class.java
-        )
+        val matcher = mock<Matcher>()
         machine.pushReturn(13, matcher, 0)
         machine.pushReturn(13, matcher, 1)
         machine.backtrack()
-        Assertions.assertThat(machine.getAddress()).isEqualTo(-1)
+        assertThat(machine.getAddress()).isEqualTo(-1)
         // TODO matched=false
     }
 
     @Test
     fun should_backtrack() {
         val machine = Machine("", arrayOf(mock(), mock(), mock(), mock()))
-        val matcher = Mockito.mock(
-            Matcher::class.java
-        )
+        val matcher = mock<Matcher>()
         val previousStack = machine.peek()
         machine.pushBacktrack(42)
         machine.pushReturn(13, matcher, 0)
         machine.pushReturn(13, matcher, 1)
         machine.backtrack()
-        Assertions.assertThat(machine.peek()).isSameAs(previousStack)
-        Assertions.assertThat(machine.getAddress()).isEqualTo(42)
+        assertThat(machine.peek()).isSameAs(previousStack)
+        assertThat(machine.getAddress()).isEqualTo(42)
     }
 
     @Test
     fun should_createLeafNode() {
         val machine = Machine("", arrayOf(mock(), mock()))
-        val matcher = Mockito.mock(
-            Matcher::class.java
-        )
+        val matcher = mock<Matcher>()
         machine.advanceIndex(42)
         machine.createLeafNode(matcher, 13)
         val node = machine.peek().subNodes()[0]
-        Assertions.assertThat(node.getMatcher()).isSameAs(matcher)
-        Assertions.assertThat(node.getStartIndex()).isEqualTo(42)
-        Assertions.assertThat(node.getEndIndex()).isEqualTo(42 + 13)
-        Assertions.assertThat(node.getChildren()).isEmpty()
+        assertThat(node.getMatcher()).isSameAs(matcher)
+        assertThat(node.getStartIndex()).isEqualTo(42)
+        assertThat(node.getEndIndex()).isEqualTo(42 + 13)
+        assertThat(node.getChildren()).isEmpty()
     }
 
     @Test
     fun should_createNode() {
         val machine = Machine(" ", arrayOf(mock(), mock()))
-        val matcher = Mockito.mock(
-            Matcher::class.java
-        )
+        val matcher = mock<Matcher>()
         machine.advanceIndex(1)
         // remember startIndex and matcher
         machine.pushReturn(0, matcher, 0)
-        val subMatcher = Mockito.mock(
-            Matcher::class.java
-        )
+        val subMatcher = mock<Matcher>()
         machine.createLeafNode(subMatcher, 2)
         machine.createLeafNode(subMatcher, 3)
         machine.createNode()
         val node = machine.peek().parent().subNodes()[0]
-        Assertions.assertThat(node.getMatcher()).isSameAs(matcher)
-        Assertions.assertThat(node.getStartIndex()).isEqualTo(1)
-        Assertions.assertThat(node.getEndIndex()).isEqualTo(1 + 2 + 3)
-        Assertions.assertThat(node.getChildren()).hasSize(2)
+        assertThat(node.getMatcher()).isSameAs(matcher)
+        assertThat(node.getStartIndex()).isEqualTo(1)
+        assertThat(node.getEndIndex()).isEqualTo(1 + 2 + 3)
+        assertThat(node.getChildren()).hasSize(2)
     }
 
     @Test
     fun should_use_memo() {
         val machine = Machine("foo", arrayOf(mock(), mock(), mock()))
-        val matcher = Mockito.mock(MemoParsingExpression::class.java)
-        Mockito.`when`(matcher.shouldMemoize()).thenReturn(true)
+        val matcher = mock<MemoParsingExpression>()
+        whenever(matcher.shouldMemoize()).thenReturn(true)
         machine.pushBacktrack(0)
         machine.pushReturn(1, matcher, 2)
         machine.advanceIndex(3)
@@ -215,43 +201,41 @@ class MachineTest {
         val memo = machine.peek().parent().subNodes()[0]
         machine.backtrack()
         machine.pushReturn(2, matcher, 1)
-        Assertions.assertThat(machine.getAddress()).isEqualTo(2)
-        Assertions.assertThat(machine.getIndex()).isEqualTo(3)
-        Assertions.assertThat(machine.peek().subNodes()).containsOnly(memo)
+        assertThat(machine.getAddress()).isEqualTo(2)
+        assertThat(machine.getIndex()).isEqualTo(3)
+        assertThat(machine.peek().subNodes()).containsOnly(memo)
     }
 
     @Test
     fun should_not_memorize() {
         val machine = Machine("foo", arrayOf(mock(), mock(), mock()))
-        val matcher = Mockito.mock(MemoParsingExpression::class.java)
-        Mockito.`when`(matcher.shouldMemoize()).thenReturn(false)
+        val matcher = mock<MemoParsingExpression>()
+        whenever(matcher.shouldMemoize()).thenReturn(false)
         machine.pushBacktrack(0)
         machine.pushReturn(1, matcher, 2)
         machine.advanceIndex(3)
         machine.createNode()
         machine.backtrack()
         machine.pushReturn(2, matcher, 1)
-        Assertions.assertThat(machine.getAddress()).isEqualTo(1)
-        Assertions.assertThat(machine.getIndex()).isEqualTo(0)
-        Assertions.assertThat(machine.peek().subNodes()).isEmpty()
+        assertThat(machine.getAddress()).isEqualTo(1)
+        assertThat(machine.getIndex()).isEqualTo(0)
+        assertThat(machine.peek().subNodes()).isEmpty()
     }
 
     @Test
     fun should_not_use_memo() {
         val machine = Machine("foo", arrayOf(mock(), mock(), mock()))
-        val matcher = Mockito.mock(MemoParsingExpression::class.java)
-        Mockito.`when`(matcher.shouldMemoize()).thenReturn(true)
+        val matcher = mock<MemoParsingExpression>()
+        whenever(matcher.shouldMemoize()).thenReturn(true)
         machine.pushBacktrack(0)
         machine.pushReturn(2, matcher, 1)
         machine.advanceIndex(3)
         machine.createNode()
         machine.backtrack()
-        val anotherMatcher = Mockito.mock(
-            Matcher::class.java
-        )
+        val anotherMatcher = mock<Matcher>()
         machine.pushReturn(2, anotherMatcher, 1)
-        Assertions.assertThat(machine.getAddress()).isEqualTo(1)
-        Assertions.assertThat(machine.getIndex()).isEqualTo(0)
-        Assertions.assertThat(machine.peek().subNodes()).isEmpty()
+        assertThat(machine.getAddress()).isEqualTo(1)
+        assertThat(machine.getIndex()).isEqualTo(0)
+        assertThat(machine.peek().subNodes()).isEmpty()
     }
 }

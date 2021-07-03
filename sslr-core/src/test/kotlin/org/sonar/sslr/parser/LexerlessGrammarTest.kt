@@ -20,10 +20,10 @@
 package org.sonar.sslr.parser
 
 import com.sonar.sslr.api.Rule
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Assert.assertThrows
 import org.junit.Test
-import org.mockito.Mockito
+import org.mockito.kotlin.mock
 import org.sonar.sslr.grammar.GrammarException
 import org.sonar.sslr.internal.grammar.MutableParsingRule
 
@@ -31,8 +31,8 @@ class LexerlessGrammarTest {
     @Test
     fun should_instanciate_rule_fields() {
         val grammar = TestGrammar()
-        Assertions.assertThat(grammar.getRootRule()).isInstanceOf(MutableParsingRule::class.java)
-        Assertions.assertThat((grammar.getRootRule() as MutableParsingRule).getName()).isEqualTo("rootRule")
+        assertThat(grammar.getRootRule()).isInstanceOf(MutableParsingRule::class.java)
+        assertThat((grammar.getRootRule() as MutableParsingRule).getName()).isEqualTo("rootRule")
     }
 
     @Test
@@ -51,11 +51,11 @@ class LexerlessGrammarTest {
 
     private class IllegalGrammar : LexerlessGrammar() {
         override fun getRootRule(): Rule {
-            return checkNotNull(rootRule)
+            return rootRule
         }
 
         companion object {
-            private val rootRule = Mockito.mock(Rule::class.java)
+            private val rootRule = mock<Rule>()
         }
     }
 }

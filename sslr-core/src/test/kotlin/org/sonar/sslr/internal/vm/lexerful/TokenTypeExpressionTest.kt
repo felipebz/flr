@@ -21,62 +21,61 @@ package org.sonar.sslr.internal.vm.lexerful
 
 import com.sonar.sslr.api.Token
 import com.sonar.sslr.api.TokenType
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Test
-import org.mockito.Mockito
+import org.mockito.kotlin.inOrder
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.whenever
 import org.sonar.sslr.internal.vm.CompilationHandler
 import org.sonar.sslr.internal.vm.Machine
 
 class TokenTypeExpressionTest {
-    private val type = Mockito.mock(TokenType::class.java)
+    private val type = mock<TokenType>()
     private val expression = TokenTypeExpression(type)
-    private val machine = Mockito.mock(Machine::class.java)
+    private val machine = mock<Machine>()
     @Test
     fun should_compile() {
-        Assertions.assertThat(expression.compile(CompilationHandler())).containsOnly(expression)
-        Assertions.assertThat(expression.toString()).isEqualTo("TokenType $type")
+        assertThat(expression.compile(CompilationHandler())).containsOnly(expression)
+        assertThat(expression.toString()).isEqualTo("TokenType $type")
     }
 
     @Test
     fun should_match() {
-        val token = Mockito.mock(Token::class.java)
-        Mockito.`when`(token.type).thenReturn(type)
-        Mockito.`when`(machine.length).thenReturn(1)
-        Mockito.`when`(machine.tokenAt(0)).thenReturn(token)
+        val token = mock<Token>()
+        whenever(token.type).thenReturn(type)
+        whenever(machine.length).thenReturn(1)
+        whenever(machine.tokenAt(0)).thenReturn(token)
         expression.execute(machine)
-        val inOrder = Mockito.inOrder(machine)
+        val inOrder = inOrder(machine)
         inOrder.verify(machine).length
         inOrder.verify(machine).tokenAt(0)
         inOrder.verify(machine).createLeafNode(expression, 1)
         inOrder.verify(machine).jump(1)
-        Mockito.verifyNoMoreInteractions(machine)
+        verifyNoMoreInteractions(machine)
     }
 
     @Test
     fun should_backtrack() {
-        Mockito.`when`(machine.length).thenReturn(0)
+        whenever(machine.length).thenReturn(0)
         expression.execute(machine)
-        val inOrder = Mockito.inOrder(machine)
+        val inOrder = inOrder(machine)
         inOrder.verify(machine).length
         inOrder.verify(machine).backtrack()
-        Mockito.verifyNoMoreInteractions(machine)
+        verifyNoMoreInteractions(machine)
     }
 
     @Test
     fun should_backtrack2() {
-        val token = Mockito.mock(Token::class.java)
-        Mockito.`when`(token.type).thenReturn(
-            Mockito.mock(
-                TokenType::class.java
-            )
-        )
-        Mockito.`when`(machine.length).thenReturn(1)
-        Mockito.`when`(machine.tokenAt(0)).thenReturn(token)
+        val token = mock<Token>()
+        whenever(token.type).thenReturn(mock())
+        whenever(machine.length).thenReturn(1)
+        whenever(machine.tokenAt(0)).thenReturn(token)
         expression.execute(machine)
-        val inOrder = Mockito.inOrder(machine)
+        val inOrder = inOrder(machine)
         inOrder.verify(machine).length
         inOrder.verify(machine).tokenAt(0)
         inOrder.verify(machine).backtrack()
-        Mockito.verifyNoMoreInteractions(machine)
+        verifyNoMoreInteractions(machine)
     }
 }

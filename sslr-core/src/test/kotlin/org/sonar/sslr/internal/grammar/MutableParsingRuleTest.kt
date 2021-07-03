@@ -20,10 +20,11 @@
 package org.sonar.sslr.internal.grammar
 
 import com.sonar.sslr.api.AstNode
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Assert.assertThrows
 import org.junit.Test
-import org.mockito.Mockito
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import org.sonar.sslr.grammar.GrammarException
 import org.sonar.sslr.grammar.GrammarRuleKey
 import org.sonar.sslr.internal.vm.ParsingExpression
@@ -32,58 +33,58 @@ import org.sonar.sslr.internal.vm.SequenceExpression
 class MutableParsingRuleTest {
     @Test
     fun should_not_allow_redefinition() {
-        val ruleKey = Mockito.mock(GrammarRuleKey::class.java)
+        val ruleKey = mock<GrammarRuleKey>()
         val rule = MutableParsingRule(ruleKey)
-        rule.`is`(Mockito.mock(ParsingExpression::class.java))
+        rule.`is`(mock<ParsingExpression>())
         assertThrows("The rule '$ruleKey' has already been defined somewhere in the grammar.", GrammarException::class.java) {
-            rule.`is`(Mockito.mock(ParsingExpression::class.java))
+            rule.`is`(mock<ParsingExpression>())
         }
     }
 
     @Test
     fun should_override() {
-        val ruleKey = Mockito.mock(GrammarRuleKey::class.java)
+        val ruleKey = mock<GrammarRuleKey>()
         val rule = MutableParsingRule(ruleKey)
-        val e1 = Mockito.mock(ParsingExpression::class.java)
-        val e2 = Mockito.mock(ParsingExpression::class.java)
+        val e1 = mock<ParsingExpression>()
+        val e2 = mock<ParsingExpression>()
         rule.`is`(e1, e2)
         rule.override(e2)
-        Assertions.assertThat(rule.expression).isSameAs(e2)
+        assertThat(rule.expression).isSameAs(e2)
         rule.override(e1, e2)
-        Assertions.assertThat(rule.expression).isInstanceOf(SequenceExpression::class.java)
+        assertThat(rule.expression).isInstanceOf(SequenceExpression::class.java)
     }
 
     @Test
     fun should_not_skip_from_AST() {
-        val ruleKey = Mockito.mock(GrammarRuleKey::class.java)
+        val ruleKey = mock<GrammarRuleKey>()
         val rule = MutableParsingRule(ruleKey)
-        val astNode = Mockito.mock(AstNode::class.java)
-        Assertions.assertThat(rule.hasToBeSkippedFromAst(astNode)).isFalse()
+        val astNode = mock<AstNode>()
+        assertThat(rule.hasToBeSkippedFromAst(astNode)).isFalse()
     }
 
     @Test
     fun should_skip_from_AST() {
-        val ruleKey = Mockito.mock(GrammarRuleKey::class.java)
+        val ruleKey = mock<GrammarRuleKey>()
         val rule = MutableParsingRule(ruleKey)
         rule.skip()
-        val astNode = Mockito.mock(AstNode::class.java)
-        Assertions.assertThat(rule.hasToBeSkippedFromAst(astNode)).isTrue()
+        val astNode = mock<AstNode>()
+        assertThat(rule.hasToBeSkippedFromAst(astNode)).isTrue()
     }
 
     @Test
     fun should_skip_from_AST_if_one_child() {
-        val ruleKey = Mockito.mock(GrammarRuleKey::class.java)
+        val ruleKey = mock<GrammarRuleKey>()
         val rule = MutableParsingRule(ruleKey)
         rule.skipIfOneChild()
-        val astNode = Mockito.mock(AstNode::class.java)
-        Mockito.`when`(astNode.numberOfChildren).thenReturn(1)
-        Assertions.assertThat(rule.hasToBeSkippedFromAst(astNode)).isTrue()
+        val astNode = mock<AstNode>()
+        whenever(astNode.numberOfChildren).thenReturn(1)
+        assertThat(rule.hasToBeSkippedFromAst(astNode)).isTrue()
     }
 
     @Test
     fun should_return_real_AstNodeType() {
-        val ruleKey = Mockito.mock(GrammarRuleKey::class.java)
+        val ruleKey = mock<GrammarRuleKey>()
         val rule = MutableParsingRule(ruleKey)
-        Assertions.assertThat(rule.getRealAstNodeType()).isSameAs(ruleKey)
+        assertThat(rule.getRealAstNodeType()).isSameAs(ruleKey)
     }
 }

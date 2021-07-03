@@ -21,7 +21,7 @@ package com.sonar.sslr.xpath.api
 
 import com.sonar.sslr.api.AstNode
 import com.sonar.sslr.api.AstNodeType
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Test
 
 class AstNodeXPathQueryTest {
@@ -33,14 +33,14 @@ class AstNodeXPathQueryTest {
         val leaf = AstNode(NodeType(), "leaf", null)
         tree.addChild(branch)
         branch.addChild(leaf)
-        Assertions.assertThat(expr.selectSingleNode(tree)).isEqualTo(leaf)
+        assertThat(expr.selectSingleNode(tree)).isEqualTo(leaf)
     }
 
     @Test
     fun selectSingleNodeNoResultTest() {
         val expr = AstNodeXPathQuery.create<AstNode>("branch")
         val tree = AstNode(NodeType(), "tree", null)
-        Assertions.assertThat(expr.selectSingleNode(tree)).isNull()
+        assertThat(expr.selectSingleNode(tree)).isNull()
     }
 
     @Test
@@ -53,14 +53,14 @@ class AstNodeXPathQueryTest {
         tree.addChild(branch)
         branch.addChild(leaf1)
         branch.addChild(leaf2)
-        Assertions.assertThat(expr.selectNodes(tree).size).isEqualTo(2)
+        assertThat(expr.selectNodes(tree).size).isEqualTo(2)
     }
 
     @Test
     fun selectNodesNoResultTest() {
         val expr = AstNodeXPathQuery.create<AstNode>("//branch")
         val tree = AstNode(NodeType(), "tree", null)
-        Assertions.assertThat(expr.selectNodes(tree).size).isEqualTo(0)
+        assertThat(expr.selectNodes(tree).size).isEqualTo(0)
     }
 
     @Test
@@ -71,7 +71,7 @@ class AstNodeXPathQueryTest {
         val leaf = AstNode(NodeType(), "leaf", null)
         tree.addChild(branch)
         branch.addChild(leaf)
-        Assertions.assertThat(expr.selectSingleNode(branch)).isEqualTo(leaf)
+        assertThat(expr.selectSingleNode(branch)).isEqualTo(leaf)
     }
 
     @Test
@@ -82,7 +82,7 @@ class AstNodeXPathQueryTest {
         val leaf = AstNode(NodeType(), "leaf", null)
         tree.addChild(branch)
         branch.addChild(leaf)
-        Assertions.assertThat(expr.selectSingleNode(branch)).isEqualTo(tree)
+        assertThat(expr.selectSingleNode(branch)).isEqualTo(tree)
     }
 
     @Test
@@ -95,7 +95,7 @@ class AstNodeXPathQueryTest {
         tree.addChild(branch1)
         tree.addChild(branch2)
         branch1.addChild(leaf)
-        Assertions.assertThat(expr.selectSingleNode(branch1)).isEqualTo(branch2)
+        assertThat(expr.selectSingleNode(branch1)).isEqualTo(branch2)
     }
 
     @Test
@@ -106,7 +106,7 @@ class AstNodeXPathQueryTest {
         val leaf = AstNode(NodeType(), "leaf", null)
         tree.addChild(branch)
         branch.addChild(leaf)
-        Assertions.assertThat(expr.selectSingleNode(tree)).isEqualTo(tree)
+        assertThat(expr.selectSingleNode(tree)).isEqualTo(tree)
     }
 
     @Test
@@ -117,7 +117,7 @@ class AstNodeXPathQueryTest {
         val leaf = AstNode(NodeType(), "leaf", null)
         tree.addChild(branch)
         branch.addChild(leaf)
-        Assertions.assertThat(expr.selectSingleNode(branch)).isEqualTo(branch)
+        assertThat(expr.selectSingleNode(branch)).isEqualTo(branch)
     }
 
     @Test
@@ -128,7 +128,7 @@ class AstNodeXPathQueryTest {
         val leaf = AstNode(NodeType(), "leaf", null)
         tree.addChild(branch)
         branch.addChild(leaf)
-        Assertions.assertThat(expr.selectSingleNode(branch)).isEqualTo(leaf)
+        assertThat(expr.selectSingleNode(branch)).isEqualTo(leaf)
     }
 
     @Test
@@ -139,14 +139,14 @@ class AstNodeXPathQueryTest {
         val leaf = AstNode(NodeType(), "leaf", null)
         tree.addChild(branch)
         branch.addChild(leaf)
-        Assertions.assertThat(expr.selectNodes(tree).size).isEqualTo(1)
+        assertThat(expr.selectNodes(tree).size).isEqualTo(1)
     }
 
     @Test
     fun relativeNamePredicate() {
         val expr = AstNodeXPathQuery.create<AstNode>(".[name() = \"tree\"]")
         val tree = AstNode(NodeType(), "tree", null)
-        Assertions.assertThat(expr.selectSingleNode(tree)).isEqualTo(tree)
+        assertThat(expr.selectSingleNode(tree)).isEqualTo(tree)
     }
 
     @Test
@@ -159,7 +159,7 @@ class AstNodeXPathQueryTest {
         tree.addChild(branch1)
         tree.addChild(branch2)
         tree.addChild(branch3)
-        Assertions.assertThat(expr.selectSingleNode(tree)).isEqualTo(tree)
+        assertThat(expr.selectSingleNode(tree)).isEqualTo(tree)
     }
 
     @Test
@@ -172,11 +172,11 @@ class AstNodeXPathQueryTest {
         tree1.addChild(branch11)
         tree1.addChild(branch12)
         tree1.addChild(branch13)
-        Assertions.assertThat(expr.selectNodes(tree1).size).isEqualTo(3)
+        assertThat(expr.selectNodes(tree1).size).isEqualTo(3)
         val tree2 = AstNode(NodeType(), "tree", null)
         val branch21 = AstNode(NodeType(), "branch", null)
         tree2.addChild(branch21)
-        Assertions.assertThat(expr.selectNodes(tree2).size).isEqualTo(1)
+        assertThat(expr.selectNodes(tree2).size).isEqualTo(1)
     }
 
     internal class NodeType : AstNodeType

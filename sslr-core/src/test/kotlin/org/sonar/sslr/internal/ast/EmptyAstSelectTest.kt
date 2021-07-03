@@ -21,10 +21,9 @@ package org.sonar.sslr.internal.ast
 
 import com.sonar.sslr.api.AstNode
 import com.sonar.sslr.api.AstNodeType
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Assert.assertThrows
 import org.junit.Test
-import org.mockito.Mockito
 import org.mockito.kotlin.mock
 import org.sonar.sslr.ast.AstSelect
 import org.sonar.sslr.internal.ast.select.EmptyAstSelect
@@ -35,77 +34,53 @@ class EmptyAstSelectTest {
     private val select: AstSelect = EmptyAstSelect()
     @Test
     fun test_children() {
-        Assertions.assertThat(select.children() as Any).isSameAs(select)
-        Assertions.assertThat(select.children(Mockito.mock(AstNodeType::class.java)) as Any).isSameAs(select)
-        Assertions.assertThat(
-            select.children(
-                Mockito.mock(AstNodeType::class.java), Mockito.mock(
-                    AstNodeType::class.java
-                )
-            ) as Any
-        ).isSameAs(select)
+        assertThat(select.children() as Any).isSameAs(select)
+        assertThat(select.children(mock()) as Any).isSameAs(select)
+        assertThat(select.children(mock(), mock()) as Any).isSameAs(select)
     }
 
     @Test
     fun test_nextSibling() {
-        Assertions.assertThat(select.nextSibling() as Any).isSameAs(select)
+        assertThat(select.nextSibling() as Any).isSameAs(select)
     }
 
     @Test
     fun test_previousSibling() {
-        Assertions.assertThat(select.previousSibling() as Any).isSameAs(select)
+        assertThat(select.previousSibling() as Any).isSameAs(select)
     }
 
     @Test
     fun test_parent() {
-        Assertions.assertThat(select.parent() as Any).isSameAs(select)
+        assertThat(select.parent() as Any).isSameAs(select)
     }
 
     @Test
     fun test_firstAncestor() {
-        Assertions.assertThat(select.firstAncestor(Mockito.mock(AstNodeType::class.java)) as Any).isSameAs(select)
-        Assertions.assertThat(
-            select.firstAncestor(
-                Mockito.mock(AstNodeType::class.java), Mockito.mock(
-                    AstNodeType::class.java
-                )
-            ) as Any
-        ).isSameAs(select)
+        assertThat(select.firstAncestor(mock()) as Any).isSameAs(select)
+        assertThat(select.firstAncestor(mock(), mock()) as Any).isSameAs(select)
     }
 
     @Test
     fun test_descendants() {
-        Assertions.assertThat(select.descendants(Mockito.mock(AstNodeType::class.java)) as Any).isSameAs(select)
-        Assertions.assertThat(
-            select.descendants(
-                Mockito.mock(AstNodeType::class.java), Mockito.mock(
-                    AstNodeType::class.java
-                )
-            ) as Any
-        ).isSameAs(select)
+        assertThat(select.descendants(mock()) as Any).isSameAs(select)
+        assertThat(select.descendants(mock(), mock()) as Any).isSameAs(select)
     }
 
     @Test
     fun test_isEmpty() {
-        Assertions.assertThat(select.isEmpty()).isTrue()
+        assertThat(select.isEmpty()).isTrue()
     }
 
     @Test
     fun test_isNotEmpty() {
-        Assertions.assertThat(select.isNotEmpty()).isFalse()
+        assertThat(select.isNotEmpty()).isFalse()
     }
 
     @Test
     fun test_filter() {
-        Assertions.assertThat(select.filter(Mockito.mock(AstNodeType::class.java)) as Any).isSameAs(select)
-        Assertions.assertThat(
-            select.filter(
-                Mockito.mock(AstNodeType::class.java), Mockito.mock(
-                    AstNodeType::class.java
-                )
-            ) as Any
-        ).isSameAs(select)
-        Assertions.assertThat(select.filter(mock<Predicate<AstNode>>()) as Any?).isSameAs(select)
+        assertThat(select.filter(mock<AstNodeType>()) as Any).isSameAs(select)
+        assertThat(select.filter(mock(), mock()) as Any).isSameAs(select)
+        assertThat(select.filter(mock<Predicate<AstNode>>()) as Any?).isSameAs(select)
     }
 
     @Test
@@ -117,11 +92,11 @@ class EmptyAstSelectTest {
 
     @Test
     fun test_size() {
-        Assertions.assertThat(select.size()).isEqualTo(0)
+        assertThat(select.size()).isEqualTo(0)
     }
 
     @Test
     fun test_iterator() {
-        Assertions.assertThat(select.iterator() as Any).isSameAs(Collections.emptyIterator<Any>())
+        assertThat(select.iterator() as Any).isSameAs(Collections.emptyIterator<Any>())
     }
 }

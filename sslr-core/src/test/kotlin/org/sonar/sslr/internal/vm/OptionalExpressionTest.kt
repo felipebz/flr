@@ -19,7 +19,7 @@
  */
 package org.sonar.sslr.internal.vm
 
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Test
 import org.sonar.sslr.internal.vm.Instruction.Companion.choice
 import org.sonar.sslr.internal.vm.Instruction.Companion.commit
@@ -28,9 +28,9 @@ class OptionalExpressionTest {
     @Test
     fun should_compile() {
         val expression = OptionalExpression(SubExpression(1, 2))
-        Assertions.assertThat(expression.toString()).isEqualTo("Optional[SubExpression]")
+        assertThat(expression.toString()).isEqualTo("Optional[SubExpression]")
         val instructions = expression.compile(CompilationHandler())
-        Assertions.assertThat(instructions).isEqualTo(
+        assertThat(instructions).isEqualTo(
             arrayOf(
                 choice(4),
                 SubExpression.mockInstruction(1),

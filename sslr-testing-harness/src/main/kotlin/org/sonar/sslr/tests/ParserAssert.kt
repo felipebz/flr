@@ -26,11 +26,12 @@ import org.fest.assertions.GenericAssert
 import org.sonar.sslr.internal.vm.EndOfInputExpression
 import org.sonar.sslr.internal.vm.FirstOfExpression
 import org.sonar.sslr.internal.vm.lexerful.TokenTypeExpression
+import org.sonar.sslr.tests.Assertions.assertThat
 import org.sonar.sslr.tests.RuleAssert.EndOfInput
 import org.sonar.sslr.tests.RuleAssert.WithEndOfInput
 
 /**
- * To create a new instance of this class invoke `[Assertions.assertThat]`.
+ * To create a new instance of this class invoke `[assertThat]`.
  *
  *
  * This class is not intended to be instantiated or subclassed by clients.
@@ -95,7 +96,7 @@ class ParserAssert(actual: Parser<*>) : GenericAssert<ParserAssert, Parser<*>>(
     }
 
     private fun hasRootRule() {
-        Assertions.assertThat(actual.getRootRule())
+        assertThat(actual.getRootRule())
             .overridingErrorMessage("Root rule of the parser should not be null")
             .isNotNull
     }

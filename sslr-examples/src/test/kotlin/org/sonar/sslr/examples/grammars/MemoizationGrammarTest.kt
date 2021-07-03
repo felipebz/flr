@@ -23,13 +23,13 @@ import org.junit.Test
 import org.sonar.sslr.examples.grammars.MemoizationGrammar.Companion.requiresNegativeMemoization
 import org.sonar.sslr.examples.grammars.MemoizationGrammar.Companion.requiresPositiveMemoization
 import org.sonar.sslr.examples.grammars.MemoizationGrammar.Companion.requiresPositiveMemoizationOnMoreThanJustLastRule
-import org.sonar.sslr.tests.Assertions
+import org.sonar.sslr.tests.Assertions.assertThat
 
 class MemoizationGrammarTest {
     @Test
     fun should_be_slow_to_fail_to_parse_gramar_requiring_negative_memoization() {
         val grammar = requiresNegativeMemoization()
-        Assertions.assertThat(grammar.rule(MemoizationGrammar.A))
+        assertThat(grammar.rule(MemoizationGrammar.A))
             .notMatches("aaaaaaaaaaaaaaa") // Requires time T
             .notMatches("aaaaaaaaaaaaaaaa") // Requires time 2*T
             .notMatches("aaaaaaaaaaaaaaaaa") // Requires time 4*T, etc.
@@ -38,7 +38,7 @@ class MemoizationGrammarTest {
     @Test
     fun should_be_fast_on_grammar_requiring_positive_memoization() {
         val grammar = requiresPositiveMemoization()
-        Assertions.assertThat(grammar.rule(MemoizationGrammar.A))
+        assertThat(grammar.rule(MemoizationGrammar.A))
             .matches("((((((((((((((((((((((((b)b)b)b)b)b)b)b)b)b)b)b)b)b)b)b)b)b)b)b)b)b)b)b)b") // Requires time T
             .matches("((((((((((((((((((((((((((b)b)b)b)b)b)b)b)b)b)b)b)b)b)b)b)b)b)b)b)b)b)b)b)b)b)b") // Requires time ~T
             .matches("((((((((((((((((((((((((((((b)b)b)b)b)b)b)b)b)b)b)b)b)b)b)b)b)b)b)b)b)b)b)b)b)b)b)b)b") // Requires time ~T, etc.
@@ -47,7 +47,7 @@ class MemoizationGrammarTest {
     @Test
     fun should_be_slow_on_grammar_requiring_positive_memoization_on_more_than_just_the_last_rule() {
         val grammar = requiresPositiveMemoizationOnMoreThanJustLastRule()
-        Assertions.assertThat(grammar.rule(MemoizationGrammar.A))
+        assertThat(grammar.rule(MemoizationGrammar.A))
             .matches("(((((((((((((((b)b)b)b)b)b)b)b)b)b)b)b)b)b)b)b") // Requires time T
             .matches("(((((((((((((((((b)b)b)b)b)b)b)b)b)b)b)b)b)b)b)b)b)b") // Requires time 4*T
             .matches("(((((((((((((((((((b)b)b)b)b)b)b)b)b)b)b)b)b)b)b)b)b)b)b)b") // Requires time 16*T, etc.

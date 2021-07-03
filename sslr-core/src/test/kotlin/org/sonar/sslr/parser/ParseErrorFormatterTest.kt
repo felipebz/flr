@@ -19,7 +19,7 @@
  */
 package org.sonar.sslr.parser
 
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.sonar.sslr.internal.matchers.ImmutableInputBuffer
@@ -45,6 +45,6 @@ class ParseErrorFormatterTest {
             .append("             ^\n")
             .append("2: \n")
             .toString()
-        Assertions.assertThat(result).isEqualTo(expected)
+        assertThat(result).isEqualTo(expected)
     }
 }

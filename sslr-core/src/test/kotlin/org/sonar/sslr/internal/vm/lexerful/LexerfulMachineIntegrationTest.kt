@@ -22,9 +22,10 @@ package org.sonar.sslr.internal.vm.lexerful
 import com.sonar.sslr.api.GenericTokenType
 import com.sonar.sslr.api.Token
 import com.sonar.sslr.api.TokenType
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Test
-import org.mockito.Mockito
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import org.sonar.sslr.internal.vm.CompilationHandler
 import org.sonar.sslr.internal.vm.Machine.Companion.execute
 import org.sonar.sslr.internal.vm.SequenceExpression
@@ -33,8 +34,8 @@ class LexerfulMachineIntegrationTest {
     @Test
     fun tokenType() {
         val instructions = TokenTypeExpression(GenericTokenType.IDENTIFIER).compile(CompilationHandler())
-        Assertions.assertThat(execute(instructions, token(GenericTokenType.IDENTIFIER))).isTrue()
-        Assertions.assertThat(execute(instructions, token(GenericTokenType.LITERAL))).isFalse()
+        assertThat(execute(instructions, token(GenericTokenType.IDENTIFIER))).isTrue()
+        assertThat(execute(instructions, token(GenericTokenType.LITERAL))).isFalse()
     }
 
     @Test
@@ -42,24 +43,24 @@ class LexerfulMachineIntegrationTest {
         val instructions =
             TokenTypesExpression(GenericTokenType.IDENTIFIER, GenericTokenType.LITERAL).compile(CompilationHandler())
         var tokens = arrayOf(token(GenericTokenType.IDENTIFIER))
-        Assertions.assertThat(execute(instructions, *tokens)).isTrue()
+        assertThat(execute(instructions, *tokens)).isTrue()
         tokens = arrayOf(token(GenericTokenType.LITERAL))
-        Assertions.assertThat(execute(instructions, *tokens)).isTrue()
+        assertThat(execute(instructions, *tokens)).isTrue()
         tokens = arrayOf(token(GenericTokenType.UNKNOWN_CHAR))
-        Assertions.assertThat(execute(instructions, *tokens)).isFalse()
+        assertThat(execute(instructions, *tokens)).isFalse()
     }
 
     @Test
     fun tokenValue() {
         val instructions = TokenValueExpression("foo").compile(CompilationHandler())
-        Assertions.assertThat(execute(instructions, token("foo"))).isTrue()
-        Assertions.assertThat(execute(instructions, token("bar"))).isFalse()
+        assertThat(execute(instructions, token("foo"))).isTrue()
+        assertThat(execute(instructions, token("bar"))).isFalse()
     }
 
     @Test
     fun anyToken() {
         val instructions = AnyTokenExpression.INSTANCE.compile(CompilationHandler())
-        Assertions.assertThat(execute(instructions, token("foo"))).isTrue()
+        assertThat(execute(instructions, token("foo"))).isTrue()
     }
 
     @Test
@@ -67,26 +68,26 @@ class LexerfulMachineIntegrationTest {
         val instructions =
             TokensBridgeExpression(GenericTokenType.IDENTIFIER, GenericTokenType.LITERAL).compile(CompilationHandler())
         var tokens = arrayOf(token(GenericTokenType.IDENTIFIER), token(GenericTokenType.LITERAL))
-        Assertions.assertThat(execute(instructions, *tokens)).isTrue()
+        assertThat(execute(instructions, *tokens)).isTrue()
         tokens = arrayOf(
             token(GenericTokenType.IDENTIFIER),
             token(GenericTokenType.IDENTIFIER),
             token(GenericTokenType.LITERAL)
         )
-        Assertions.assertThat(execute(instructions, *tokens)).isFalse()
+        assertThat(execute(instructions, *tokens)).isFalse()
         tokens = arrayOf(
             token(GenericTokenType.IDENTIFIER),
             token(GenericTokenType.IDENTIFIER),
             token(GenericTokenType.LITERAL),
             token(GenericTokenType.LITERAL)
         )
-        Assertions.assertThat(execute(instructions, *tokens)).isTrue()
+        assertThat(execute(instructions, *tokens)).isTrue()
         tokens = arrayOf(
             token(GenericTokenType.IDENTIFIER),
             token(GenericTokenType.UNKNOWN_CHAR),
             token(GenericTokenType.LITERAL)
         )
-        Assertions.assertThat(execute(instructions, *tokens)).isTrue()
+        assertThat(execute(instructions, *tokens)).isTrue()
     }
 
     @Test
@@ -95,7 +96,7 @@ class LexerfulMachineIntegrationTest {
             GenericTokenType::class.java
         ).compile(CompilationHandler())
         val tokens = arrayOf(token(GenericTokenType.IDENTIFIER))
-        Assertions.assertThat(execute(instructions, *tokens)).isTrue()
+        assertThat(execute(instructions, *tokens)).isTrue()
     }
 
     @Test
@@ -106,25 +107,25 @@ class LexerfulMachineIntegrationTest {
             TokenValueExpression("bar")
         ).compile(CompilationHandler())
         var tokens = arrayOf(token(1, 1, "foo"), token(1, 4, "bar"))
-        Assertions.assertThat(execute(instructions, *tokens)).isTrue()
+        assertThat(execute(instructions, *tokens)).isTrue()
         tokens = arrayOf(token(1, 1, "foo"), token(1, 5, "bar"))
-        Assertions.assertThat(execute(instructions, *tokens)).isFalse()
+        assertThat(execute(instructions, *tokens)).isFalse()
     }
 
     companion object {
         private fun token(type: TokenType): Token {
-            return Mockito.`when`(Mockito.mock(Token::class.java).type).thenReturn(type).getMock()
+            return whenever(mock<Token>().type).thenReturn(type).getMock()
         }
 
         private fun token(value: String): Token {
-            return Mockito.`when`(Mockito.mock(Token::class.java).value).thenReturn(value).getMock()
+            return whenever(mock<Token>().value).thenReturn(value).getMock()
         }
 
         private fun token(line: Int, column: Int, value: String): Token {
-            val token = Mockito.mock(Token::class.java)
-            Mockito.`when`(token.line).thenReturn(line)
-            Mockito.`when`(token.column).thenReturn(column)
-            Mockito.`when`(token.value).thenReturn(value)
+            val token = mock<Token>()
+            whenever(token.line).thenReturn(line)
+            whenever(token.column).thenReturn(column)
+            whenever(token.value).thenReturn(value)
             return token
         }
     }

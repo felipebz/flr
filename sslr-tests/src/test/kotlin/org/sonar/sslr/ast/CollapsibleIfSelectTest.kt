@@ -22,7 +22,7 @@ package org.sonar.sslr.ast
 import com.sonar.sslr.api.AstNode
 import com.sonar.sslr.test.minic.MiniCGrammar
 import com.sonar.sslr.test.minic.MiniCParser
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Test
 import java.io.File
 
@@ -39,7 +39,7 @@ class CollapsibleIfSelectTest {
                 violations.add(node.tokenLine)
             }
         }
-        Assertions.assertThat(violations).containsOnly(7, 16)
+        assertThat(violations).containsOnly(7, 16)
     }
 
     private fun visit(node: AstNode): Boolean {

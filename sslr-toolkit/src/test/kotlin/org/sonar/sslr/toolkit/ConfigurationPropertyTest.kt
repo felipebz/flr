@@ -19,7 +19,7 @@
  */
 package org.sonar.sslr.toolkit
 
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Assert.assertThrows
 import org.junit.Test
 
@@ -27,28 +27,28 @@ class ConfigurationPropertyTest {
 
     @Test
     fun name() {
-        Assertions.assertThat(ConfigurationProperty("foo", "", "").name).isEqualTo("foo")
-        Assertions.assertThat(ConfigurationProperty("bar", "", "").name).isEqualTo("bar")
+        assertThat(ConfigurationProperty("foo", "", "").name).isEqualTo("foo")
+        assertThat(ConfigurationProperty("bar", "", "").name).isEqualTo("bar")
     }
 
     @Test
     fun description() {
-        Assertions.assertThat(ConfigurationProperty("", "foo", "").description).isEqualTo("foo")
-        Assertions.assertThat(ConfigurationProperty("", "bar", "").description).isEqualTo("bar")
+        assertThat(ConfigurationProperty("", "foo", "").description).isEqualTo("foo")
+        assertThat(ConfigurationProperty("", "bar", "").description).isEqualTo("bar")
     }
 
     @Test
     fun validate() {
-        Assertions.assertThat(ConfigurationProperty("", "", "").validate("")).isEmpty()
-        Assertions.assertThat(ConfigurationProperty("", "", "").validate("foo")).isEmpty()
+        assertThat(ConfigurationProperty("", "", "").validate("")).isEmpty()
+        assertThat(ConfigurationProperty("", "", "").validate("foo")).isEmpty()
         val property = ConfigurationProperty("", "", "foo", object : ValidationCallback {
             override fun validate(newValueCandidate: String): String {
                 return if ("foo" == newValueCandidate) "" else "Only the value \"foo\" is allowed."
             }
         })
-        Assertions.assertThat(property.validate("")).isEqualTo("Only the value \"foo\" is allowed.")
-        Assertions.assertThat(property.validate("foo")).isEmpty()
-        Assertions.assertThat(property.validate("bar")).isEqualTo("Only the value \"foo\" is allowed.")
+        assertThat(property.validate("")).isEqualTo("Only the value \"foo\" is allowed.")
+        assertThat(property.validate("foo")).isEmpty()
+        assertThat(property.validate("bar")).isEqualTo("Only the value \"foo\" is allowed.")
     }
 
     @Test
@@ -70,11 +70,11 @@ class ConfigurationPropertyTest {
 
     @Test
     fun value() {
-        Assertions.assertThat(ConfigurationProperty("", "", "").value).isEqualTo("")
-        Assertions.assertThat(ConfigurationProperty("", "", "foo").value).isEqualTo("foo")
+        assertThat(ConfigurationProperty("", "", "").value).isEqualTo("")
+        assertThat(ConfigurationProperty("", "", "foo").value).isEqualTo("foo")
         val property = ConfigurationProperty("", "", "")
-        Assertions.assertThat(property.value).isEqualTo("")
+        assertThat(property.value).isEqualTo("")
         property.value = "foo"
-        Assertions.assertThat(property.value).isEqualTo("foo")
+        assertThat(property.value).isEqualTo("foo")
     }
 }

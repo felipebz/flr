@@ -21,7 +21,7 @@ package org.sonar.sslr.internal.vm
 
 import com.sonar.sslr.api.GenericTokenType
 import com.sonar.sslr.api.Trivia.TriviaKind
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Assert.assertThrows
 import org.junit.Rule
 import org.junit.Test
@@ -38,16 +38,16 @@ class MachineIntegrationTest {
     @Test
     fun pattern() {
         val instructions = PatternExpression("foo|bar").compile(CompilationHandler())
-        Assertions.assertThat(execute("foo", instructions)).isTrue()
-        Assertions.assertThat(execute("bar", instructions)).isTrue()
-        Assertions.assertThat(execute("baz", instructions)).isFalse()
+        assertThat(execute("foo", instructions)).isTrue()
+        assertThat(execute("bar", instructions)).isTrue()
+        assertThat(execute("baz", instructions)).isFalse()
     }
 
     @Test
     fun string() {
         val instructions = StringExpression("foo").compile(CompilationHandler())
-        Assertions.assertThat(execute("foo", instructions)).isTrue()
-        Assertions.assertThat(execute("bar", instructions)).isFalse()
+        assertThat(execute("foo", instructions)).isTrue()
+        assertThat(execute("bar", instructions)).isFalse()
     }
 
     @Test
@@ -55,8 +55,8 @@ class MachineIntegrationTest {
         val instructions = SequenceExpression(
             StringExpression("foo"), StringExpression("bar")
         ).compile(CompilationHandler())
-        Assertions.assertThat(execute("foobar", instructions)).isTrue()
-        Assertions.assertThat(execute("baz", instructions)).isFalse()
+        assertThat(execute("foobar", instructions)).isTrue()
+        assertThat(execute("baz", instructions)).isFalse()
     }
 
     @Test
@@ -66,39 +66,39 @@ class MachineIntegrationTest {
             StringExpression("bar"),
             StringExpression("baz")
         ).compile(CompilationHandler())
-        Assertions.assertThat(execute("foo", instructions)).isTrue()
-        Assertions.assertThat(execute("bar", instructions)).isTrue()
-        Assertions.assertThat(execute("baz", instructions)).isTrue()
-        Assertions.assertThat(execute("qux", instructions)).isFalse()
+        assertThat(execute("foo", instructions)).isTrue()
+        assertThat(execute("bar", instructions)).isTrue()
+        assertThat(execute("baz", instructions)).isTrue()
+        assertThat(execute("qux", instructions)).isFalse()
     }
 
     @Test
     fun optional() {
         val instructions = OptionalExpression(StringExpression("a")).compile(CompilationHandler())
-        Assertions.assertThat(execute("", instructions)).isTrue()
-        Assertions.assertThat(execute("a", instructions)).isTrue()
+        assertThat(execute("", instructions)).isTrue()
+        assertThat(execute("a", instructions)).isTrue()
     }
 
     @Test
     operator fun next() {
         val instructions = NextExpression(StringExpression("foo")).compile(CompilationHandler())
-        Assertions.assertThat(execute("foo", instructions)).isTrue()
-        Assertions.assertThat(execute("bar", instructions)).isFalse()
+        assertThat(execute("foo", instructions)).isTrue()
+        assertThat(execute("bar", instructions)).isFalse()
     }
 
     @Test
     fun nextNot() {
         val instructions = NextNotExpression(StringExpression("foo")).compile(CompilationHandler())
-        Assertions.assertThat(execute("foo", instructions)).isFalse()
-        Assertions.assertThat(execute("bar", instructions)).isTrue()
+        assertThat(execute("foo", instructions)).isFalse()
+        assertThat(execute("bar", instructions)).isTrue()
     }
 
     @Test
     fun zeroOrMore() {
         val instructions = ZeroOrMoreExpression(StringExpression("a")).compile(CompilationHandler())
-        Assertions.assertThat(execute("", instructions)).isTrue()
-        Assertions.assertThat(execute("a", instructions)).isTrue()
-        Assertions.assertThat(execute("aa", instructions)).isTrue()
+        assertThat(execute("", instructions)).isTrue()
+        assertThat(execute("a", instructions)).isTrue()
+        assertThat(execute("aa", instructions)).isTrue()
     }
 
     @Test
@@ -117,9 +117,9 @@ class MachineIntegrationTest {
     @Test
     fun oneOrMore() {
         val instructions = OneOrMoreExpression(StringExpression("a")).compile(CompilationHandler())
-        Assertions.assertThat(execute("", instructions)).isFalse()
-        Assertions.assertThat(execute("a", instructions)).isTrue()
-        Assertions.assertThat(execute("aa", instructions)).isTrue()
+        assertThat(execute("", instructions)).isFalse()
+        assertThat(execute("a", instructions)).isTrue()
+        assertThat(execute("aa", instructions)).isTrue()
     }
 
     @Test
@@ -139,14 +139,14 @@ class MachineIntegrationTest {
     fun token() {
         val instructions =
             TokenExpression(GenericTokenType.IDENTIFIER, StringExpression("foo")).compile(CompilationHandler())
-        Assertions.assertThat(execute("foo", instructions)).isTrue()
-        Assertions.assertThat(execute("bar", instructions)).isFalse()
+        assertThat(execute("foo", instructions)).isTrue()
+        assertThat(execute("bar", instructions)).isFalse()
     }
 
     @Test
     fun trivia() {
         val instructions = TriviaExpression(TriviaKind.COMMENT, StringExpression("foo")).compile(CompilationHandler())
-        Assertions.assertThat(execute("foo", instructions)).isTrue()
-        Assertions.assertThat(execute("bar", instructions)).isFalse()
+        assertThat(execute("foo", instructions)).isTrue()
+        assertThat(execute("bar", instructions)).isFalse()
     }
 }

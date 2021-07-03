@@ -19,7 +19,7 @@
  */
 package org.sonar.sslr.internal.vm
 
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Test
 import org.sonar.sslr.internal.vm.Instruction.Companion.backCommit
 import org.sonar.sslr.internal.vm.Instruction.Companion.backtrack
@@ -29,9 +29,9 @@ class NextExpressionTest {
     @Test
     fun should_compile() {
         val expression = NextExpression(SubExpression(1, 2))
-        Assertions.assertThat(expression.toString()).isEqualTo("Next[SubExpression]")
+        assertThat(expression.toString()).isEqualTo("Next[SubExpression]")
         val instructions = expression.compile(CompilationHandler())
-        Assertions.assertThat(instructions).isEqualTo(
+        assertThat(instructions).isEqualTo(
             arrayOf(
                 choice(4),
                 SubExpression.mockInstruction(1),

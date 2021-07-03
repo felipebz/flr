@@ -27,7 +27,7 @@ import org.sonar.sslr.examples.grammars.LeftRecursiveGrammar.Companion.immediate
 import org.sonar.sslr.examples.grammars.LeftRecursiveGrammar.Companion.indirectLeftRecursion
 import org.sonar.sslr.grammar.GrammarException
 import org.sonar.sslr.parser.ParseRunner
-import org.sonar.sslr.tests.Assertions
+import org.sonar.sslr.tests.Assertions.assertThat
 
 class LeftRecursiveGrammarTest {
     @Test
@@ -45,7 +45,7 @@ class LeftRecursiveGrammarTest {
     @Test
     fun eliminated_immediate_left_recursion() {
         val grammar = eliminatedImmediateLeftRecursion()
-        Assertions.assertThat(grammar.rule(LeftRecursiveGrammar.A))
+        assertThat(grammar.rule(LeftRecursiveGrammar.A))
             .matches("s1")
             .matches("s2")
             .matches("s1t1")
@@ -73,7 +73,7 @@ class LeftRecursiveGrammarTest {
     @Test
     fun eliminated_indirect_left_recursion() {
         val grammar = eliminatedIndirectLeftRecursion()
-        Assertions.assertThat(grammar.rule(LeftRecursiveGrammar.A))
+        assertThat(grammar.rule(LeftRecursiveGrammar.A))
             .matches("s2t1")
             .matches("s2t1t2t1")
             .matches("s2t1t2t1t2t1")

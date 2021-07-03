@@ -22,7 +22,7 @@ package com.sonar.sslr.api
 import com.sonar.sslr.test.lexer.MockHelper.mockToken
 import com.sonar.sslr.test.minic.MiniCGrammar
 import com.sonar.sslr.test.minic.MiniCParser.parseString
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Test
 
 class AstNodeTest {
@@ -33,14 +33,14 @@ class AstNodeTest {
         val assign = AstNode(NodeType(), "assign", null)
         expr.addChild(stat)
         expr.addChild(assign)
-        Assertions.assertThat(expr.children).contains(stat, assign)
+        assertThat(expr.children).contains(stat, assign)
     }
 
     @Test
     fun testAddNullChild() {
         val expr = AstNode(NodeType(), "expr", null)
         expr.addChild(null)
-        Assertions.assertThat(expr.hasChildren()).isFalse()
+        assertThat(expr.hasChildren()).isFalse()
     }
 
     @Test
@@ -54,7 +54,7 @@ class AstNodeTest {
         val print = AstNode(NodeType(), "print", null)
         many.addChild(print)
         expr.addChild(many)
-        Assertions.assertThat(expr.children).contains(stat, print)
+        assertThat(expr.children).contains(stat, print)
     }
 
     @Test
@@ -62,13 +62,13 @@ class AstNodeTest {
         val expr = AstNode(NodeType(), "expr", null)
         val all = AstNode(NodeType(true), "all", null)
         expr.addChild(all)
-        Assertions.assertThat(expr.children.size).isEqualTo(0)
+        assertThat(expr.children.size).isEqualTo(0)
     }
 
     @Test
     fun testHasChildren() {
         val expr = AstNode(NodeType(), "expr", null)
-        Assertions.assertThat(expr.hasChildren()).isFalse()
+        assertThat(expr.hasChildren()).isFalse()
     }
 
     @Test
@@ -78,8 +78,8 @@ class AstNodeTest {
         val child2 = AstNode(NodeType(), "child2", null)
         parent.addChild(child1)
         parent.addChild(child2)
-        Assertions.assertThat(parent.getChild(0)).isSameAs(child1)
-        Assertions.assertThat(parent.getChild(1)).isSameAs(child2)
+        assertThat(parent.getChild(0)).isSameAs(child1)
+        assertThat(parent.getChild(1)).isSameAs(child2)
     }
 
     @Test
@@ -90,8 +90,8 @@ class AstNodeTest {
         val child2 = AstNode(NodeType(), "child2", lastToken)
         parent.addChild(child1)
         parent.addChild(child2)
-        Assertions.assertThat(parent.lastToken).isSameAs(lastToken)
-        Assertions.assertThat(child2.lastToken).isSameAs(lastToken)
+        assertThat(parent.lastToken).isSameAs(lastToken)
+        assertThat(child2.lastToken).isSameAs(lastToken)
     }
 
     @Test
@@ -103,9 +103,9 @@ class AstNodeTest {
         val child2 = AstNode(NodeType(), "child2", child2Token)
         parent.addChild(child1)
         parent.addChild(child2)
-        Assertions.assertThat(parent.tokens.size).isEqualTo(2)
-        Assertions.assertThat(parent.tokens[0]).isSameAs(child1Token)
-        Assertions.assertThat(parent.tokens[1]).isSameAs(child2Token)
+        assertThat(parent.tokens.size).isEqualTo(2)
+        assertThat(parent.tokens[0]).isSameAs(child1Token)
+        assertThat(parent.tokens[1]).isSameAs(child2Token)
     }
 
     @Test(expected = IllegalStateException::class)
@@ -123,8 +123,8 @@ class AstNodeTest {
         val statement = AstNode(NodeType(), "statement", null)
         statement.addChild(expr1)
         statement.addChild(expr2)
-        Assertions.assertThat(expr1.nextSibling()).isSameAs(expr2)
-        Assertions.assertThat(expr2.nextSibling()).isNull()
+        assertThat(expr1.nextSibling()).isSameAs(expr2)
+        assertThat(expr2.nextSibling()).isNull()
     }
 
     @Test
@@ -134,8 +134,8 @@ class AstNodeTest {
         val statement = AstNode(NodeType(), "statement", null)
         statement.addChild(expr1)
         statement.addChild(expr2)
-        Assertions.assertThat(expr1.previousSibling()).isNull()
-        Assertions.assertThat(expr2.previousSibling()).isSameAs(expr1)
+        assertThat(expr1.previousSibling()).isNull()
+        assertThat(expr2.previousSibling()).isSameAs(expr1)
     }
 
     @Test
@@ -146,59 +146,59 @@ class AstNodeTest {
         val identifier = AstNode(NodeType(), "identifier", null)
         expr.addChild(stat)
         expr.addChild(identifier)
-        Assertions.assertThat(expr.findFirstDirectChild(statRule)).isSameAs(stat)
+        assertThat(expr.findFirstDirectChild(statRule)).isSameAs(stat)
         val anotherRule = NodeType()
-        Assertions.assertThat(expr.findFirstDirectChild(anotherRule, statRule)).isSameAs(stat)
+        assertThat(expr.findFirstDirectChild(anotherRule, statRule)).isSameAs(stat)
     }
 
     @Test
     fun testIs() {
         val declarationNode = checkNotNull(parseString("int a = 0;").firstChild)
-        Assertions.assertThat(declarationNode.`is`(MiniCGrammar.DEFINITION)).isTrue()
-        Assertions.assertThat(declarationNode.`is`(MiniCGrammar.COMPILATION_UNIT, MiniCGrammar.DEFINITION)).isTrue()
-        Assertions.assertThat(declarationNode.`is`(MiniCGrammar.DEFINITION, MiniCGrammar.COMPILATION_UNIT)).isTrue()
-        Assertions.assertThat(declarationNode.`is`(MiniCGrammar.COMPILATION_UNIT)).isFalse()
+        assertThat(declarationNode.`is`(MiniCGrammar.DEFINITION)).isTrue()
+        assertThat(declarationNode.`is`(MiniCGrammar.COMPILATION_UNIT, MiniCGrammar.DEFINITION)).isTrue()
+        assertThat(declarationNode.`is`(MiniCGrammar.DEFINITION, MiniCGrammar.COMPILATION_UNIT)).isTrue()
+        assertThat(declarationNode.`is`(MiniCGrammar.COMPILATION_UNIT)).isFalse()
     }
 
     @Test
     fun testIsNot() {
         val declarationNode = checkNotNull(parseString("int a = 0;").firstChild)
-        Assertions.assertThat(declarationNode.isNot(MiniCGrammar.DEFINITION)).isFalse()
-        Assertions.assertThat(declarationNode.isNot(MiniCGrammar.COMPILATION_UNIT, MiniCGrammar.DEFINITION)).isFalse()
-        Assertions.assertThat(declarationNode.isNot(MiniCGrammar.DEFINITION, MiniCGrammar.COMPILATION_UNIT)).isFalse()
-        Assertions.assertThat(declarationNode.isNot(MiniCGrammar.COMPILATION_UNIT)).isTrue()
+        assertThat(declarationNode.isNot(MiniCGrammar.DEFINITION)).isFalse()
+        assertThat(declarationNode.isNot(MiniCGrammar.COMPILATION_UNIT, MiniCGrammar.DEFINITION)).isFalse()
+        assertThat(declarationNode.isNot(MiniCGrammar.DEFINITION, MiniCGrammar.COMPILATION_UNIT)).isFalse()
+        assertThat(declarationNode.isNot(MiniCGrammar.COMPILATION_UNIT)).isTrue()
     }
 
     @Test
     fun testFindChildren() {
         val fileNode = parseString("int a = 0; int myFunction() { int b = 0; { int c = 0; } }")
         val binVariableDeclarationNodes = fileNode.findChildren(MiniCGrammar.BIN_VARIABLE_DEFINITION)
-        Assertions.assertThat(binVariableDeclarationNodes.size).isEqualTo(3)
-        Assertions.assertThat(binVariableDeclarationNodes[0].tokenValue).isEqualTo("a")
-        Assertions.assertThat(binVariableDeclarationNodes[1].tokenValue).isEqualTo("b")
-        Assertions.assertThat(binVariableDeclarationNodes[2].tokenValue).isEqualTo("c")
+        assertThat(binVariableDeclarationNodes.size).isEqualTo(3)
+        assertThat(binVariableDeclarationNodes[0].tokenValue).isEqualTo("a")
+        assertThat(binVariableDeclarationNodes[1].tokenValue).isEqualTo("b")
+        assertThat(binVariableDeclarationNodes[2].tokenValue).isEqualTo("c")
         val binVDeclarationNodes =
             fileNode.findChildren(MiniCGrammar.BIN_VARIABLE_DEFINITION, MiniCGrammar.BIN_FUNCTION_DEFINITION)
-        Assertions.assertThat(binVDeclarationNodes.size).isEqualTo(4)
-        Assertions.assertThat(binVDeclarationNodes[0].tokenValue).isEqualTo("a")
-        Assertions.assertThat(binVDeclarationNodes[1].tokenValue).isEqualTo("myFunction")
-        Assertions.assertThat(binVDeclarationNodes[2].tokenValue).isEqualTo("b")
-        Assertions.assertThat(binVDeclarationNodes[3].tokenValue).isEqualTo("c")
-        Assertions.assertThat(fileNode.findChildren(MiniCGrammar.MULTIPLICATIVE_EXPRESSION).size).isEqualTo(0)
+        assertThat(binVDeclarationNodes.size).isEqualTo(4)
+        assertThat(binVDeclarationNodes[0].tokenValue).isEqualTo("a")
+        assertThat(binVDeclarationNodes[1].tokenValue).isEqualTo("myFunction")
+        assertThat(binVDeclarationNodes[2].tokenValue).isEqualTo("b")
+        assertThat(binVDeclarationNodes[3].tokenValue).isEqualTo("c")
+        assertThat(fileNode.findChildren(MiniCGrammar.MULTIPLICATIVE_EXPRESSION).size).isEqualTo(0)
     }
 
     @Test
     fun testFindDirectChildren() {
         val fileNode = parseString("int a = 0; void myFunction() { int b = 0*3; { int c = 0; } }")
         val declarationNodes = fileNode.findDirectChildren(MiniCGrammar.DEFINITION)
-        Assertions.assertThat(declarationNodes.size).isEqualTo(2)
-        Assertions.assertThat(declarationNodes[0].tokenValue).isEqualTo("int")
-        Assertions.assertThat(declarationNodes[1].tokenValue).isEqualTo("void")
+        assertThat(declarationNodes.size).isEqualTo(2)
+        assertThat(declarationNodes[0].tokenValue).isEqualTo("int")
+        assertThat(declarationNodes[1].tokenValue).isEqualTo("void")
         val binVDeclarationNodes = fileNode.findDirectChildren(
             MiniCGrammar.BIN_VARIABLE_DEFINITION,
             MiniCGrammar.BIN_FUNCTION_DEFINITION
         )
-        Assertions.assertThat(binVDeclarationNodes.size).isEqualTo(0)
+        assertThat(binVDeclarationNodes.size).isEqualTo(0)
     }
 
     @Test
@@ -209,11 +209,11 @@ class AstNodeTest {
         val identifier = AstNode(indentifierRule, "identifier", null)
         expr.addChild(stat)
         expr.addChild(identifier)
-        Assertions.assertThat(expr.findFirstChild(indentifierRule)).isSameAs(identifier)
-        Assertions.assertThat(expr.hasChildren(indentifierRule)).isTrue()
+        assertThat(expr.findFirstChild(indentifierRule)).isSameAs(identifier)
+        assertThat(expr.hasChildren(indentifierRule)).isTrue()
         val anotherRule = NodeType()
-        Assertions.assertThat(expr.findFirstChild(anotherRule)).isNull()
-        Assertions.assertThat(expr.hasChildren(anotherRule)).isFalse()
+        assertThat(expr.findFirstChild(anotherRule)).isNull()
+        assertThat(expr.hasChildren(anotherRule)).isFalse()
     }
 
     @Test
@@ -224,8 +224,8 @@ class AstNodeTest {
         val identifier = AstNode(NodeType(), "identifier", null)
         expr.addChild(stat)
         expr.addChild(identifier)
-        Assertions.assertThat(identifier.hasParents(exprRule)).isTrue()
-        Assertions.assertThat(identifier.hasParents(NodeType())).isFalse()
+        assertThat(identifier.hasParents(exprRule)).isTrue()
+        assertThat(identifier.hasParents(NodeType())).isFalse()
     }
 
     @Test
@@ -235,7 +235,7 @@ class AstNodeTest {
         val statement = AstNode(NodeType(), "statement", null)
         statement.addChild(expr1)
         statement.addChild(expr2)
-        Assertions.assertThat(statement.lastChild).isSameAs(expr2)
+        assertThat(statement.lastChild).isSameAs(expr2)
     }
 
     /**
@@ -266,14 +266,14 @@ class AstNodeTest {
         a1.addChild(b2)
         a1.addChild(d1)
         a1.addChild(b3)
-        Assertions.assertThat(a1.findChildren(b, c)).containsExactly(c1, b1, b2, b3)
-        Assertions.assertThat(a1.findChildren(b)).containsExactly(b1, b2, b3)
-        Assertions.assertThat(a1.findChildren(e)).isEmpty()
-        Assertions.assertThat(a1.findChildren(a)).`as`("SSLR-249").containsExactly(a1)
-        Assertions.assertThat(a1.getDescendants(b, c)).containsExactly(c1, b1, b2, b3)
-        Assertions.assertThat(a1.getDescendants(b)).containsExactly(b1, b2, b3)
-        Assertions.assertThat(a1.getDescendants(e)).isEmpty()
-        Assertions.assertThat(a1.getDescendants(a)).`as`("SSLR-249").isEmpty()
+        assertThat(a1.findChildren(b, c)).containsExactly(c1, b1, b2, b3)
+        assertThat(a1.findChildren(b)).containsExactly(b1, b2, b3)
+        assertThat(a1.findChildren(e)).isEmpty()
+        assertThat(a1.findChildren(a)).`as`("SSLR-249").containsExactly(a1)
+        assertThat(a1.getDescendants(b, c)).containsExactly(c1, b1, b2, b3)
+        assertThat(a1.getDescendants(b)).containsExactly(b1, b2, b3)
+        assertThat(a1.getDescendants(e)).isEmpty()
+        assertThat(a1.getDescendants(a)).`as`("SSLR-249").isEmpty()
     }
 
     private inner class NodeType : AstNodeSkippingPolicy {

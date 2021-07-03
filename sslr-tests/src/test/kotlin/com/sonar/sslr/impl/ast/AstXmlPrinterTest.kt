@@ -25,7 +25,7 @@ import com.sonar.sslr.impl.ast.AstXmlPrinter.Companion.print
 import com.sonar.sslr.impl.matcher.RuleDefinition
 import com.sonar.sslr.test.lexer.MockHelper.mockToken
 import com.sonar.sslr.test.lexer.MockHelper.mockTokenBuilder
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Test
 
 class AstXmlPrinterTest {
@@ -35,13 +35,13 @@ class AstXmlPrinterTest {
             RuleDefinition("expr"), "expr", mockTokenBuilder(WordTokenType(), "word").setLine(34)
                 .setColumn(12).build()
         )
-        Assertions.assertThat(print(root)).isEqualTo("<expr tokenValue=\"word\" tokenLine=\"34\" tokenColumn=\"12\"/>")
+        assertThat(print(root)).isEqualTo("<expr tokenValue=\"word\" tokenLine=\"34\" tokenColumn=\"12\"/>")
     }
 
     @Test
     fun testPrintWordAstNode() {
         val root = AstNode(mockToken(WordTokenType(), "myword"))
-        Assertions.assertThat(print(root)).isEqualTo("<WORD tokenValue=\"myword\" tokenLine=\"1\" tokenColumn=\"1\"/>")
+        assertThat(print(root)).isEqualTo("<WORD tokenValue=\"myword\" tokenLine=\"1\" tokenColumn=\"1\"/>")
     }
 
     @Test
@@ -59,7 +59,7 @@ class AstXmlPrinterTest {
             .append("  <WORD tokenValue=\"WORD\" tokenLine=\"1\" tokenColumn=\"1\"/>\n")
             .append("</expr>")
             .toString()
-        Assertions.assertThat(print(astNode)).isEqualTo(expectedResult)
+        assertThat(print(astNode)).isEqualTo(expectedResult)
     }
 
     private class WordTokenType : TokenType {

@@ -23,7 +23,7 @@ import com.sonar.sslr.impl.MockTokenType
 import com.sonar.sslr.impl.channel.RegexpChannelBuilder.or
 import com.sonar.sslr.impl.matcher.GrammarFunctions.Standard.o2n
 import com.sonar.sslr.impl.matcher.GrammarFunctions.Standard.opt
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 
@@ -40,11 +40,11 @@ class RuleMatcherTest {
 
     @Test
     fun getName() {
-        Assertions.assertThat(javaClassDefinition.getName()).isEqualTo("JavaClassDefinition")
+        assertThat(javaClassDefinition.getName()).isEqualTo("JavaClassDefinition")
     }
 
     @Test
     fun getToString() {
-        Assertions.assertThat(javaClassDefinition.getName()).isEqualTo("JavaClassDefinition")
+        assertThat(javaClassDefinition.getName()).isEqualTo("JavaClassDefinition")
     }
 }

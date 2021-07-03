@@ -28,7 +28,7 @@ import org.sonar.sslr.parser.ParseErrorFormatter
 import org.sonar.sslr.parser.ParseRunner
 
 /**
- * To create a new instance of this class invoke `[Assertions.assertThat]`.
+ * To create a new instance of this class invoke `[assertThat]`.
  *
  *
  * This class is not intended to be instantiated or subclassed by clients.

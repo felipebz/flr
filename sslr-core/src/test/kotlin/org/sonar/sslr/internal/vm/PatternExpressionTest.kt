@@ -19,72 +19,71 @@
  */
 package org.sonar.sslr.internal.vm
 
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Assert
 import org.junit.Assert.assertThrows
 import org.junit.Test
-import org.mockito.Mockito
+import org.mockito.kotlin.*
 import org.sonar.sslr.grammar.GrammarException
-import org.sonar.sslr.internal.vm.Machine
 
 class PatternExpressionTest {
     private val expression = PatternExpression("foo|bar")
-    private val machine = Mockito.mock(Machine::class.java)
+    private val machine = mock<Machine>()
     @Test
     fun should_compile() {
-        Assertions.assertThat(expression.compile(CompilationHandler())).containsOnly(expression)
-        Assertions.assertThat(expression.toString()).isEqualTo("Pattern foo|bar")
+        assertThat(expression.compile(CompilationHandler())).containsOnly(expression)
+        assertThat(expression.toString()).isEqualTo("Pattern foo|bar")
     }
 
     @Test
     fun should_match() {
-        Mockito.`when`(machine.length).thenReturn(3)
-        Mockito.`when`(machine[0]).thenReturn('f')
-        Mockito.`when`(machine[1]).thenReturn('o')
-        Mockito.`when`(machine[2]).thenReturn('o')
+        whenever(machine.length).thenReturn(3)
+        whenever(machine[0]).thenReturn('f')
+        whenever(machine[1]).thenReturn('o')
+        whenever(machine[2]).thenReturn('o')
         expression.execute(machine)
-        val inOrder = Mockito.inOrder(machine)
-        inOrder.verify(machine, Mockito.atLeast(1)).length
-        inOrder.verify(machine, Mockito.atLeast(1))[0]
-        inOrder.verify(machine, Mockito.atLeast(1))[1]
-        inOrder.verify(machine, Mockito.atLeast(1))[2]
+        val inOrder = inOrder(machine)
+        inOrder.verify(machine, atLeast(1)).length
+        inOrder.verify(machine, atLeast(1))[0]
+        inOrder.verify(machine, atLeast(1))[1]
+        inOrder.verify(machine, atLeast(1))[2]
         inOrder.verify(machine).createLeafNode(expression, 3)
         inOrder.verify(machine).jump(1)
-        Mockito.verifyNoMoreInteractions(machine)
+        verifyNoMoreInteractions(machine)
 
         // Should reset matcher with empty string:
         try {
             expression.getMatcher().find(1)
             Assert.fail("exception expected")
         } catch (e: IndexOutOfBoundsException) {
-            Assertions.assertThat(e.message).isEqualTo("Illegal start index")
+            assertThat(e.message).isEqualTo("Illegal start index")
         }
     }
 
     @Test
     fun should_backtrack() {
-        Mockito.`when`(machine.length).thenReturn(1)
-        Mockito.`when`(machine[0]).thenReturn('z')
+        whenever(machine.length).thenReturn(1)
+        whenever(machine[0]).thenReturn('z')
         expression.execute(machine)
-        val inOrder = Mockito.inOrder(machine)
-        inOrder.verify(machine, Mockito.atLeast(1)).length
-        inOrder.verify(machine, Mockito.atLeast(1))[0]
+        val inOrder = inOrder(machine)
+        inOrder.verify(machine, atLeast(1)).length
+        inOrder.verify(machine, atLeast(1))[0]
         inOrder.verify(machine).backtrack()
-        Mockito.verifyNoMoreInteractions(machine)
+        verifyNoMoreInteractions(machine)
 
         // Should reset matcher with empty string:
         try {
             expression.getMatcher().find(1)
             Assert.fail("exception expected")
         } catch (e: IndexOutOfBoundsException) {
-            Assertions.assertThat(e.message).isEqualTo("Illegal start index")
+            assertThat(e.message).isEqualTo("Illegal start index")
         }
     }
 
     @Test
     fun should_catch_StackOverflowError() {
-        Mockito.`when`(machine.length).thenReturn(1)
-        Mockito.`when`(machine[0]).thenThrow(StackOverflowError::class.java)
+        whenever(machine.length).thenReturn(1)
+        whenever(machine[0]).thenThrow(StackOverflowError::class.java)
         assertThrows(
             "The regular expression 'foo|bar' has led to a stack overflow error."
                     + " This error is certainly due to an inefficient use of alternations. See https://bugs.java.com/bugdatabase/view_bug.do?bug_id=5050507",

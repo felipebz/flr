@@ -19,7 +19,7 @@
  */
 package org.sonar.sslr.internal.vm
 
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Test
 import org.sonar.sslr.internal.vm.Instruction.Companion.backtrack
 import org.sonar.sslr.internal.vm.Instruction.Companion.choice
@@ -30,9 +30,9 @@ class OneOrMoreExpressionTest {
     @Test
     fun should_compile() {
         val expression = OneOrMoreExpression(SubExpression(1, 2))
-        Assertions.assertThat(expression.toString()).isEqualTo("OneOrMore[SubExpression]")
+        assertThat(expression.toString()).isEqualTo("OneOrMore[SubExpression]")
         val instructions = expression.compile(CompilationHandler())
-        Assertions.assertThat(instructions).isEqualTo(
+        assertThat(instructions).isEqualTo(
             arrayOf(
                 choice(6),
                 SubExpression.mockInstruction(1),

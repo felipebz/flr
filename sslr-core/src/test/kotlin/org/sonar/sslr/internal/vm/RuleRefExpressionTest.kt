@@ -19,22 +19,21 @@
  */
 package org.sonar.sslr.internal.vm
 
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Assert.assertThrows
 import org.junit.Test
-import org.mockito.Mockito
+import org.mockito.kotlin.mock
 import org.sonar.sslr.grammar.GrammarRuleKey
-import org.sonar.sslr.internal.vm.Machine
 
 class RuleRefExpressionTest {
-    private val ruleKey = Mockito.mock(GrammarRuleKey::class.java)
+    private val ruleKey = mock<GrammarRuleKey>()
     private val expression = RuleRefExpression(ruleKey)
-    private val machine = Mockito.mock(Machine::class.java)
+    private val machine = mock<Machine>()
     @Test
     fun should_compile() {
-        Assertions.assertThat(expression.compile(CompilationHandler())).containsOnly(expression)
-        Assertions.assertThat(expression.getRuleKey()).isSameAs(ruleKey)
-        Assertions.assertThat(expression.toString()).isEqualTo("Ref $ruleKey")
+        assertThat(expression.compile(CompilationHandler())).containsOnly(expression)
+        assertThat(expression.getRuleKey()).isSameAs(ruleKey)
+        assertThat(expression.toString()).isEqualTo("Ref $ruleKey")
     }
 
     @Test

@@ -20,41 +20,41 @@
 package org.sonar.sslr.examples.grammars
 
 import org.junit.Test
-import org.sonar.sslr.tests.Assertions
+import org.sonar.sslr.tests.Assertions.assertThat
 
 class PegGrammarTest {
     private val g = PegGrammar.create()
     @Test
     fun test() {
-        Assertions.assertThat(g.rule(PegGrammar.WHITESPACE))
+        assertThat(g.rule(PegGrammar.WHITESPACE))
             .matches("\n \r \t")
-        Assertions.assertThat(g.rule(PegGrammar.STRING))
+        assertThat(g.rule(PegGrammar.STRING))
             .matches("\"string\"")
-        Assertions.assertThat(g.rule(PegGrammar.RULE_KEY))
+        assertThat(g.rule(PegGrammar.RULE_KEY))
             .matches("rule_key")
-        Assertions.assertThat(g.rule(PegGrammar.ATOM))
+        assertThat(g.rule(PegGrammar.ATOM))
             .matches("\"string\"")
             .matches("rule_key")
             .matches("( e )")
-        Assertions.assertThat(g.rule(PegGrammar.ZERO_OR_MORE_EXPRESSION))
+        assertThat(g.rule(PegGrammar.ZERO_OR_MORE_EXPRESSION))
             .matches("e *")
-        Assertions.assertThat(g.rule(PegGrammar.ONE_OR_MORE_EXPRESSION))
+        assertThat(g.rule(PegGrammar.ONE_OR_MORE_EXPRESSION))
             .matches("e +")
-        Assertions.assertThat(g.rule(PegGrammar.OPTIONAL_EXPRESSION))
+        assertThat(g.rule(PegGrammar.OPTIONAL_EXPRESSION))
             .matches("e ?")
-        Assertions.assertThat(g.rule(PegGrammar.NEXT_NOT_EXPRESSION))
+        assertThat(g.rule(PegGrammar.NEXT_NOT_EXPRESSION))
             .matches("! e")
-        Assertions.assertThat(g.rule(PegGrammar.NEXT_EXPRESSION))
+        assertThat(g.rule(PegGrammar.NEXT_EXPRESSION))
             .matches("& e")
-        Assertions.assertThat(g.rule(PegGrammar.SEQUENCE_EXPRESSION))
+        assertThat(g.rule(PegGrammar.SEQUENCE_EXPRESSION))
             .matches("e e")
-        Assertions.assertThat(g.rule(PegGrammar.FIRST_OF_EXPRESSION))
+        assertThat(g.rule(PegGrammar.FIRST_OF_EXPRESSION))
             .matches("e")
             .matches("e | e")
-        Assertions.assertThat(g.rule(PegGrammar.RULE))
+        assertThat(g.rule(PegGrammar.RULE))
             .matches("rule = e ;")
             .matches("rule = e | e ;")
-        Assertions.assertThat(g.rule(PegGrammar.GRAMMAR))
+        assertThat(g.rule(PegGrammar.GRAMMAR))
             .matches("rule = e ; rule = e ;")
     }
 }

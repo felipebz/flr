@@ -23,7 +23,7 @@ import com.sonar.sslr.api.GenericTokenType
 import com.sonar.sslr.api.TokenType
 import com.sonar.sslr.impl.Lexer
 import com.sonar.sslr.test.lexer.MockHelper.mockLexer
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.hamcrest.CoreMatchers
 import org.junit.Assert
 import org.junit.Test
@@ -42,7 +42,7 @@ class UnknownCharacterChannelTest {
 
     @Test
     fun shouldConsumeEofCharacter() {
-        Assertions.assertThat(channel.consume(CodeReader(""), mockLexer())).isFalse()
+        assertThat(channel.consume(CodeReader(""), mockLexer())).isFalse()
     }
 
     private fun check(
@@ -53,7 +53,7 @@ class UnknownCharacterChannelTest {
         lexer: Lexer
     ) {
         val code = CodeReader(StringReader(input))
-        Assertions.assertThat(channel.consume(code, lexer)).isTrue()
+        assertThat(channel.consume(code, lexer)).isTrue()
         Assert.assertThat(lexer.tokens.size, CoreMatchers.`is`(1))
         Assert.assertThat(lexer.tokens[0].type, CoreMatchers.`is`(expectedTokenType))
         Assert.assertThat(lexer.tokens[0].value, CoreMatchers.`is`(expectedTokenValue))

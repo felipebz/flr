@@ -21,12 +21,12 @@ package org.sonar.sslr.internal.ast
 
 import com.sonar.sslr.api.AstNode
 import com.sonar.sslr.api.AstNodeType
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Assert.assertThrows
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mockito
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import org.sonar.sslr.internal.ast.select.AstSelectFactory.empty
 import org.sonar.sslr.internal.ast.select.ListAstSelect
 import org.sonar.sslr.internal.ast.select.SingleAstSelect
@@ -37,189 +37,177 @@ class SingleAstSelectTest {
     private lateinit var select: SingleAstSelect
     @Before
     fun init() {
-        node = Mockito.mock(AstNode::class.java)
+        node = mock()
         select = SingleAstSelect(node)
     }
 
     @Test
     fun test_children_when_no_children() {
-        Assertions.assertThat(select.children() as Any).isSameAs(empty())
-        Assertions.assertThat(select.children(Mockito.mock(AstNodeType::class.java)) as Any).isSameAs(empty())
-        Assertions.assertThat(
-            select.children(
-                Mockito.mock(AstNodeType::class.java), Mockito.mock(
-                    AstNodeType::class.java
-                )
-            ) as Any
-        ).isSameAs(empty())
+        assertThat(select.children() as Any).isSameAs(empty())
+        assertThat(select.children(mock()) as Any).isSameAs(empty())
+        assertThat(select.children(mock(), mock()) as Any).isSameAs(empty())
     }
 
     @Test
     fun test_children_when_one_child() {
-        val type1 = Mockito.mock(AstNodeType::class.java)
-        val type2 = Mockito.mock(AstNodeType::class.java)
-        val child = Mockito.mock(AstNode::class.java)
-        Mockito.`when`(node.numberOfChildren).thenReturn(1)
-        Mockito.`when`(node.firstChild).thenReturn(child)
+        val type1 = mock<AstNodeType>()
+        val type2 = mock<AstNodeType>()
+        val child = mock<AstNode>()
+        whenever(node.numberOfChildren).thenReturn(1)
+        whenever(node.firstChild).thenReturn(child)
         var children = select.children()
-        Assertions.assertThat(children as Any).isInstanceOf(SingleAstSelect::class.java)
-        Assertions.assertThat(children).containsOnly(child)
-        Mockito.`when`<List<AstNode>>(node.children).thenReturn(listOf(child))
+        assertThat(children as Any).isInstanceOf(SingleAstSelect::class.java)
+        assertThat(children).containsOnly(child)
+        whenever<List<AstNode>>(node.children).thenReturn(listOf(child))
         children = select.children(type1)
-        Assertions.assertThat(children as Any).isSameAs(empty())
-        Mockito.`when`(child.type).thenReturn(type1)
+        assertThat(children as Any).isSameAs(empty())
+        whenever(child.type).thenReturn(type1)
         children = select.children(type1)
-        Assertions.assertThat(children as Any).isInstanceOf(SingleAstSelect::class.java)
-        Assertions.assertThat(children).containsOnly(child)
+        assertThat(children as Any).isInstanceOf(SingleAstSelect::class.java)
+        assertThat(children).containsOnly(child)
         children = select.children(type1, type2)
-        Assertions.assertThat(children as Any).isSameAs(empty())
-        Mockito.`when`(child.`is`(type1, type2)).thenReturn(true)
+        assertThat(children as Any).isSameAs(empty())
+        whenever(child.`is`(type1, type2)).thenReturn(true)
         children = select.children(type1, type2)
-        Assertions.assertThat(children as Any).isInstanceOf(SingleAstSelect::class.java)
-        Assertions.assertThat(children).containsOnly(child)
+        assertThat(children as Any).isInstanceOf(SingleAstSelect::class.java)
+        assertThat(children).containsOnly(child)
     }
 
     @Test
     fun test_chilren_when_more_than_one_child() {
-        val type1 = Mockito.mock(AstNodeType::class.java)
-        val type2 = Mockito.mock(AstNodeType::class.java)
-        val child1 = Mockito.mock(AstNode::class.java)
-        val child2 = Mockito.mock(AstNode::class.java)
-        Mockito.`when`(node.numberOfChildren).thenReturn(2)
-        Mockito.`when`<List<AstNode>>(node.children).thenReturn(listOf(child1, child2))
+        val type1 = mock<AstNodeType>()
+        val type2 = mock<AstNodeType>()
+        val child1 = mock<AstNode>()
+        val child2 = mock<AstNode>()
+        whenever(node.numberOfChildren).thenReturn(2)
+        whenever<List<AstNode>>(node.children).thenReturn(listOf(child1, child2))
         var children = select.children()
-        Assertions.assertThat(children as Any).isInstanceOf(ListAstSelect::class.java)
-        Assertions.assertThat(children).containsOnly(child1, child2)
+        assertThat(children as Any).isInstanceOf(ListAstSelect::class.java)
+        assertThat(children).containsOnly(child1, child2)
         children = select.children(type1)
-        Assertions.assertThat(children as Any).isSameAs(empty())
-        Mockito.`when`(child1.type).thenReturn(type1)
+        assertThat(children as Any).isSameAs(empty())
+        whenever(child1.type).thenReturn(type1)
         children = select.children(type1)
-        Assertions.assertThat(children as Any).isInstanceOf(SingleAstSelect::class.java)
-        Assertions.assertThat(children).containsOnly(child1)
-        Mockito.`when`(child2.type).thenReturn(type1)
+        assertThat(children as Any).isInstanceOf(SingleAstSelect::class.java)
+        assertThat(children).containsOnly(child1)
+        whenever(child2.type).thenReturn(type1)
         children = select.children(type1)
-        Assertions.assertThat(children as Any).isInstanceOf(ListAstSelect::class.java)
-        Assertions.assertThat(children).containsOnly(child1, child2)
+        assertThat(children as Any).isInstanceOf(ListAstSelect::class.java)
+        assertThat(children).containsOnly(child1, child2)
         children = select.children(type1, type2)
-        Assertions.assertThat(children as Any).isSameAs(empty())
-        Mockito.`when`(child1.`is`(type1, type2)).thenReturn(true)
+        assertThat(children as Any).isSameAs(empty())
+        whenever(child1.`is`(type1, type2)).thenReturn(true)
         children = select.children(type1, type2)
-        Assertions.assertThat(children as Any).isInstanceOf(SingleAstSelect::class.java)
-        Assertions.assertThat(children).containsOnly(child1)
-        Mockito.`when`(child2.`is`(type1, type2)).thenReturn(true)
+        assertThat(children as Any).isInstanceOf(SingleAstSelect::class.java)
+        assertThat(children).containsOnly(child1)
+        whenever(child2.`is`(type1, type2)).thenReturn(true)
         children = select.children(type1, type2)
-        Assertions.assertThat(children as Any).isInstanceOf(ListAstSelect::class.java)
-        Assertions.assertThat(children).containsOnly(child1, child2)
+        assertThat(children as Any).isInstanceOf(ListAstSelect::class.java)
+        assertThat(children).containsOnly(child1, child2)
     }
 
     @Test
     fun test_nextSibling() {
-        Assertions.assertThat(select.nextSibling() as Any).isSameAs(empty())
-        val sibling = Mockito.mock(AstNode::class.java)
-        Mockito.`when`(node.nextSibling).thenReturn(sibling)
-        Assertions.assertThat(select.nextSibling() as Any).isInstanceOf(SingleAstSelect::class.java)
-        Assertions.assertThat(select.nextSibling()).containsOnly(sibling)
+        assertThat(select.nextSibling() as Any).isSameAs(empty())
+        val sibling = mock<AstNode>()
+        whenever(node.nextSibling).thenReturn(sibling)
+        assertThat(select.nextSibling() as Any).isInstanceOf(SingleAstSelect::class.java)
+        assertThat(select.nextSibling()).containsOnly(sibling)
     }
 
     @Test
     fun test_previousSibling() {
-        Assertions.assertThat(select.previousSibling() as Any).isSameAs(empty())
-        val sibling = Mockito.mock(AstNode::class.java)
-        Mockito.`when`(node.previousSibling).thenReturn(sibling)
-        Assertions.assertThat(select.previousSibling() as Any).isInstanceOf(SingleAstSelect::class.java)
-        Assertions.assertThat(select.previousSibling()).containsOnly(sibling)
+        assertThat(select.previousSibling() as Any).isSameAs(empty())
+        val sibling = mock<AstNode>()
+        whenever(node.previousSibling).thenReturn(sibling)
+        assertThat(select.previousSibling() as Any).isInstanceOf(SingleAstSelect::class.java)
+        assertThat(select.previousSibling()).containsOnly(sibling)
     }
 
     @Test
     fun test_parent() {
-        Assertions.assertThat(select.parent() as Any).isSameAs(empty())
-        val parent = Mockito.mock(AstNode::class.java)
-        Mockito.`when`(node.parent).thenReturn(parent)
-        Assertions.assertThat(select.parent() as Any).isInstanceOf(SingleAstSelect::class.java)
-        Assertions.assertThat(select.parent()).containsOnly(parent)
+        assertThat(select.parent() as Any).isSameAs(empty())
+        val parent = mock<AstNode>()
+        whenever(node.parent).thenReturn(parent)
+        assertThat(select.parent() as Any).isInstanceOf(SingleAstSelect::class.java)
+        assertThat(select.parent()).containsOnly(parent)
     }
 
     @Test
     fun test_firstAncestor_by_type() {
-        val type = Mockito.mock(AstNodeType::class.java)
-        Assertions.assertThat(select.firstAncestor(type) as Any).isSameAs(empty())
-        val parent = Mockito.mock(AstNode::class.java)
-        Mockito.`when`(node.parent).thenReturn(parent)
-        val ancestor = Mockito.mock(AstNode::class.java)
-        Mockito.`when`(ancestor.type).thenReturn(type)
-        Mockito.`when`(parent.parent).thenReturn(ancestor)
-        Assertions.assertThat(select.firstAncestor(type) as Any).isInstanceOf(
+        val type = mock<AstNodeType>()
+        assertThat(select.firstAncestor(type) as Any).isSameAs(empty())
+        val parent = mock<AstNode>()
+        whenever(node.parent).thenReturn(parent)
+        val ancestor = mock<AstNode>()
+        whenever(ancestor.type).thenReturn(type)
+        whenever(parent.parent).thenReturn(ancestor)
+        assertThat(select.firstAncestor(type) as Any).isInstanceOf(
             SingleAstSelect::class.java
         )
-        Assertions.assertThat(select.firstAncestor(type)).containsOnly(ancestor)
+        assertThat(select.firstAncestor(type)).containsOnly(ancestor)
     }
 
     @Test
     fun test_firstAncestor_by_types() {
-        val type1 = Mockito.mock(AstNodeType::class.java)
-        val type2 = Mockito.mock(AstNodeType::class.java)
-        Assertions.assertThat(select.firstAncestor(type1, type2) as Any).isSameAs(empty())
-        val parent = Mockito.mock(AstNode::class.java)
-        Mockito.`when`(node.parent).thenReturn(parent)
-        val ancestor = Mockito.mock(AstNode::class.java)
-        Mockito.`when`(ancestor.`is`(type1, type2)).thenReturn(true)
-        Mockito.`when`(parent.parent).thenReturn(ancestor)
-        Assertions.assertThat(select.firstAncestor(type1, type2) as Any).isInstanceOf(
+        val type1 = mock<AstNodeType>()
+        val type2 = mock<AstNodeType>()
+        assertThat(select.firstAncestor(type1, type2) as Any).isSameAs(empty())
+        val parent = mock<AstNode>()
+        whenever(node.parent).thenReturn(parent)
+        val ancestor = mock<AstNode>()
+        whenever(ancestor.`is`(type1, type2)).thenReturn(true)
+        whenever(parent.parent).thenReturn(ancestor)
+        assertThat(select.firstAncestor(type1, type2) as Any).isInstanceOf(
             SingleAstSelect::class.java
         )
-        Assertions.assertThat(select.firstAncestor(type1, type2)).containsOnly(ancestor)
+        assertThat(select.firstAncestor(type1, type2)).containsOnly(ancestor)
     }
 
     @Test
     fun test_descendants() {
-        Assertions.assertThat(select.descendants(Mockito.mock(AstNodeType::class.java)) as Any).isSameAs(empty())
-        Assertions.assertThat(
-            select.descendants(
-                Mockito.mock(AstNodeType::class.java), Mockito.mock(
-                    AstNodeType::class.java
-                )
-            ) as Any
-        ).isSameAs(empty())
+        assertThat(select.descendants(mock()) as Any).isSameAs(empty())
+        assertThat(select.descendants(mock(), mock()) as Any).isSameAs(empty())
     }
 
     @Test
     fun test_isEmpty() {
-        Assertions.assertThat(select.isEmpty()).isFalse()
+        assertThat(select.isEmpty()).isFalse()
     }
 
     @Test
     fun test_isNotEmpty() {
-        Assertions.assertThat(select.isNotEmpty()).isTrue()
+        assertThat(select.isNotEmpty()).isTrue()
     }
 
     @Test
     fun test_filter_by_type() {
-        val type = Mockito.mock(AstNodeType::class.java)
-        Assertions.assertThat(select.filter(type) as Any).isSameAs(empty())
-        Mockito.`when`(node.type).thenReturn(type)
-        Assertions.assertThat(select.filter(type) as Any).isSameAs(select)
+        val type = mock<AstNodeType>()
+        assertThat(select.filter(type) as Any).isSameAs(empty())
+        whenever(node.type).thenReturn(type)
+        assertThat(select.filter(type) as Any).isSameAs(select)
     }
 
     @Test
     fun test_filter_by_types() {
-        val type1 = Mockito.mock(AstNodeType::class.java)
-        val type2 = Mockito.mock(AstNodeType::class.java)
-        Assertions.assertThat(select.filter(type1, type2) as Any).isSameAs(empty())
-        Mockito.`when`(node.`is`(type1, type2)).thenReturn(true)
-        Assertions.assertThat(select.filter(type1, type2) as Any).isSameAs(select)
+        val type1 = mock<AstNodeType>()
+        val type2 = mock<AstNodeType>()
+        assertThat(select.filter(type1, type2) as Any).isSameAs(empty())
+        whenever(node.`is`(type1, type2)).thenReturn(true)
+        assertThat(select.filter(type1, type2) as Any).isSameAs(select)
     }
 
     @Test
     fun test_filter() {
         val predicate = mock<Predicate<AstNode>>()
-        Assertions.assertThat(select.filter(predicate) as Any?).isSameAs(empty())
-        Mockito.`when`(predicate.test(node)).thenReturn(true)
-        Assertions.assertThat(select.filter(predicate) as Any?).isSameAs(select)
+        assertThat(select.filter(predicate) as Any?).isSameAs(empty())
+        whenever(predicate.test(node)).thenReturn(true)
+        assertThat(select.filter(predicate) as Any?).isSameAs(select)
     }
 
     @Test
     fun test_get0() {
-        Assertions.assertThat(select[0]).isSameAs(node)
+        assertThat(select[0]).isSameAs(node)
     }
 
     @Test
@@ -231,11 +219,11 @@ class SingleAstSelectTest {
 
     @Test
     fun test_size() {
-        Assertions.assertThat(select.size()).isEqualTo(1)
+        assertThat(select.size()).isEqualTo(1)
     }
 
     @Test
     fun test_iterator() {
-        Assertions.assertThat(select.iterator()).containsOnly(node)
+        assertThat(select.iterator()).containsOnly(node)
     }
 }

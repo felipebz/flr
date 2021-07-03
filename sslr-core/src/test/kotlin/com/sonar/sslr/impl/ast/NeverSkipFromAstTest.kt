@@ -20,14 +20,14 @@
 package com.sonar.sslr.impl.ast
 
 import com.sonar.sslr.api.AstNode
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Test
-import org.mockito.Mockito
+import org.mockito.kotlin.mock
 
 class NeverSkipFromAstTest {
     @Test
     fun test() {
-        val astNode = Mockito.mock(AstNode::class.java)
-        Assertions.assertThat(NeverSkipFromAst.INSTANCE.hasToBeSkippedFromAst(astNode)).isFalse()
+        val astNode = mock<AstNode>()
+        assertThat(NeverSkipFromAst.INSTANCE.hasToBeSkippedFromAst(astNode)).isFalse()
     }
 }

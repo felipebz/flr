@@ -23,7 +23,7 @@ import com.sonar.sslr.api.GenericTokenType
 import com.sonar.sslr.api.RecognitionException
 import com.sonar.sslr.test.minic.MiniCParser.parseFile
 import com.sonar.sslr.test.minic.MiniCParser.parseString
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Test
 
 class ParserTest {
@@ -40,7 +40,7 @@ class ParserTest {
     @Test
     fun parse() {
         val compilationUnit = parseString("")
-        Assertions.assertThat(compilationUnit.numberOfChildren).isEqualTo(1)
-        Assertions.assertThat(checkNotNull(compilationUnit.firstChild).`is`(GenericTokenType.EOF)).isTrue()
+        assertThat(compilationUnit.numberOfChildren).isEqualTo(1)
+        assertThat(checkNotNull(compilationUnit.firstChild).`is`(GenericTokenType.EOF)).isTrue()
     }
 }

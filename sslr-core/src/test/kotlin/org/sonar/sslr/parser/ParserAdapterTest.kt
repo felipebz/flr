@@ -22,7 +22,7 @@ package org.sonar.sslr.parser
 import com.sonar.sslr.api.RecognitionException
 import com.sonar.sslr.api.Token
 import com.sonar.sslr.impl.Parser.Companion.builder
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Assert.assertThrows
 import org.junit.Before
 import org.junit.Rule
@@ -48,7 +48,7 @@ class ParserAdapterTest {
 
     @Test
     fun should_return_grammar() {
-        Assertions.assertThat(parser.grammar).isSameAs(grammar)
+        assertThat(parser.grammar).isSameAs(grammar)
     }
 
     @Test
@@ -81,7 +81,7 @@ class ParserAdapterTest {
 
     @Test
     fun builder_should_not_create_new_instance_from_adapter() {
-        Assertions.assertThat(builder(parser).build()).isSameAs(parser)
+        assertThat(builder(parser).build()).isSameAs(parser)
     }
 
     @Test

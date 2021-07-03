@@ -20,9 +20,9 @@
 package org.sonar.sslr.internal.vm
 
 import com.sonar.sslr.api.Trivia.TriviaKind
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Test
-import org.mockito.Mockito
+import org.mockito.kotlin.mock
 import org.sonar.sslr.internal.vm.Instruction.Companion.call
 import org.sonar.sslr.internal.vm.Instruction.Companion.ignoreErrors
 import org.sonar.sslr.internal.vm.Instruction.Companion.jump
@@ -32,9 +32,9 @@ class TriviaExpressionTest {
     @Test
     fun should_compile() {
         val expression = TriviaExpression(TriviaKind.COMMENT, SubExpression(1, 2))
-        Assertions.assertThat(expression.toString()).isEqualTo("Trivia COMMENT[SubExpression]")
+        assertThat(expression.toString()).isEqualTo("Trivia COMMENT[SubExpression]")
         val instructions = expression.compile(CompilationHandler())
-        Assertions.assertThat(instructions).isEqualTo(
+        assertThat(instructions).isEqualTo(
             arrayOf(
                 call(2, expression),
                 jump(5),
@@ -48,12 +48,8 @@ class TriviaExpressionTest {
 
     @Test
     fun should_implement_Matcher() {
-        val expression = TriviaExpression(
-            TriviaKind.COMMENT, Mockito.mock(
-                ParsingExpression::class.java
-            )
-        )
+        val expression = TriviaExpression(TriviaKind.COMMENT, mock())
         // Important for AstCreator
-        Assertions.assertThat(expression.getTriviaKind()).isSameAs(TriviaKind.COMMENT)
+        assertThat(expression.getTriviaKind()).isSameAs(TriviaKind.COMMENT)
     }
 }

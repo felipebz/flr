@@ -20,17 +20,18 @@
 package com.sonar.sslr.impl.ast
 
 import com.sonar.sslr.api.AstNode
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Test
-import org.mockito.Mockito
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 
 class SkipFromAstIfOnlyOneChildTest {
     @Test
     fun testHasToBeSkippedFromAst() {
-        val astNode = Mockito.mock(AstNode::class.java)
-        Mockito.`when`(astNode.numberOfChildren).thenReturn(1)
-        Assertions.assertThat(SkipFromAstIfOnlyOneChild.INSTANCE.hasToBeSkippedFromAst(astNode)).isTrue()
-        Mockito.`when`(astNode.numberOfChildren).thenReturn(2)
-        Assertions.assertThat(SkipFromAstIfOnlyOneChild.INSTANCE.hasToBeSkippedFromAst(astNode)).isFalse()
+        val astNode = mock<AstNode>()
+        whenever(astNode.numberOfChildren).thenReturn(1)
+        assertThat(SkipFromAstIfOnlyOneChild.INSTANCE.hasToBeSkippedFromAst(astNode)).isTrue()
+        whenever(astNode.numberOfChildren).thenReturn(2)
+        assertThat(SkipFromAstIfOnlyOneChild.INSTANCE.hasToBeSkippedFromAst(astNode)).isFalse()
     }
 }

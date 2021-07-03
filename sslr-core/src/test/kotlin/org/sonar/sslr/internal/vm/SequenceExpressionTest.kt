@@ -19,7 +19,7 @@
  */
 package org.sonar.sslr.internal.vm
 
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Test
 
 class SequenceExpressionTest {
@@ -29,9 +29,9 @@ class SequenceExpressionTest {
             SubExpression(1, 2),
             SubExpression(3)
         )
-        Assertions.assertThat(expression.toString()).isEqualTo("Sequence[SubExpression, SubExpression]")
+        assertThat(expression.toString()).isEqualTo("Sequence[SubExpression, SubExpression]")
         val instructions = expression.compile(CompilationHandler())
-        Assertions.assertThat(instructions).isEqualTo(
+        assertThat(instructions).isEqualTo(
             arrayOf(
                 SubExpression.mockInstruction(1),
                 SubExpression.mockInstruction(2),

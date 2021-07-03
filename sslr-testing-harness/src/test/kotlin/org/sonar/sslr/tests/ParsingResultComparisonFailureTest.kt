@@ -19,7 +19,7 @@
  */
 package org.sonar.sslr.tests
 
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.ComparisonFailure
 import org.junit.Test
 
@@ -27,7 +27,7 @@ class ParsingResultComparisonFailureTest {
     @Test
     fun test_implicit_message() {
         val failure = ParsingResultComparisonFailure("expected", "actual")
-        Assertions.assertThat(failure)
+        assertThat(failure)
             .isInstanceOf(ComparisonFailure::class.java)
             .hasMessage("expected\nactual")
             .hasNoCause()
@@ -36,7 +36,7 @@ class ParsingResultComparisonFailureTest {
     @Test
     fun test_explicit_message() {
         val failure = ParsingResultComparisonFailure("foo", "expected", "actual")
-        Assertions.assertThat(failure)
+        assertThat(failure)
             .isInstanceOf(ComparisonFailure::class.java)
             .hasMessage("foo")
             .hasNoCause()

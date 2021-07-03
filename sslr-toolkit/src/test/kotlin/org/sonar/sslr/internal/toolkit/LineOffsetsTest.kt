@@ -21,7 +21,7 @@ package org.sonar.sslr.internal.toolkit
 
 import com.sonar.sslr.api.GenericTokenType
 import com.sonar.sslr.api.Token
-import org.fest.assertions.Assertions
+import org.fest.assertions.Assertions.assertThat
 import org.junit.Assert.assertThrows
 import org.junit.Test
 import java.net.URI
@@ -33,8 +33,8 @@ class LineOffsetsTest {
         val foo = mockToken(1, 0, "foo")
         val bar = mockToken(2, 2, "bar")
         val lineOffsets = LineOffsets("foo\n??bar")
-        Assertions.assertThat(lineOffsets.getStartOffset(foo)).isEqualTo(0)
-        Assertions.assertThat(lineOffsets.getStartOffset(bar)).isEqualTo(6)
+        assertThat(lineOffsets.getStartOffset(foo)).isEqualTo(0)
+        assertThat(lineOffsets.getStartOffset(bar)).isEqualTo(6)
     }
 
     @Test
@@ -42,8 +42,8 @@ class LineOffsetsTest {
         val foo = mockToken(1, 0, "foo")
         val bar = mockToken(2, 2, "bar")
         val lineOffsets = LineOffsets("foo\n??bar...")
-        Assertions.assertThat(lineOffsets.getEndOffset(foo)).isEqualTo(3)
-        Assertions.assertThat(lineOffsets.getEndOffset(bar)).isEqualTo(9)
+        assertThat(lineOffsets.getEndOffset(foo)).isEqualTo(3)
+        assertThat(lineOffsets.getEndOffset(bar)).isEqualTo(9)
     }
 
     @Test
@@ -51,8 +51,8 @@ class LineOffsetsTest {
         val foo = mockToken(1, 0, "foo")
         val bar = mockToken(2, 2, "bar\nbaz")
         val lineOffsets = LineOffsets("foo\n??bar\nbaz...")
-        Assertions.assertThat(lineOffsets.getEndOffset(foo)).isEqualTo(3)
-        Assertions.assertThat(lineOffsets.getEndOffset(bar)).isEqualTo(13)
+        assertThat(lineOffsets.getEndOffset(foo)).isEqualTo(3)
+        assertThat(lineOffsets.getEndOffset(bar)).isEqualTo(13)
     }
 
     @Test
@@ -60,8 +60,8 @@ class LineOffsetsTest {
         val foo = mockToken(1, 0, "foo")
         val bar = mockToken(2, 2, "bar\r\nbaz")
         val lineOffsets = LineOffsets("foo\n??bar\r\nbaz...")
-        Assertions.assertThat(lineOffsets.getEndOffset(foo)).isEqualTo(3)
-        Assertions.assertThat(lineOffsets.getEndOffset(bar)).isEqualTo(13)
+        assertThat(lineOffsets.getEndOffset(foo)).isEqualTo(3)
+        assertThat(lineOffsets.getEndOffset(bar)).isEqualTo(13)
     }
 
     @Test
@@ -69,30 +69,30 @@ class LineOffsetsTest {
         val foo = mockToken(1, 0, "foo")
         val bar = mockToken(2, 2, "bar\rbaz")
         val lineOffsets = LineOffsets("foo\n??bar\rbaz...")
-        Assertions.assertThat(lineOffsets.getEndOffset(foo)).isEqualTo(3)
-        Assertions.assertThat(lineOffsets.getEndOffset(bar)).isEqualTo(13)
+        assertThat(lineOffsets.getEndOffset(foo)).isEqualTo(3)
+        assertThat(lineOffsets.getEndOffset(bar)).isEqualTo(13)
     }
 
     @Test
     fun offset() {
         val lineOffsets = LineOffsets("int a = 0;\nint b = 0;")
-        Assertions.assertThat(lineOffsets.getOffset(2, 4)).isEqualTo(15)
-        Assertions.assertThat(lineOffsets.getOffset(2, 100)).isEqualTo(21)
-        Assertions.assertThat(lineOffsets.getOffset(100, 100)).isEqualTo(21)
+        assertThat(lineOffsets.getOffset(2, 4)).isEqualTo(15)
+        assertThat(lineOffsets.getOffset(2, 100)).isEqualTo(21)
+        assertThat(lineOffsets.getOffset(100, 100)).isEqualTo(21)
     }
 
     @Test
     fun offsetCariageReturnAsNewLine() {
         val lineOffsets = LineOffsets("\rfoo")
-        Assertions.assertThat(lineOffsets.getOffset(1, 0)).isEqualTo(0)
-        Assertions.assertThat(lineOffsets.getOffset(2, 0)).isEqualTo(1)
+        assertThat(lineOffsets.getOffset(1, 0)).isEqualTo(0)
+        assertThat(lineOffsets.getOffset(2, 0)).isEqualTo(1)
     }
 
     @Test
     fun offsetCariageReturnAndLineFeedAsSingleOffset() {
         val lineOffsets = LineOffsets("\r\nfoo")
-        Assertions.assertThat(lineOffsets.getOffset(1, 0)).isEqualTo(0)
-        Assertions.assertThat(lineOffsets.getOffset(2, 0)).isEqualTo(1)
+        assertThat(lineOffsets.getOffset(1, 0)).isEqualTo(0)
+        assertThat(lineOffsets.getOffset(2, 0)).isEqualTo(1)
     }
 
     @Test

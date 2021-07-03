@@ -21,7 +21,8 @@ package org.sonar.sslr.examples.grammars
 
 import org.junit.Test
 import org.sonar.sslr.parser.ParserAdapter
-import org.sonar.sslr.tests.Assertions
+import org.sonar.sslr.tests.Assertions.assertThat
+import org.fest.assertions.Assertions.assertThat
 import java.nio.charset.StandardCharsets
 
 class ExpressionGrammarTest {
@@ -32,7 +33,7 @@ class ExpressionGrammarTest {
      */
     @Test
     fun rules() {
-        Assertions.assertThat(b.build().rule(ExpressionGrammar.EXPRESSION))
+        assertThat(b.build().rule(ExpressionGrammar.EXPRESSION))
             .matches("1 + 1")
             .notMatches("1 +")
             .matches("20 * ( 2 + 2 ) - var")
@@ -45,15 +46,15 @@ class ExpressionGrammarTest {
     fun ast() {
         val parser = ParserAdapter(StandardCharsets.UTF_8, b.build())
         val rootNode = parser.parse("2 + var")
-        org.fest.assertions.Assertions.assertThat(rootNode.type).isSameAs(ExpressionGrammar.EXPRESSION)
+        assertThat(rootNode.type).isSameAs(ExpressionGrammar.EXPRESSION)
         var astNode = rootNode
-        org.fest.assertions.Assertions.assertThat(astNode.numberOfChildren).isEqualTo(1)
-        org.fest.assertions.Assertions.assertThat(astNode.children[0].type)
+        assertThat(astNode.numberOfChildren).isEqualTo(1)
+        assertThat(astNode.children[0].type)
             .isSameAs(ExpressionGrammar.ADDITIVE_EXPRESSION)
         astNode = rootNode.children[0]
-        org.fest.assertions.Assertions.assertThat(astNode.numberOfChildren).isEqualTo(3)
-        org.fest.assertions.Assertions.assertThat(astNode.children[0].type).isSameAs(ExpressionGrammar.NUMBER)
-        org.fest.assertions.Assertions.assertThat(astNode.children[1].type).isSameAs(ExpressionGrammar.PLUS)
-        org.fest.assertions.Assertions.assertThat(astNode.children[2].type).isSameAs(ExpressionGrammar.VARIABLE)
+        assertThat(astNode.numberOfChildren).isEqualTo(3)
+        assertThat(astNode.children[0].type).isSameAs(ExpressionGrammar.NUMBER)
+        assertThat(astNode.children[1].type).isSameAs(ExpressionGrammar.PLUS)
+        assertThat(astNode.children[2].type).isSameAs(ExpressionGrammar.VARIABLE)
     }
 }

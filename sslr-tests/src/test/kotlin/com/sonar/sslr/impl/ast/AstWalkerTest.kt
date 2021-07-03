@@ -27,7 +27,7 @@ import com.sonar.sslr.impl.MockTokenType
 import com.sonar.sslr.test.lexer.MockHelper.mockToken
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mockito
+import org.mockito.kotlin.*
 import java.util.*
 
 class AstWalkerTest {
@@ -44,8 +44,8 @@ class AstWalkerTest {
     private val dog: AstNodeType = object : AstNodeType {}
     private val cat: AstNodeType = object : AstNodeType {}
     private val tiger: AstNodeType = object : AstNodeType {}
-    private val astVisitor = Mockito.mock(AstVisitor::class.java)
-    private val astAndTokenVisitor = Mockito.mock(AstAndTokenVisitor::class.java)
+    private val astVisitor = mock<AstVisitor>()
+    private val astAndTokenVisitor = mock<AstAndTokenVisitor>()
     @Before
     fun init() {
         ast121 = AstNode(animal, "121", null)
@@ -66,43 +66,43 @@ class AstWalkerTest {
 
     @Test
     fun testVisitFileAndLeaveFileCalls() {
-        Mockito.`when`(astVisitor.getAstNodeTypesToVisit()).thenReturn(ArrayList())
+        whenever(astVisitor.getAstNodeTypesToVisit()).thenReturn(ArrayList())
         walker.addVisitor(astVisitor)
         walker.walkAndVisit(ast1)
-        Mockito.verify(astVisitor).visitFile(ast1)
-        Mockito.verify(astVisitor).leaveFile(ast1)
-        Mockito.verify(astVisitor, Mockito.never()).visitNode(ast11)
+        verify(astVisitor).visitFile(ast1)
+        verify(astVisitor).leaveFile(ast1)
+        verify(astVisitor, never()).visitNode(ast11)
     }
 
     @Test
     fun testVisitToken() {
-        Mockito.`when`(astAndTokenVisitor.getAstNodeTypesToVisit()).thenReturn(ArrayList())
+        whenever(astAndTokenVisitor.getAstNodeTypesToVisit()).thenReturn(ArrayList())
         walker.addVisitor(astAndTokenVisitor)
         walker.walkAndVisit(astNodeWithToken)
-        Mockito.verify(astAndTokenVisitor).visitFile(astNodeWithToken)
-        Mockito.verify(astAndTokenVisitor).leaveFile(astNodeWithToken)
-        Mockito.verify(astAndTokenVisitor).visitToken(token)
+        verify(astAndTokenVisitor).visitFile(astNodeWithToken)
+        verify(astAndTokenVisitor).leaveFile(astNodeWithToken)
+        verify(astAndTokenVisitor).visitToken(token)
     }
 
     @Test
     fun testVisitNodeAndLeaveNodeCalls() {
-        Mockito.`when`(astVisitor.getAstNodeTypesToVisit()).thenReturn(listOf(tiger))
+        whenever(astVisitor.getAstNodeTypesToVisit()).thenReturn(listOf(tiger))
         walker.addVisitor(astVisitor)
         walker.walkAndVisit(ast1)
-        val inOrder = Mockito.inOrder(astVisitor)
+        val inOrder = inOrder(astVisitor)
         inOrder.verify(astVisitor).visitNode(ast122)
         inOrder.verify(astVisitor).leaveNode(ast122)
-        Mockito.verify(astVisitor, Mockito.never()).visitNode(ast11)
+        verify(astVisitor, never()).visitNode(ast11)
     }
 
     @Test
     fun testAddVisitor() {
         val walker = AstWalker()
-        val astNodeType = Mockito.mock(AstNodeType::class.java)
-        val visitor1 = Mockito.mock(AstVisitor::class.java)
-        Mockito.`when`(visitor1.getAstNodeTypesToVisit()).thenReturn(listOf(astNodeType))
-        val visitor2 = Mockito.mock(AstVisitor::class.java)
-        Mockito.`when`(visitor2.getAstNodeTypesToVisit()).thenReturn(listOf(astNodeType))
+        val astNodeType = mock<AstNodeType>()
+        val visitor1 = mock<AstVisitor>()
+        whenever(visitor1.getAstNodeTypesToVisit()).thenReturn(listOf(astNodeType))
+        val visitor2 = mock<AstVisitor>()
+        whenever(visitor2.getAstNodeTypesToVisit()).thenReturn(listOf(astNodeType))
         walker.addVisitor(visitor1)
         walker.addVisitor(visitor2)
     }
