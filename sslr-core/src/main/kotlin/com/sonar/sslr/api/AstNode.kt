@@ -20,8 +20,6 @@
 package com.sonar.sslr.api
 
 import com.sonar.sslr.impl.matcher.RuleDefinition
-import org.sonar.sslr.ast.AstSelect
-import org.sonar.sslr.internal.ast.select.AstSelectFactory
 import org.sonar.sslr.internal.grammar.MutableParsingRule
 
 /**
@@ -599,14 +597,4 @@ open class AstNode(
             }
             return currentNode.token
         }
-
-    /**
-     * @since 1.18
-     */
-    @Deprecated("in 1.22",
-        ReplaceWith("AstSelectFactory.select(this)", "org.sonar.sslr.internal.ast.select.AstSelectFactory")
-    )
-    fun select(): AstSelect {
-        return AstSelectFactory.select(this)
-    }
 }

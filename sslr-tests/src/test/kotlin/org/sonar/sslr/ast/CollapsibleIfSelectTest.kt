@@ -28,7 +28,7 @@ import java.io.File
 
 class CollapsibleIfSelectTest {
     private val p = MiniCParser.create()
-    private val g = p.grammar
+
     @Test
     fun test() {
         val fileNode = p.parse(File("src/test/resources/queries/collapsible_if.mc"))
@@ -43,28 +43,23 @@ class CollapsibleIfSelectTest {
     }
 
     private fun visit(node: AstNode): Boolean {
-        val select = node.select()
-        return hasNoElseClause(select) && (hasIfStatementWithoutElse(select) || hasIfStatementWithoutElseInCompoundStatement(
-            select
-        ))
+        return hasNoElseClause(node) && (hasIfStatementWithoutElse(listOf(node)) || hasIfStatementWithoutElseInCompoundStatement(node))
     }
 
-    private fun hasNoElseClause(select: AstSelect): Boolean {
-        return select.children(MiniCGrammar.ELSE_CLAUSE).isEmpty()
+    private fun hasNoElseClause(node: AstNode): Boolean {
+        return node.getChildren(MiniCGrammar.ELSE_CLAUSE).isEmpty()
     }
 
-    private fun hasIfStatementWithoutElseInCompoundStatement(select: AstSelect): Boolean {
-        var select = select
-        select = select
-            .children(MiniCGrammar.STATEMENT)
-            .children(MiniCGrammar.COMPOUND_STATEMENT)
-        return (select.children().size() == 3
-                && hasIfStatementWithoutElse(select))
+    private fun hasIfStatementWithoutElseInCompoundStatement(node: AstNode): Boolean {
+        val statements = node
+            .getChildren(MiniCGrammar.STATEMENT)
+            .flatMap { it.getChildren(MiniCGrammar.COMPOUND_STATEMENT) }
+        return (statements.flatMap { it.children }.size == 3
+                && hasIfStatementWithoutElse(statements))
     }
 
-    private fun hasIfStatementWithoutElse(select: AstSelect): Boolean {
-        var select = select
-        select = select.children(MiniCGrammar.STATEMENT).children(MiniCGrammar.IF_STATEMENT)
-        return select.isNotEmpty() && hasNoElseClause(select)
+    private fun hasIfStatementWithoutElse(nodes: List<AstNode>): Boolean {
+        val statements = nodes.flatMap { it.getChildren(MiniCGrammar.STATEMENT) }.flatMap { it.getChildren(MiniCGrammar.IF_STATEMENT) }
+        return statements.isNotEmpty() && statements.all { hasNoElseClause(it) }
     }
 }
