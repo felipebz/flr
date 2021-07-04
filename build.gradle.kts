@@ -55,15 +55,17 @@ subprojects {
     }
 
     tasks.withType<LicenseFormat>().configureEach {
-        this.extra.set("year", Calendar.getInstance().get(Calendar.YEAR))
-        this.header = File(this.project.rootDir, "LICENSE_HEADER")
-        this.include("**/*.kt")
+        extra.set("year", Calendar.getInstance().get(Calendar.YEAR))
+        header = File(this.project.rootDir, "LICENSE_HEADER")
+        include("**/*.kt")
+        skipExistingHeaders = true
     }
 
     tasks.withType<LicenseCheck>().configureEach {
-        this.extra.set("year", Calendar.getInstance().get(Calendar.YEAR))
-        this.header = File(this.project.rootDir, "LICENSE_HEADER")
-        this.include("**/*.kt")
+        extra.set("year", Calendar.getInstance().get(Calendar.YEAR))
+        header = File(this.project.rootDir, "LICENSE_HEADER")
+        include("**/*.kt")
+        skipExistingHeaders = true
     }
 
     publishing {

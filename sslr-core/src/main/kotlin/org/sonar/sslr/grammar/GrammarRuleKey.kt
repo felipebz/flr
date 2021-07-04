@@ -1,7 +1,8 @@
-/*
- * SonarSource Language Recognizer
+/**
+ * FLR
  * Copyright (C) 2010-2021 SonarSource SA
- * mailto:info AT sonarsource DOT com
+ * Copyright (C) 2021-2021 Felipe Zorzo
+ * mailto:felipe AT felipezorzo DOT com DOT br
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
