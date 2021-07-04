@@ -20,13 +20,16 @@
  */
 package org.sonar.sslr.internal.vm
 
-import com.sonar.sslr.api.*
+import com.sonar.sslr.api.RecognitionException
+import com.sonar.sslr.api.Token
 import org.sonar.sslr.grammar.GrammarException
-import org.sonar.sslr.internal.matchers.*
+import org.sonar.sslr.internal.matchers.ImmutableInputBuffer
+import org.sonar.sslr.internal.matchers.InputBuffer
+import org.sonar.sslr.internal.matchers.Matcher
+import org.sonar.sslr.internal.matchers.ParseNode
 import org.sonar.sslr.internal.vm.lexerful.LexerfulParseErrorFormatter
 import org.sonar.sslr.parser.ParseError
 import org.sonar.sslr.parser.ParsingResult
-import java.util.*
 
 class Machine private constructor(
     private val input: CharArray,
@@ -36,24 +39,24 @@ class Machine private constructor(
 ) : CharSequence {
     private var inputLength = if (input.isNotEmpty()) input.size else tokens.size
     private var stack = MachineStack()
-    private var index = 0
-    private var address = 0
     private var matched = true
     private val memos: Array<ParseNode?> = arrayOfNulls(inputLength + 1)
 
     // Number of instructions in grammar for Java is about 2000.
     private val calls: IntArray = IntArray(instructions.size)
-    private var ignoreErrors = false
+
+    var address = 0
+    var index = 0
+    var ignoreErrors = false
 
     private fun execute(matcher: Matcher?, offset: Int, instructions: Array<Instruction>) {
         // Place first rule on top of stack
         push(-1)
-        stack.setMatcher(matcher)
+        stack.matcher = matcher
         jump(offset)
         execute(instructions)
     }
 
-    // @VisibleForTesting
     @JvmOverloads
     constructor(
         input: String,
@@ -67,54 +70,46 @@ class Machine private constructor(
         }
     }
 
-    fun getAddress(): Int {
-        return address
-    }
-
-    fun setAddress(address: Int) {
-        this.address = address
-    }
-
     fun jump(offset: Int) {
         address += offset
     }
 
     private fun push(address: Int) {
         stack = stack.getOrCreateChild()
-        stack.subNodes().clear()
-        stack.setAddress(address)
-        stack.setIndex(index)
-        stack.setIgnoreErrors(ignoreErrors)
+        stack.subNodes.clear()
+        stack.address = address
+        stack.index = index
+        stack.ignoreErrors = ignoreErrors
     }
 
     fun popReturn() {
-        calls[stack.calledAddress()] = stack.leftRecursion()
+        calls[stack.calledAddress] = stack.leftRecursion
         stack = stack.parent()
     }
 
     fun pushReturn(returnOffset: Int, matcher: Matcher?, callOffset: Int) {
         val memo = memos[index]
-        if (memo != null && memo.getMatcher() === matcher) {
-            stack.subNodes().add(memo)
-            index = memo.getEndIndex()
+        if (memo != null && memo.matcher === matcher) {
+            stack.subNodes.add(memo)
+            index = memo.endIndex
             address += returnOffset
         } else {
             push(address + returnOffset)
-            stack.setMatcher(matcher)
+            stack.matcher = matcher
             address += callOffset
             if (calls[address] == index) {
                 // TODO better message, e.g. dump stack
                 throw GrammarException("Left recursion has been detected, involved rule: " + matcher.toString())
             }
-            stack.setCalledAddress(address)
-            stack.setLeftRecursion(calls[address])
+            stack.calledAddress = address
+            stack.leftRecursion = calls[address]
             calls[address] = index
         }
     }
 
     fun pushBacktrack(offset: Int) {
         push(address + offset)
-        stack.setMatcher(null)
+        stack.matcher = null
     }
 
     fun pop() {
@@ -125,16 +120,12 @@ class Machine private constructor(
         return stack
     }
 
-    fun setIgnoreErrors(ignoreErrors: Boolean) {
-        this.ignoreErrors = ignoreErrors
-    }
-
     fun backtrack() {
         // pop any return addresses from the top of the stack
         while (stack.isReturn()) {
 
             // TODO we must have this inside of loop, otherwise report won't be generated in case of input "foo" and rule "nextNot(foo)"
-            ignoreErrors = stack.isIgnoreErrors()
+            ignoreErrors = stack.ignoreErrors
             if (!ignoreErrors) {
                 handler.onBacktrack(this)
             }
@@ -146,33 +137,25 @@ class Machine private constructor(
             matched = false
         } else {
             // restore state
-            index = stack.index()
-            address = stack.address()
-            ignoreErrors = stack.isIgnoreErrors()
+            index = stack.index
+            address = stack.address
+            ignoreErrors = stack.ignoreErrors
             stack = stack.parent()
         }
     }
 
     fun createNode() {
-        val node = ParseNode(stack.index(), index, stack.subNodes(), stack.matcher())
-        stack.parent().subNodes().add(node)
-        if (stack.matcher() is MemoParsingExpression && (stack.matcher() as MemoParsingExpression).shouldMemoize()) {
-            memos[stack.index()] = node
+        val node = ParseNode(stack.index, index, stack.matcher, stack.subNodes)
+        stack.parent().subNodes.add(node)
+        if (stack.matcher is MemoParsingExpression && (stack.matcher as MemoParsingExpression).shouldMemoize()) {
+            memos[stack.index] = node
         }
     }
 
     fun createLeafNode(matcher: Matcher?, offset: Int) {
         val node = ParseNode(index, index + offset, matcher)
-        stack.subNodes().add(node)
+        stack.subNodes.add(node)
         index += offset
-    }
-
-    fun getIndex(): Int {
-        return index
-    }
-
-    fun setIndex(index: Int) {
-        this.index = index
     }
 
     fun advanceIndex(offset: Int) {
@@ -209,7 +192,7 @@ class Machine private constructor(
             val machine = Machine(CharArray(0), inputTokens, grammar.instructions, errorLocatingHandler)
             machine.execute(grammar.getMatcher(grammar.rootRuleKey), grammar.rootRuleOffset, grammar.instructions)
             return if (machine.matched) {
-                machine.stack.subNodes()[0]
+                machine.stack.subNodes[0]
             } else {
                 if (tokens.isEmpty()) {
                     // Godin: weird situation - I expect that list of tokens contains at least EOF, but this is not the case in C Parser
@@ -234,7 +217,7 @@ class Machine private constructor(
                 ParsingResult(
                     ImmutableInputBuffer(checkNotNull(machine.input)),
                     machine.matched,  // TODO what if there is no nodes, or more than one?
-                    machine.stack.subNodes()[0],
+                    machine.stack.subNodes[0],
                     null
                 )
             } else {
@@ -244,7 +227,6 @@ class Machine private constructor(
             }
         }
 
-        // @VisibleForTesting
         @JvmStatic
         fun execute(input: String, instructions: Array<Instruction>): Boolean {
             val machine = Machine(input, instructions)
@@ -254,7 +236,6 @@ class Machine private constructor(
             return machine.matched
         }
 
-        // @VisibleForTesting
         @JvmStatic
         fun execute(instructions: Array<Instruction>, vararg input: Token): Boolean {
             val machine = Machine(CharArray(0), input, instructions, NOP_HANDLER)
@@ -274,7 +255,7 @@ class Machine private constructor(
 
     init {
         stack = stack.getOrCreateChild()
-        stack.setIndex(-1)
-        Arrays.fill(calls, -1)
+        stack.index = -1
+        calls.fill(-1)
     }
 }

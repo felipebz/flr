@@ -32,12 +32,12 @@ object ParseTreePrinter {
     }
 
     private fun printLeafs(node: ParseNode, input: CharArray, result: StringBuilder) {
-        if (node.getChildren().isEmpty()) {
-            for (i in node.getStartIndex() until min(node.getEndIndex(), input.size)) {
+        if (node.children.isEmpty()) {
+            for (i in node.startIndex until min(node.endIndex, input.size)) {
                 result.append(input[i])
             }
         } else {
-            for (child in node.getChildren()) {
+            for (child in node.children) {
                 printLeafs(child, input, result)
             }
         }
@@ -52,17 +52,17 @@ object ParseTreePrinter {
             print("  ")
         }
         val sb = StringBuilder()
-        for (i in node.getStartIndex() until min(node.getEndIndex(), input.size)) {
+        for (i in node.startIndex until min(node.endIndex, input.size)) {
             sb.append(input[i])
         }
         println(
-            matcherToString(node.getMatcher())
-                    + " (start=" + node.getStartIndex()
-                    + ", end=" + node.getEndIndex()
+            matcherToString(node.matcher)
+                    + " (start=" + node.startIndex
+                    + ", end=" + node.endIndex
                     + ", matches=" + sb.toString()
                     + ")"
         )
-        for (child in node.getChildren()) {
+        for (child in node.children) {
             print(child, level + 1, input)
         }
     }

@@ -49,7 +49,7 @@ class SyntaxTreeCreator<T>(
     }
 
     private fun visit(node: ParseNode): Any? {
-        return if (node.getMatcher() is MutableParsingRule) {
+        return if (node.matcher is MutableParsingRule) {
             visitNonTerminal(node)
         } else {
             visitTerminal(node)
@@ -57,9 +57,9 @@ class SyntaxTreeCreator<T>(
     }
 
     private fun visitNonTerminal(node: ParseNode): Any? {
-        val rule = node.getMatcher() as MutableParsingRule
+        val rule = node.matcher as MutableParsingRule
         val ruleKey = rule.ruleKey
-        val children = node.getChildren()
+        val children = node.children
         return if (mapping.hasMethodForRuleKey(ruleKey)) {
             // TODO Drop useless intermediate nodes
             check(children.size == 1)
@@ -83,8 +83,8 @@ class SyntaxTreeCreator<T>(
                     ruleKey,
                     rule,
                     convertedChildren,
-                    node.getStartIndex(),
-                    node.getEndIndex()
+                    node.startIndex,
+                    node.endIndex
                 )
             } else {
                 ReflectionUtils.invokeMethod(method, treeFactory, *convertedChildren.toTypedArray())
@@ -94,8 +94,8 @@ class SyntaxTreeCreator<T>(
 
     private fun visitTerminal(node: ParseNode): Any? {
         var type: TokenType? = null
-        if (node.getMatcher() is TriviaExpression) {
-            val ruleMatcher = node.getMatcher() as TriviaExpression
+        if (node.matcher is TriviaExpression) {
+            val ruleMatcher = node.matcher
             return when (ruleMatcher.getTriviaKind()) {
                  TriviaKind.SKIPPED_TEXT -> {
                     null
@@ -108,26 +108,26 @@ class SyntaxTreeCreator<T>(
                     throw IllegalStateException("Unexpected trivia kind: " + ruleMatcher.getTriviaKind())
                 }
             }
-        } else if (node.getMatcher() is TokenExpression) {
-            val ruleMatcher = node.getMatcher() as TokenExpression
+        } else if (node.matcher is TokenExpression) {
+            val ruleMatcher = node.matcher
             type = ruleMatcher.getTokenType()
             if (GenericTokenType.COMMENT == ruleMatcher.getTokenType()) {
                 addComment(node)
                 return null
             }
         }
-        val result = nodeBuilder.createTerminal(input, node.getStartIndex(), node.getEndIndex(), trivias, type)
+        val result = nodeBuilder.createTerminal(input, node.startIndex, node.endIndex, trivias, type)
         trivias.clear()
         return result
     }
 
     private fun addComment(node: ParseNode) {
         tokenBuilder.setGeneratedCode(false)
-        val lineAndColumn = input.lineAndColumnAt(node.getStartIndex())
+        val lineAndColumn = input.lineAndColumnAt(node.startIndex)
         tokenBuilder.setLine(lineAndColumn[0])
         tokenBuilder.setColumn(lineAndColumn[1] - 1)
         tokenBuilder.setURI(input.uri())
-        val value = input.substring(node.getStartIndex(), node.getEndIndex())
+        val value = input.substring(node.startIndex, node.endIndex)
         tokenBuilder.setValueAndOriginalValue(value)
         tokenBuilder.setTrivia(emptyList())
         tokenBuilder.setType(GenericTokenType.COMMENT)

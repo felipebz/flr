@@ -25,7 +25,7 @@ import org.sonar.sslr.internal.vm.NativeExpression
 
 class AdjacentExpression private constructor() : NativeExpression() {
     override fun execute(machine: Machine) {
-        if (machine.getIndex() == 0) {
+        if (machine.index == 0) {
             machine.backtrack()
             return
         }

@@ -27,7 +27,7 @@ import org.sonar.sslr.internal.vm.NativeExpression
 
 class TillNewLineExpression private constructor() : NativeExpression(), Matcher {
     override fun execute(machine: Machine) {
-        val currentLine = if (machine.getIndex() == 0) 1 else machine.tokenAt(-1).line
+        val currentLine = if (machine.index == 0) 1 else machine.tokenAt(-1).line
         var offset = 0
         var token = machine.tokenAt(offset)
         while (token.line == currentLine && token.type !== GenericTokenType.EOF) {

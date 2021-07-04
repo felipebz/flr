@@ -30,13 +30,13 @@ class ErrorLocatingHandlerTest {
     @Test
     fun should_find_location_of_error() {
         val machine = mock<Machine>()
-        whenever(machine.getIndex()).thenReturn(1)
+        whenever(machine.index).thenReturn(1)
         errorLocatingHandler.onBacktrack(machine)
         assertThat(errorLocatingHandler.getErrorIndex()).isEqualTo(1)
-        whenever(machine.getIndex()).thenReturn(3)
+        whenever(machine.index).thenReturn(3)
         errorLocatingHandler.onBacktrack(machine)
         assertThat(errorLocatingHandler.getErrorIndex()).isEqualTo(3)
-        whenever(machine.getIndex()).thenReturn(2)
+        whenever(machine.index).thenReturn(2)
         errorLocatingHandler.onBacktrack(machine)
         assertThat(errorLocatingHandler.getErrorIndex()).isEqualTo(3)
     }

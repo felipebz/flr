@@ -97,7 +97,7 @@ class InstructionTest {
         instruction.execute(machine)
         val inOrder = inOrder(machine)
         inOrder.verify(machine).pushBacktrack(42)
-        inOrder.verify(machine).setIgnoreErrors(true)
+        inOrder.verify(machine).ignoreErrors = true
         inOrder.verify(machine).jump(1)
         verifyNoMoreInteractions(machine)
     }
@@ -132,10 +132,10 @@ class InstructionTest {
         assertThat(instruction.hashCode()).isEqualTo(42)
         val stack = MachineStack().getOrCreateChild()
         whenever(machine.peek()).thenReturn(stack)
-        whenever(machine.getIndex()).thenReturn(13)
+        whenever(machine.index).thenReturn(13)
         instruction.execute(machine)
         val inOrder = inOrder(machine)
-        inOrder.verify(machine).getIndex()
+        inOrder.verify(machine).index
         inOrder.verify(machine, times(3)).peek()
         inOrder.verify(machine).pop()
         inOrder.verify(machine).jump(42)
@@ -146,9 +146,9 @@ class InstructionTest {
     fun commitVerify_should_throw_exception() {
         val instruction = commitVerify(42)
         val stack = MachineStack().getOrCreateChild()
-        stack.setIndex(13)
+        stack.index = 13
         whenever(machine.peek()).thenReturn(stack)
-        whenever(machine.getIndex()).thenReturn(13)
+        whenever(machine.index).thenReturn(13)
         assertThrows("The inner part of ZeroOrMore and OneOrMore must not allow empty matches", GrammarException::class.java) {
             instruction.execute(machine)
         }
@@ -161,15 +161,15 @@ class InstructionTest {
         assertThat(instruction.toString()).isEqualTo("Ret")
         assertThat(instruction).`as`("singleton").isSameAs(Instruction.ret())
         val stack = mock<MachineStack>()
-        whenever(stack.address()).thenReturn(42)
-        whenever(stack.isIgnoreErrors()).thenReturn(true)
+        whenever(stack.address).thenReturn(42)
+        whenever(stack.ignoreErrors).thenReturn(true)
         whenever(machine.peek()).thenReturn(stack)
         instruction.execute(machine)
         val inOrder = inOrder(machine)
         inOrder.verify(machine).createNode()
         inOrder.verify(machine).peek()
-        inOrder.verify(machine).setIgnoreErrors(true)
-        inOrder.verify(machine).setAddress(42)
+        inOrder.verify(machine).ignoreErrors = true
+        inOrder.verify(machine).address = 42
         inOrder.verify(machine).popReturn()
         verifyNoMoreInteractions(machine)
     }
@@ -194,7 +194,7 @@ class InstructionTest {
         assertThat(instruction).`as`("singleton").isSameAs(Instruction.end())
         instruction.execute(machine)
         val inOrder = inOrder(machine)
-        inOrder.verify(machine).setAddress(-1)
+        inOrder.verify(machine).address = -1
         verifyNoMoreInteractions(machine)
     }
 
@@ -205,12 +205,12 @@ class InstructionTest {
         assertThat(instruction.toString()).isEqualTo("FailTwice")
         assertThat(instruction).`as`("singleton").isSameAs(Instruction.failTwice())
         val stack = mock<MachineStack>()
-        whenever(stack.index()).thenReturn(13)
+        whenever(stack.index).thenReturn(13)
         whenever(machine.peek()).thenReturn(stack)
         instruction.execute(machine)
         val inOrder = inOrder(machine)
         inOrder.verify(machine).peek()
-        inOrder.verify(machine).setIndex(13)
+        inOrder.verify(machine).index = 13
         inOrder.verify(machine).pop()
         inOrder.verify(machine).backtrack()
         verifyNoMoreInteractions(machine)
@@ -226,14 +226,14 @@ class InstructionTest {
         assertThat(instruction == Any()).isFalse()
         assertThat(instruction.hashCode()).isEqualTo(42)
         val stack = mock<MachineStack>()
-        whenever(stack.index()).thenReturn(13)
-        whenever(stack.isIgnoreErrors()).thenReturn(true)
+        whenever(stack.index).thenReturn(13)
+        whenever(stack.ignoreErrors).thenReturn(true)
         whenever(machine.peek()).thenReturn(stack)
         instruction.execute(machine)
         val inOrder = inOrder(machine)
         inOrder.verify(machine).peek()
-        inOrder.verify(machine).setIndex(13)
-        inOrder.verify(machine).setIgnoreErrors(true)
+        inOrder.verify(machine).index = 13
+        inOrder.verify(machine).ignoreErrors = true
         inOrder.verify(machine).pop()
         inOrder.verify(machine).jump(42)
         verifyNoMoreInteractions(machine)
@@ -246,7 +246,7 @@ class InstructionTest {
         assertThat(instruction.toString()).isEqualTo("IgnoreErrors")
         assertThat(instruction).`as`("singleton").isSameAs(Instruction.ignoreErrors())
         instruction.execute(machine)
-        verify(machine).setIgnoreErrors(true)
+        verify(machine).ignoreErrors = true
         verify(machine).jump(1)
         verifyNoMoreInteractions(machine)
     }

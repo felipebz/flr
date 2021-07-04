@@ -48,12 +48,12 @@ class AdjacentExpressionTest {
         val nextToken = mock<Token>()
         whenever(nextToken.line).thenReturn(42)
         whenever(nextToken.column).thenReturn(13 + 3)
-        whenever(machine.getIndex()).thenReturn(1)
+        whenever(machine.index).thenReturn(1)
         whenever(machine.tokenAt(-1)).thenReturn(previousToken)
         whenever(machine.tokenAt(0)).thenReturn(nextToken)
         expression.execute(machine)
         val inOrder = inOrder(machine)
-        inOrder.verify(machine).getIndex()
+        inOrder.verify(machine).index
         inOrder.verify(machine).tokenAt(-1)
         inOrder.verify(machine).tokenAt(0)
         inOrder.verify(machine).jump(1)
@@ -69,12 +69,12 @@ class AdjacentExpressionTest {
         val nextToken = mock<Token>()
         whenever(nextToken.line).thenReturn(42 + 1)
         whenever(nextToken.column).thenReturn(13 + 3)
-        whenever(machine.getIndex()).thenReturn(1)
+        whenever(machine.index).thenReturn(1)
         whenever(machine.tokenAt(-1)).thenReturn(previousToken)
         whenever(machine.tokenAt(0)).thenReturn(nextToken)
         expression.execute(machine)
         val inOrder = inOrder(machine)
-        inOrder.verify(machine).getIndex()
+        inOrder.verify(machine).index
         inOrder.verify(machine).tokenAt(-1)
         inOrder.verify(machine).tokenAt(0)
         inOrder.verify(machine).backtrack()
@@ -90,12 +90,12 @@ class AdjacentExpressionTest {
         val nextToken = mock<Token>()
         whenever(nextToken.line).thenReturn(13)
         whenever(nextToken.column).thenReturn(42)
-        whenever(machine.getIndex()).thenReturn(1)
+        whenever(machine.index).thenReturn(1)
         whenever(machine.tokenAt(-1)).thenReturn(previousToken)
         whenever(machine.tokenAt(0)).thenReturn(nextToken)
         expression.execute(machine)
         val inOrder = inOrder(machine)
-        inOrder.verify(machine).getIndex()
+        inOrder.verify(machine).index
         inOrder.verify(machine).tokenAt(-1)
         inOrder.verify(machine).tokenAt(0)
         inOrder.verify(machine).backtrack()
@@ -104,10 +104,10 @@ class AdjacentExpressionTest {
 
     @Test
     fun should_backtrack3() {
-        whenever(machine.getIndex()).thenReturn(0)
+        whenever(machine.index).thenReturn(0)
         expression.execute(machine)
         val inOrder = inOrder(machine)
-        inOrder.verify(machine).getIndex()
+        inOrder.verify(machine).index
         inOrder.verify(machine).backtrack()
         verifyNoMoreInteractions(machine)
     }

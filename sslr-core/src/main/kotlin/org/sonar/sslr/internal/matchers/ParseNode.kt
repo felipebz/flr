@@ -23,45 +23,14 @@ package org.sonar.sslr.internal.matchers
 /**
  * Node of a parse tree.
  */
-class ParseNode {
-    private val startIndex: Int
-    private val endIndex: Int
-    private val children: List<ParseNode>
-    private val matcher: Matcher?
-
-    constructor(startIndex: Int, endIndex: Int, children: List<ParseNode>, matcher: Matcher?) {
-        this.startIndex = startIndex
-        this.endIndex = endIndex
-        this.children = ArrayList(children)
-        this.matcher = matcher
-    }
-
-    /**
-     * Leaf node.
-     */
-    constructor(startIndex: Int, endIndex: Int, matcher: Matcher?) {
-        this.startIndex = startIndex
-        this.endIndex = endIndex
-        this.matcher = matcher
-        children = emptyList()
-    }
-
-    fun getStartIndex(): Int {
-        return startIndex
-    }
-
+class ParseNode(
+    val startIndex: Int,
     /**
      * Be aware that element of input with this index is not included into this node.
      */
-    fun getEndIndex(): Int {
-        return endIndex
-    }
-
-    fun getChildren(): List<ParseNode> {
-        return children
-    }
-
-    fun getMatcher(): Matcher? {
-        return matcher
-    }
+    val endIndex: Int,
+    val matcher: Matcher?,
+    children: List<ParseNode> = emptyList()
+) {
+    val children: List<ParseNode> = children.toList()
 }

@@ -40,35 +40,35 @@ class MachineTest {
     @Test
     fun test_initial_state() {
         val machine = Machine("", arrayOf(mock(), mock()))
-        assertThat(machine.getAddress()).isEqualTo(0)
-        assertThat(machine.getIndex()).isEqualTo(0)
+        assertThat(machine.address).isEqualTo(0)
+        assertThat(machine.index).isEqualTo(0)
         assertThat(machine.peek().isEmpty()).isTrue()
     }
 
     @Test
     fun should_jump() {
         val machine = Machine("", arrayOf(mock(), mock()))
-        assertThat(machine.getAddress()).isEqualTo(0)
+        assertThat(machine.address).isEqualTo(0)
         machine.jump(42)
-        assertThat(machine.getAddress()).isEqualTo(42)
+        assertThat(machine.address).isEqualTo(42)
         machine.jump(13)
-        assertThat(machine.getAddress()).isEqualTo(42 + 13)
+        assertThat(machine.address).isEqualTo(42 + 13)
     }
 
     @Test
     fun should_advanceIndex() {
         val machine = Machine("foo bar", arrayOf(mock(), mock()))
-        assertThat(machine.getIndex()).isEqualTo(0)
+        assertThat(machine.index).isEqualTo(0)
         assertThat(machine.length).isEqualTo(7)
         assertThat(machine[0]).isEqualTo('f')
         assertThat(machine[1]).isEqualTo('o')
         machine.advanceIndex(3)
-        assertThat(machine.getIndex()).isEqualTo(3)
+        assertThat(machine.index).isEqualTo(3)
         assertThat(machine.length).isEqualTo(4)
         assertThat(machine[0]).isEqualTo(' ')
         assertThat(machine[1]).isEqualTo('b')
         machine.advanceIndex(1)
-        assertThat(machine.getIndex()).isEqualTo(4)
+        assertThat(machine.index).isEqualTo(4)
         assertThat(machine.length).isEqualTo(3)
         assertThat(machine[0]).isEqualTo('b')
         assertThat(machine[1]).isEqualTo('a')
@@ -82,12 +82,12 @@ class MachineTest {
         machine.jump(1)
         val previousStack = machine.peek()
         machine.pushReturn(2, matcher, 1)
-        assertThat(machine.getAddress()).`as`("new address").isEqualTo(2)
+        assertThat(machine.address).`as`("new address").isEqualTo(2)
         assertThat(machine.peek()).isNotSameAs(previousStack)
         assertThat(machine.peek().parent()).isSameAs(previousStack)
-        assertThat(machine.peek().index()).`as`("current index").isEqualTo(1)
-        assertThat(machine.peek().address()).`as`("return address").isEqualTo(1 + 2)
-        assertThat(machine.peek().matcher()).isSameAs(matcher)
+        assertThat(machine.peek().index).`as`("current index").isEqualTo(1)
+        assertThat(machine.peek().address).`as`("return address").isEqualTo(1 + 2)
+        assertThat(machine.peek().matcher).isSameAs(matcher)
     }
 
     @Test
@@ -96,14 +96,14 @@ class MachineTest {
         val matcher = mock<Matcher>()
         machine.advanceIndex(1)
         machine.pushReturn(0, matcher, 1)
-        assertThat(machine.peek().calledAddress()).isEqualTo(1)
-        assertThat(machine.peek().leftRecursion()).isEqualTo(-1)
+        assertThat(machine.peek().calledAddress).isEqualTo(1)
+        assertThat(machine.peek().leftRecursion).isEqualTo(-1)
 
         // same rule, but another index of input sequence
         machine.advanceIndex(1)
         machine.pushReturn(0, matcher, 0)
-        assertThat(machine.peek().calledAddress()).isEqualTo(1)
-        assertThat(machine.peek().leftRecursion()).isEqualTo(1)
+        assertThat(machine.peek().calledAddress).isEqualTo(1)
+        assertThat(machine.peek().leftRecursion).isEqualTo(1)
 
         // same rule and index of input sequence
         assertThrows("Left recursion has been detected, involved rule: $matcher", GrammarException::class.java) {
@@ -120,9 +120,9 @@ class MachineTest {
         machine.pushBacktrack(13)
         assertThat(machine.peek()).isNotSameAs(previousStack)
         assertThat(machine.peek().parent()).isSameAs(previousStack)
-        assertThat(machine.peek().index()).`as`("current index").isEqualTo(1)
-        assertThat(machine.peek().address()).`as`("backtrack address").isEqualTo(42 + 13)
-        assertThat(machine.peek().matcher()).isNull()
+        assertThat(machine.peek().index).`as`("current index").isEqualTo(1)
+        assertThat(machine.peek().address).`as`("backtrack address").isEqualTo(42 + 13)
+        assertThat(machine.peek().matcher).isNull()
     }
 
     @Test
@@ -142,7 +142,7 @@ class MachineTest {
         machine.pushReturn(13, matcher, 0)
         machine.pushReturn(13, matcher, 1)
         machine.backtrack()
-        assertThat(machine.getAddress()).isEqualTo(-1)
+        assertThat(machine.address).isEqualTo(-1)
         // TODO matched=false
     }
 
@@ -156,7 +156,7 @@ class MachineTest {
         machine.pushReturn(13, matcher, 1)
         machine.backtrack()
         assertThat(machine.peek()).isSameAs(previousStack)
-        assertThat(machine.getAddress()).isEqualTo(42)
+        assertThat(machine.address).isEqualTo(42)
     }
 
     @Test
@@ -165,11 +165,11 @@ class MachineTest {
         val matcher = mock<Matcher>()
         machine.advanceIndex(42)
         machine.createLeafNode(matcher, 13)
-        val node = machine.peek().subNodes()[0]
-        assertThat(node.getMatcher()).isSameAs(matcher)
-        assertThat(node.getStartIndex()).isEqualTo(42)
-        assertThat(node.getEndIndex()).isEqualTo(42 + 13)
-        assertThat(node.getChildren()).isEmpty()
+        val node = machine.peek().subNodes[0]
+        assertThat(node.matcher).isSameAs(matcher)
+        assertThat(node.startIndex).isEqualTo(42)
+        assertThat(node.endIndex).isEqualTo(42 + 13)
+        assertThat(node.children).isEmpty()
     }
 
     @Test
@@ -183,11 +183,11 @@ class MachineTest {
         machine.createLeafNode(subMatcher, 2)
         machine.createLeafNode(subMatcher, 3)
         machine.createNode()
-        val node = machine.peek().parent().subNodes()[0]
-        assertThat(node.getMatcher()).isSameAs(matcher)
-        assertThat(node.getStartIndex()).isEqualTo(1)
-        assertThat(node.getEndIndex()).isEqualTo(1 + 2 + 3)
-        assertThat(node.getChildren()).hasSize(2)
+        val node = machine.peek().parent().subNodes[0]
+        assertThat(node.matcher).isSameAs(matcher)
+        assertThat(node.startIndex).isEqualTo(1)
+        assertThat(node.endIndex).isEqualTo(1 + 2 + 3)
+        assertThat(node.children).hasSize(2)
     }
 
     @Test
@@ -199,12 +199,12 @@ class MachineTest {
         machine.pushReturn(1, matcher, 2)
         machine.advanceIndex(3)
         machine.createNode()
-        val memo = machine.peek().parent().subNodes()[0]
+        val memo = machine.peek().parent().subNodes[0]
         machine.backtrack()
         machine.pushReturn(2, matcher, 1)
-        assertThat(machine.getAddress()).isEqualTo(2)
-        assertThat(machine.getIndex()).isEqualTo(3)
-        assertThat(machine.peek().subNodes()).containsOnly(memo)
+        assertThat(machine.address).isEqualTo(2)
+        assertThat(machine.index).isEqualTo(3)
+        assertThat(machine.peek().subNodes).containsOnly(memo)
     }
 
     @Test
@@ -218,9 +218,9 @@ class MachineTest {
         machine.createNode()
         machine.backtrack()
         machine.pushReturn(2, matcher, 1)
-        assertThat(machine.getAddress()).isEqualTo(1)
-        assertThat(machine.getIndex()).isEqualTo(0)
-        assertThat(machine.peek().subNodes()).isEmpty()
+        assertThat(machine.address).isEqualTo(1)
+        assertThat(machine.index).isEqualTo(0)
+        assertThat(machine.peek().subNodes).isEmpty()
     }
 
     @Test
@@ -235,8 +235,8 @@ class MachineTest {
         machine.backtrack()
         val anotherMatcher = mock<Matcher>()
         machine.pushReturn(2, anotherMatcher, 1)
-        assertThat(machine.getAddress()).isEqualTo(1)
-        assertThat(machine.getIndex()).isEqualTo(0)
-        assertThat(machine.peek().subNodes()).isEmpty()
+        assertThat(machine.address).isEqualTo(1)
+        assertThat(machine.index).isEqualTo(0)
+        assertThat(machine.peek().subNodes).isEmpty()
     }
 }

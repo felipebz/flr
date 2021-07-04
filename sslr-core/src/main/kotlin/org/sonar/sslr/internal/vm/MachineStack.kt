@@ -24,15 +24,15 @@ import org.sonar.sslr.internal.matchers.Matcher
 import org.sonar.sslr.internal.matchers.ParseNode
 
 class MachineStack {
-    private val parent: MachineStack?
     private var child: MachineStack? = null
-    private val subNodes: MutableList<ParseNode>
-    private var address = 0
-    private var index = 0
-    private var ignoreErrors = false
-    private var matcher: Matcher? = null
-    private var leftRecursion = 0
-    private var calledAddress = 0
+    private val parent: MachineStack?
+    val subNodes: MutableList<ParseNode>
+    var address = 0
+    var index = 0
+    var ignoreErrors = false
+    var matcher: Matcher? = null
+    var leftRecursion = 0
+    var calledAddress = 0
 
     constructor() {
         parent = null
@@ -42,7 +42,7 @@ class MachineStack {
 
     private constructor(parent: MachineStack) {
         this.parent = parent
-        subNodes = ArrayList()
+        subNodes = mutableListOf()
     }
 
     fun parent(): MachineStack {
@@ -63,57 +63,5 @@ class MachineStack {
      */
     fun isEmpty(): Boolean {
         return index == -1
-    }
-
-    fun address(): Int {
-        return address
-    }
-
-    fun setAddress(address: Int) {
-        this.address = address
-    }
-
-    fun index(): Int {
-        return index
-    }
-
-    fun setIndex(index: Int) {
-        this.index = index
-    }
-
-    fun isIgnoreErrors(): Boolean {
-        return ignoreErrors
-    }
-
-    fun setIgnoreErrors(ignoreErrors: Boolean) {
-        this.ignoreErrors = ignoreErrors
-    }
-
-    fun matcher(): Matcher? {
-        return matcher
-    }
-
-    fun setMatcher(matcher: Matcher?) {
-        this.matcher = matcher
-    }
-
-    fun leftRecursion(): Int {
-        return leftRecursion
-    }
-
-    fun setLeftRecursion(leftRecursion: Int) {
-        this.leftRecursion = leftRecursion
-    }
-
-    fun calledAddress(): Int {
-        return calledAddress
-    }
-
-    fun setCalledAddress(calledAddress: Int) {
-        this.calledAddress = calledAddress
-    }
-
-    fun subNodes(): MutableList<ParseNode> {
-        return subNodes
     }
 }

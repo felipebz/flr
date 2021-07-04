@@ -89,7 +89,7 @@ abstract class Instruction {
 
     class IgnoreErrorsInstruction : Instruction() {
         override fun execute(machine: Machine) {
-            machine.setIgnoreErrors(true)
+            machine.ignoreErrors = true
             machine.jump(1)
         }
 
@@ -105,7 +105,7 @@ abstract class Instruction {
     class PredicateChoiceInstruction(private val offset: Int) : Instruction() {
         override fun execute(machine: Machine) {
             machine.pushBacktrack(offset)
-            machine.setIgnoreErrors(true)
+            machine.ignoreErrors = true
             machine.jump(1)
         }
 
@@ -125,7 +125,7 @@ abstract class Instruction {
     class CommitInstruction(private val offset: Int) : Instruction() {
         override fun execute(machine: Machine) {
             // add all nodes to parent
-            machine.peek().parent().subNodes().addAll(machine.peek().subNodes())
+            machine.peek().parent().subNodes.addAll(machine.peek().subNodes)
             machine.pop()
             machine.jump(offset)
         }
@@ -145,12 +145,12 @@ abstract class Instruction {
 
     class CommitVerifyInstruction(private val offset: Int) : Instruction() {
         override fun execute(machine: Machine) {
-            if (machine.getIndex() == machine.peek().index()) {
+            if (machine.index == machine.peek().index) {
                 // TODO better message, e.g. dump stack
                 throw GrammarException("The inner part of ZeroOrMore and OneOrMore must not allow empty matches")
             }
             // add all nodes to parent
-            machine.peek().parent().subNodes().addAll(machine.peek().subNodes())
+            machine.peek().parent().subNodes.addAll(machine.peek().subNodes)
             machine.pop()
             machine.jump(offset)
         }
@@ -172,8 +172,8 @@ abstract class Instruction {
         override fun execute(machine: Machine) {
             machine.createNode()
             val stack = machine.peek()
-            machine.setIgnoreErrors(stack.isIgnoreErrors())
-            machine.setAddress(stack.address())
+            machine.ignoreErrors = stack.ignoreErrors
+            machine.address = stack.address
             machine.popReturn()
         }
 
@@ -194,7 +194,7 @@ abstract class Instruction {
 
     class EndInstruction : Instruction() {
         override fun execute(machine: Machine) {
-            machine.setAddress(-1)
+            machine.address = -1
         }
 
         override fun toString(): String {
@@ -206,7 +206,7 @@ abstract class Instruction {
         override fun execute(machine: Machine) {
             // restore state of machine to correctly report error during backtrack
             // note that there is no need restore value of "IgnoreErrors", because this will be done during backtrack
-            machine.setIndex(machine.peek().index())
+            machine.index = machine.peek().index
 
             // remove pending alternative pushed by Choice instruction
             machine.pop()
@@ -221,8 +221,8 @@ abstract class Instruction {
     class BackCommitInstruction(private val offset: Int) : Instruction() {
         override fun execute(machine: Machine) {
             val stack = machine.peek()
-            machine.setIndex(stack.index())
-            machine.setIgnoreErrors(stack.isIgnoreErrors())
+            machine.index = stack.index
+            machine.ignoreErrors = stack.ignoreErrors
             machine.pop()
             machine.jump(offset)
         }

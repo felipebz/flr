@@ -121,8 +121,8 @@ class RuleAssert(actual: Rule?) : GenericAssert<RuleAssert, Rule>(
                 """.trimIndent()
             val actual = ParseErrorFormatter().format(parsingResult.getParseError())
             throw ParsingResultComparisonFailure(expected, actual)
-        } else if (prefixToBeMatched.length != parsingResult.getParseTreeRoot().getEndIndex()) {
-            val actualMatchedPrefix = input.substring(0, parsingResult.getParseTreeRoot().getEndIndex())
+        } else if (prefixToBeMatched.length != parsingResult.getParseTreeRoot().endIndex) {
+            val actualMatchedPrefix = input.substring(0, parsingResult.getParseTreeRoot().endIndex)
             val message = """
                 Rule '${getRuleName()}' should match:
                 $prefixToBeMatched

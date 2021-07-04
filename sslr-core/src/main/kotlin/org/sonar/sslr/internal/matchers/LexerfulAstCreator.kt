@@ -26,7 +26,7 @@ import org.sonar.sslr.internal.vm.lexerful.TokenTypeExpression
 
 class LexerfulAstCreator private constructor(private val tokens: List<Token>) {
     private fun visit(node: ParseNode): AstNode? {
-        return if (node.getMatcher() is RuleDefinition) {
+        return if (node.matcher is RuleDefinition) {
             visitNonTerminal(node)
         } else {
             visitTerminal(node)
@@ -35,7 +35,7 @@ class LexerfulAstCreator private constructor(private val tokens: List<Token>) {
 
     private fun visitNonTerminal(node: ParseNode): AstNode {
         val astNodes = mutableListOf<AstNode>()
-        for (child in node.getChildren()) {
+        for (child in node.children) {
             val astNode = visit(child)
             when {
                 astNode == null -> {
@@ -49,26 +49,26 @@ class LexerfulAstCreator private constructor(private val tokens: List<Token>) {
                 }
             }
         }
-        val ruleMatcher = node.getMatcher() as RuleDefinition
-        val token = if (node.getStartIndex() < tokens.size) tokens[node.getStartIndex()] else null
+        val ruleMatcher = node.matcher as RuleDefinition
+        val token = if (node.startIndex < tokens.size) tokens[node.startIndex] else null
         val astNode = AstNode(ruleMatcher, ruleMatcher.getName(), token)
         for (child in astNodes) {
             astNode.addChild(child)
         }
-        astNode.fromIndex = node.getStartIndex()
-        astNode.toIndex = node.getEndIndex()
+        astNode.fromIndex = node.startIndex
+        astNode.toIndex = node.endIndex
         return astNode
     }
 
     private fun visitTerminal(node: ParseNode): AstNode? {
-        val token = tokens[node.getStartIndex()]
+        val token = tokens[node.startIndex]
         // For compatibility with SSLR < 1.19, TokenType should be checked only for TokenTypeExpression:
-        if (node.getMatcher() is TokenTypeExpression && token.type.hasToBeSkippedFromAst(null)) {
+        if (node.matcher is TokenTypeExpression && token.type.hasToBeSkippedFromAst(null)) {
             return null
         }
         val astNode = AstNode(token)
-        astNode.fromIndex = node.getStartIndex()
-        astNode.toIndex = node.getEndIndex()
+        astNode.fromIndex = node.startIndex
+        astNode.toIndex = node.endIndex
         return astNode
     }
 

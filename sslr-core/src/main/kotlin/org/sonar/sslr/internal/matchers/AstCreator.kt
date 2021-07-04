@@ -72,7 +72,7 @@ class AstCreator private constructor(private val input: LocatedText) {
     private val tokenBuilder: Token.Builder = Token.builder()
     private val trivias: MutableList<Trivia> = ArrayList()
     private fun visit(node: ParseNode): AstNode? {
-        return if (node.getMatcher() is MutableParsingRule) {
+        return if (node.matcher is MutableParsingRule) {
             visitNonTerminal(node)
         } else {
             visitTerminal(node)
@@ -80,8 +80,8 @@ class AstCreator private constructor(private val input: LocatedText) {
     }
 
     private fun visitTerminal(node: ParseNode): AstNode? {
-        if (node.getMatcher() is TriviaExpression) {
-            val ruleMatcher = node.getMatcher() as TriviaExpression
+        if (node.matcher is TriviaExpression) {
+            val ruleMatcher = node.matcher
             return when {
                 ruleMatcher.getTriviaKind() == TriviaKind.SKIPPED_TEXT -> {
                     null
@@ -97,9 +97,9 @@ class AstCreator private constructor(private val input: LocatedText) {
                     throw IllegalStateException("Unexpected trivia kind: " + ruleMatcher.getTriviaKind())
                 }
             }
-        } else if (node.getMatcher() is TokenExpression) {
+        } else if (node.matcher is TokenExpression) {
             updateTokenPositionAndValue(node)
-            val ruleMatcher = node.getMatcher() as TokenExpression
+            val ruleMatcher = node.matcher
             tokenBuilder.setType(ruleMatcher.getTokenType())
             if (ruleMatcher.getTokenType() === GenericTokenType.COMMENT) {
                 tokenBuilder.setTrivia(emptyList())
@@ -113,13 +113,13 @@ class AstCreator private constructor(private val input: LocatedText) {
         val token = tokenBuilder.setTrivia(trivias).build()
         trivias.clear()
         val astNode = AstNode(token)
-        astNode.fromIndex = node.getStartIndex()
-        astNode.toIndex = node.getEndIndex()
+        astNode.fromIndex = node.startIndex
+        astNode.toIndex = node.endIndex
         return astNode
     }
 
     private fun updateTokenPositionAndValue(node: ParseNode) {
-        val location = input.getLocation(node.getStartIndex())
+        val location = input.getLocation(node.startIndex)
         if (location == null) {
             tokenBuilder.setGeneratedCode(true)
             // Godin: line, column and uri has no value for generated code, but we should bypass checks in TokenBuilder
@@ -138,9 +138,9 @@ class AstCreator private constructor(private val input: LocatedText) {
     }
 
     private fun visitNonTerminal(node: ParseNode): AstNode {
-        val ruleMatcher = node.getMatcher() as MutableParsingRule
+        val ruleMatcher = node.matcher as MutableParsingRule
         val astNodes: MutableList<AstNode> = ArrayList()
-        for (child in node.getChildren()) {
+        for (child in node.children) {
             val astNode = visit(child)
             if (astNode != null) {
                 if (astNode.hasToBeSkippedFromAst()) {
@@ -161,14 +161,14 @@ class AstCreator private constructor(private val input: LocatedText) {
         for (child in astNodes) {
             astNode.addChild(child)
         }
-        astNode.fromIndex = node.getStartIndex()
-        astNode.toIndex = node.getEndIndex()
+        astNode.fromIndex = node.startIndex
+        astNode.toIndex = node.endIndex
         return astNode
     }
 
     private fun getValue(node: ParseNode): String {
         val result = StringBuilder()
-        for (i in node.getStartIndex() until min(node.getEndIndex(), input.length)) {
+        for (i in node.startIndex until min(node.endIndex, input.length)) {
             result.append(input[i])
         }
         return result.toString()
