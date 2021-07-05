@@ -20,9 +20,9 @@
  */
 package org.sonar.sslr.examples.grammars.typed
 
-import com.sonar.sslr.api.typed.Optional
 import org.sonar.sslr.examples.grammars.typed.api.*
 import org.sonar.sslr.examples.grammars.typed.impl.*
+import java.util.*
 
 open class TreeFactory {
     open fun json(arrayOrObject: Tree?, eof: InternalSyntaxToken?): JsonTree {
@@ -58,7 +58,7 @@ open class TreeFactory {
         values: Optional<SyntaxList<ValueTree?>?>,
         closeBracketToken: InternalSyntaxToken?
     ): ArrayTree {
-        return ArrayTreeImpl(openBracketToken, values.orNull(), closeBracketToken)
+        return ArrayTreeImpl(openBracketToken, values.orElse(null), closeBracketToken)
     }
 
     open fun pair(string: LiteralTree?, colonToken: InternalSyntaxToken?, value: ValueTree?): PairTree {
@@ -78,6 +78,6 @@ open class TreeFactory {
         pairs: Optional<SyntaxList<PairTree?>?>,
         closeCurlyBraceToken: InternalSyntaxToken?
     ): ObjectTree {
-        return ObjectTreeImpl(openCurlyBraceToken!!, pairs.orNull(), closeCurlyBraceToken!!)
+        return ObjectTreeImpl(openCurlyBraceToken!!, pairs.orElse(null), closeCurlyBraceToken!!)
     }
 }

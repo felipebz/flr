@@ -32,6 +32,7 @@ import org.sonar.sslr.grammar.LexerlessGrammarBuilder
 import java.io.File
 import java.nio.charset.StandardCharsets
 import java.nio.file.NoSuchFileException
+import java.util.*
 
 class ActionParserTest {
     @Test(expected = RecognitionException::class)

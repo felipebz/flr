@@ -22,6 +22,7 @@ package com.sonar.sslr.api.typed
 
 import com.sonar.sslr.api.AstNode
 import org.sonar.sslr.grammar.GrammarRuleKey
+import java.util.*
 
 /**
  * @since 1.21

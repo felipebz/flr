@@ -27,11 +27,11 @@ import com.sonar.sslr.api.Trivia
 import com.sonar.sslr.api.Trivia.TriviaKind
 import com.sonar.sslr.api.typed.Input
 import com.sonar.sslr.api.typed.NodeBuilder
-import com.sonar.sslr.api.typed.Optional
 import org.sonar.sslr.internal.grammar.MutableParsingRule
 import org.sonar.sslr.internal.matchers.ParseNode
 import org.sonar.sslr.internal.vm.TokenExpression
 import org.sonar.sslr.internal.vm.TriviaExpression
+import java.util.*
 
 class SyntaxTreeCreator<T>(
     private val treeFactory: Any,
@@ -67,9 +67,9 @@ class SyntaxTreeCreator<T>(
         } else if (mapping.isOptionalRule(ruleKey)) {
             check(children.size <= 1)
             if (children.isEmpty()) {
-                Optional.absent<Any>()
+                Optional.empty()
             } else {
-                Optional.of(visit(children[0]))
+                Optional.of(visit(children[0]) as Any)
             }
         } else {
             val method = mapping.actionForRuleKey(ruleKey)
@@ -77,7 +77,7 @@ class SyntaxTreeCreator<T>(
             if (mapping.isOneOrMoreRule(ruleKey)) {
                 convertedChildren
             } else if (mapping.isZeroOrMoreRule(ruleKey)) {
-                if (convertedChildren.isEmpty()) Optional.absent<Any>() else Optional.of(convertedChildren)
+                if (convertedChildren.isEmpty()) Optional.empty() else Optional.of(convertedChildren)
             } else if (method == null) {
                 nodeBuilder.createNonTerminal(
                     ruleKey,

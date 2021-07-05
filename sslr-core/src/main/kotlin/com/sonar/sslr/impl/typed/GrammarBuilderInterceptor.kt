@@ -23,7 +23,6 @@ package com.sonar.sslr.impl.typed
 import com.sonar.sslr.api.AstNode
 import com.sonar.sslr.api.typed.GrammarBuilder
 import com.sonar.sslr.api.typed.NonterminalBuilder
-import com.sonar.sslr.api.typed.Optional
 import org.sonar.sslr.grammar.GrammarRuleKey
 import org.sonar.sslr.grammar.LexerlessGrammarBuilder
 import org.sonar.sslr.internal.vm.FirstOfExpression
@@ -84,7 +83,7 @@ class GrammarBuilderInterceptor<T>(private val b: LexerlessGrammarBuilder) : Met
         optionals.add(grammarRuleKey)
         b.rule(grammarRuleKey).`is`(b.optional(expression))
         invokeRule(grammarRuleKey)
-        return Optional.absent()
+        return Optional.empty()
     }
 
     override fun <U> oneOrMore(method: U): List<U>? {
