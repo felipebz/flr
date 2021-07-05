@@ -106,19 +106,6 @@ open class AstNode(
             return children.size
         }
 
-    @Deprecated("in 1.19.2, use {@link #getFirstChild(AstNodeType...)} instead")
-    fun getChild(index: Int): AstNode {
-        check(index < numberOfChildren) {
-            ("The AstNode '$this' has only $numberOfChildren children. Requested child index is wrong : $index")
-        }
-        return children[index]
-    }
-
-    @Deprecated("in 1.17, use {@link #getNextAstNode()} instead", ReplaceWith("nextAstNode"))
-    fun nextAstNode(): AstNode? {
-        return nextAstNode
-    }
-
     /**
      * Get the next sibling AstNode in the tree and if this node doesn't exist try to get the next AST Node of the parent.
      *
@@ -129,11 +116,6 @@ open class AstNode(
             return nextSibling ?: parent?.nextAstNode
         }
 
-    @Deprecated("in 1.17, use {@link #getPreviousAstNode()} instead", ReplaceWith("previousAstNode"))
-    fun previousAstNode(): AstNode? {
-        return previousAstNode
-    }
-
     /**
      * Get the previous sibling AstNode in the tree and if this node doesn't exist try to get the next AST Node of the parent.
      *
@@ -143,11 +125,6 @@ open class AstNode(
         get() {
             return previousSibling ?: parent?.previousAstNode
         }
-
-    @Deprecated("in 1.17, use {@link #getNextSibling()} instead", ReplaceWith("nextSibling"))
-    fun nextSibling(): AstNode? {
-        return nextSibling
-    }
 
     /**
      * Get the next sibling AstNode if exists in the tree.
@@ -162,11 +139,6 @@ open class AstNode(
                 parent.children[childIndex + 1]
             } else null
         }
-
-    @Deprecated("in 1.17, use {@link #getPreviousSibling()}", ReplaceWith("previousSibling"))
-    fun previousSibling(): AstNode? {
-        return previousSibling
-    }
 
     /**
      * Get the previous sibling AstNode if exists in the tree.
@@ -251,11 +223,6 @@ open class AstNode(
         return !`is`(*types)
     }
 
-    @Deprecated("in 1.17, use {@link #getFirstChild(AstNodeType...)} instead", ReplaceWith("getFirstChild(*nodeTypes)"))
-    fun findFirstDirectChild(vararg nodeTypes: AstNodeType): AstNode? {
-        return getFirstChild(*nodeTypes)
-    }
-
     /**
      * Returns first child of one of specified types.
      *
@@ -281,13 +248,6 @@ open class AstNode(
             }
         }
         return null
-    }
-
-    @Deprecated("in 1.17, use {@link #getFirstDescendant(AstNodeType...)} instead",
-        ReplaceWith("getFirstDescendant(*nodeTypes)")
-    )
-    fun findFirstChild(vararg nodeTypes: AstNodeType): AstNode? {
-        return getFirstDescendant(*nodeTypes)
     }
 
     /**
@@ -329,11 +289,6 @@ open class AstNode(
             return if (children.isEmpty()) null else children[0]
         }
 
-    @Deprecated("in 1.17, use {@link #getChildren(AstNodeType...)} instead", ReplaceWith("getChildren(*nodeTypes)"))
-    fun findDirectChildren(vararg nodeTypes: AstNodeType): List<AstNode> {
-        return getChildren(*nodeTypes)
-    }
-
     /**
      * Returns children of specified types.
      * In the following case, `getChildren("B")` would return "B2" and "B3":
@@ -359,13 +314,6 @@ open class AstNode(
                 }
             }
         }
-        return result
-    }
-
-    @Deprecated("in 1.17, use {@link #getDescendants(AstNodeType...)} instead, but don't forget that those methods behave differently due to bug SSLR-249")
-    fun findChildren(vararg nodeTypes: AstNodeType): List<AstNode> {
-        val result = mutableListOf<AstNode>()
-        getDescendants(result, *nodeTypes)
         return result
     }
 
@@ -456,26 +404,12 @@ open class AstNode(
         return getFirstChild(*nodeTypes) != null
     }
 
-    @Deprecated(
-        """in 1.17, use {@link #hasDescendant(AstNodeType...)} instead.
-    Be careful the name of this method is misleading as the check is done on descendant nodes
-    and not only on child nodes.""", ReplaceWith("hasDescendant(*nodeTypes)")
-    )
-    fun hasChildren(vararg nodeTypes: AstNodeType): Boolean {
-        return hasDescendant(*nodeTypes)
-    }
-
     /**
      * @return true if this node has a descendant of one of specified types
      * @since 1.17
      */
     fun hasDescendant(vararg nodeTypes: AstNodeType): Boolean {
         return getFirstDescendant(*nodeTypes) != null
-    }
-
-    @Deprecated("in 1.17, use {@link #hasAncestor(AstNodeType)} instead", ReplaceWith("hasAncestor(nodeType)"))
-    fun hasParents(nodeType: AstNodeType): Boolean {
-        return hasAncestor(nodeType)
     }
 
     /**
@@ -500,13 +434,6 @@ open class AstNode(
      */
     fun hasAncestor(vararg nodeTypes: AstNodeType): Boolean {
         return getFirstAncestor(*nodeTypes) != null
-    }
-
-    @Deprecated("in 1.17, use {@link #getFirstAncestor(AstNodeType)} instead",
-        ReplaceWith("getFirstAncestor(nodeType)")
-    )
-    fun findFirstParent(nodeType: AstNodeType): AstNode? {
-        return getFirstAncestor(nodeType)
     }
 
     /**

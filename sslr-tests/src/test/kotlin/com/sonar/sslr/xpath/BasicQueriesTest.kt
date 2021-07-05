@@ -65,14 +65,14 @@ class BasicQueriesTest {
     fun EOFTest() {
         val xpath = create<AstNode>("/COMPILATION_UNIT/EOF")
         assertThat(xpath.selectSingleNode(fileNode))
-            .isEqualTo(fileNode.findFirstChild(GenericTokenType.EOF))
+            .isEqualTo(fileNode.getFirstChild(GenericTokenType.EOF))
     }
 
     @Test
     fun anyEOFTest() {
         val xpath = create<AstNode>("//EOF")
         assertThat(xpath.selectSingleNode(fileNode))
-            .isEqualTo(fileNode.findFirstChild(GenericTokenType.EOF))
+            .isEqualTo(fileNode.getFirstChild(GenericTokenType.EOF))
     }
 
     @Test
