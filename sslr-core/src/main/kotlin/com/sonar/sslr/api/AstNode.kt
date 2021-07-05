@@ -72,14 +72,9 @@ open class AstNode(
 
     fun addChild(child: AstNode?) {
         if (child != null) {
-            if (children.isEmpty()) {
-                children = ArrayList()
-            }
             if (child.hasToBeSkippedFromAst()) {
-                if (child.hasChildren()) {
-                    for (subChild in child.children) {
-                        addChildToList(subChild)
-                    }
+                for (subChild in child.children) {
+                    addChildToList(subChild)
                 }
             } else {
                 addChildToList(child)
@@ -100,9 +95,8 @@ open class AstNode(
         return children.isNotEmpty()
     }
 
-    val numberOfChildren: Int 
-        get()
-        {
+    val numberOfChildren: Int
+        get() {
             return children.size
         }
 
@@ -111,7 +105,7 @@ open class AstNode(
      *
      * @since 1.17
      */
-    val nextAstNode: AstNode? 
+    val nextAstNode: AstNode?
         get() {
             return nextSibling ?: parent?.nextAstNode
         }
@@ -192,31 +186,25 @@ open class AstNode(
      * For internal use only.
      */
     fun hasToBeSkippedFromAst(): Boolean {
-        if (_type == null) {
-            return true
-        }
-        val result = if (AstNodeSkippingPolicy::class.java.isAssignableFrom(type.javaClass)) {
-            (type as AstNodeSkippingPolicy).hasToBeSkippedFromAst(this)
-        } else {
-            false
-        }
+        val type = _type ?: return true
+
+        val result = (type as? AstNodeSkippingPolicy)?.hasToBeSkippedFromAst(this) ?: false
+
         // For LexerlessGrammarBuilder and LexerfulGrammarBuilder
         // unwrap AstNodeType to get a real one, i.e. detach node from tree of matchers:
-        if (type is MutableParsingRule) {
-            _type = (type as MutableParsingRule).getRealAstNodeType()
-        } else if (type is RuleDefinition) {
-            _type = (type as RuleDefinition).getRealAstNodeType()
+        when (type) {
+            is MutableParsingRule -> {
+                _type = type.getRealAstNodeType()
+            }
+            is RuleDefinition -> {
+                _type = type.getRealAstNodeType()
+            }
         }
         return result
     }
 
     fun `is`(vararg types: AstNodeType): Boolean {
-        for (expectedType in types) {
-            if (type === expectedType) {
-                return true
-            }
-        }
-        return false
+        return types.any { type === it }
     }
 
     fun isNot(vararg types: AstNodeType): Boolean {
@@ -240,14 +228,7 @@ open class AstNode(
      * @since 1.17
      */
     fun getFirstChild(vararg nodeTypes: AstNodeType): AstNode? {
-        for (child in children) {
-            for (nodeType in nodeTypes) {
-                if (child.type === nodeType) {
-                    return child
-                }
-            }
-        }
-        return null
+        return children.firstOrNull { it.type in nodeTypes }
     }
 
     /**
@@ -286,7 +267,7 @@ open class AstNode(
      */
     val firstChild: AstNode?
         get() {
-            return if (children.isEmpty()) null else children[0]
+            return children.firstOrNull()
         }
 
     /**
@@ -306,15 +287,7 @@ open class AstNode(
      * @since 1.17
      */
     fun getChildren(vararg nodeTypes: AstNodeType): List<AstNode> {
-        val result: MutableList<AstNode> = ArrayList()
-        for (child in children) {
-            for (nodeType in nodeTypes) {
-                if (child.type === nodeType) {
-                    result.add(child)
-                }
-            }
-        }
-        return result
+        return children.filter { it.type in nodeTypes }
     }
 
     /**
@@ -335,12 +308,10 @@ open class AstNode(
      * @return descendants of specified types, never null
      * @since 1.17
      */
-    fun getDescendants(vararg nodeTypes: AstNodeType): MutableList<AstNode> {
+    fun getDescendants(vararg nodeTypes: AstNodeType): List<AstNode> {
         val result: MutableList<AstNode> = ArrayList()
-        if (hasChildren()) {
-            for (child in children) {
-                child.getDescendants(result, *nodeTypes)
-            }
+        for (child in children) {
+            child.getDescendants(result, *nodeTypes)
         }
         return result
     }
@@ -351,10 +322,8 @@ open class AstNode(
                 result.add(this)
             }
         }
-        if (hasChildren()) {
-            for (child in children) {
-                child.getDescendants(result, *nodeTypes)
-            }
+        for (child in children) {
+            child.getDescendants(result, *nodeTypes)
         }
     }
 
@@ -365,7 +334,7 @@ open class AstNode(
      */
     val lastChild: AstNode?
         get() {
-            return if (children.isEmpty()) null else children[children.size - 1]
+            return children.lastOrNull()
         }
 
     /**
@@ -386,15 +355,7 @@ open class AstNode(
      * @since 1.20
      */
     fun getLastChild(vararg nodeTypes: AstNodeType): AstNode? {
-        for (i in children.indices.reversed()) {
-            val child = children[i]
-            for (nodeType in nodeTypes) {
-                if (child.type === nodeType) {
-                    return child
-                }
-            }
-        }
-        return null
+        return children.lastOrNull { it.type in nodeTypes }
     }
 
     /**
@@ -480,7 +441,7 @@ open class AstNode(
      */
     val tokens: List<Token>
         get() {
-            val tokens: MutableList<Token> = ArrayList()
+            val tokens = mutableListOf<Token>()
             getTokens(tokens)
             return tokens
         }
@@ -491,8 +452,8 @@ open class AstNode(
                 tokens.add(token)
             }
         } else {
-            for (i in children.indices) {
-                children[i].getTokens(tokens)
+            for (i in children) {
+                i.getTokens(tokens)
             }
         }
     }
@@ -515,13 +476,7 @@ open class AstNode(
             }
             var currentNode = this
             while (currentNode.hasChildren()) {
-                for (i in currentNode.children.indices.reversed()) {
-                    val child = currentNode.children[i]
-                    if (child.hasToken()) {
-                        currentNode = child
-                        break
-                    }
-                }
+                currentNode = currentNode.children.last { it.hasToken() }
             }
             return currentNode.token
         }
