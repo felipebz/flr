@@ -22,21 +22,21 @@ package com.sonar.sslr.api
 
 import java.util.*
 
-class Trivia private constructor(
+public class Trivia private constructor(
     private val kind: TriviaKind,
     vararg tokens: Token
 ) {
-    enum class TriviaKind {
+    public enum class TriviaKind {
         COMMENT, SKIPPED_TEXT
     }
 
-    val tokens: List<Token> = listOf(*tokens)
+    public val tokens: List<Token> = listOf(*tokens)
 
-    val token: Token
+    public val token: Token
         get() = tokens[0]
-    val isComment: Boolean
+    public val isComment: Boolean
         get() = kind == TriviaKind.COMMENT
-    val isSkippedText: Boolean
+    public val isSkippedText: Boolean
         get() = kind == TriviaKind.SKIPPED_TEXT
 
     override fun toString(): String {
@@ -59,17 +59,17 @@ class Trivia private constructor(
         }
     }
 
-    companion object {
-        fun createComment(commentToken: Token): Trivia {
+    public companion object {
+        public fun createComment(commentToken: Token): Trivia {
             return Trivia(TriviaKind.COMMENT, commentToken)
         }
 
-        fun createSkippedText(tokens: List<Token>): Trivia {
+        public fun createSkippedText(tokens: List<Token>): Trivia {
             Objects.requireNonNull(tokens, "tokens cannot be null")
             return createSkippedText(*tokens.toTypedArray())
         }
 
-        fun createSkippedText(vararg tokens: Token): Trivia {
+        public fun createSkippedText(vararg tokens: Token): Trivia {
             return Trivia(TriviaKind.SKIPPED_TEXT, *tokens)
         }
     }

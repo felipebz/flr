@@ -27,12 +27,12 @@ import org.sonar.sslr.grammar.LexerlessGrammarBuilder
 /**
  * PEG grammar.
  */
-enum class PegGrammar : GrammarRuleKey {
+public enum class PegGrammar : GrammarRuleKey {
     GRAMMAR, RULE, RULE_KEY, STRING, ATOM, FIRST_OF_EXPRESSION, SEQUENCE_EXPRESSION, ZERO_OR_MORE_EXPRESSION, ONE_OR_MORE_EXPRESSION, OPTIONAL_EXPRESSION, NEXT_NOT_EXPRESSION, NEXT_EXPRESSION, ASSIGN, SEMICOLON, OR, NOT, AND, QUESTION, PLUS, STAR, OPEN, CLOSE, WHITESPACE;
 
-    companion object {
+    public companion object {
         @JvmStatic
-        fun create(): Grammar {
+        public fun create(): Grammar {
             val b = LexerlessGrammarBuilder.create()
             b.rule(GRAMMAR).`is`(WHITESPACE, b.zeroOrMore(RULE), b.endOfInput())
             b.rule(RULE).`is`(RULE_KEY, ASSIGN, FIRST_OF_EXPRESSION, SEMICOLON)

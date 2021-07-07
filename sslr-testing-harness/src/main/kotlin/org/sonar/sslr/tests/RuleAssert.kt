@@ -36,7 +36,7 @@ import org.sonar.sslr.parser.ParseRunner
  *
  * @since 1.16
  */
-class RuleAssert(actual: Rule?) : GenericAssert<RuleAssert, Rule>(
+public class RuleAssert(actual: Rule?) : GenericAssert<RuleAssert, Rule>(
     RuleAssert::class.java, actual
 ) {
     internal class WithEndOfInput(private val ruleKey: GrammarRuleKey?) : GrammarRuleKey {
@@ -65,7 +65,7 @@ class RuleAssert(actual: Rule?) : GenericAssert<RuleAssert, Rule>(
      * Verifies that the actual `[Rule]` fully matches a given input.
      * @return this assertion object.
      */
-    fun matches(input: String): RuleAssert {
+    public fun matches(input: String): RuleAssert {
         val parseRunner = createParseRunnerWithEofMatcher()
         val parsingResult = parseRunner.parse(input.toCharArray())
         if (!parsingResult.isMatched()) {
@@ -83,7 +83,7 @@ class RuleAssert(actual: Rule?) : GenericAssert<RuleAssert, Rule>(
      * Verifies that the actual `[Rule]` does not match a given input.
      * @return this assertion object.
      */
-    fun notMatches(input: String): RuleAssert {
+    public fun notMatches(input: String): RuleAssert {
         val parseRunner = createParseRunnerWithEofMatcher()
         val parsingResult = parseRunner.parse(input.toCharArray())
         if (parsingResult.isMatched()) {
@@ -108,7 +108,7 @@ class RuleAssert(actual: Rule?) : GenericAssert<RuleAssert, Rule>(
      * @param remainingInput the remainder of the input, which is not to be matched
      * @return this assertion object.
      */
-    fun matchesPrefix(prefixToBeMatched: String, remainingInput: String): RuleAssert {
+    public fun matchesPrefix(prefixToBeMatched: String, remainingInput: String): RuleAssert {
         val parseRunner = createParseRunnerWithoutEofMatcher()
         val input = prefixToBeMatched + remainingInput
         val parsingResult = parseRunner.parse(input.toCharArray())

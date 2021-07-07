@@ -27,7 +27,7 @@ import org.sonar.sslr.internal.matchers.Matcher
 /**
  * Rule, which can be compiled by [MutableGrammarCompiler].
  */
-interface CompilableGrammarRule : Matcher, Rule, ParsingExpression {
-    val ruleKey: GrammarRuleKey
-    var expression: ParsingExpression?
+public interface CompilableGrammarRule : Matcher, Rule, ParsingExpression {
+    public val ruleKey: GrammarRuleKey
+    public var expression: ParsingExpression?
 }

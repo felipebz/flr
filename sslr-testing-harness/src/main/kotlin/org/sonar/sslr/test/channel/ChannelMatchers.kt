@@ -22,19 +22,19 @@ package org.sonar.sslr.test.channel
 
 import org.sonar.sslr.channel.CodeReader
 
-object ChannelMatchers {
+public object ChannelMatchers {
     @JvmStatic
-    fun <O> consume(sourceCode: String, output: O): ChannelMatcher<O> {
+    public fun <O> consume(sourceCode: String, output: O): ChannelMatcher<O> {
         return ChannelMatcher(sourceCode, output)
     }
 
     @JvmStatic
-    fun <O> consume(codeReader: CodeReader, output: O): ChannelMatcher<O> {
+    public fun <O> consume(codeReader: CodeReader, output: O): ChannelMatcher<O> {
         return ChannelMatcher(codeReader, output)
     }
 
     @JvmStatic
-    fun hasNextChar(nextChar: Char): ReaderHasNextCharMatcher {
+    public fun hasNextChar(nextChar: Char): ReaderHasNextCharMatcher {
         return ReaderHasNextCharMatcher(nextChar)
     }
 }

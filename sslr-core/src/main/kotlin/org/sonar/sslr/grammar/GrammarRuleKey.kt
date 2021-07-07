@@ -35,4 +35,4 @@ import com.sonar.sslr.api.AstNodeType
  *
  * @since 1.18
  */
-interface GrammarRuleKey : AstNodeType
+public interface GrammarRuleKey : AstNodeType

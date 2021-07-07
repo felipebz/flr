@@ -31,13 +31,13 @@ import org.sonar.sslr.channel.CodeReader
  *
  * @since 1.2
  */
-class UnknownCharacterChannel : Channel<Lexer> {
+public class UnknownCharacterChannel : Channel<Lexer> {
     private val tokenBuilder: Token.Builder = Token.builder()
 
-    constructor()
+    public constructor()
 
     @Deprecated("logging removed in 1.20, use {@link #UnknownCharacterChannel()} or implement your own Channel with logging")
-    constructor(shouldLogWarning: Boolean)
+    public constructor(shouldLogWarning: Boolean)
 
     override fun consume(code: CodeReader, output: Lexer): Boolean {
         if (code.peek() != -1) {

@@ -25,7 +25,7 @@ import org.sonar.sslr.examples.grammars.typed.api.PairTree
 import org.sonar.sslr.examples.grammars.typed.api.SyntaxToken
 import org.sonar.sslr.examples.grammars.typed.api.ValueTree
 
-class PairTreeImpl(private val name: LiteralTree, private val colonToken: SyntaxToken, private val value: ValueTree) :
+public class PairTreeImpl(private val name: LiteralTree, private val colonToken: SyntaxToken, private val value: ValueTree) :
     PairTree {
     override fun name(): LiteralTree {
         return name

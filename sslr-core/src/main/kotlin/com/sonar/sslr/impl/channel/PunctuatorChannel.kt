@@ -27,7 +27,7 @@ import org.sonar.sslr.channel.CodeReader
 import java.util.*
 import kotlin.math.max
 
-class PunctuatorChannel(vararg punctuators: TokenType) : Channel<Lexer>() {
+public class PunctuatorChannel(vararg punctuators: TokenType) : Channel<Lexer>() {
     private val lookahead: Int
     private val sortedPunctuators: Array<out TokenType> = punctuators
     private val sortedPunctuatorsChars: Array<CharArray>
@@ -65,7 +65,7 @@ class PunctuatorChannel(vararg punctuators: TokenType) : Channel<Lexer>() {
         return false
     }
 
-    companion object {
+    public companion object {
         /**
          * Expected that length of second array can be less than length of first.
          */

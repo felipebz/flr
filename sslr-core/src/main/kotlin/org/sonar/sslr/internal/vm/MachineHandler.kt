@@ -20,6 +20,6 @@
  */
 package org.sonar.sslr.internal.vm
 
-interface MachineHandler {
-    fun onBacktrack(machine: Machine)
+public interface MachineHandler {
+    public fun onBacktrack(machine: Machine)
 }

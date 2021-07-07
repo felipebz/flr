@@ -28,27 +28,27 @@ package org.sonar.sslr.internal.matchers
  *
  * @since 1.16
  */
-interface InputBuffer {
-    fun length(): Int
-    fun charAt(index: Int): Char
+public interface InputBuffer {
+    public fun length(): Int
+    public fun charAt(index: Int): Char
 
     /**
      * Returns content of a line for a given line number.
      * Numbering of lines starts from 1.
      */
-    fun extractLine(lineNumber: Int): String
+    public fun extractLine(lineNumber: Int): String
 
     /**
      * Returns number of lines, which is always equal to number of line terminators plus 1.
      */
-    fun getLineCount(): Int
-    fun getPosition(index: Int): Position
-    class Position(private val line: Int, private val column: Int) {
-        fun getLine(): Int {
+    public fun getLineCount(): Int
+    public fun getPosition(index: Int): Position
+    public class Position(private val line: Int, private val column: Int) {
+        public fun getLine(): Int {
             return line
         }
 
-        fun getColumn(): Int {
+        public fun getColumn(): Int {
             return column
         }
 

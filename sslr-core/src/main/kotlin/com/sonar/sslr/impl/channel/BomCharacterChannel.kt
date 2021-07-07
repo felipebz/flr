@@ -29,7 +29,7 @@ import org.sonar.sslr.channel.CodeReader
  *
  * @since 1.17
  */
-class BomCharacterChannel : Channel<Lexer>() {
+public class BomCharacterChannel : Channel<Lexer>() {
     override fun consume(code: CodeReader, output: Lexer): Boolean {
         if (code.peek() == BOM_CHAR) {
             code.pop()
@@ -38,7 +38,7 @@ class BomCharacterChannel : Channel<Lexer>() {
         return false
     }
 
-    companion object {
-        const val BOM_CHAR = '\uFEFF'.code
+    public companion object {
+        public const val BOM_CHAR: Int = '\uFEFF'.code
     }
 }

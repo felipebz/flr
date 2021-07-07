@@ -24,8 +24,8 @@ import java.lang.reflect.Field
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
 
-object ReflectionUtils {
-    fun invokeMethod(method: Method, `object`: Any?, vararg args: Any?): Any? {
+public object ReflectionUtils {
+    public fun invokeMethod(method: Method, `object`: Any?, vararg args: Any?): Any? {
         return try {
             method.invoke(`object`, *args)
         } catch (e: IllegalAccessException) {
@@ -35,7 +35,7 @@ object ReflectionUtils {
         }
     }
 
-    fun getField(clazz: Class<*>, fieldName: String): Field {
+    public fun getField(clazz: Class<*>, fieldName: String): Field {
         return try {
             val field = clazz.getDeclaredField(fieldName)
             field.isAccessible = true
@@ -45,7 +45,7 @@ object ReflectionUtils {
         }
     }
 
-    fun setField(field: Field, instance: Any?, value: Any?) {
+    public fun setField(field: Field, instance: Any?, value: Any?) {
         try {
             field[instance] = value
         } catch (e: IllegalAccessException) {

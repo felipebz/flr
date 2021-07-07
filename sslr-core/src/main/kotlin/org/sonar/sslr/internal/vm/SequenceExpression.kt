@@ -22,7 +22,7 @@ package org.sonar.sslr.internal.vm
 
 import java.util.*
 
-class SequenceExpression(private vararg val subExpressions: ParsingExpression) : ParsingExpression {
+public class SequenceExpression(private vararg val subExpressions: ParsingExpression) : ParsingExpression {
 
     /**
      * Compiles this expression into a sequence of instructions:

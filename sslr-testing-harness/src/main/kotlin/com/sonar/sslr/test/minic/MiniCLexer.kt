@@ -29,9 +29,9 @@ import com.sonar.sslr.impl.channel.PunctuatorChannel
 import com.sonar.sslr.impl.channel.RegexpChannelBuilder.commentRegexp
 import com.sonar.sslr.impl.channel.RegexpChannelBuilder.regexp
 
-object MiniCLexer {
+public object MiniCLexer {
     @JvmStatic
-    fun create(): Lexer {
+    public fun create(): Lexer {
         return Lexer.builder()
             .withFailIfNoChannelToConsumeOneCharacter(true)
             .withChannel(IdentifierAndKeywordChannel("[a-zA-Z]([a-zA-Z0-9_]*[a-zA-Z0-9])?+", true, Keywords.values()))
@@ -42,7 +42,7 @@ object MiniCLexer {
             .build()
     }
 
-    enum class Literals : TokenType {
+    public enum class Literals : TokenType {
         INTEGER;
 
         override val value: String
@@ -55,7 +55,7 @@ object MiniCLexer {
         }
     }
 
-    enum class Punctuators(override val value: String) : TokenType {
+    public enum class Punctuators(override val value: String) : TokenType {
         PAREN_L("("), PAREN_R(")"), BRACE_L("{"), BRACE_R("}"), EQ("="), COMMA(","), SEMICOLON(";"), ADD("+"), SUB("-"), MUL(
             "*"
         ),
@@ -66,7 +66,7 @@ object MiniCLexer {
         }
     }
 
-    enum class Keywords(override val value: String) : TokenType {
+    public enum class Keywords(override val value: String) : TokenType {
         STRUCT("struct"), INT("int"), VOID("void"), RETURN("return"), IF("if"), ELSE("else"), WHILE("while"), CONTINUE("continue"), BREAK(
             "break"
         );
@@ -75,8 +75,8 @@ object MiniCLexer {
             return false
         }
 
-        companion object {
-            fun keywordValues(): Array<String> {
+        public companion object {
+            public fun keywordValues(): Array<String> {
                 return values().map { it.value }.toTypedArray()
             }
         }

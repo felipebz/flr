@@ -28,8 +28,8 @@ import org.sonar.sslr.grammar.GrammarRuleKey
 /**
  * @since 1.21
  */
-interface NodeBuilder {
-    fun createNonTerminal(
+public interface NodeBuilder {
+    public fun createNonTerminal(
         ruleKey: GrammarRuleKey,
         rule: Rule,
         children: List<Any?>,
@@ -37,5 +37,5 @@ interface NodeBuilder {
         endIndex: Int
     ): Any
 
-    fun createTerminal(input: Input, startIndex: Int, endIndex: Int, trivias: List<Trivia>, type: TokenType?): Any
+    public fun createTerminal(input: Input, startIndex: Int, endIndex: Int, trivias: List<Trivia>, type: TokenType?): Any
 }

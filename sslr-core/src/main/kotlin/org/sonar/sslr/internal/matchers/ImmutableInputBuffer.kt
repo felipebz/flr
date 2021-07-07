@@ -23,7 +23,7 @@ package org.sonar.sslr.internal.matchers
 import java.util.*
 import kotlin.math.min
 
-class ImmutableInputBuffer(private val buffer: CharArray) : InputBuffer {
+public class ImmutableInputBuffer(private val buffer: CharArray) : InputBuffer {
     /**
      * Indices of lines in buffer.
      */
@@ -57,7 +57,7 @@ class ImmutableInputBuffer(private val buffer: CharArray) : InputBuffer {
         return InputBuffer.Position(line, column)
     }
 
-    companion object {
+    public companion object {
         /**
          * A line is considered to be terminated by any one of
          * a line feed (`'\n'`), a carriage return (`'\r'`),

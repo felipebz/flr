@@ -25,14 +25,14 @@ import java.util.*
 /**
  * Configuration parameters used by a CodeReader to handle some specificities.
  */
-class CodeReaderConfiguration {
+public class CodeReaderConfiguration {
     private var tabWidth = DEFAULT_TAB_WIDTH
     private var codeReaderFilters = mutableListOf<CodeReaderFilter<*>>()
 
     /**
      * @return the tabWidth
      */
-    fun getTabWidth(): Int {
+    public fun getTabWidth(): Int {
         return tabWidth
     }
 
@@ -40,14 +40,14 @@ class CodeReaderConfiguration {
      * @param tabWidth
      * the tabWidth to set
      */
-    fun setTabWidth(tabWidth: Int) {
+    public fun setTabWidth(tabWidth: Int) {
         this.tabWidth = tabWidth
     }
 
     /**
      * @return the codeReaderFilters
      */
-    fun getCodeReaderFilters(): Array<CodeReaderFilter<*>> {
+    public fun getCodeReaderFilters(): Array<CodeReaderFilter<*>> {
         return codeReaderFilters.toTypedArray()
     }
 
@@ -55,7 +55,7 @@ class CodeReaderConfiguration {
      * @param codeReaderFilters
      * the codeReaderFilters to set
      */
-    fun setCodeReaderFilters(vararg codeReaderFilters: CodeReaderFilter<*>?) {
+    public fun setCodeReaderFilters(vararg codeReaderFilters: CodeReaderFilter<*>?) {
         this.codeReaderFilters = ArrayList(listOf(*codeReaderFilters))
     }
 
@@ -65,17 +65,17 @@ class CodeReaderConfiguration {
      * @param codeReaderFilter
      * the codeReaderFilter to add
      */
-    fun addCodeReaderFilters(codeReaderFilter: CodeReaderFilter<*>) {
+    public fun addCodeReaderFilters(codeReaderFilter: CodeReaderFilter<*>) {
         codeReaderFilters.add(codeReaderFilter)
     }
 
-    fun cloneWithoutCodeReaderFilters(): CodeReaderConfiguration {
+    public fun cloneWithoutCodeReaderFilters(): CodeReaderConfiguration {
         val clone = CodeReaderConfiguration()
         clone.setTabWidth(tabWidth)
         return clone
     }
 
-    companion object {
-        const val DEFAULT_TAB_WIDTH = 1
+    public companion object {
+        public const val DEFAULT_TAB_WIDTH: Int = 1
     }
 }

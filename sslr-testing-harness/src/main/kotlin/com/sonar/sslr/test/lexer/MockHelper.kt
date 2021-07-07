@@ -29,19 +29,19 @@ import java.net.URI
 import java.net.URISyntaxException
 
 @Deprecated("in 1.17 All classes can now be mocked since none of them are final anymore, hence this helper is useless.")
-object MockHelper {
+public object MockHelper {
     @JvmStatic
-    fun mockLexer(): Lexer {
+    public fun mockLexer(): Lexer {
         return Lexer.builder().build()
     }
 
     @JvmStatic
-    fun mockToken(type: TokenType, value: String): Token {
+    public fun mockToken(type: TokenType, value: String): Token {
         return mockTokenBuilder(type, value).build()
     }
 
     @JvmStatic
-    fun mockTokenBuilder(type: TokenType, value: String): Token.Builder {
+    public fun mockTokenBuilder(type: TokenType, value: String): Token.Builder {
         return try {
             Token.builder()
                 .setType(type)
@@ -54,7 +54,7 @@ object MockHelper {
         }
     }
 
-    fun mockAstNode(name: String): AstNode {
+    public fun mockAstNode(name: String): AstNode {
         return AstNode(GenericTokenType.IDENTIFIER, name, mockToken(GenericTokenType.LITERAL, "dummy"))
     }
 }

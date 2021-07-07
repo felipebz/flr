@@ -20,7 +20,7 @@
  */
 package org.sonar.sslr.channel
 
-class ChannelDispatcher<O> private constructor(builder: Builder) : Channel<O>() {
+public class ChannelDispatcher<O> private constructor(builder: Builder) : Channel<O>() {
     private val failIfNoChannelToConsumeOneCharacter: Boolean
     private val channels: Array<Channel<O>> = builder.channels.toTypedArray() as Array<Channel<O>>
     override fun consume(code: CodeReader, output: O): Boolean {
@@ -47,19 +47,19 @@ class ChannelDispatcher<O> private constructor(builder: Builder) : Channel<O>() 
         return true
     }
 
-    fun getChannels(): Array<Channel<O>> {
+    public fun getChannels(): Array<Channel<O>> {
         return channels
     }
 
-    class Builder {
-        val channels: MutableList<Channel<*>> = ArrayList()
-        var failIfNoChannelToConsumeOneCharacter = false
-        fun addChannel(channel: Channel<*>): Builder {
+    public class Builder {
+        public val channels: MutableList<Channel<*>> = ArrayList()
+        public var failIfNoChannelToConsumeOneCharacter: Boolean = false
+        public fun addChannel(channel: Channel<*>): Builder {
             channels.add(channel)
             return this
         }
 
-        fun addChannels(vararg c: Channel<*>): Builder {
+        public fun addChannels(vararg c: Channel<*>): Builder {
             for (channel in c) {
                 addChannel(channel)
             }
@@ -69,22 +69,22 @@ class ChannelDispatcher<O> private constructor(builder: Builder) : Channel<O>() 
         /**
          * If this option is activated, an IllegalStateException will be thrown as soon as a character won't be consumed by any channel.
          */
-        fun failIfNoChannelToConsumeOneCharacter(): Builder {
+        public fun failIfNoChannelToConsumeOneCharacter(): Builder {
             failIfNoChannelToConsumeOneCharacter = true
             return this
         }
 
-        fun <O> build(): ChannelDispatcher<O> {
+        public fun <O> build(): ChannelDispatcher<O> {
             return ChannelDispatcher(this)
         }
     }
 
-    companion object {
+    public companion object {
         /**
          * Get a Builder instance to build a new ChannelDispatcher
          */
         @JvmStatic
-        fun builder(): Builder {
+        public fun builder(): Builder {
             return Builder()
         }
     }

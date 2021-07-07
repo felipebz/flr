@@ -24,7 +24,7 @@ import org.sonar.sslr.internal.matchers.Matcher
 import org.sonar.sslr.internal.vm.Machine
 import org.sonar.sslr.internal.vm.NativeExpression
 
-class TokenTypeClassExpression(private val typeClass: Class<*>) : NativeExpression(), Matcher {
+public class TokenTypeClassExpression(private val typeClass: Class<*>) : NativeExpression(), Matcher {
     override fun execute(machine: Machine) {
         if (machine.isEmpty() || typeClass != machine.tokenAt(0).type.javaClass) {
             machine.backtrack()

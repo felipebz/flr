@@ -33,20 +33,20 @@ import java.net.URL
 import java.nio.charset.Charset
 import java.util.*
 
-class Lexer private constructor(builder: Builder) {
+public class Lexer private constructor(builder: Builder) {
     private val charset: Charset
     private val configuration: CodeReaderConfiguration
     private val channelDispatcher: ChannelDispatcher<Lexer>?
     private val trivia: MutableList<Trivia> = LinkedList()
     private var _tokens: MutableList<Token> = ArrayList()
 
-    val tokens: List<Token>
+    public val tokens: List<Token>
         get() = Collections.unmodifiableList(_tokens)
 
-    var uri: URI? = null
+    public var uri: URI? = null
         private set
 
-    fun lex(file: File): List<Token> {
+    public fun lex(file: File): List<Token> {
         Objects.requireNonNull(file, "file cannot be null")
         require(file.isFile) { "file \"" + file.absolutePath + "\" must be a file" }
         return try {
@@ -56,7 +56,7 @@ class Lexer private constructor(builder: Builder) {
         }
     }
 
-    fun lex(url: URL): List<Token> {
+    public fun lex(url: URL): List<Token> {
         Objects.requireNonNull(url, "url cannot be null")
         try {
             InputStreamReader(url.openStream(), charset).use { reader ->
@@ -75,7 +75,7 @@ class Lexer private constructor(builder: Builder) {
      * @return
      */
     // @VisibleForTesting
-    fun lex(sourceCode: String): List<Token> {
+    public fun lex(sourceCode: String): List<Token> {
         Objects.requireNonNull(sourceCode, "sourceCode cannot be null")
         return try {
             lex(StringReader(sourceCode))
@@ -108,15 +108,15 @@ class Lexer private constructor(builder: Builder) {
         }
     }
 
-    fun addTrivia(vararg trivia: Trivia) {
+    public fun addTrivia(vararg trivia: Trivia) {
         addTrivia(listOf(*trivia))
     }
 
-    fun addTrivia(trivia: List<Trivia>) {
+    public fun addTrivia(trivia: List<Trivia>) {
         this.trivia.addAll(trivia)
     }
 
-    fun addToken(vararg tokens: Token) {
+    public fun addToken(vararg tokens: Token) {
         require(tokens.isNotEmpty()) { "at least one token must be given" }
         val firstToken = tokens[0]
         val firstTokenWithTrivia: Token
@@ -134,31 +134,31 @@ class Lexer private constructor(builder: Builder) {
         }
     }
 
-    class Builder {
-        var charset: Charset = Charset.defaultCharset()
-        val configuration = CodeReaderConfiguration()
+    public class Builder {
+        public var charset: Charset = Charset.defaultCharset()
+        public val configuration: CodeReaderConfiguration = CodeReaderConfiguration()
         private val channels: MutableList<Channel<Lexer>> = ArrayList()
         private var failIfNoChannelToConsumeOneCharacter = false
-        fun build(): Lexer {
+        public fun build(): Lexer {
             return Lexer(this)
         }
 
-        fun withCharset(charset: Charset): Builder {
+        public fun withCharset(charset: Charset): Builder {
             this.charset = charset
             return this
         }
 
-        fun withChannel(channel: Channel<Lexer>): Builder {
+        public fun withChannel(channel: Channel<Lexer>): Builder {
             channels.add(channel)
             return this
         }
 
-        fun withFailIfNoChannelToConsumeOneCharacter(failIfNoChannelToConsumeOneCharacter: Boolean): Builder {
+        public fun withFailIfNoChannelToConsumeOneCharacter(failIfNoChannelToConsumeOneCharacter: Boolean): Builder {
             this.failIfNoChannelToConsumeOneCharacter = failIfNoChannelToConsumeOneCharacter
             return this
         }
 
-        val channelDispatcher: ChannelDispatcher<Lexer>
+        public val channelDispatcher: ChannelDispatcher<Lexer>
             get() {
                 val builder: ChannelDispatcher.Builder = ChannelDispatcher.builder()
                     .addChannels(*channels.toTypedArray())
@@ -169,9 +169,9 @@ class Lexer private constructor(builder: Builder) {
             }
     }
 
-    companion object {
+    public companion object {
         @JvmStatic
-        fun builder(): Builder {
+        public fun builder(): Builder {
             return Builder()
         }
     }

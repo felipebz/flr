@@ -24,7 +24,7 @@ import org.sonar.sslr.internal.matchers.Matcher
 import org.sonar.sslr.internal.vm.Machine
 import org.sonar.sslr.internal.vm.NativeExpression
 
-class AnyTokenExpression private constructor() : NativeExpression(), Matcher {
+public class AnyTokenExpression private constructor() : NativeExpression(), Matcher {
     override fun execute(machine: Machine) {
         if (machine.isEmpty()) {
             machine.backtrack()
@@ -38,8 +38,8 @@ class AnyTokenExpression private constructor() : NativeExpression(), Matcher {
         return "AnyToken"
     }
 
-    companion object {
+    public companion object {
         @JvmField
-        val INSTANCE = AnyTokenExpression()
+        public val INSTANCE: AnyTokenExpression = AnyTokenExpression()
     }
 }

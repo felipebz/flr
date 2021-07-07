@@ -28,48 +28,48 @@ import java.util.*
  * By definition, comments and preprocessing directives should not be seen by the parser that's why such Trivia, when they exist, are
  * attached to the next token.
  */
-class Token private constructor(builder: Builder) {
-    val type: TokenType
-    val value: String
+public class Token private constructor(builder: Builder) {
+    public val type: TokenType
+    public val value: String
 
     /**
      * @return the original value of the token. This method is useful when a language is case-insensitive as in that case all token values are
      * capitalized.
      */
-    val originalValue: String
+    public val originalValue: String
 
     /**
      * @return the line of the token in the source code
      */
-    val line: Int
+    public val line: Int
 
     /**
      * @return the column of the token in the source code
      */
-    val column: Int
+    public val column: Int
 
     /**
      * @return the URI this token belongs to
      */
-    val uRI: URI?
-    val isGeneratedCode: Boolean
+    public val uRI: URI?
+    public val isGeneratedCode: Boolean
 
     /**
      * @return the list of trivia located between this token and the previous one
      */
-    val trivia: List<Trivia>
-    val isCopyBook: Boolean
-    val copyBookOriginalLine: Int
-    val copyBookOriginalFileName: String
+    public val trivia: List<Trivia>
+    public val isCopyBook: Boolean
+    public val copyBookOriginalLine: Int
+    public val copyBookOriginalFileName: String
 
     /**
      * @return true if there is some trivia like some comments or preprocessing directive between this token and the previous one.
      */
-    fun hasTrivia(): Boolean {
+    public fun hasTrivia(): Boolean {
         return trivia.isNotEmpty()
     }
 
-    fun isOnSameLineThan(other: Token?): Boolean {
+    public fun isOnSameLineThan(other: Token?): Boolean {
         return if (other == null) false else line == other.line
     }
 
@@ -81,7 +81,7 @@ class Token private constructor(builder: Builder) {
      * Instances can be reused - it is safe to call [.build]
      * multiple times to build multiple tokens in series.
      */
-    class Builder {
+    public class Builder {
         internal lateinit var type: TokenType
         internal var value: String = ""
         internal var originalValue: String = ""
@@ -94,8 +94,8 @@ class Token private constructor(builder: Builder) {
         internal var copyBookOriginalLine = -1
         internal var copyBookOriginalFileName = ""
 
-        constructor()
-        constructor(token: Token) {
+        public constructor()
+        public constructor(token: Token) {
             type = token.type
             value = token.value
             originalValue = token.originalValue
@@ -109,19 +109,19 @@ class Token private constructor(builder: Builder) {
             copyBookOriginalFileName = token.copyBookOriginalFileName
         }
 
-        fun setType(type: TokenType): Builder {
+        public fun setType(type: TokenType): Builder {
             Objects.requireNonNull(type, "type cannot be null")
             this.type = type
             return this
         }
 
-        fun setValueAndOriginalValue(valueAndOriginalValue: String): Builder {
+        public fun setValueAndOriginalValue(valueAndOriginalValue: String): Builder {
             value = valueAndOriginalValue
             originalValue = valueAndOriginalValue
             return this
         }
 
-        fun setValueAndOriginalValue(value: String, originalValue: String): Builder {
+        public fun setValueAndOriginalValue(value: String, originalValue: String): Builder {
             Objects.requireNonNull(value, "value cannot be null")
             Objects.requireNonNull(originalValue, "originalValue cannot be null")
             this.value = value
@@ -129,33 +129,33 @@ class Token private constructor(builder: Builder) {
             return this
         }
 
-        fun setLine(line: Int): Builder {
+        public fun setLine(line: Int): Builder {
             this.line = line
             return this
         }
 
-        fun setColumn(column: Int): Builder {
+        public fun setColumn(column: Int): Builder {
             this.column = column
             return this
         }
 
-        fun setURI(uri: URI?): Builder {
+        public fun setURI(uri: URI?): Builder {
             Objects.requireNonNull(uri, "uri cannot be null")
             this.uri = uri
             return this
         }
 
-        fun setGeneratedCode(generatedCode: Boolean): Builder {
+        public fun setGeneratedCode(generatedCode: Boolean): Builder {
             this.generatedCode = generatedCode
             return this
         }
 
-        fun setTrivia(trivia: List<Trivia>): Builder {
+        public fun setTrivia(trivia: List<Trivia>): Builder {
             this.trivia = ArrayList(trivia)
             return this
         }
 
-        fun addTrivia(trivia: Trivia): Builder {
+        public fun addTrivia(trivia: Trivia): Builder {
             if (this.trivia.isEmpty()) {
                 this.trivia = ArrayList()
             }
@@ -166,14 +166,14 @@ class Token private constructor(builder: Builder) {
         /**
          * @since 1.17
          */
-        fun notCopyBook(): Builder {
+        public fun notCopyBook(): Builder {
             copyBook = false
             copyBookOriginalLine = -1
             copyBookOriginalFileName = ""
             return this
         }
 
-        fun setCopyBook(copyBookOriginalFileName: String, copyBookOriginalLine: Int): Builder {
+        public fun setCopyBook(copyBookOriginalFileName: String, copyBookOriginalLine: Int): Builder {
             Objects.requireNonNull(copyBookOriginalFileName, "copyBookOriginalFileName cannot be null")
             copyBook = true
             this.copyBookOriginalFileName = copyBookOriginalFileName
@@ -181,7 +181,7 @@ class Token private constructor(builder: Builder) {
             return this
         }
 
-        fun build(): Token {
+        public fun build(): Token {
             Objects.requireNonNull(type, "type must be set")
             Objects.requireNonNull(value, "value must be set")
             Objects.requireNonNull(originalValue, "originalValue must be set")
@@ -192,14 +192,14 @@ class Token private constructor(builder: Builder) {
         }
     }
 
-    companion object {
+    public companion object {
         @JvmStatic
-        fun builder(): Builder {
+        public fun builder(): Builder {
             return Builder()
         }
 
         @JvmStatic
-        fun builder(token: Token): Builder {
+        public fun builder(token: Token): Builder {
             return Builder(token)
         }
     }

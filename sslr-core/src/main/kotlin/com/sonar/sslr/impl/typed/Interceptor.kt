@@ -28,9 +28,9 @@ import java.lang.reflect.Method
 import java.util.*
 import kotlin.streams.toList
 
-object Interceptor {
+public object Interceptor {
     @JvmStatic
-    fun create(
+    public fun create(
         superClass: Class<*>,
         constructorParameterTypes: Array<Class<*>>,
         constructorArguments: Array<Any?>,

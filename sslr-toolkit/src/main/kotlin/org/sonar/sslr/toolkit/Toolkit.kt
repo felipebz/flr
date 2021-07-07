@@ -27,11 +27,11 @@ import java.util.*
 import javax.swing.SwingUtilities
 import javax.swing.UIManager
 
-class Toolkit(title: String?, configurationModel: ConfigurationModel) {
+public class Toolkit(title: String?, configurationModel: ConfigurationModel) {
     private val title: String?
     private val configurationModel: ConfigurationModel
 
-    fun run() {
+    public fun run() {
         SwingUtilities.invokeLater {
             try {
                 for (info in UIManager.getInstalledLookAndFeels()) {

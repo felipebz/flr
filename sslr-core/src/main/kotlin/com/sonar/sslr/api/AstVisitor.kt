@@ -20,13 +20,13 @@
  */
 package com.sonar.sslr.api
 
-interface AstVisitor {
+public interface AstVisitor {
     /**
      * The AST node types that this check must be registered for.
      *
      * @return the AST node types this must be registered for.
      */
-    fun getAstNodeTypesToVisit(): List<AstNodeType>
+    public fun getAstNodeTypesToVisit(): List<AstNodeType>
 
     /**
      * Called before starting visiting a computation unit tree. Ideal place to initialize information that is to be collected while processing
@@ -35,7 +35,7 @@ interface AstVisitor {
      * @param ast
      * the root of the tree, or `null` if no tree
      */
-    fun visitFile(ast: AstNode?)
+    public fun visitFile(ast: AstNode?)
 
     /**
      * Called once a computation unit tree has been fully visited. Ideal place to report on information collected while processing a tree.
@@ -43,7 +43,7 @@ interface AstVisitor {
      * @param ast
      * the root of the tree, or `null` if no tree
      */
-    fun leaveFile(ast: AstNode?)
+    public fun leaveFile(ast: AstNode?)
 
     /**
      * Called to process an AST node whose type has been registered to be visited.
@@ -51,7 +51,7 @@ interface AstVisitor {
      * @param ast
      * the AST node to process
      */
-    fun visitNode(ast: AstNode?)
+    public fun visitNode(ast: AstNode?)
 
     /**
      * Called once an AST node has been fully visited.
@@ -59,5 +59,5 @@ interface AstVisitor {
      * @param ast
      * the AST node which has been visited
      */
-    fun leaveNode(ast: AstNode?)
+    public fun leaveNode(ast: AstNode?)
 }

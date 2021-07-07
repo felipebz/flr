@@ -26,18 +26,18 @@ import org.sonar.sslr.internal.vm.*
  *
  * This class is not intended to be instantiated or subclassed by clients.
  */
-abstract class GrammarBuilder {
+public abstract class GrammarBuilder {
     /**
      * Allows to describe rule.
      * Result of this method should be used only for execution of methods in it, i.e. you should not save reference on it.
      * No guarantee that this method always returns the same instance for the same key of rule.
      */
-    abstract fun rule(ruleKey: GrammarRuleKey): GrammarRuleBuilder
+    public abstract fun rule(ruleKey: GrammarRuleKey): GrammarRuleBuilder
 
     /**
      * Allows to specify that given rule should be root for grammar.
      */
-    abstract fun setRootRule(ruleKey: GrammarRuleKey)
+    public abstract fun setRootRule(ruleKey: GrammarRuleKey)
 
     /**
      * Creates parsing expression - "sequence".
@@ -48,7 +48,7 @@ abstract class GrammarBuilder {
      * @param e2  second sub-expression
      * @throws IllegalArgumentException if any of given arguments is not a parsing expression
      */
-    fun sequence(e1: Any, e2: Any): Any {
+    public fun sequence(e1: Any, e2: Any): Any {
         return SequenceExpression(convertToExpression(e1), convertToExpression(e2))
     }
 
@@ -61,7 +61,7 @@ abstract class GrammarBuilder {
      * @param rest  rest of sub-expressions
      * @throws IllegalArgumentException if any of given arguments is not a parsing expression
      */
-    fun sequence(e1: Any, e2: Any, vararg rest: Any): Any {
+    public fun sequence(e1: Any, e2: Any, vararg rest: Any): Any {
         return SequenceExpression(*convertToExpressions(e1, e2, rest))
     }
 
@@ -77,7 +77,7 @@ abstract class GrammarBuilder {
      * @param e2  second sub-expression
      * @throws IllegalArgumentException if any of given arguments is not a parsing expression
      */
-    fun firstOf(e1: Any, e2: Any): Any {
+    public fun firstOf(e1: Any, e2: Any): Any {
         return FirstOfExpression(convertToExpression(e1), convertToExpression(e2))
     }
 
@@ -90,7 +90,7 @@ abstract class GrammarBuilder {
      * @param rest  rest of sub-expressions
      * @throws IllegalArgumentException if any of given arguments is not a parsing expression
      */
-    fun firstOf(e1: Any, e2: Any, vararg rest: Any): Any {
+    public fun firstOf(e1: Any, e2: Any, vararg rest: Any): Any {
         return FirstOfExpression(*convertToExpressions(e1, e2, rest))
     }
 
@@ -105,7 +105,7 @@ abstract class GrammarBuilder {
      * @param e  sub-expression
      * @throws IllegalArgumentException if given argument is not a parsing expression
      */
-    fun optional(e: Any): Any {
+    public fun optional(e: Any): Any {
         return OptionalExpression(convertToExpression(e))
     }
 
@@ -119,7 +119,7 @@ abstract class GrammarBuilder {
      * @see .optional
      * @see .sequence
      */
-    fun optional(e1: Any, vararg rest: Any): Any {
+    public fun optional(e1: Any, vararg rest: Any): Any {
         return OptionalExpression(SequenceExpression(*convertToExpressions(e1, rest)))
     }
 
@@ -138,7 +138,7 @@ abstract class GrammarBuilder {
      * @param e  sub-expression
      * @throws IllegalArgumentException if given argument is not a parsing expression
      */
-    fun oneOrMore(e: Any): Any {
+    public fun oneOrMore(e: Any): Any {
         return OneOrMoreExpression(convertToExpression(e))
     }
 
@@ -152,7 +152,7 @@ abstract class GrammarBuilder {
      * @see .oneOrMore
      * @see .sequence
      */
-    fun oneOrMore(e1: Any, vararg rest: Any): Any {
+    public fun oneOrMore(e1: Any, vararg rest: Any): Any {
         return OneOrMoreExpression(SequenceExpression(*convertToExpressions(e1, rest)))
     }
 
@@ -171,7 +171,7 @@ abstract class GrammarBuilder {
      * @param e  sub-expression
      * @throws IllegalArgumentException if given argument is not a parsing expression
      */
-    fun zeroOrMore(e: Any): Any {
+    public fun zeroOrMore(e: Any): Any {
         return ZeroOrMoreExpression(convertToExpression(e))
     }
 
@@ -185,7 +185,7 @@ abstract class GrammarBuilder {
      * @see .zeroOrMore
      * @see .sequence
      */
-    fun zeroOrMore(e1: Any, vararg rest: Any): Any {
+    public fun zeroOrMore(e1: Any, vararg rest: Any): Any {
         return ZeroOrMoreExpression(SequenceExpression(*convertToExpressions(e1, rest)))
     }
 
@@ -197,7 +197,7 @@ abstract class GrammarBuilder {
      * @param e  sub-expression
      * @throws IllegalArgumentException if given argument is not a parsing expression
      */
-    fun next(e: Any): Any {
+    public fun next(e: Any): Any {
         return NextExpression(convertToExpression(e))
     }
 
@@ -211,7 +211,7 @@ abstract class GrammarBuilder {
      * @see .next
      * @see .sequence
      */
-    fun next(e1: Any, vararg rest: Any): Any {
+    public fun next(e1: Any, vararg rest: Any): Any {
         return NextExpression(SequenceExpression(*convertToExpressions(e1, rest)))
     }
 
@@ -223,7 +223,7 @@ abstract class GrammarBuilder {
      * @param e  sub-expression
      * @throws IllegalArgumentException if given argument is not a parsing expression
      */
-    fun nextNot(e: Any): Any {
+    public fun nextNot(e: Any): Any {
         return NextNotExpression(convertToExpression(e))
     }
 
@@ -237,7 +237,7 @@ abstract class GrammarBuilder {
      * @see .nextNot
      * @see .sequence
      */
-    fun nextNot(e1: Any, vararg rest: Any): Any {
+    public fun nextNot(e1: Any, vararg rest: Any): Any {
         return NextNotExpression(SequenceExpression(*convertToExpressions(e1, rest)))
     }
 
@@ -245,13 +245,13 @@ abstract class GrammarBuilder {
      * Creates parsing expression - "nothing".
      * This expression always fails.
      */
-    fun nothing(): Any {
+    public fun nothing(): Any {
         return NothingExpression.INSTANCE
     }
 
-    abstract fun convertToExpression(e: Any): ParsingExpression
+    public abstract fun convertToExpression(e: Any): ParsingExpression
 
-    fun convertToExpressions(e1: Any, rest: Array<out Any>): Array<out ParsingExpression> {
+    public fun convertToExpressions(e1: Any, rest: Array<out Any>): Array<out ParsingExpression> {
         val result = arrayOfNulls<ParsingExpression>(1 + rest.size)
         result[0] = convertToExpression(e1)
         for (i in rest.indices) {

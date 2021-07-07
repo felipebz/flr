@@ -23,7 +23,7 @@ package com.sonar.sslr.impl.ast
 import com.sonar.sslr.api.AstNode
 import com.sonar.sslr.api.AstNodeSkippingPolicy
 
-class AlwaysSkipFromAst private constructor() : AstNodeSkippingPolicy {
+internal class AlwaysSkipFromAst private constructor() : AstNodeSkippingPolicy {
     override fun hasToBeSkippedFromAst(node: AstNode): Boolean {
         return true
     }

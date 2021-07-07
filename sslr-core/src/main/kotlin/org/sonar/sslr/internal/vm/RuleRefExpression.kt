@@ -22,8 +22,8 @@ package org.sonar.sslr.internal.vm
 
 import org.sonar.sslr.grammar.GrammarRuleKey
 
-class RuleRefExpression(private val ruleKey: GrammarRuleKey?) : NativeExpression() {
-    fun getRuleKey(): GrammarRuleKey? {
+public class RuleRefExpression(private val ruleKey: GrammarRuleKey?) : NativeExpression() {
+    public fun getRuleKey(): GrammarRuleKey? {
         return ruleKey
     }
 

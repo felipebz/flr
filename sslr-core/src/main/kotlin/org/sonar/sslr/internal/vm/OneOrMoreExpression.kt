@@ -20,7 +20,7 @@
  */
 package org.sonar.sslr.internal.vm
 
-class OneOrMoreExpression(private val subExpression: ParsingExpression) : ParsingExpression {
+public class OneOrMoreExpression(private val subExpression: ParsingExpression) : ParsingExpression {
     /**
      * Compiles this expression into a sequence of instructions:
      * <pre>

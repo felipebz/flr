@@ -22,6 +22,6 @@ package org.sonar.sslr.examples.grammars.typed.api
 
 import org.sonar.sslr.examples.grammars.typed.Tree
 
-interface SyntaxToken : Tree {
-    fun value(): String
+public interface SyntaxToken : Tree {
+    public fun value(): String
 }

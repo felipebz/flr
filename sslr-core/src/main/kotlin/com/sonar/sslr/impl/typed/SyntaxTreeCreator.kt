@@ -33,7 +33,7 @@ import org.sonar.sslr.internal.vm.TokenExpression
 import org.sonar.sslr.internal.vm.TriviaExpression
 import java.util.*
 
-class SyntaxTreeCreator<T>(
+public class SyntaxTreeCreator<T>(
     private val treeFactory: Any,
     private val mapping: GrammarBuilderInterceptor<*>,
     private val nodeBuilder: NodeBuilder
@@ -42,7 +42,7 @@ class SyntaxTreeCreator<T>(
     private val trivias: MutableList<Trivia> = ArrayList()
     private lateinit var input: Input
 
-    fun create(node: ParseNode, input: Input): T? {
+    public fun create(node: ParseNode, input: Input): T? {
         this.input = input
         trivias.clear()
         return visit(node) as T?

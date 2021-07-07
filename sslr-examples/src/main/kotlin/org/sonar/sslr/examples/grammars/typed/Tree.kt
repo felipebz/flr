@@ -20,4 +20,4 @@
  */
 package org.sonar.sslr.examples.grammars.typed
 
-interface Tree 
+public interface Tree

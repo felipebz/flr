@@ -31,13 +31,13 @@ import org.sonar.sslr.internal.matchers.InputBuffer
  *
  * @since 1.16
  */
-class ParseError(private val inputBuffer: InputBuffer, private val errorIndex: Int) {
+public class ParseError(private val inputBuffer: InputBuffer, private val errorIndex: Int) {
 
-    fun getInputBuffer(): InputBuffer {
+    public fun getInputBuffer(): InputBuffer {
         return inputBuffer
     }
 
-    fun getErrorIndex(): Int {
+    public fun getErrorIndex(): Int {
         return errorIndex
     }
 

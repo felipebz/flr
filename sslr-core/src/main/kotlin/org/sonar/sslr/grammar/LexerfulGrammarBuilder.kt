@@ -43,7 +43,7 @@ import java.util.*
  * @since 1.18
  * @see LexerlessGrammarBuilder
  */
-class LexerfulGrammarBuilder private constructor() : GrammarBuilder() {
+public class LexerfulGrammarBuilder private constructor() : GrammarBuilder() {
     private val definitions: MutableMap<GrammarRuleKey, RuleDefinition> = HashMap()
     private var rootRuleKey: GrammarRuleKey? = null
 
@@ -74,7 +74,7 @@ class LexerfulGrammarBuilder private constructor() : GrammarBuilder() {
      * @return grammar
      * @see .buildWithMemoizationOfMatchesForAllRules
      */
-    fun build(): Grammar {
+    public fun build(): Grammar {
         for (rule in definitions.values) {
             if (rule.expression == null) {
                 throw GrammarException("The rule '" + rule.ruleKey + "' hasn't been defined.")
@@ -90,7 +90,7 @@ class LexerfulGrammarBuilder private constructor() : GrammarBuilder() {
      * @return grammar
      * @see .build
      */
-    fun buildWithMemoizationOfMatchesForAllRules(): Grammar {
+    public fun buildWithMemoizationOfMatchesForAllRules(): Grammar {
         for (rule in definitions.values) {
             rule.enableMemoization()
         }
@@ -104,7 +104,7 @@ class LexerfulGrammarBuilder private constructor() : GrammarBuilder() {
      * @param e  sub-expression
      * @throws IllegalArgumentException if given argument is not a parsing expression
      */
-    fun adjacent(e: Any): Any {
+    public fun adjacent(e: Any): Any {
         return SequenceExpression(AdjacentExpression.INSTANCE, convertToExpression(e))
     }
 
@@ -116,7 +116,7 @@ class LexerfulGrammarBuilder private constructor() : GrammarBuilder() {
      * @param e  sub-expression
      * @throws IllegalArgumentException if given argument is not a parsing expression
      */
-    fun anyTokenButNot(e: Any): Any {
+    public fun anyTokenButNot(e: Any): Any {
         return SequenceExpression(NextNotExpression(convertToExpression(e)), AnyTokenExpression.INSTANCE)
     }
 
@@ -129,7 +129,7 @@ class LexerfulGrammarBuilder private constructor() : GrammarBuilder() {
      * @param t1  first type of token
      * @param rest  rest of types
      */
-    fun isOneOfThem(t1: TokenType?, vararg rest: TokenType?): Any {
+    public fun isOneOfThem(t1: TokenType?, vararg rest: TokenType?): Any {
         val types = arrayOfNulls<TokenType>(1 + rest.size)
         types[0] = t1
         System.arraycopy(rest, 0, types, 1, rest.size)
@@ -151,12 +151,12 @@ class LexerfulGrammarBuilder private constructor() : GrammarBuilder() {
     </pre> *
      * Do not overuse this expression.
      */
-    fun bridge(from: TokenType, to: TokenType): Any {
+    public fun bridge(from: TokenType, to: TokenType): Any {
         return TokensBridgeExpression(from, to)
     }
 
     @Deprecated("in 1.19, use {@link #anyToken()} instead.")
-    fun everything(): Any {
+    public fun everything(): Any {
         return AnyTokenExpression.INSTANCE
     }
 
@@ -165,7 +165,7 @@ class LexerfulGrammarBuilder private constructor() : GrammarBuilder() {
      * During execution of this expression parser will unconditionally consume following token.
      * This expression fails, if end of input reached.
      */
-    fun anyToken(): Any {
+    public fun anyToken(): Any {
         return AnyTokenExpression.INSTANCE
     }
 
@@ -175,7 +175,7 @@ class LexerfulGrammarBuilder private constructor() : GrammarBuilder() {
      * This expression always succeeds.
      * Do not overuse this expression.
      */
-    fun tillNewLine(): Any {
+    public fun tillNewLine(): Any {
         return TillNewLineExpression.INSTANCE
     }
 
@@ -187,7 +187,7 @@ class LexerfulGrammarBuilder private constructor() : GrammarBuilder() {
      * @param e  sub-expression
      * @throws IllegalArgumentException if given argument is not a parsing expression
      */
-    fun till(e: Any): Any {
+    public fun till(e: Any): Any {
         // TODO repeated expression
         val expression = convertToExpression(e)
         return SequenceExpression(
@@ -209,7 +209,7 @@ class LexerfulGrammarBuilder private constructor() : GrammarBuilder() {
      * @param e  sub-expression
      * @throws IllegalArgumentException if any of given arguments is not a parsing expression
      */
-    fun exclusiveTill(e: Any): Any {
+    public fun exclusiveTill(e: Any): Any {
         return ZeroOrMoreExpression(
             SequenceExpression(
                 NextNotExpression(convertToExpression(e)),
@@ -227,7 +227,7 @@ class LexerfulGrammarBuilder private constructor() : GrammarBuilder() {
      * @param rest  rest of sub-expressions
      * @throws IllegalArgumentException if any of given arguments is not a parsing expression
      */
-    fun exclusiveTill(e1: Any, vararg rest: Any): Any {
+    public fun exclusiveTill(e1: Any, vararg rest: Any): Any {
         return exclusiveTill(FirstOfExpression(*convertToExpressions(e1, rest)))
     }
 
@@ -255,9 +255,9 @@ class LexerfulGrammarBuilder private constructor() : GrammarBuilder() {
         }
     }
 
-    companion object {
+    public companion object {
         @JvmStatic
-        fun create(): LexerfulGrammarBuilder {
+        public fun create(): LexerfulGrammarBuilder {
             return LexerfulGrammarBuilder()
         }
     }

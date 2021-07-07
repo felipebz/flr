@@ -27,12 +27,12 @@ import org.sonar.sslr.grammar.LexerlessGrammarBuilder.Companion.create
 /**
  * Grammar for the classic non-context-free language { a^n b^n c^n : n >= 1 }.
  */
-enum class AbcGrammar : GrammarRuleKey {
+public enum class AbcGrammar : GrammarRuleKey {
     S, A, B;
 
-    companion object {
+    public companion object {
         @JvmStatic
-        fun createGrammar(): Grammar {
+        public fun createGrammar(): Grammar {
             val b = create()
             b.rule(S).`is`(b.next(A, "c"), b.oneOrMore("a"), B, b.nextNot("a", "b", "c"))
             b.rule(A).`is`("a", b.optional(A), "b")

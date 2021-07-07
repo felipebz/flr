@@ -28,7 +28,7 @@ import com.sonar.sslr.api.typed.NodeBuilder
 import org.sonar.sslr.examples.grammars.typed.impl.InternalSyntaxToken
 import org.sonar.sslr.grammar.GrammarRuleKey
 
-class JsonNodeBuilder : NodeBuilder {
+public class JsonNodeBuilder : NodeBuilder {
     /**
      * This methods is called for every rule defined in JsonLexer (i.e. TRUE, NUMBER, etc.).
      * Despite the fact that these rules are supposed to define tokens (as [JsonNodeBuilder.createTerminal] method does), this method is called due to whitespaces.

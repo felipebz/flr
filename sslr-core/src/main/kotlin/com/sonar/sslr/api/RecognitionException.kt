@@ -26,30 +26,30 @@ import com.sonar.sslr.impl.LexerException
  *
  * This class is not intended to be instantiated or subclassed by clients.
  */
-class RecognitionException : RuntimeException {
+public class RecognitionException : RuntimeException {
 
     /**
      * Line where the parsing error has occurred.
      *
      * @return line
      */
-    val line: Int
+    public val line: Int
 
-    constructor(e: LexerException) : super("Lexer error: " + e.message, e) {
+    public constructor(e: LexerException) : super("Lexer error: " + e.message, e) {
         line = 0
     }
 
     /**
      * @since 1.16
      */
-    constructor(line: Int, message: String?) : super(message) {
+    public constructor(line: Int, message: String?) : super(message) {
         this.line = line
     }
 
     /**
      * @since 1.16
      */
-    constructor(line: Int, message: String?, cause: Throwable?) : super(message, cause) {
+    public constructor(line: Int, message: String?, cause: Throwable?) : super(message, cause) {
         this.line = line
     }
 

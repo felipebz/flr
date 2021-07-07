@@ -33,18 +33,18 @@ import java.nio.charset.Charset
  *
  * @since 1.17
  */
-interface ConfigurationModel {
+public interface ConfigurationModel {
     /**
      * Gets the properties to be shown, in the same order, in the Configuration tab.
      *
      * @return The list of configuration properties
      */
-    val properties: List<ConfigurationProperty>
+    public val properties: List<ConfigurationProperty>
 
     /**
      * This method is called each time a configuration property's value is changed.
      */
-    fun setUpdatedFlag()
+    public fun setUpdatedFlag()
 
     /**
      * Gets the character set reflecting the current configuration state.
@@ -53,12 +53,12 @@ interface ConfigurationModel {
      *
      * @since 1.18
      */
-    val charset: Charset
+    public val charset: Charset
 
     /**
      * Gets a parser instance reflecting the current configuration state.
      *
      * @return A parser for the current configuration
      */
-    val parser: Parser<*>?
+    public val parser: Parser<*>?
 }

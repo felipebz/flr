@@ -36,7 +36,7 @@ import java.io.File
  *
  * This class is not intended to be instantiated or subclassed by clients.
  */
-open class Parser<G : Grammar> {
+public open class Parser<G : Grammar> {
     private var rootRule: RuleDefinition? = null
     private val lexer: Lexer?
     private val _grammar: G
@@ -55,7 +55,7 @@ open class Parser<G : Grammar> {
         rootRule = _grammar.getRootRule() as RuleDefinition
     }
 
-    open fun parse(file: File): AstNode {
+    public open fun parse(file: File): AstNode {
         checkNotNull(lexer) { "a lexer should be provided" }
         try {
             lexer.lex(file)
@@ -65,7 +65,7 @@ open class Parser<G : Grammar> {
         return parse(lexer.tokens)
     }
 
-    open fun parse(source: String): AstNode {
+    public open fun parse(source: String): AstNode {
         checkNotNull(lexer) { "a lexer should be provided" }
         try {
             lexer.lex(source)
@@ -75,58 +75,58 @@ open class Parser<G : Grammar> {
         return parse(lexer.tokens)
     }
 
-    open fun parse(tokens: List<Token>): AstNode {
+    public open fun parse(tokens: List<Token>): AstNode {
         // TODO can be compiled only once
         val g: CompiledGrammar = MutableGrammarCompiler.compile(rootRule as CompilableGrammarRule)
         return LexerfulAstCreator.create(Machine.parse(tokens, g), tokens)
     }
 
-    val grammar: G
+    public val grammar: G
         get() = _grammar
 
-    open fun getRootRule(): RuleDefinition? {
+    public open fun getRootRule(): RuleDefinition? {
         return rootRule
     }
 
-    fun setRootRule(rootRule: Rule?) {
+    public fun setRootRule(rootRule: Rule?) {
         this.rootRule = rootRule as RuleDefinition?
     }
 
-    class Builder<G : Grammar> {
+    public class Builder<G : Grammar> {
         private var baseParser: Parser<G>? = null
-        var lexer: Lexer? = null
-        val grammar: G
+        public var lexer: Lexer? = null
+        public val grammar: G
 
-        constructor(grammar: G) {
+        public constructor(grammar: G) {
             this.grammar = grammar
         }
 
-        constructor(parser: Parser<G>) {
+        public constructor(parser: Parser<G>) {
             baseParser = parser
             lexer = parser.lexer
             grammar = parser._grammar
         }
 
-        fun build(): Parser<G> {
+        public fun build(): Parser<G> {
             return if (baseParser != null && baseParser is ParserAdapter<*>) {
                 baseParser as Parser<G>
             } else Parser(this)
         }
 
-        fun withLexer(lexer: Lexer?): Builder<G> {
+        public fun withLexer(lexer: Lexer?): Builder<G> {
             this.lexer = lexer
             return this
         }
     }
 
-    companion object {
+    public companion object {
         @JvmStatic
-        fun <G : Grammar> builder(grammar: G): Builder<G> {
+        public fun <G : Grammar> builder(grammar: G): Builder<G> {
             return Builder(grammar)
         }
 
         @JvmStatic
-        fun <G : Grammar> builder(parser: Parser<G>): Builder<G> {
+        public fun <G : Grammar> builder(parser: Parser<G>): Builder<G> {
             return Builder(parser)
         }
     }

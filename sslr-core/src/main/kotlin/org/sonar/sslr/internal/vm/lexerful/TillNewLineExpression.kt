@@ -25,7 +25,7 @@ import org.sonar.sslr.internal.matchers.Matcher
 import org.sonar.sslr.internal.vm.Machine
 import org.sonar.sslr.internal.vm.NativeExpression
 
-class TillNewLineExpression private constructor() : NativeExpression(), Matcher {
+public class TillNewLineExpression private constructor() : NativeExpression(), Matcher {
     override fun execute(machine: Machine) {
         val currentLine = if (machine.index == 0) 1 else machine.tokenAt(-1).line
         var offset = 0
@@ -44,8 +44,8 @@ class TillNewLineExpression private constructor() : NativeExpression(), Matcher 
         return "TillNewLine"
     }
 
-    companion object {
+    public companion object {
         @JvmField
-        val INSTANCE = TillNewLineExpression()
+        public val INSTANCE: TillNewLineExpression = TillNewLineExpression()
     }
 }

@@ -23,18 +23,18 @@ package org.sonar.sslr.internal.vm
 import org.sonar.sslr.internal.matchers.Matcher
 import org.sonar.sslr.internal.matchers.ParseNode
 
-class MachineStack {
+public class MachineStack {
     private var child: MachineStack? = null
     private val parent: MachineStack?
-    val subNodes: MutableList<ParseNode>
-    var address = 0
-    var index = 0
-    var ignoreErrors = false
-    var matcher: Matcher? = null
-    var leftRecursion = 0
-    var calledAddress = 0
+    public val subNodes: MutableList<ParseNode>
+    public var address: Int = 0
+    public var index: Int = 0
+    public var ignoreErrors: Boolean = false
+    public var matcher: Matcher? = null
+    public var leftRecursion: Int = 0
+    public var calledAddress: Int = 0
 
-    constructor() {
+    public constructor() {
         parent = null
         subNodes = mutableListOf()
         index = -1
@@ -45,23 +45,23 @@ class MachineStack {
         subNodes = mutableListOf()
     }
 
-    fun parent(): MachineStack {
+    public fun parent(): MachineStack {
         return checkNotNull(parent)
     }
 
-    fun getOrCreateChild(): MachineStack {
+    public fun getOrCreateChild(): MachineStack {
         child = child ?: MachineStack(this)
         return child as MachineStack
     }
 
-    fun isReturn(): Boolean {
+    public fun isReturn(): Boolean {
         return matcher != null
     }
 
     /**
      * @return true, if this object denotes an empty stack
      */
-    fun isEmpty(): Boolean {
+    public fun isEmpty(): Boolean {
         return index == -1
     }
 }

@@ -23,7 +23,7 @@ package org.sonar.sslr.internal.vm
 import org.sonar.sslr.grammar.GrammarRuleKey
 import java.util.*
 
-class MutableGrammarCompiler : CompilationHandler() {
+public class MutableGrammarCompiler : CompilationHandler() {
     private val compilationQueue: Queue<CompilableGrammarRule?> = ArrayDeque()
     private val matchers: MutableMap<GrammarRuleKey, CompilableGrammarRule> = HashMap()
     private val offsets: MutableMap<GrammarRuleKey, Int> = HashMap()
@@ -66,8 +66,8 @@ class MutableGrammarCompiler : CompilationHandler() {
         }
     }
 
-    companion object {
-        fun compile(rule: CompilableGrammarRule): CompiledGrammar {
+    public companion object {
+        public fun compile(rule: CompilableGrammarRule): CompiledGrammar {
             return MutableGrammarCompiler().doCompile(rule)
         }
     }

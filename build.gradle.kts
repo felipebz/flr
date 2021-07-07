@@ -38,6 +38,10 @@ subprojects {
         testImplementation("junit:junit:4.13.1")
     }
 
+    kotlin {
+        explicitApi()
+    }
+
     tasks.withType<KotlinCompile>().configureEach {
         kotlinOptions {
             this.jvmTarget = "1.8"

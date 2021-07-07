@@ -22,9 +22,9 @@ package com.sonar.sslr.impl.typed
 
 import java.lang.reflect.Method
 
-fun interface MethodInterceptor {
+public fun interface MethodInterceptor {
     /**
      * @return `true` if original method should not be invoked
      */
-    fun intercept(method: Method): Boolean
+    public fun intercept(method: Method): Boolean
 }

@@ -22,6 +22,6 @@ package org.sonar.sslr.internal.vm
 
 import org.sonar.sslr.internal.matchers.Matcher
 
-interface MemoParsingExpression : ParsingExpression, Matcher {
-    fun shouldMemoize(): Boolean
+public interface MemoParsingExpression : ParsingExpression, Matcher {
+    public fun shouldMemoize(): Boolean
 }

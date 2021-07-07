@@ -23,14 +23,14 @@ package org.sonar.sslr.internal.toolkit
 import com.sonar.sslr.api.Token
 import kotlin.math.min
 
-class LineOffsets(code: String) {
+public class LineOffsets(code: String) {
     private val lineOffsets: MutableMap<Int, Int> = HashMap()
     private val endOffset: Int
-    fun getStartOffset(token: Token): Int {
+    public fun getStartOffset(token: Token): Int {
         return getOffset(token.line, token.column)
     }
 
-    fun getEndOffset(token: Token): Int {
+    public fun getEndOffset(token: Token): Int {
         val tokenLines = token.originalValue.split(NEWLINE_REGEX).toTypedArray()
         val tokenLastLine = token.line + tokenLines.size - 1
         val tokenLastLineColumn =
@@ -38,7 +38,7 @@ class LineOffsets(code: String) {
         return getOffset(tokenLastLine, tokenLastLineColumn)
     }
 
-    fun getOffset(line: Int, column: Int): Int {
+    public fun getOffset(line: Int, column: Int): Int {
         require(line >= 1)
         require(column >= 0)
         val lineOffset = lineOffsets[line]
@@ -49,7 +49,7 @@ class LineOffsets(code: String) {
         }
     }
 
-    companion object {
+    public companion object {
         private val NEWLINE_REGEX = Regex("(\r)?\n|\r")
     }
 

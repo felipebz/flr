@@ -20,6 +20,6 @@
  */
 package org.sonar.sslr.channel
 
-fun interface EndMatcher {
-    fun match(toMatch: Int): Boolean
+public fun interface EndMatcher {
+    public fun match(toMatch: Int): Boolean
 }

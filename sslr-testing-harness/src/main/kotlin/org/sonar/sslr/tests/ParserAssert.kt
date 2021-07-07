@@ -39,7 +39,7 @@ import org.sonar.sslr.tests.RuleAssert.WithEndOfInput
  *
  * @since 1.16
  */
-class ParserAssert(actual: Parser<*>) : GenericAssert<ParserAssert, Parser<*>>(
+public class ParserAssert(actual: Parser<*>) : GenericAssert<ParserAssert, Parser<*>>(
     ParserAssert::class.java, actual
 ) {
     private fun createParserWithEofMatcher(): Parser<*> {
@@ -57,7 +57,7 @@ class ParserAssert(actual: Parser<*>) : GenericAssert<ParserAssert, Parser<*>>(
      * Verifies that the actual `[Parser]` fully matches a given input.
      * @return this assertion object.
      */
-    fun matches(input: String): ParserAssert {
+    public fun matches(input: String): ParserAssert {
         isNotNull
         hasRootRule()
         val parser = createParserWithEofMatcher()
@@ -78,7 +78,7 @@ class ParserAssert(actual: Parser<*>) : GenericAssert<ParserAssert, Parser<*>>(
      * Verifies that the actual `[Parser]` not matches a given input.
      * @return this assertion object.
      */
-    fun notMatches(input: String): ParserAssert {
+    public fun notMatches(input: String): ParserAssert {
         isNotNull
         hasRootRule()
         val parser = createParserWithEofMatcher()

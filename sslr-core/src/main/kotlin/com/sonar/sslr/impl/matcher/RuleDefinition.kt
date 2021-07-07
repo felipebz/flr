@@ -35,24 +35,24 @@ import java.util.*
  *
  * This class is not intended to be instantiated or subclassed by clients.
  */
-class RuleDefinition : Rule, AstNodeSkippingPolicy, GrammarRuleKey, CompilableGrammarRule, MemoParsingExpression {
+public class RuleDefinition : Rule, AstNodeSkippingPolicy, GrammarRuleKey, CompilableGrammarRule, MemoParsingExpression {
     override val ruleKey: GrammarRuleKey
     private val name: String
     override var expression: ParsingExpression? = null
     private var astNodeSkippingPolicy: AstNodeType = NeverSkipFromAst.INSTANCE
     private var memoize = false
 
-    constructor(name: String) {
+    public constructor(name: String) {
         ruleKey = this
         this.name = name
     }
 
-    constructor(ruleKey: GrammarRuleKey) {
+    public constructor(ruleKey: GrammarRuleKey) {
         this.ruleKey = ruleKey
         name = ruleKey.toString()
     }
 
-    fun getName(): String {
+    public fun getName(): String {
         return name
     }
 
@@ -98,7 +98,7 @@ class RuleDefinition : Rule, AstNodeSkippingPolicy, GrammarRuleKey, CompilableGr
     /**
      * @since 1.18
      */
-    fun getRealAstNodeType(): AstNodeType {
+    public fun getRealAstNodeType(): AstNodeType {
         return ruleKey
     }
 
@@ -114,7 +114,7 @@ class RuleDefinition : Rule, AstNodeSkippingPolicy, GrammarRuleKey, CompilableGr
         return memoize
     }
 
-    fun enableMemoization() {
+    public fun enableMemoization() {
         memoize = true
     }
 }

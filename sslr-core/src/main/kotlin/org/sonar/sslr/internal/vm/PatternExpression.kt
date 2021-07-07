@@ -24,7 +24,7 @@ import org.sonar.sslr.grammar.GrammarException
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
-class PatternExpression(regex: String) : NativeExpression(), org.sonar.sslr.internal.matchers.Matcher {
+public class PatternExpression(regex: String) : NativeExpression(), org.sonar.sslr.internal.matchers.Matcher {
     private val matcher: Matcher = Pattern.compile(regex).matcher("")
 
     /**
@@ -59,7 +59,7 @@ class PatternExpression(regex: String) : NativeExpression(), org.sonar.sslr.inte
     /**
      * Visible for testing.
      */
-    fun getMatcher(): Matcher {
+    public fun getMatcher(): Matcher {
         return matcher
     }
 

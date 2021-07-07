@@ -27,13 +27,13 @@ import java.util.*
 /**
  * @since 1.21
  */
-interface GrammarBuilder<T> {
-    fun <U> nonterminal(): NonterminalBuilder<U>
-    fun <U> nonterminal(ruleKey: GrammarRuleKey): NonterminalBuilder<U>
-    fun <U> firstOf(vararg methods: U?): U?
-    fun <U> optional(method: U): Optional<U>
-    fun <U> oneOrMore(method: U): List<U>?
-    fun <U> zeroOrMore(method: U): Optional<List<U>>?
-    fun invokeRule(ruleKey: GrammarRuleKey): AstNode?
-    fun token(ruleKey: GrammarRuleKey): T
+public interface GrammarBuilder<T> {
+    public fun <U> nonterminal(): NonterminalBuilder<U>
+    public fun <U> nonterminal(ruleKey: GrammarRuleKey): NonterminalBuilder<U>
+    public fun <U> firstOf(vararg methods: U?): U?
+    public fun <U> optional(method: U): Optional<U>
+    public fun <U> oneOrMore(method: U): List<U>?
+    public fun <U> zeroOrMore(method: U): Optional<List<U>>?
+    public fun invokeRule(ruleKey: GrammarRuleKey): AstNode?
+    public fun token(ruleKey: GrammarRuleKey): T
 }

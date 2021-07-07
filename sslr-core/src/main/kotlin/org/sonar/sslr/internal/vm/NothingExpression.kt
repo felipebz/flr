@@ -20,7 +20,7 @@
  */
 package org.sonar.sslr.internal.vm
 
-class NothingExpression private constructor() : NativeExpression() {
+public class NothingExpression private constructor() : NativeExpression() {
     override fun execute(machine: Machine) {
         machine.backtrack()
     }
@@ -29,8 +29,8 @@ class NothingExpression private constructor() : NativeExpression() {
         return "Nothing"
     }
 
-    companion object {
+    public companion object {
         @JvmField
-        val INSTANCE = NothingExpression()
+        public val INSTANCE: NothingExpression = NothingExpression()
     }
 }

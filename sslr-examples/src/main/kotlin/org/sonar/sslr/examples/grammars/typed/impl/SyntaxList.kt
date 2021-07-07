@@ -22,16 +22,16 @@ package org.sonar.sslr.examples.grammars.typed.impl
 
 import org.sonar.sslr.examples.grammars.typed.api.SyntaxToken
 
-class SyntaxList<T>(private val element: T, private val commaToken: SyntaxToken?, private val next: SyntaxList<T>?) {
-    fun element(): T {
+public class SyntaxList<T>(private val element: T, private val commaToken: SyntaxToken?, private val next: SyntaxList<T>?) {
+    public fun element(): T {
         return element
     }
 
-    fun commaToken(): SyntaxToken? {
+    public fun commaToken(): SyntaxToken? {
         return commaToken
     }
 
-    operator fun next(): SyntaxList<*>? {
+    public operator fun next(): SyntaxList<*>? {
         return next
     }
 }

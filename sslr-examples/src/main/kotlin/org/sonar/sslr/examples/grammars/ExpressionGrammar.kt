@@ -27,12 +27,12 @@ import org.sonar.sslr.grammar.LexerlessGrammarBuilder.Companion.create
 /**
  * This class demonstrates how to use [LexerlessGrammarBuilder] to define grammar for simple arithmetic expressions.
  */
-enum class ExpressionGrammar : GrammarRuleKey {
+public enum class ExpressionGrammar : GrammarRuleKey {
     WHITESPACE, PLUS, MINUS, DIV, MUL, NUMBER, VARIABLE, LPAR, RPAR, EXPRESSION, ADDITIVE_EXPRESSION, MULTIPLICATIVE_EXPRESSION, PRIMARY, PARENS;
 
-    companion object {
+    public companion object {
         @JvmStatic
-        fun createGrammarBuilder(): LexerlessGrammarBuilder {
+        public fun createGrammarBuilder(): LexerlessGrammarBuilder {
             val b = create()
             b.rule(WHITESPACE).`is`(b.commentTrivia(b.regexp("\\s*+"))).skip()
             b.rule(PLUS).`is`('+', WHITESPACE)

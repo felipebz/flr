@@ -31,7 +31,7 @@ import org.sonar.sslr.internal.vm.lexerful.LexerfulParseErrorFormatter
 import org.sonar.sslr.parser.ParseError
 import org.sonar.sslr.parser.ParsingResult
 
-class Machine private constructor(
+public class Machine private constructor(
     private val input: CharArray,
     private val tokens: Array<out Token>,
     instructions: Array<Instruction>,
@@ -45,9 +45,9 @@ class Machine private constructor(
     // Number of instructions in grammar for Java is about 2000.
     private val calls: IntArray = IntArray(instructions.size)
 
-    var address = 0
-    var index = 0
-    var ignoreErrors = false
+    public var address: Int = 0
+    public var index: Int = 0
+    public var ignoreErrors: Boolean = false
 
     private fun execute(matcher: Matcher?, offset: Int, instructions: Array<Instruction>) {
         // Place first rule on top of stack
@@ -58,7 +58,7 @@ class Machine private constructor(
     }
 
     @JvmOverloads
-    constructor(
+    public constructor(
         input: String,
         instructions: Array<Instruction>,
         handler: MachineHandler = NOP_HANDLER
@@ -70,7 +70,7 @@ class Machine private constructor(
         }
     }
 
-    fun jump(offset: Int) {
+    public fun jump(offset: Int) {
         address += offset
     }
 
@@ -82,12 +82,12 @@ class Machine private constructor(
         stack.ignoreErrors = ignoreErrors
     }
 
-    fun popReturn() {
+    public fun popReturn() {
         calls[stack.calledAddress] = stack.leftRecursion
         stack = stack.parent()
     }
 
-    fun pushReturn(returnOffset: Int, matcher: Matcher?, callOffset: Int) {
+    public fun pushReturn(returnOffset: Int, matcher: Matcher?, callOffset: Int) {
         val memo = memos[index]
         if (memo != null && memo.matcher === matcher) {
             stack.subNodes.add(memo)
@@ -107,20 +107,20 @@ class Machine private constructor(
         }
     }
 
-    fun pushBacktrack(offset: Int) {
+    public fun pushBacktrack(offset: Int) {
         push(address + offset)
         stack.matcher = null
     }
 
-    fun pop() {
+    public fun pop() {
         stack = stack.parent()
     }
 
-    fun peek(): MachineStack {
+    public fun peek(): MachineStack {
         return stack
     }
 
-    fun backtrack() {
+    public fun backtrack() {
         // pop any return addresses from the top of the stack
         while (stack.isReturn()) {
 
@@ -144,7 +144,7 @@ class Machine private constructor(
         }
     }
 
-    fun createNode() {
+    public fun createNode() {
         val node = ParseNode(stack.index, index, stack.matcher, stack.subNodes)
         stack.parent().subNodes.add(node)
         if (stack.matcher is MemoParsingExpression && (stack.matcher as MemoParsingExpression).shouldMemoize()) {
@@ -152,13 +152,13 @@ class Machine private constructor(
         }
     }
 
-    fun createLeafNode(matcher: Matcher?, offset: Int) {
+    public fun createLeafNode(matcher: Matcher?, offset: Int) {
         val node = ParseNode(index, index + offset, matcher)
         stack.subNodes.add(node)
         index += offset
     }
 
-    fun advanceIndex(offset: Int) {
+    public fun advanceIndex(offset: Int) {
         index += offset
     }
 
@@ -180,13 +180,13 @@ class Machine private constructor(
         throw UnsupportedOperationException()
     }
 
-    fun tokenAt(offset: Int): Token {
+    public fun tokenAt(offset: Int): Token {
         return tokens[index + offset]
     }
 
-    companion object {
+    public companion object {
         @JvmStatic
-        fun parse(tokens: List<Token>, grammar: CompiledGrammar): ParseNode {
+        public fun parse(tokens: List<Token>, grammar: CompiledGrammar): ParseNode {
             val inputTokens: Array<Token> = tokens.toTypedArray()
             val errorLocatingHandler = ErrorLocatingHandler()
             val machine = Machine(CharArray(0), inputTokens, grammar.instructions, errorLocatingHandler)
@@ -208,7 +208,7 @@ class Machine private constructor(
         }
 
         @JvmStatic
-        fun parse(input: CharArray, grammar: CompiledGrammar): ParsingResult {
+        public fun parse(input: CharArray, grammar: CompiledGrammar): ParsingResult {
             val instructions = grammar.instructions
             val errorLocatingHandler = ErrorLocatingHandler()
             val machine = Machine(input, emptyArray(), instructions, errorLocatingHandler)
@@ -228,7 +228,7 @@ class Machine private constructor(
         }
 
         @JvmStatic
-        fun execute(input: String, instructions: Array<Instruction>): Boolean {
+        public fun execute(input: String, instructions: Array<Instruction>): Boolean {
             val machine = Machine(input, instructions)
             while (machine.address != -1 && machine.address < instructions.size) {
                 instructions[machine.address].execute(machine)
@@ -237,7 +237,7 @@ class Machine private constructor(
         }
 
         @JvmStatic
-        fun execute(instructions: Array<Instruction>, vararg input: Token): Boolean {
+        public fun execute(instructions: Array<Instruction>, vararg input: Token): Boolean {
             val machine = Machine(CharArray(0), input, instructions, NOP_HANDLER)
             while (machine.address != -1 && machine.address < instructions.size) {
                 instructions[machine.address].execute(machine)

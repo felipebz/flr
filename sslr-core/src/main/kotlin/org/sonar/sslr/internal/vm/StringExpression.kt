@@ -22,7 +22,7 @@ package org.sonar.sslr.internal.vm
 
 import org.sonar.sslr.internal.matchers.Matcher
 
-class StringExpression(private val string: String) : NativeExpression(), Matcher {
+public class StringExpression(private val string: String) : NativeExpression(), Matcher {
     override fun execute(machine: Machine) {
         if (machine.length < string.length) {
             machine.backtrack()

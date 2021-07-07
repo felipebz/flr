@@ -28,10 +28,10 @@ import java.util.regex.Matcher
  * The CodeReader class provides some advanced features to read a source code. The most important one is the ability to try consuming the
  * next characters in the stream according to a regular expression.
  */
-class CodeReader : CodeBuffer {
+public class CodeReader : CodeBuffer {
     private var _previousCursor: Cursor? = null
 
-    val previousCursor: Cursor
+    public val previousCursor: Cursor
         get() = _previousCursor.let {
             checkNotNull(it)
             return it
@@ -40,12 +40,12 @@ class CodeReader : CodeBuffer {
     /*
    * Constructor needed to be backward compatible (before using CodeReaderFilter)
    */
-    constructor(code: Reader) : super(code, CodeReaderConfiguration())
+    public constructor(code: Reader) : super(code, CodeReaderConfiguration())
 
     /*
    * Constructor needed to be backward compatible (before using CodeReaderFilter)
    */
-    constructor(code: String) : super(code, CodeReaderConfiguration())
+    public constructor(code: String) : super(code, CodeReaderConfiguration())
 
     /**
      * Creates a code reader with specific configuration parameters.
@@ -56,7 +56,7 @@ class CodeReader : CodeBuffer {
      * @param configuration
      * the configuration parameters
      */
-    constructor(code: Reader, configuration: CodeReaderConfiguration) : super(code, configuration)
+    public constructor(code: Reader, configuration: CodeReaderConfiguration) : super(code, configuration)
 
     /**
      * Creates a code reader with specific configuration parameters.
@@ -66,7 +66,7 @@ class CodeReader : CodeBuffer {
      * @param configuration
      * the configuration parameters
      */
-    constructor(code: String, configuration: CodeReaderConfiguration) : super(code, configuration)
+    public constructor(code: String, configuration: CodeReaderConfiguration) : super(code, configuration)
 
     /**
      * Read and consume the next character
@@ -74,7 +74,7 @@ class CodeReader : CodeBuffer {
      * @param appendable
      * the read character is appended to appendable
      */
-    fun pop(appendable: Appendable) {
+    public fun pop(appendable: Appendable) {
         try {
             appendable.append(pop().toChar())
         } catch (e: IOException) {
@@ -89,7 +89,7 @@ class CodeReader : CodeBuffer {
      * number of character to read
      * @return array of characters
      */
-    fun peek(length: Int): CharArray {
+    public fun peek(length: Int): CharArray {
         val result = CharArray(length)
         var index = 0
         var nextChar = intAt(index)
@@ -109,7 +109,7 @@ class CodeReader : CodeBuffer {
      * @param appendable
      * the read characters is appended to appendable
      */
-    fun peekTo(matcher: EndMatcher, appendable: Appendable) {
+    public fun peekTo(matcher: EndMatcher, appendable: Appendable) {
         var index = 0
         var nextChar = intAt(index)
         try {
@@ -132,7 +132,7 @@ class CodeReader : CodeBuffer {
      * the consumed characters are appended to this appendable
      * @return number of consumed characters or -1 if the next input sequence doesn't match this matcher's pattern
      */
-    fun popTo(matcher: Matcher, appendable: Appendable): Int {
+    public fun popTo(matcher: Matcher, appendable: Appendable): Int {
         return popTo(matcher, null, appendable)
     }
 
@@ -148,7 +148,7 @@ class CodeReader : CodeBuffer {
      * the consumed characters are appended to this appendable
      * @return number of consumed characters or -1 if one of the two Matchers doesn't match
      */
-    fun popTo(matcher: Matcher, afterMatcher: Matcher?, appendable: Appendable): Int {
+    public fun popTo(matcher: Matcher, afterMatcher: Matcher?, appendable: Appendable): Int {
         try {
             matcher.reset(this)
             if (matcher.lookingAt()) {

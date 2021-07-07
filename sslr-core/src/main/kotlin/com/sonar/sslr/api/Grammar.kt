@@ -33,7 +33,7 @@ import java.lang.reflect.Field
  *
  * This class is not intended to be instantiated or subclassed by clients.
  */
-abstract class Grammar {
+public abstract class Grammar {
     private fun instanciateRuleFields() {
         for (ruleField in getAllRuleFields(this.javaClass)) {
             val ruleName = ruleField.name
@@ -57,7 +57,7 @@ abstract class Grammar {
      *
      * @since 1.18
      */
-    open fun rule(ruleKey: GrammarRuleKey): Rule {
+    public open fun rule(ruleKey: GrammarRuleKey): Rule {
         throw UnsupportedOperationException()
     }
 
@@ -66,9 +66,9 @@ abstract class Grammar {
      *
      * @return the entry point of this Grammar
      */
-    abstract fun getRootRule(): Rule?
+    public abstract fun getRootRule(): Rule?
 
-    companion object {
+    public companion object {
         /**
          * Find all the direct rule fields declared in the given Grammar class.
          * Inherited rule fields are not returned.
@@ -79,7 +79,7 @@ abstract class Grammar {
          * @see getAllRuleFields
          */
         @JvmStatic
-        fun getRuleFields(grammarClass: Class<*>): MutableList<Field> {
+        public fun getRuleFields(grammarClass: Class<*>): MutableList<Field> {
             val fields = grammarClass.declaredFields
             val ruleFields: MutableList<Field> = ArrayList()
             for (field in fields) {
@@ -100,7 +100,7 @@ abstract class Grammar {
          * @see getRuleFields
          */
         @JvmStatic
-        fun getAllRuleFields(grammarClass: Class<*>): List<Field> {
+        public fun getAllRuleFields(grammarClass: Class<*>): List<Field> {
             val ruleFields = getRuleFields(grammarClass)
             var superClass = grammarClass.superclass
             while (superClass != null) {

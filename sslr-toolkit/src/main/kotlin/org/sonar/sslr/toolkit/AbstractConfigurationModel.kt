@@ -31,7 +31,7 @@ import java.nio.charset.Charset
  *
  * @since 1.17
  */
-abstract class AbstractConfigurationModel : ConfigurationModel {
+public abstract class AbstractConfigurationModel : ConfigurationModel {
     private var updatedFlag = true
     private var internalParser: Parser<*>? = null
 
@@ -68,5 +68,5 @@ abstract class AbstractConfigurationModel : ConfigurationModel {
      *
      * @return A parser for the current configuration
      */
-    abstract fun doGetParser(): Parser<*>?
+    public abstract fun doGetParser(): Parser<*>?
 }

@@ -26,7 +26,7 @@ import org.sonar.sslr.grammar.GrammarRuleKey
 /**
  * @since 1.21
  */
-class AstNodeBuilder : NodeBuilder {
+internal class AstNodeBuilder : NodeBuilder {
     override fun createNonTerminal(
         ruleKey: GrammarRuleKey,
         rule: Rule,

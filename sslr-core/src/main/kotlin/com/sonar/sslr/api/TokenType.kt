@@ -20,8 +20,8 @@
  */
 package com.sonar.sslr.api
 
-interface TokenType : AstNodeType {
-    val name: String
-    val value: String
-    fun hasToBeSkippedFromAst(node: AstNode?): Boolean
+public interface TokenType : AstNodeType {
+    public val name: String
+    public val value: String
+    public fun hasToBeSkippedFromAst(node: AstNode?): Boolean
 }

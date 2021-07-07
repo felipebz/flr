@@ -27,12 +27,12 @@ import org.sonar.sslr.grammar.LexerlessGrammarBuilder
 /**
  * Regular Expression Grammar.
  */
-enum class RegularExpressionGrammar : GrammarRuleKey {
+public enum class RegularExpressionGrammar : GrammarRuleKey {
     EXPRESSION, ALTERNATION, ALTERNATIVE, TERM, CAPTURING_GROUP, NON_CAPTURING_GROUP, POSITIVE_LOOKAHEAD, NEGATIVE_LOOKAHEAD, QUANTIFIER, NUMBER, ATOM, BACK_REFERENCE, CHARACTER_CLASS, CLASS_ATOM;
 
-    companion object {
+    public companion object {
         @JvmStatic
-        fun create(): Grammar {
+        public fun create(): Grammar {
             val b = LexerlessGrammarBuilder.create()
             b.rule(EXPRESSION).`is`(ALTERNATION)
             b.rule(ALTERNATION).`is`(ALTERNATIVE, b.zeroOrMore("|", ALTERNATIVE))

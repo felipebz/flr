@@ -25,7 +25,7 @@ import java.io.IOException
 import java.io.StringWriter
 import java.io.Writer
 
-class AstXmlPrinter private constructor(private val rootNode: AstNode, private val writer: Writer) {
+public class AstXmlPrinter private constructor(private val rootNode: AstNode, private val writer: Writer) {
     private fun print() {
         try {
             printNode(0, rootNode)
@@ -85,16 +85,16 @@ class AstXmlPrinter private constructor(private val rootNode: AstNode, private v
         }
     }
 
-    companion object {
+    public companion object {
         @JvmStatic
-        fun print(rootNode: AstNode): String {
+        public fun print(rootNode: AstNode): String {
             val writer = StringWriter()
             print(rootNode, writer)
             return writer.toString()
         }
 
         @JvmStatic
-        fun print(rootNode: AstNode, writer: Writer) {
+        public fun print(rootNode: AstNode, writer: Writer) {
             val printer = AstXmlPrinter(rootNode, writer)
             printer.print()
         }

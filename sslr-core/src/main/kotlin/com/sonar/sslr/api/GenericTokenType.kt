@@ -20,7 +20,7 @@
  */
 package com.sonar.sslr.api
 
-enum class GenericTokenType : TokenType {
+public enum class GenericTokenType : TokenType {
     COMMENT, IDENTIFIER, LITERAL, CONSTANT, EOF, EOL, UNKNOWN_CHAR;
 
     override val value: String

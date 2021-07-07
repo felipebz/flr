@@ -32,4 +32,4 @@ package com.sonar.sslr.api
  *
  * @see AstNode
  */
-interface AstNodeType 
+public interface AstNodeType

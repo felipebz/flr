@@ -30,4 +30,4 @@ import com.sonar.sslr.api.Grammar
  *
  * @since 1.16
  */
-abstract class LexerlessGrammar : Grammar()
+public abstract class LexerlessGrammar : Grammar()

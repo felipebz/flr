@@ -24,8 +24,8 @@ import com.sonar.sslr.api.*
 import kotlin.math.max
 import kotlin.math.min
 
-class LexerfulParseErrorFormatter {
-    fun format(tokens: List<Token>, errorIndex: Int): String {
+public class LexerfulParseErrorFormatter {
+    public fun format(tokens: List<Token>, errorIndex: Int): String {
         val sb = StringBuilder()
         val errorPos = if (errorIndex < tokens.size) getTokenStart(
             tokens[errorIndex]
@@ -45,7 +45,7 @@ class LexerfulParseErrorFormatter {
         }
     }
 
-    companion object {
+    public companion object {
         /**
          * Number of tokens in snippet before and after token with error.
          */

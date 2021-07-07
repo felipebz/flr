@@ -30,7 +30,7 @@ package org.sonar.sslr.grammar
  * @see LexerlessGrammarBuilder.rule
  * @see LexerfulGrammarBuilder.rule
  */
-interface GrammarRuleBuilder {
+public interface GrammarRuleBuilder {
     /**
      * Allows to provide definition of a grammar rule.
      *
@@ -42,7 +42,7 @@ interface GrammarRuleBuilder {
      * @throws GrammarException if definition has been already done
      * @throws IllegalArgumentException if given argument is not a parsing expression
      */
-    fun `is`(e: Any): GrammarRuleBuilder
+    public fun `is`(e: Any): GrammarRuleBuilder
 
     /**
      * Convenience method equivalent to calling `is(grammarBuilder.sequence(e, rest))`.
@@ -54,7 +54,7 @@ interface GrammarRuleBuilder {
      * @throws IllegalArgumentException if any of given arguments is not a parsing expression
      * @see .is
      */
-    fun `is`(e: Any, vararg rest: Any): GrammarRuleBuilder
+    public fun `is`(e: Any, vararg rest: Any): GrammarRuleBuilder
 
     /**
      * Allows to override definition of a grammar rule.
@@ -66,7 +66,7 @@ interface GrammarRuleBuilder {
      * @throws IllegalArgumentException if given argument is not a parsing expression
      * @return this (for method chaining)
      */
-    fun override(e: Any): GrammarRuleBuilder
+    public fun override(e: Any): GrammarRuleBuilder
 
     /**
      * Convenience method equivalent to calling `override(grammarBuilder.sequence(e, rest))`.
@@ -77,15 +77,15 @@ interface GrammarRuleBuilder {
      * @return this (for method chaining)
      * @see .override
      */
-    fun override(e: Any, vararg rest: Any): GrammarRuleBuilder
+    public fun override(e: Any, vararg rest: Any): GrammarRuleBuilder
 
     /**
      * Indicates that grammar rule should not lead to creation of AST node - its children should be attached directly to its parent.
      */
-    fun skip()
+    public fun skip()
 
     /**
      * Indicates that grammar rule should not lead to creation of AST node if it has exactly one child.
      */
-    fun skipIfOneChild()
+    public fun skipIfOneChild()
 }

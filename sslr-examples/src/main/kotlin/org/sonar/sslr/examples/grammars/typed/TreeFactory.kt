@@ -24,28 +24,28 @@ import org.sonar.sslr.examples.grammars.typed.api.*
 import org.sonar.sslr.examples.grammars.typed.impl.*
 import java.util.*
 
-open class TreeFactory {
-    open fun json(arrayOrObject: Tree?, eof: InternalSyntaxToken?): JsonTree {
+public open class TreeFactory {
+    public open fun json(arrayOrObject: Tree?, eof: InternalSyntaxToken?): JsonTree {
         return JsonTreeImpl(arrayOrObject!!)
     }
 
-    open fun buildInValue(token: InternalSyntaxToken?): BuiltInValueTree {
+    public open fun buildInValue(token: InternalSyntaxToken?): BuiltInValueTree {
         return BuiltInValueTreeImpl(token!!)
     }
 
-    open fun number(token: InternalSyntaxToken?): LiteralTree {
+    public open fun number(token: InternalSyntaxToken?): LiteralTree {
         return LiteralTreeImpl(token!!)
     }
 
-    open fun string(token: InternalSyntaxToken?): LiteralTree {
+    public open fun string(token: InternalSyntaxToken?): LiteralTree {
         return LiteralTreeImpl(token!!)
     }
 
-    open fun valueList(value: ValueTree?): SyntaxList<ValueTree?> {
+    public open fun valueList(value: ValueTree?): SyntaxList<ValueTree?> {
         return SyntaxList(value, null, null)
     }
 
-    open fun valueList(
+    public open fun valueList(
         value: ValueTree?,
         commaToken: InternalSyntaxToken?,
         next: SyntaxList<ValueTree?>?
@@ -53,7 +53,7 @@ open class TreeFactory {
         return SyntaxList(value, commaToken, next)
     }
 
-    open fun array(
+    public open fun array(
         openBracketToken: InternalSyntaxToken?,
         values: Optional<SyntaxList<ValueTree?>?>,
         closeBracketToken: InternalSyntaxToken?
@@ -61,19 +61,19 @@ open class TreeFactory {
         return ArrayTreeImpl(openBracketToken, values.orElse(null), closeBracketToken)
     }
 
-    open fun pair(string: LiteralTree?, colonToken: InternalSyntaxToken?, value: ValueTree?): PairTree {
+    public open fun pair(string: LiteralTree?, colonToken: InternalSyntaxToken?, value: ValueTree?): PairTree {
         return PairTreeImpl(string!!, colonToken!!, value!!)
     }
 
-    open fun pairList(pair: PairTree?): SyntaxList<PairTree?> {
+    public open fun pairList(pair: PairTree?): SyntaxList<PairTree?> {
         return SyntaxList(pair, null, null)
     }
 
-    open fun pairList(pair: PairTree?, commaToken: InternalSyntaxToken?, next: SyntaxList<PairTree?>?): SyntaxList<PairTree?> {
+    public open fun pairList(pair: PairTree?, commaToken: InternalSyntaxToken?, next: SyntaxList<PairTree?>?): SyntaxList<PairTree?> {
         return SyntaxList(pair, commaToken, next)
     }
 
-    open fun `object`(
+    public open fun `object`(
         openCurlyBraceToken: InternalSyntaxToken?,
         pairs: Optional<SyntaxList<PairTree?>?>,
         closeCurlyBraceToken: InternalSyntaxToken?

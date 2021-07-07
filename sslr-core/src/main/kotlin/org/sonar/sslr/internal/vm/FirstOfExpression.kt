@@ -20,7 +20,7 @@
  */
 package org.sonar.sslr.internal.vm
 
-class FirstOfExpression(private vararg val subExpressions: ParsingExpression) : ParsingExpression {
+public class FirstOfExpression(private vararg val subExpressions: ParsingExpression) : ParsingExpression {
 
     /**
      * Compiles this expression into a sequence of instructions:

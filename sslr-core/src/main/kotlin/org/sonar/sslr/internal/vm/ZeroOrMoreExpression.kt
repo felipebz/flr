@@ -20,7 +20,7 @@
  */
 package org.sonar.sslr.internal.vm
 
-class ZeroOrMoreExpression(private val subExpression: ParsingExpression) : ParsingExpression {
+public class ZeroOrMoreExpression(private val subExpression: ParsingExpression) : ParsingExpression {
     /**
      * Compiles this expression into a sequence of instructions:
      * <pre>

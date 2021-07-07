@@ -26,7 +26,7 @@ import java.util.regex.Pattern
 /**
  * The RegexChannel can be used to be called each time the next characters in the character stream match a regular expression
  */
-abstract class RegexChannel<O>(regex: String) : Channel<O>() {
+public abstract class RegexChannel<O>(regex: String) : Channel<O>() {
     private val tmpBuilder = StringBuilder()
     private val matcher: Matcher = Pattern.compile(regex).matcher("")
     override fun consume(code: CodeReader, output: O): Boolean {

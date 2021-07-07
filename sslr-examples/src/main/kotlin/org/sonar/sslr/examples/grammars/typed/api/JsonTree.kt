@@ -22,6 +22,6 @@ package org.sonar.sslr.examples.grammars.typed.api
 
 import org.sonar.sslr.examples.grammars.typed.Tree
 
-interface JsonTree : Tree {
-    fun arrayOrObject(): Tree
+public interface JsonTree : Tree {
+    public fun arrayOrObject(): Tree
 }

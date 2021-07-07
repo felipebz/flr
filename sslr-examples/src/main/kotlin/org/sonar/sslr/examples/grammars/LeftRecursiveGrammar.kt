@@ -33,15 +33,15 @@ import org.sonar.sslr.grammar.LexerlessGrammarBuilder.Companion.create
  * ([Direct Left-Recursive Parsing Expressing Grammars, Laurence Tratt](http://port70.net/~nsz/articles/other/tratt_direct_left_recursive_peg_2010.pdf)).
  * For those reasons, it was decided not to support it - SSLR can detect existence of left recursion at runtime and will report this as an error.
  */
-enum class LeftRecursiveGrammar : GrammarRuleKey {
+public enum class LeftRecursiveGrammar : GrammarRuleKey {
     A, B, T1, T2, S1, S2;
 
-    companion object {
+    public companion object {
         /**
          * @see .eliminatedImmediateLeftRecursion
          */
         @JvmStatic
-        fun immediateLeftRecursion(): Grammar {
+        public fun immediateLeftRecursion(): Grammar {
             val b = create()
             b.rule(A).`is`(
                 b.firstOf(
@@ -57,7 +57,7 @@ enum class LeftRecursiveGrammar : GrammarRuleKey {
          * To eliminate immediate left recursion - factor out non recursive alternatives.
          */
         @JvmStatic
-        fun eliminatedImmediateLeftRecursion(): Grammar {
+        public fun eliminatedImmediateLeftRecursion(): Grammar {
             val b = create()
             b.rule(A).`is`(b.firstOf(S1, S2), b.zeroOrMore(b.firstOf(T1, T2)))
             otherRules(b)
@@ -68,7 +68,7 @@ enum class LeftRecursiveGrammar : GrammarRuleKey {
          * @see .eliminatedIndirectLeftRecursion
          */
         @JvmStatic
-        fun indirectLeftRecursion(): Grammar {
+        public fun indirectLeftRecursion(): Grammar {
             val b = create()
             b.rule(A).`is`(
                 b.firstOf(
@@ -88,7 +88,7 @@ enum class LeftRecursiveGrammar : GrammarRuleKey {
          * To eliminate indirect left recursion - transform to immediate left recursion, then factor out non recursive alternatives.
          */
         @JvmStatic
-        fun eliminatedIndirectLeftRecursion(): Grammar {
+        public fun eliminatedIndirectLeftRecursion(): Grammar {
             val b = create()
             b.rule(A).`is`(b.firstOf(b.sequence(S2, T1), S1), b.zeroOrMore(T2, T1))
             otherRules(b)

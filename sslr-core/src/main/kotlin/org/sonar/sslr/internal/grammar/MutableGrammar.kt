@@ -25,7 +25,7 @@ import org.sonar.sslr.grammar.GrammarRuleKey
 import org.sonar.sslr.internal.vm.CompilableGrammarRule
 import org.sonar.sslr.parser.LexerlessGrammar
 
-class MutableGrammar(
+public class MutableGrammar(
     private val rules: Map<GrammarRuleKey, CompilableGrammarRule>,
     private val rootRuleKey: GrammarRuleKey?
 ) : LexerlessGrammar() {

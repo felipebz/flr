@@ -24,54 +24,54 @@ import com.sonar.sslr.api.Token
 import com.sonar.sslr.api.TokenType
 import org.hamcrest.Matcher
 
-object LexerMatchers {
+public object LexerMatchers {
     @JvmStatic
-    fun hasToken(tokenValue: String, tokenType: TokenType): Matcher<List<Token>> {
+    public fun hasToken(tokenValue: String, tokenType: TokenType): Matcher<List<Token>> {
         return HasTokenMatcher(tokenValue, tokenType)
     }
 
     @JvmStatic
-    fun hasToken(tokenValue: String): Matcher<List<Token>> {
+    public fun hasToken(tokenValue: String): Matcher<List<Token>> {
         return HasTokenValueMatcher(tokenValue)
     }
 
     @JvmStatic
-    fun hasOriginalToken(tokenValue: String): Matcher<List<Token>> {
+    public fun hasOriginalToken(tokenValue: String): Matcher<List<Token>> {
         return HasTokenValueMatcher(tokenValue, true)
     }
 
     @JvmStatic
-    fun hasToken(tokenType: TokenType): Matcher<List<Token>> {
+    public fun hasToken(tokenType: TokenType): Matcher<List<Token>> {
         return HasTokenTypeMatcher(tokenType)
     }
 
     @JvmStatic
-    fun hasTokens(vararg tokenValues: String): Matcher<List<Token>> {
+    public fun hasTokens(vararg tokenValues: String): Matcher<List<Token>> {
         return HasTokensMatcher(*tokenValues)
     }
 
     @JvmStatic
-    fun hasLastToken(tokenValue: String, tokenType: TokenType): Matcher<List<Token>> {
+    public fun hasLastToken(tokenValue: String, tokenType: TokenType): Matcher<List<Token>> {
         return HasLastTokenMatcher(tokenValue, tokenType)
     }
 
     @JvmStatic
-    fun hasComment(commentValue: String): Matcher<List<Token>> {
+    public fun hasComment(commentValue: String): Matcher<List<Token>> {
         return HasCommentMatcher(commentValue)
     }
 
     @JvmStatic
-    fun hasComment(commentValue: String, commentLine: Int): Matcher<List<Token>> {
+    public fun hasComment(commentValue: String, commentLine: Int): Matcher<List<Token>> {
         return HasCommentMatcher(commentValue, commentLine)
     }
 
     @JvmStatic
-    fun hasOriginalComment(commentValue: String): Matcher<List<Token>> {
+    public fun hasOriginalComment(commentValue: String): Matcher<List<Token>> {
         return HasCommentMatcher(commentValue, true)
     }
 
     @JvmStatic
-    fun hasOriginalComment(commentValue: String, commentLine: Int): Matcher<List<Token>> {
+    public fun hasOriginalComment(commentValue: String, commentLine: Int): Matcher<List<Token>> {
         return HasCommentMatcher(commentValue, commentLine, true)
     }
 }

@@ -29,7 +29,7 @@ import java.nio.charset.UnsupportedCharsetException
  *
  * @since 1.17
  */
-object Validators {
+public object Validators {
     private val CHARSET_VALIDATOR = CharsetValidator()
     private val BOOLEAN_VALIDATOR = BooleanValidator()
 
@@ -39,7 +39,7 @@ object Validators {
      * @return A charset validator
      */
     @JvmStatic
-    fun charsetValidator(): ValidationCallback {
+    public fun charsetValidator(): ValidationCallback {
         return CHARSET_VALIDATOR
     }
 
@@ -51,7 +51,7 @@ object Validators {
      * @return An integer range validator
      */
     @JvmStatic
-    fun integerRangeValidator(lowerBound: Int, upperBound: Int): ValidationCallback {
+    public fun integerRangeValidator(lowerBound: Int, upperBound: Int): ValidationCallback {
         return IntegerRangeValidator(lowerBound, upperBound)
     }
 
@@ -61,7 +61,7 @@ object Validators {
      * @return A boolean validator
      */
     @JvmStatic
-    fun booleanValidator(): ValidationCallback {
+    public fun booleanValidator(): ValidationCallback {
         return BOOLEAN_VALIDATOR
     }
 

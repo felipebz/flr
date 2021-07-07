@@ -30,12 +30,12 @@ import org.sonar.sslr.grammar.LexerlessGrammarBuilder
  * Depth of recursion not limited by Java stack size (i.e. can't lead to [StackOverflowError])
  * and limited only by amount of available memory.
  */
-enum class RecursiveGrammar : GrammarRuleKey {
+public enum class RecursiveGrammar : GrammarRuleKey {
     S;
 
-    companion object {
+    public companion object {
         @JvmStatic
-        fun create(): Grammar {
+        public fun create(): Grammar {
             val b = LexerlessGrammarBuilder.create()
             b.rule(S).`is`("(", b.optional(S), ")")
             return b.build()

@@ -20,8 +20,8 @@
  */
 package org.sonar.sslr.channel
 
-class ChannelException : RuntimeException {
-    constructor(message: String?, cause: Exception?) : super(message, cause)
-    constructor(message: String?) : super(message)
-    constructor(message: String?, cause: Throwable?) : super(message, cause)
+public class ChannelException : RuntimeException {
+    public constructor(message: String?, cause: Exception?) : super(message, cause)
+    public constructor(message: String?) : super(message)
+    public constructor(message: String?, cause: Throwable?) : super(message, cause)
 }

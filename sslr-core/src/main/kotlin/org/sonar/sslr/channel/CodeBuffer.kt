@@ -35,7 +35,7 @@ import java.io.StringReader
  *  * Position of the pending cursor : line and column
  *
  */
-open class CodeBuffer protected constructor(initialCodeReader: Reader, configuration: CodeReaderConfiguration) :
+public open class CodeBuffer protected constructor(initialCodeReader: Reader, configuration: CodeReaderConfiguration) :
     CharSequence {
     private var lastChar = -1
     private val cursor: Cursor
@@ -45,7 +45,7 @@ open class CodeBuffer protected constructor(initialCodeReader: Reader, configura
     private var recordingMode = false
     private var recordedCharacters = StringBuilder()
 
-    constructor(code: String, configuration: CodeReaderConfiguration) : this(StringReader(code), configuration)
+    public constructor(code: String, configuration: CodeReaderConfiguration) : this(StringReader(code), configuration)
 
     @Throws(IOException::class)
     private fun read(reader: Reader): CharArray {
@@ -63,7 +63,7 @@ open class CodeBuffer protected constructor(initialCodeReader: Reader, configura
      *
      * @return the next character or -1 if the end of the stream is reached
      */
-    fun pop(): Int {
+    public fun pop(): Int {
         if (bufferPosition >= buffer.size) {
             return -1
         }
@@ -94,7 +94,7 @@ open class CodeBuffer protected constructor(initialCodeReader: Reader, configura
      *
      * @return the last character or -1 if the no character has been yet consumed
      */
-    fun lastChar(): Int {
+    public fun lastChar(): Int {
         return lastChar
     }
 
@@ -103,32 +103,32 @@ open class CodeBuffer protected constructor(initialCodeReader: Reader, configura
      *
      * @return the next character or -1 if the end of the stream has been reached
      */
-    fun peek(): Int {
+    public fun peek(): Int {
         return intAt(0)
     }
 
     /**
      * @return the current line of the cursor
      */
-    fun getLinePosition(): Int {
+    public fun getLinePosition(): Int {
         return cursor.line
     }
 
-    fun getCursor(): Cursor {
+    public fun getCursor(): Cursor {
         return cursor
     }
 
     /**
      * @return the current column of the cursor
      */
-    fun getColumnPosition(): Int {
+    public fun getColumnPosition(): Int {
         return cursor.column
     }
 
     /**
      * Overrides the current column position
      */
-    fun setColumnPosition(cp: Int): CodeBuffer {
+    public fun setColumnPosition(cp: Int): CodeBuffer {
         cursor.column = cp
         return this
     }
@@ -136,15 +136,15 @@ open class CodeBuffer protected constructor(initialCodeReader: Reader, configura
     /**
      * Overrides the current line position
      */
-    fun setLinePosition(lp: Int) {
+    public fun setLinePosition(lp: Int) {
         cursor.line = lp
     }
 
-    fun startRecording() {
+    public fun startRecording() {
         recordingMode = true
     }
 
-    fun stopRecording(): CharSequence {
+    public fun stopRecording(): CharSequence {
         recordingMode = false
         val result: CharSequence = recordedCharacters
         recordedCharacters = StringBuilder()
@@ -163,7 +163,7 @@ open class CodeBuffer protected constructor(initialCodeReader: Reader, configura
         return intAt(index).toChar()
     }
 
-    fun intAt(index: Int): Int {
+    public fun intAt(index: Int): Int {
         return if (bufferPosition + index >= buffer.size) {
             -1
         } else buffer[bufferPosition + index].code
@@ -191,9 +191,9 @@ open class CodeBuffer protected constructor(initialCodeReader: Reader, configura
         return result.toString()
     }
 
-    class Cursor : Cloneable {
-        var line = 1
-        var column = 0
+    public class Cursor : Cloneable {
+        public var line: Int = 1
+        public var column: Int = 0
 
         public override fun clone(): Cursor {
             val clone = try {
@@ -237,7 +237,7 @@ open class CodeBuffer protected constructor(initialCodeReader: Reader, configura
         }
     }
 
-    companion object {
+    private companion object {
         private const val LF = '\n'
         private const val CR = '\r'
     }

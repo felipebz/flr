@@ -30,25 +30,25 @@ import java.io.File
  * Note that *none* of the methods here-under should generate *any* event back to the presenter.
  * Only end-user interactions are supposed to generate events.
  */
-interface ToolkitView {
+public interface ToolkitView {
     /**
      * Launch the application.
      */
-    fun run()
+    public fun run()
 
     /**
      * Set the title of the application.
      *
      * @param title
      */
-    fun setTitle(title: String?)
+    public fun setTitle(title: String?)
 
     /**
      * Prompt the user for a file to parse and return it.
      *
      * @return The file to parse, or null if no file was picked
      */
-    fun pickFileToParse(): File?
+    public fun pickFileToParse(): File?
 
     /**
      * Display the given HTML highlighted source code in the source code editor.
@@ -56,133 +56,133 @@ interface ToolkitView {
      *
      * @param htmlHighlightedSourceCode The HTML highlighted source code
      */
-    fun displaySourceCode(newSourceCode: String)
+    public fun displaySourceCode(newSourceCode: String)
 
     /**
      * Display the abstract syntax tree view starting from a given node.
      *
      * @param astNode The root AST node or null if no abstract syntax tree must be shown
      */
-    fun displayAst(astNode: AstNode?)
+    public fun displayAst(astNode: AstNode?)
 
     /**
      * Display the given string in the XML view.
      *
      * @param xml The string to display
      */
-    fun displayXml(xml: String)
+    public fun displayXml(xml: String)
 
     /**
      * Get the current source code editor scrollbars' position point.
      *
      * @return The point
      */
-    val sourceCodeScrollbarPosition: Point
+    public val sourceCodeScrollbarPosition: Point
 
     /**
      * Scroll the source code editor in order to make the given point visible.
      *
      * @param point to make visible
      */
-    fun scrollSourceCodeTo(point: Point)
+    public fun scrollSourceCodeTo(point: Point)
 
     /**
      * Get the source code currently entered in the source code editor.
      *
      * @return The source code
      */
-    val sourceCode: String?
+    public val sourceCode: String?
 
     /**
      * Get the text currently entered in the XPath field.
      *
      * @return The XPath field text
      */
-    val xPath: String?
+    public val xPath: String?
 
     /**
      * Select the given AST node in the abstract syntax tree view.
      *
      * @param astNode The AST node to select, null will lead to a no operation
      */
-    fun selectAstNode(astNode: AstNode?)
+    public fun selectAstNode(astNode: AstNode?)
 
     /**
      * Clear all the selections in the abstract syntax tree view.
      */
-    fun clearAstSelections()
+    public fun clearAstSelections()
 
     /**
      * Scroll the abstract syntax tree view in order to make the given AST node visible.
      *
      * @param astNode The AST node to make visible, null will lead to a no operation
      */
-    fun scrollAstTo(astNode: AstNode?)
+    public fun scrollAstTo(astNode: AstNode?)
 
     /**
      * Highlight the given AST node in the source code editor.
      *
      * @param astNode The AST node to highlight
      */
-    fun highlightSourceCode(astNode: AstNode)
+    public fun highlightSourceCode(astNode: AstNode)
 
     /**
      * Clear all the highlights in the source code editor.
      */
-    fun clearSourceCodeHighlights()
+    public fun clearSourceCodeHighlights()
 
     /**
      * Scroll the source code editor in order to make the given AST node visible.
      *
      * @param astNode The AST node to make visible, null will lead to a no operation
      */
-    fun scrollSourceCodeTo(astNode: AstNode?)
+    public fun scrollSourceCodeTo(astNode: AstNode?)
 
     /**
      * Disable the XPath evaluate button.
      */
-    fun disableXPathEvaluateButton()
+    public fun disableXPathEvaluateButton()
 
     /**
      * Enable the XPath evaluate button.
      */
-    fun enableXPathEvaluateButton()
+    public fun enableXPathEvaluateButton()
 
     /**
      * Get the AST node which follows the current source code editor text cursor position.
      *
      * @return The following AST node, or null if there is no such node
      */
-    val astNodeFollowingCurrentSourceCodeTextCursorPosition: AstNode?
+    public val astNodeFollowingCurrentSourceCodeTextCursorPosition: AstNode?
 
     /**
      * Get the list of nodes currently selected in the abstract syntax tree view.
      *
      * @return The list of selected AST nodes
      */
-    val selectedAstNodes: List<AstNode>
+    public val selectedAstNodes: List<AstNode>
 
     /**
      * Append the given message to the console view.
      *
      * @param message The message to append
      */
-    fun appendToConsole(message: String?)
+    public fun appendToConsole(message: String?)
 
     /**
      * Set the focus on the console view.
      */
-    fun setFocusOnConsoleView()
+    public fun setFocusOnConsoleView()
 
     /**
      * Set the focus on the abstract syntax tree view.
      */
-    fun setFocusOnAbstractSyntaxTreeView()
+    public fun setFocusOnAbstractSyntaxTreeView()
 
     /**
      * Clear the console.
      */
-    fun clearConsole()
+    public fun clearConsole()
 
     /**
      * Add a new configuration property to the configuration tab.
@@ -190,7 +190,7 @@ interface ToolkitView {
      * @param name
      * @param description
      */
-    fun addConfigurationProperty(name: String, description: String)
+    public fun addConfigurationProperty(name: String, description: String)
 
     /**
      * Get the value currently entered in the configuration property field identified by the given name.
@@ -198,7 +198,7 @@ interface ToolkitView {
      * @param name The name of the configuration property
      * @return The current value of the field
      */
-    fun getConfigurationPropertyValue(name: String): String
+    public fun getConfigurationPropertyValue(name: String): String
 
     /**
      * Set the current value of the configuration property field identified by the given name.
@@ -206,7 +206,7 @@ interface ToolkitView {
      * @param name The name of the configuration property
      * @param value The value to be set
      */
-    fun setConfigurationPropertyValue(name: String, value: String)
+    public fun setConfigurationPropertyValue(name: String, value: String)
 
     /**
      * Set the error message of the configuration property identified by the given name.
@@ -214,17 +214,17 @@ interface ToolkitView {
      * @param name The name of the configuration property
      * @param errorMessage The error message
      */
-    fun setConfigurationPropertyErrorMessage(name: String, errorMessage: String)
+    public fun setConfigurationPropertyErrorMessage(name: String, errorMessage: String)
 
     /**
      * Set the focus on the configuration field identified by the given name.
      *
      * @param name
      */
-    fun setFocusOnConfigurationPropertyField(name: String)
+    public fun setFocusOnConfigurationPropertyField(name: String)
 
     /**
      * Set the focus on the configuration view.
      */
-    fun setFocusOnConfigurationView()
+    public fun setFocusOnConfigurationView()
 }

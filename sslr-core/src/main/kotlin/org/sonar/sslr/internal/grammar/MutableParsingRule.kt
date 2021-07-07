@@ -33,28 +33,28 @@ import org.sonar.sslr.internal.matchers.Matcher
 import org.sonar.sslr.internal.vm.*
 import org.sonar.sslr.parser.GrammarOperators
 
-class MutableParsingRule : CompilableGrammarRule, Matcher, Rule, AstNodeSkippingPolicy, MemoParsingExpression,
+public class MutableParsingRule : CompilableGrammarRule, Matcher, Rule, AstNodeSkippingPolicy, MemoParsingExpression,
     GrammarRuleKey {
     override val ruleKey: GrammarRuleKey
     private val name: String
     override var expression: ParsingExpression? = null
     private var astNodeSkippingPolicy: AstNodeSkippingPolicy = NeverSkipFromAst.INSTANCE
 
-    constructor(name: String) {
+    public constructor(name: String) {
         ruleKey = this
         this.name = name
     }
 
-    constructor(ruleKey: GrammarRuleKey) {
+    public constructor(ruleKey: GrammarRuleKey) {
         this.ruleKey = ruleKey
         name = ruleKey.toString()
     }
 
-    fun getName(): String {
+    public fun getName(): String {
         return name
     }
 
-    fun getRealAstNodeType(): AstNodeType {
+    public fun getRealAstNodeType(): AstNodeType {
         return ruleKey
     }
 

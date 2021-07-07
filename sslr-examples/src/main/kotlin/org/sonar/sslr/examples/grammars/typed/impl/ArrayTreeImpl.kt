@@ -24,7 +24,7 @@ import org.sonar.sslr.examples.grammars.typed.api.ArrayTree
 import org.sonar.sslr.examples.grammars.typed.api.SyntaxToken
 import org.sonar.sslr.examples.grammars.typed.api.ValueTree
 
-class ArrayTreeImpl(
+public class ArrayTreeImpl(
     private val openBracketToken: SyntaxToken?,
     private val values: SyntaxList<ValueTree?>?,
     private val closeBracketToken: SyntaxToken?

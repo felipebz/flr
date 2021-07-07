@@ -22,29 +22,29 @@ package com.sonar.sslr.impl.channel
 
 import com.sonar.sslr.api.TokenType
 
-object RegexpChannelBuilder {
-    const val DIGIT = "\\d"
-    const val ANY_CHAR = "[\\s\\S]"
-    const val OCTAL_DIGIT = "[0-7]"
-    const val HEXA_DIGIT = "[a-fA-F0-9]"
+public object RegexpChannelBuilder {
+    public const val DIGIT: String = "\\d"
+    public const val ANY_CHAR: String = "[\\s\\S]"
+    public const val OCTAL_DIGIT: String = "[0-7]"
+    public const val HEXA_DIGIT: String = "[a-fA-F0-9]"
 
     @JvmStatic
-    fun regexp(type: TokenType, vararg regexpPiece: String): RegexpChannel {
+    public fun regexp(type: TokenType, vararg regexpPiece: String): RegexpChannel {
         return RegexpChannel(type, merge(*regexpPiece))
     }
 
     @JvmStatic
-    fun commentRegexp(vararg regexpPiece: String): CommentRegexpChannel {
+    public fun commentRegexp(vararg regexpPiece: String): CommentRegexpChannel {
         return CommentRegexpChannel(merge(*regexpPiece))
     }
 
     @JvmStatic
-    fun opt(regexpPiece: String): String {
+    public fun opt(regexpPiece: String): String {
         return "$regexpPiece?+"
     }
 
     @JvmStatic
-    fun and(vararg regexpPieces: String?): String {
+    public fun and(vararg regexpPieces: String?): String {
         val result = StringBuilder()
         for (rexpPiece in regexpPieces) {
             result.append(rexpPiece)
@@ -53,17 +53,17 @@ object RegexpChannelBuilder {
     }
 
     @JvmStatic
-    fun one2n(regexpPiece: String): String {
+    public fun one2n(regexpPiece: String): String {
         return "$regexpPiece++"
     }
 
     @JvmStatic
-    fun o2n(regexpPiece: String): String {
+    public fun o2n(regexpPiece: String): String {
         return "$regexpPiece*+"
     }
 
     @JvmStatic
-    fun anyButNot(vararg character: String?): String {
+    public fun anyButNot(vararg character: String?): String {
         val result = StringBuilder()
         result.append("[^")
         for (element in character) {
@@ -74,7 +74,7 @@ object RegexpChannelBuilder {
     }
 
     @JvmStatic
-    fun g(vararg regexpPiece: String?): String {
+    public fun g(vararg regexpPiece: String?): String {
         val result = StringBuilder()
         result.append("(")
         for (element in regexpPiece) {
@@ -85,7 +85,7 @@ object RegexpChannelBuilder {
     }
 
     @JvmStatic
-    fun or(vararg regexpPiece: String): String {
+    public fun or(vararg regexpPiece: String): String {
         val result = StringBuilder()
         result.append("(")
         for (i in regexpPiece.indices) {

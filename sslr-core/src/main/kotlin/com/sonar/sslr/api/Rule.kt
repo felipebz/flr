@@ -24,7 +24,7 @@ package com.sonar.sslr.api
  *
  * This interface is not intended to be implemented by clients.
  */
-interface Rule : AstNodeType {
+public interface Rule : AstNodeType {
     /**
      * Allows to provide definition of a grammar rule.
      *
@@ -37,7 +37,7 @@ interface Rule : AstNodeType {
      * @throws IllegalArgumentException if any of given arguments is not a parsing expression
      */
     @Deprecated("in 1.19, use {@link org.sonar.sslr.grammar.GrammarRuleBuilder#is(Object)} instead.")
-    fun `is`(vararg e: Any): Rule
+    public fun `is`(vararg e: Any): Rule
 
     /**
      * Allows to override definition of a grammar rule.
@@ -50,21 +50,21 @@ interface Rule : AstNodeType {
      * @throws IllegalArgumentException if any of given arguments is not a parsing expression
      */
     @Deprecated("in 1.19, use {@link org.sonar.sslr.grammar.GrammarRuleBuilder#override(Object)} instead.")
-    fun override(vararg e: Any): Rule
+    public fun override(vararg e: Any): Rule
 
     /**
      * Indicates that grammar rule should not lead to creation of AST node - its children should be attached directly to its parent.
      *
      */
     @Deprecated("in 1.19, use {@link org.sonar.sslr.grammar.GrammarRuleBuilder#skip()} instead.")
-    fun skip()
+    public fun skip()
 
     /**
      * Indicates that grammar rule should not lead to creation of AST node if it has exactly one child.
      *
      */
     @Deprecated("in 1.19, use {@link org.sonar.sslr.grammar.GrammarRuleBuilder#skipIfOneChild()} instead.")
-    fun skipIfOneChild()
+    public fun skipIfOneChild()
 
     /**
      * Utility method used for unit testing in order to dynamically replace the definition of the rule to match as soon as a token whose value
@@ -72,5 +72,5 @@ interface Rule : AstNodeType {
      *
      */
     @Deprecated("in 1.18, use {@link #override(Object...)} instead.")
-    fun mock()
+    public fun mock()
 }

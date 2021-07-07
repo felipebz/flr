@@ -26,7 +26,7 @@ import org.sonar.sslr.internal.matchers.Matcher
 import org.sonar.sslr.internal.vm.Machine
 import org.sonar.sslr.internal.vm.NativeExpression
 
-class TokensBridgeExpression(private val from: TokenType, private val to: TokenType) : NativeExpression(), Matcher {
+public class TokensBridgeExpression(private val from: TokenType, private val to: TokenType) : NativeExpression(), Matcher {
     override fun execute(machine: Machine) {
         val length = machine.length
         if (length < 2 || machine.tokenAt(0).type !== from) {

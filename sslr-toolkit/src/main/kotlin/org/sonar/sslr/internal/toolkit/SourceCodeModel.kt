@@ -30,14 +30,14 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.*
 
-class SourceCodeModel(configurationModel: ConfigurationModel) {
+public class SourceCodeModel(configurationModel: ConfigurationModel) {
     private val configurationModel: ConfigurationModel
-    lateinit var sourceCode: String
+    public lateinit var sourceCode: String
         private set
-    lateinit var astNode: AstNode
+    public lateinit var astNode: AstNode
         private set
 
-    fun setSourceCode(source: File, charset: Charset?) {
+    public fun setSourceCode(source: File, charset: Charset?) {
         astNode = configurationModel.parser!!.parse(source)
         try {
             sourceCode = String(Files.readAllBytes(Paths.get(source.path)), charset!!)
@@ -46,12 +46,12 @@ class SourceCodeModel(configurationModel: ConfigurationModel) {
         }
     }
 
-    fun setSourceCode(sourceCode: String?) {
+    public fun setSourceCode(sourceCode: String?) {
         astNode = configurationModel.parser!!.parse(sourceCode!!)
         this.sourceCode = sourceCode
     }
 
-    val xml: String
+    public val xml: String
         get() = AstXmlPrinter.print(astNode)
 
     init {

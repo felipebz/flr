@@ -23,7 +23,7 @@ package org.sonar.sslr.examples.grammars.typed.impl
 import org.sonar.sslr.examples.grammars.typed.Tree
 import org.sonar.sslr.examples.grammars.typed.api.JsonTree
 
-class JsonTreeImpl(private val arrayOrObject: Tree) : JsonTree {
+public class JsonTreeImpl(private val arrayOrObject: Tree) : JsonTree {
     override fun arrayOrObject(): Tree {
         return arrayOrObject
     }

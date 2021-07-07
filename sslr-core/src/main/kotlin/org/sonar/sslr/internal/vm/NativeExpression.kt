@@ -20,7 +20,7 @@
  */
 package org.sonar.sslr.internal.vm
 
-abstract class NativeExpression : Instruction(), ParsingExpression {
+public abstract class NativeExpression : Instruction(), ParsingExpression {
     override fun compile(compiler: CompilationHandler): Array<Instruction> {
         return arrayOf(this)
     }

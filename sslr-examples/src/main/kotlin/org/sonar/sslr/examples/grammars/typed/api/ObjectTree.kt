@@ -22,8 +22,8 @@ package org.sonar.sslr.examples.grammars.typed.api
 
 import org.sonar.sslr.examples.grammars.typed.impl.SyntaxList
 
-interface ObjectTree : ValueTree {
-    fun openCurlyBraceToken(): SyntaxToken
-    fun pairs(): SyntaxList<PairTree?>?
-    fun closeCurlyBraceToken(): SyntaxToken
+public interface ObjectTree : ValueTree {
+    public fun openCurlyBraceToken(): SyntaxToken
+    public fun pairs(): SyntaxList<PairTree?>?
+    public fun closeCurlyBraceToken(): SyntaxToken
 }

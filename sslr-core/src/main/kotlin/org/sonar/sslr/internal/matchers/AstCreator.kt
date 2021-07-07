@@ -30,7 +30,7 @@ import java.net.URI
 import java.net.URISyntaxException
 import kotlin.math.min
 
-class AstCreator private constructor(private val input: LocatedText) {
+internal class AstCreator private constructor(private val input: LocatedText) {
     companion object {
         private var FAKE_URI: URI
         @JvmStatic

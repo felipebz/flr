@@ -24,15 +24,15 @@ import com.sonar.sslr.api.*
 import com.sonar.sslr.impl.Parser
 import java.io.File
 
-object MiniCParser {
+public object MiniCParser {
     private val P = create()
     @JvmStatic
-    fun create(): Parser<Grammar> {
+    public fun create(): Parser<Grammar> {
         return Parser.builder(MiniCGrammar.create()).withLexer(MiniCLexer.create()).build()
     }
 
     @JvmStatic
-    fun parseFile(filePath: String): AstNode {
+    public fun parseFile(filePath: String): AstNode {
         val file = File(MiniCParser::class.java.getResource(filePath).path)
         if (!file.exists()) {
             throw AssertionError("The file \"$filePath\" does not exist.")
@@ -41,7 +41,7 @@ object MiniCParser {
     }
 
     @JvmStatic
-    fun parseString(source: String): AstNode {
+    public fun parseString(source: String): AstNode {
         return P.parse(source)
     }
 }

@@ -24,7 +24,7 @@ import org.sonar.sslr.examples.grammars.typed.api.ObjectTree
 import org.sonar.sslr.examples.grammars.typed.api.PairTree
 import org.sonar.sslr.examples.grammars.typed.api.SyntaxToken
 
-class ObjectTreeImpl(
+public class ObjectTreeImpl(
     private val openCurlyBraceToken: SyntaxToken,
     private val pairs: SyntaxList<PairTree?>?,
     private val closeCurlyBraceToken: SyntaxToken

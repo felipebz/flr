@@ -20,4 +20,4 @@
  */
 package org.sonar.sslr.internal.matchers
 
-interface Matcher
+public interface Matcher

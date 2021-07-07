@@ -28,7 +28,7 @@ import java.io.Reader
  * declared for the CodeReader.
  *
  */
-class ChannelCodeReaderFilter<O : Any> : CodeReaderFilter<O> {
+public class ChannelCodeReaderFilter<O : Any> : CodeReaderFilter<O> {
     private var channels: Array<out Channel<O>> = emptyArray()
     private lateinit var internalCodeReader: CodeReader
 
@@ -38,7 +38,7 @@ class ChannelCodeReaderFilter<O : Any> : CodeReaderFilter<O> {
      * @param channels
      * the different channels
      */
-    constructor(vararg channels: Channel<O>) : super() {
+    public constructor(vararg channels: Channel<O>) : super() {
         this.channels = channels
     }
 
@@ -51,7 +51,7 @@ class ChannelCodeReaderFilter<O : Any> : CodeReaderFilter<O> {
      * @param channels
      * the different channels
      */
-    constructor(output: O, vararg channels: Channel<O>) : super(output) {
+    public constructor(output: O, vararg channels: Channel<O>) : super(output) {
         this.channels = channels
     }
 

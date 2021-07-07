@@ -26,7 +26,7 @@ import org.sonar.sslr.internal.vm.Machine
 import org.sonar.sslr.internal.vm.NativeExpression
 import java.util.*
 
-class TokenTypesExpression(vararg types: TokenType?) : NativeExpression(), Matcher {
+public class TokenTypesExpression(vararg types: TokenType?) : NativeExpression(), Matcher {
     private val types: MutableSet<TokenType?>
     override fun execute(machine: Machine) {
         if (machine.isEmpty() || !types.contains(machine.tokenAt(0).type)) {

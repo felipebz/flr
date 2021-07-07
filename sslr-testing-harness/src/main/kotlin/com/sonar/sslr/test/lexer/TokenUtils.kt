@@ -25,8 +25,8 @@ import com.sonar.sslr.api.Token
 import org.sonar.sslr.channel.CodeReader
 import java.util.regex.Pattern
 
-object TokenUtils {
-    fun merge(tokens: MutableList<Token>): String {
+public object TokenUtils {
+    public fun merge(tokens: MutableList<Token>): String {
         var tokens = tokens
         tokens = removeLastTokenIfEof(tokens)
         val result = StringBuilder()
@@ -50,7 +50,7 @@ object TokenUtils {
         return tokens
     }
 
-    fun lex(sourceCode: String): MutableList<Token?> {
+    public fun lex(sourceCode: String): MutableList<Token?> {
         val tokens: MutableList<Token?> = ArrayList()
         val reader = CodeReader(sourceCode)
         val matcher = Pattern.compile("[a-zA-Z_0-9\\+\\-\\*/]+").matcher("")

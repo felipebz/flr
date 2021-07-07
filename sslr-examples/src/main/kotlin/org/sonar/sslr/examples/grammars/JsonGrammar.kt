@@ -27,12 +27,12 @@ import org.sonar.sslr.grammar.LexerlessGrammarBuilder
 /**
  * JSON grammar. See [http://json.org/](http://json.org/).
  */
-enum class JsonGrammar : GrammarRuleKey {
+public enum class JsonGrammar : GrammarRuleKey {
     JSON, ARRAY, OBJECT, PAIR, VALUE, STRING, NUMBER, TRUE, FALSE, NULL, WHITESPACE;
 
-    companion object {
+    public companion object {
         @JvmStatic
-        fun create(): Grammar {
+        public fun create(): Grammar {
             val b = LexerlessGrammarBuilder.create()
             b.rule(JSON).`is`(b.firstOf(ARRAY, OBJECT))
             b.rule(OBJECT).`is`("{", WHITESPACE, b.optional(PAIR, b.zeroOrMore(",", WHITESPACE, PAIR)), "}", WHITESPACE)

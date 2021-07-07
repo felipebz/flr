@@ -23,6 +23,6 @@ package com.sonar.sslr.api.typed
 /**
  * @since 1.21
  */
-interface NonterminalBuilder<T> {
-    fun `is`(method: T): T
+public interface NonterminalBuilder<T> {
+    public fun `is`(method: T): T
 }

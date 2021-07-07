@@ -23,13 +23,13 @@ package com.sonar.sslr.impl.ast
 import com.sonar.sslr.api.AstNode
 import com.sonar.sslr.api.AstNodeSkippingPolicy
 
-class SkipFromAstIfOnlyOneChild private constructor() : AstNodeSkippingPolicy {
+public class SkipFromAstIfOnlyOneChild private constructor() : AstNodeSkippingPolicy {
     override fun hasToBeSkippedFromAst(node: AstNode): Boolean {
         return node.numberOfChildren == 1
     }
 
-    companion object {
+    public companion object {
         @JvmField
-        val INSTANCE = SkipFromAstIfOnlyOneChild()
+        public val INSTANCE: SkipFromAstIfOnlyOneChild = SkipFromAstIfOnlyOneChild()
     }
 }

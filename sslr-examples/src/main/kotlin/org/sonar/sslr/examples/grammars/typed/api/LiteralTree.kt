@@ -20,6 +20,6 @@
  */
 package org.sonar.sslr.examples.grammars.typed.api
 
-interface LiteralTree : ValueTree {
-    fun token(): SyntaxToken
+public interface LiteralTree : ValueTree {
+    public fun token(): SyntaxToken
 }

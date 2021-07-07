@@ -22,7 +22,7 @@ package org.sonar.sslr.examples.grammars.typed.impl
 
 import org.sonar.sslr.examples.grammars.typed.api.SyntaxToken
 
-class InternalSyntaxToken(private val value: String) : SyntaxToken {
+public class InternalSyntaxToken(private val value: String) : SyntaxToken {
     override fun value(): String {
         return value
     }

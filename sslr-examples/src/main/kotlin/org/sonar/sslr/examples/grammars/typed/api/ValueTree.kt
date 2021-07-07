@@ -22,4 +22,4 @@ package org.sonar.sslr.examples.grammars.typed.api
 
 import org.sonar.sslr.examples.grammars.typed.Tree
 
-interface ValueTree : Tree
+public interface ValueTree : Tree

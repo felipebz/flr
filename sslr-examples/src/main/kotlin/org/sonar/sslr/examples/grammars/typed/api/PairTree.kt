@@ -22,8 +22,8 @@ package org.sonar.sslr.examples.grammars.typed.api
 
 import org.sonar.sslr.examples.grammars.typed.Tree
 
-interface PairTree : Tree {
-    fun name(): LiteralTree
-    fun colonToken(): SyntaxToken
-    fun value(): ValueTree?
+public interface PairTree : Tree {
+    public fun name(): LiteralTree
+    public fun colonToken(): SyntaxToken
+    public fun value(): ValueTree?
 }

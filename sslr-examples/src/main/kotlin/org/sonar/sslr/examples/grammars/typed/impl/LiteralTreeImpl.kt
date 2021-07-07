@@ -23,7 +23,7 @@ package org.sonar.sslr.examples.grammars.typed.impl
 import org.sonar.sslr.examples.grammars.typed.api.LiteralTree
 import org.sonar.sslr.examples.grammars.typed.api.SyntaxToken
 
-class LiteralTreeImpl(private val token: SyntaxToken) : LiteralTree {
+public class LiteralTreeImpl(private val token: SyntaxToken) : LiteralTree {
     override fun token(): SyntaxToken {
         return token
     }

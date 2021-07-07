@@ -23,7 +23,7 @@ package org.sonar.sslr.examples.grammars.typed.impl
 import org.sonar.sslr.examples.grammars.typed.api.BuiltInValueTree
 import org.sonar.sslr.examples.grammars.typed.api.SyntaxToken
 
-class BuiltInValueTreeImpl(private val token: SyntaxToken) : BuiltInValueTree {
+public class BuiltInValueTreeImpl(private val token: SyntaxToken) : BuiltInValueTree {
     override fun token(): SyntaxToken {
         return token
     }

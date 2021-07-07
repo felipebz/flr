@@ -20,7 +20,7 @@
  */
 package org.sonar.sslr.channel
 
-abstract class Channel<O> {
+public abstract class Channel<O> {
     /**
      * Tries to consume the character stream at the current reading cursor position (provided by the [org.sonar.sslr.channel.CodeReader]). If
      * the character stream is consumed the method must return true and the OUTPUT object can be fed.
@@ -31,5 +31,5 @@ abstract class Channel<O> {
      * the OUTPUT that can be optionally fed by the Channel
      * @return false if the Channel doesn't want to consume the character stream, true otherwise.
      */
-    abstract fun consume(code: CodeReader, output: O): Boolean
+    public abstract fun consume(code: CodeReader, output: O): Boolean
 }

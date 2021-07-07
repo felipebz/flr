@@ -27,26 +27,26 @@ import org.sonar.sslr.grammar.LexerlessGrammarBuilder.Companion.create
 /**
  * This class demonstrates how SSLR detects various mistakes in grammars.
  */
-enum class IncorrectGrammar : GrammarRuleKey {
+public enum class IncorrectGrammar : GrammarRuleKey {
     A, B;
 
-    companion object {
+    public companion object {
         @JvmStatic
-        fun undefinedRule(): Grammar {
+        public fun undefinedRule(): Grammar {
             val b = create()
             b.rule(A)
             return b.build()
         }
 
         @JvmStatic
-        fun referenceToUndefinedRule(): Grammar {
+        public fun referenceToUndefinedRule(): Grammar {
             val b = create()
             b.rule(A).`is`(B)
             return b.build()
         }
 
         @JvmStatic
-        fun ruleDefinedTwice(): Grammar {
+        public fun ruleDefinedTwice(): Grammar {
             val b = create()
             b.rule(A).`is`("foo")
             b.rule(A).`is`("bar")
@@ -54,21 +54,21 @@ enum class IncorrectGrammar : GrammarRuleKey {
         }
 
         @JvmStatic
-        fun incorrectRegularExpression(): Grammar {
+        public fun incorrectRegularExpression(): Grammar {
             val b = create()
             b.rule(A).`is`(b.regexp("*"))
             return b.build()
         }
 
         @JvmStatic
-        fun infiniteZeroOrMore(): Grammar {
+        public fun infiniteZeroOrMore(): Grammar {
             val b = create()
             b.rule(A).`is`(b.zeroOrMore(b.optional("foo")))
             return b.build()
         }
 
         @JvmStatic
-        fun infiniteOneOrMore(): Grammar {
+        public fun infiniteOneOrMore(): Grammar {
             val b = create()
             b.rule(A).`is`(b.oneOrMore(b.optional("foo")))
             return b.build()

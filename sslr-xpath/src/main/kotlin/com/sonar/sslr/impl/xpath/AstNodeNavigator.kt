@@ -27,10 +27,10 @@ import java.lang.UnsupportedOperationException
 import org.jaxen.util.SingleObjectIterator
 import java.util.*
 
-open class AstNodeNavigator : DefaultNavigator() {
+public open class AstNodeNavigator : DefaultNavigator() {
     @Transient
     private var documentNode: AstNode? = null
-    fun reset() {
+    public fun reset() {
         documentNode = null
     }
 
@@ -230,5 +230,5 @@ open class AstNodeNavigator : DefaultNavigator() {
     }
 
     // @VisibleForTesting
-    open class Attribute(open val name: String, open val astNode: AstNode)
+    public open class Attribute(public open val name: String, public open val astNode: AstNode)
 }

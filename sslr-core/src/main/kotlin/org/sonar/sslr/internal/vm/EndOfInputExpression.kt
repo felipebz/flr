@@ -20,7 +20,7 @@
  */
 package org.sonar.sslr.internal.vm
 
-class EndOfInputExpression private constructor() : NativeExpression() {
+public class EndOfInputExpression private constructor() : NativeExpression() {
     override fun execute(machine: Machine) {
         if (machine.isEmpty()) {
             machine.jump(1)
@@ -33,8 +33,8 @@ class EndOfInputExpression private constructor() : NativeExpression() {
         return "EndOfInput"
     }
 
-    companion object {
+    public companion object {
         @JvmField
-        val INSTANCE = EndOfInputExpression()
+        public val INSTANCE: EndOfInputExpression = EndOfInputExpression()
     }
 }

@@ -24,11 +24,11 @@ package com.sonar.sslr.impl
  *
  * This class is not intended to be instantiated or subclassed by clients.
  */
-class LexerException : RuntimeException {
-    constructor(message: String?, e: Throwable?) : super(message, e)
-    constructor(message: String?) : super(message)
+public class LexerException : RuntimeException {
+    public constructor(message: String?, e: Throwable?) : super(message, e)
+    public constructor(message: String?) : super(message)
 
-    companion object {
+    public companion object {
         private const val serialVersionUID = 4901910668771476677L
     }
 }

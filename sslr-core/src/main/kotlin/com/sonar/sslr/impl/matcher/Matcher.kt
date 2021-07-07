@@ -24,4 +24,4 @@ package com.sonar.sslr.impl.matcher
  *
  * This interface is not intended to be implemented by clients.
  */
-interface Matcher 
+public interface Matcher

@@ -23,14 +23,14 @@ package org.sonar.sslr.internal.matchers
 /**
  * Node of a parse tree.
  */
-class ParseNode(
-    val startIndex: Int,
+public class ParseNode(
+    public val startIndex: Int,
     /**
      * Be aware that element of input with this index is not included into this node.
      */
-    val endIndex: Int,
-    val matcher: Matcher?,
+    public val endIndex: Int,
+    public val matcher: Matcher?,
     children: List<ParseNode> = emptyList()
 ) {
-    val children: List<ParseNode> = children.toList()
+    public val children: List<ParseNode> = children.toList()
 }

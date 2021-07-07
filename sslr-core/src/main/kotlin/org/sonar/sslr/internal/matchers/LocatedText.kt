@@ -24,7 +24,7 @@ import java.io.File
 import java.net.URI
 import java.util.*
 
-class LocatedText(private val file: File?, private val chars: CharArray) : CharSequence {
+public class LocatedText(private val file: File?, private val chars: CharArray) : CharSequence {
     private val uri: URI? = file?.toURI()
 
     /**
@@ -37,7 +37,7 @@ class LocatedText(private val file: File?, private val chars: CharArray) : CharS
             return chars.size
         }
 
-    fun toChars(): CharArray {
+    public fun toChars(): CharArray {
         val chars = CharArray(length)
         System.arraycopy(this.chars, 0, chars, 0, chars.size)
         return chars
@@ -55,7 +55,7 @@ class LocatedText(private val file: File?, private val chars: CharArray) : CharS
         return String(toChars())
     }
 
-    fun getLocation(index: Int): TextLocation {
+    public fun getLocation(index: Int): TextLocation {
         if (index < 0 || index > length) {
             throw IndexOutOfBoundsException()
         }
@@ -73,7 +73,7 @@ class LocatedText(private val file: File?, private val chars: CharArray) : CharS
         return if (line == 1) 0 else lines[line - 2]
     }
 
-    companion object {
+    public companion object {
         private val EMPTY_INT_ARRAY = IntArray(0)
         private fun computeLines(chars: CharArray): IntArray {
             val newlines: MutableList<Int> = ArrayList()

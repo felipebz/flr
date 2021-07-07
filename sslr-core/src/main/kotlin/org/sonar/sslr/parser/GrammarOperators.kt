@@ -29,17 +29,17 @@ import java.util.*
  * @since 1.16
  */
 @Deprecated("in 1.19, use {@link org.sonar.sslr.grammar.LexerlessGrammarBuilder} instead.")
-object GrammarOperators {
+public object GrammarOperators {
 
     @JvmStatic
     @Deprecated("in 1.19, use {@link org.sonar.sslr.grammar.LexerlessGrammarBuilder#sequence(Object, Object)} instead.")
-    fun sequence(vararg e: Any): Any {
+    public fun sequence(vararg e: Any): Any {
         return convertToSingleExpression(*e)
     }
 
     @JvmStatic
     @Deprecated("in 1.19, use {@link org.sonar.sslr.grammar.LexerlessGrammarBuilder#firstOf(Object, Object)} instead.")
-    fun firstOf(vararg e: Any): Any {
+    public fun firstOf(vararg e: Any): Any {
         Objects.requireNonNull(e)
         return if (e.size == 1) {
             convertToExpression(e[0])
@@ -48,55 +48,55 @@ object GrammarOperators {
 
     @JvmStatic
     @Deprecated("in 1.19, use {@link org.sonar.sslr.grammar.LexerlessGrammarBuilder#optional(Object)} instead.")
-    fun optional(vararg e: Any): Any {
+    public fun optional(vararg e: Any): Any {
         return OptionalExpression(convertToSingleExpression(*e))
     }
 
     @JvmStatic
     @Deprecated("in 1.19, use {@link org.sonar.sslr.grammar.LexerlessGrammarBuilder#oneOrMore(Object)} instead.")
-    fun oneOrMore(vararg e: Any): Any {
+    public fun oneOrMore(vararg e: Any): Any {
         return OneOrMoreExpression(convertToSingleExpression(*e))
     }
 
     @JvmStatic
     @Deprecated("in 1.19, use {@link org.sonar.sslr.grammar.LexerlessGrammarBuilder#zeroOrMore(Object)} instead.")
-    fun zeroOrMore(vararg e: Any): Any {
+    public fun zeroOrMore(vararg e: Any): Any {
         return ZeroOrMoreExpression(convertToSingleExpression(*e))
     }
 
     @JvmStatic
     @Deprecated("in 1.19, use {@link org.sonar.sslr.grammar.LexerlessGrammarBuilder#next(Object)} instead.")
-    fun next(vararg e: Any): Any {
+    public fun next(vararg e: Any): Any {
         return NextExpression(convertToSingleExpression(*e))
     }
 
     @JvmStatic
     @Deprecated("in 1.19, use {@link org.sonar.sslr.grammar.LexerlessGrammarBuilder#nextNot(Object)} instead.")
-    fun nextNot(vararg e: Any): Any {
+    public fun nextNot(vararg e: Any): Any {
         return NextNotExpression(convertToSingleExpression(*e))
     }
 
     @JvmStatic
     @Deprecated("in 1.19, use {@link org.sonar.sslr.grammar.LexerlessGrammarBuilder#regexp(String)} instead.")
-    fun regexp(regexp: String): Any {
+    public fun regexp(regexp: String): Any {
         return PatternExpression(regexp)
     }
 
     @JvmStatic
     @Deprecated("in 1.19, use {@link org.sonar.sslr.grammar.LexerlessGrammarBuilder#endOfInput()} instead.")
-    fun endOfInput(): Any {
+    public fun endOfInput(): Any {
         return EndOfInputExpression.INSTANCE
     }
 
     @JvmStatic
     @Deprecated("in 1.19, use {@link org.sonar.sslr.grammar.LexerlessGrammarBuilder#nothing()} instead.")
-    fun nothing(): Any {
+    public fun nothing(): Any {
         return NothingExpression.INSTANCE
     }
 
     @JvmStatic
     @Deprecated("in 1.19, use {@link org.sonar.sslr.grammar.LexerlessGrammarBuilder#token(TokenType, Object)} instead.")
-    fun token(tokenType: TokenType, e: Any): Any {
+    public fun token(tokenType: TokenType, e: Any): Any {
         return TokenExpression(tokenType, convertToExpression(e))
     }
 
@@ -105,7 +105,7 @@ object GrammarOperators {
      */
     @JvmStatic
     @Deprecated("in 1.19, use {@link org.sonar.sslr.grammar.LexerlessGrammarBuilder#commentTrivia(Object)} instead.")
-    fun commentTrivia(e: Any): Any {
+    public fun commentTrivia(e: Any): Any {
         return TriviaExpression(TriviaKind.COMMENT, convertToExpression(e))
     }
 
@@ -114,7 +114,7 @@ object GrammarOperators {
      */
     @JvmStatic
     @Deprecated("in 1.19, use {@link org.sonar.sslr.grammar.LexerlessGrammarBuilder#skippedTrivia(Object)} instead.")
-    fun skippedTrivia(e: Any): Any {
+    public fun skippedTrivia(e: Any): Any {
         return TriviaExpression(TriviaKind.SKIPPED_TEXT, convertToExpression(e))
     }
 

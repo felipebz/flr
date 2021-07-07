@@ -30,8 +30,8 @@ import org.sonar.sslr.internal.grammar.MutableParsingRule
  *
  * @see Token
  */
-open class AstNode(
-    private var _type: AstNodeType?, val name: String?,
+public open class AstNode(
+    private var _type: AstNodeType?, public val name: String?,
     /**
      * Get the Token associated to this AstNode
      */
@@ -39,13 +39,13 @@ open class AstNode(
 ) {
     private val _token = token
 
-    val token: Token
+    public val token: Token
         get() = _token.let {
             checkNotNull(it)
             return it
         }
 
-    val type: AstNodeType
+    public val type: AstNodeType
         get() = _type.let {
             checkNotNull(it)
             return it
@@ -56,21 +56,21 @@ open class AstNode(
      *
      * @return list of children
      */
-    var children: MutableList<AstNode> = mutableListOf()
+    public var children: MutableList<AstNode> = mutableListOf()
         private set
     private var childIndex = -1
 
     /**
      * Get the parent of this node in the tree.
      */
-    var parent: AstNode? = null
+    public var parent: AstNode? = null
         private set
-    var fromIndex = 0
-    var toIndex = 0
+    public var fromIndex: Int = 0
+    public var toIndex: Int = 0
 
-    constructor(token: Token) : this(token.type, token.type.name, token)
+    public constructor(token: Token) : this(token.type, token.type.name, token)
 
-    fun addChild(child: AstNode?) {
+    public fun addChild(child: AstNode?) {
         if (child != null) {
             if (child.hasToBeSkippedFromAst()) {
                 for (subChild in child.children) {
@@ -91,11 +91,11 @@ open class AstNode(
     /**
      * @return true if this AstNode has some children.
      */
-    fun hasChildren(): Boolean {
+    public fun hasChildren(): Boolean {
         return children.isNotEmpty()
     }
 
-    val numberOfChildren: Int
+    public val numberOfChildren: Int
         get() {
             return children.size
         }
@@ -105,7 +105,7 @@ open class AstNode(
      *
      * @since 1.17
      */
-    val nextAstNode: AstNode?
+    public val nextAstNode: AstNode?
         get() {
             return nextSibling ?: parent?.nextAstNode
         }
@@ -115,7 +115,7 @@ open class AstNode(
      *
      * @since 1.17
      */
-    val previousAstNode: AstNode?
+    public val previousAstNode: AstNode?
         get() {
             return previousSibling ?: parent?.previousAstNode
         }
@@ -126,7 +126,7 @@ open class AstNode(
      * @return next sibling, or null if not exists
      * @since 1.17
      */
-    val nextSibling: AstNode?
+    public val nextSibling: AstNode?
         get() {
             val parent = this.parent
             return if (parent != null && parent.numberOfChildren > childIndex + 1) {
@@ -140,7 +140,7 @@ open class AstNode(
      * @return previous sibling, or null if not exists
      * @since 1.17
      */
-    val previousSibling: AstNode?
+    public val previousSibling: AstNode?
         get() {
             val parent = this.parent ?: return null
             return if (childIndex > 0) {
@@ -153,7 +153,7 @@ open class AstNode(
      *
      * @return token's value
      */
-    val tokenValue: String
+    public val tokenValue: String
         get() {
             return _token?.value.orEmpty()
         }
@@ -163,7 +163,7 @@ open class AstNode(
      *
      * @return token's original value
      */
-    open val tokenOriginalValue: String
+    public open val tokenOriginalValue: String
         get() {
             return _token?.originalValue.orEmpty()
         }
@@ -173,19 +173,19 @@ open class AstNode(
      *
      * @return token's line
      */
-    val tokenLine: Int
+    public val tokenLine: Int
         get() {
             return _token?.line ?: -1
         }
 
-    fun hasToken(): Boolean {
+    public fun hasToken(): Boolean {
         return _token != null
     }
 
     /**
      * For internal use only.
      */
-    fun hasToBeSkippedFromAst(): Boolean {
+    public fun hasToBeSkippedFromAst(): Boolean {
         val type = _type ?: return true
 
         val result = (type as? AstNodeSkippingPolicy)?.hasToBeSkippedFromAst(this) ?: false
@@ -203,11 +203,11 @@ open class AstNode(
         return result
     }
 
-    fun `is`(vararg types: AstNodeType): Boolean {
+    public fun `is`(vararg types: AstNodeType): Boolean {
         return types.any { type === it }
     }
 
-    fun isNot(vararg types: AstNodeType): Boolean {
+    public fun isNot(vararg types: AstNodeType): Boolean {
         return !`is`(*types)
     }
 
@@ -227,7 +227,7 @@ open class AstNode(
      * @return first child of one of specified types, or null if not found
      * @since 1.17
      */
-    fun getFirstChild(vararg nodeTypes: AstNodeType): AstNode? {
+    public fun getFirstChild(vararg nodeTypes: AstNodeType): AstNode? {
         return children.firstOrNull { it.type in nodeTypes }
     }
 
@@ -247,7 +247,7 @@ open class AstNode(
      * @return first descendant of one of specified types, or null if not found
      * @since 1.17
      */
-    fun getFirstDescendant(vararg nodeTypes: AstNodeType): AstNode? {
+    public fun getFirstDescendant(vararg nodeTypes: AstNodeType): AstNode? {
         for (child in children) {
             if (child.`is`(*nodeTypes)) {
                 return child
@@ -265,7 +265,7 @@ open class AstNode(
      *
      * @return the first child, or null if there is no child
      */
-    val firstChild: AstNode?
+    public val firstChild: AstNode?
         get() {
             return children.firstOrNull()
         }
@@ -286,7 +286,7 @@ open class AstNode(
      * @return children of specified types, never null
      * @since 1.17
      */
-    fun getChildren(vararg nodeTypes: AstNodeType): List<AstNode> {
+    public fun getChildren(vararg nodeTypes: AstNodeType): List<AstNode> {
         return children.filter { it.type in nodeTypes }
     }
 
@@ -308,7 +308,7 @@ open class AstNode(
      * @return descendants of specified types, never null
      * @since 1.17
      */
-    fun getDescendants(vararg nodeTypes: AstNodeType): List<AstNode> {
+    public fun getDescendants(vararg nodeTypes: AstNodeType): List<AstNode> {
         val result: MutableList<AstNode> = ArrayList()
         for (child in children) {
             child.getDescendants(result, *nodeTypes)
@@ -332,7 +332,7 @@ open class AstNode(
      *
      * @return the last child, or null if there is no child
      */
-    val lastChild: AstNode?
+    public val lastChild: AstNode?
         get() {
             return children.lastOrNull()
         }
@@ -354,14 +354,14 @@ open class AstNode(
      * @return last child of one of specified types, or null if not found
      * @since 1.20
      */
-    fun getLastChild(vararg nodeTypes: AstNodeType): AstNode? {
+    public fun getLastChild(vararg nodeTypes: AstNodeType): AstNode? {
         return children.lastOrNull { it.type in nodeTypes }
     }
 
     /**
      * @return true if this node has some children with the requested node types
      */
-    fun hasDirectChildren(vararg nodeTypes: AstNodeType): Boolean {
+    public fun hasDirectChildren(vararg nodeTypes: AstNodeType): Boolean {
         return getFirstChild(*nodeTypes) != null
     }
 
@@ -369,14 +369,14 @@ open class AstNode(
      * @return true if this node has a descendant of one of specified types
      * @since 1.17
      */
-    fun hasDescendant(vararg nodeTypes: AstNodeType): Boolean {
+    public fun hasDescendant(vararg nodeTypes: AstNodeType): Boolean {
         return getFirstDescendant(*nodeTypes) != null
     }
 
     /**
      * @since 1.19.2
      */
-    fun hasParent(vararg nodeTypes: AstNodeType): Boolean {
+    public fun hasParent(vararg nodeTypes: AstNodeType): Boolean {
         val parent = this.parent
         return parent != null && parent.`is`(*nodeTypes)
     }
@@ -385,7 +385,7 @@ open class AstNode(
      * @return true if this node has an ancestor of the specified type
      * @since 1.17
      */
-    fun hasAncestor(nodeType: AstNodeType): Boolean {
+    public fun hasAncestor(nodeType: AstNodeType): Boolean {
         return getFirstAncestor(nodeType) != null
     }
 
@@ -393,7 +393,7 @@ open class AstNode(
      * @return true if this node has an ancestor of one of specified types
      * @since 1.19.2
      */
-    fun hasAncestor(vararg nodeTypes: AstNodeType): Boolean {
+    public fun hasAncestor(vararg nodeTypes: AstNodeType): Boolean {
         return getFirstAncestor(*nodeTypes) != null
     }
 
@@ -401,7 +401,7 @@ open class AstNode(
      * @return first ancestor of the specified type, or null if not found
      * @since 1.17
      */
-    fun getFirstAncestor(nodeType: AstNodeType): AstNode? {
+    public fun getFirstAncestor(nodeType: AstNodeType): AstNode? {
         val parent = this.parent
         return when {
             parent == null -> {
@@ -420,7 +420,7 @@ open class AstNode(
      * @return first ancestor of one of specified types, or null if not found
      * @since 1.19.2
      */
-    fun getFirstAncestor(vararg nodeTypes: AstNodeType): AstNode? {
+    public fun getFirstAncestor(vararg nodeTypes: AstNodeType): AstNode? {
         var result = parent
         while (result != null) {
             if (result.`is`(*nodeTypes)) {
@@ -431,7 +431,7 @@ open class AstNode(
         return null
     }
 
-    val isCopyBookOrGeneratedNode: Boolean
+    public val isCopyBookOrGeneratedNode: Boolean
         get() {
             return checkNotNull(_token).isCopyBook || _token.isGeneratedCode
         }
@@ -439,7 +439,7 @@ open class AstNode(
     /**
      * Return all tokens contained in this tree node. Those tokens can be directly or indirectly attached to this node.
      */
-    val tokens: List<Token>
+    public val tokens: List<Token>
         get() {
             val tokens = mutableListOf<Token>()
             getTokens(tokens)
@@ -469,7 +469,7 @@ open class AstNode(
         return result.toString()
     }
 
-    val lastToken: Token?
+    public val lastToken: Token?
         get() {
             if (!hasToken()) {
                 return null

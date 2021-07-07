@@ -24,7 +24,7 @@ import com.sonar.sslr.api.AstNode
 import com.sonar.sslr.api.Token
 import java.lang.reflect.Field
 
-object AstNodeReflector {
+internal object AstNodeReflector {
     private val TOKEN_FIELD = getAstNodeField("token")
     private val CHILD_INDEX_FIELD = getAstNodeField("childIndex")
     private val PARENT_FIELD = getAstNodeField("parent")

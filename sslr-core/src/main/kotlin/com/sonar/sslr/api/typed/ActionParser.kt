@@ -40,7 +40,7 @@ import java.nio.file.Paths
 /**
  * @since 1.21
  */
-class ActionParser<N>(
+public class ActionParser<N>(
     private val charset: Charset,
     b: LexerlessGrammarBuilder,
     grammarClass: Class<*>,
@@ -51,7 +51,7 @@ class ActionParser<N>(
     private val syntaxTreeCreator: SyntaxTreeCreator<N>
     private val rootRule: GrammarRuleKey
     private val parseRunner: ParseRunner
-    fun parse(file: File): N? {
+    public fun parse(file: File): N? {
         return try {
             val chars = String(Files.readAllBytes(Paths.get(file.path)), charset).toCharArray()
             parse(Input(chars, file.toURI()))
@@ -60,7 +60,7 @@ class ActionParser<N>(
         }
     }
 
-    fun parse(source: String): N? {
+    public fun parse(source: String): N? {
         return parse(Input(source.toCharArray()))
     }
 
@@ -76,7 +76,7 @@ class ActionParser<N>(
         return syntaxTreeCreator.create(result.getParseTreeRoot(), input)
     }
 
-    fun rootRule(): GrammarRuleKey {
+    public fun rootRule(): GrammarRuleKey {
         return rootRule
     }
 

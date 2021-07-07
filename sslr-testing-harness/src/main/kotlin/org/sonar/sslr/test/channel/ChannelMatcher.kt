@@ -25,18 +25,18 @@ import org.hamcrest.Description
 import org.sonar.sslr.channel.Channel
 import org.sonar.sslr.channel.CodeReader
 
-class ChannelMatcher<O> : BaseMatcher<Channel<O>> {
+public class ChannelMatcher<O> : BaseMatcher<Channel<O>> {
     private val sourceCode: String?
     private val output: O?
     private val reader: CodeReader?
 
-    constructor(sourceCode: String, output: O?) {
+    public constructor(sourceCode: String, output: O?) {
         this.sourceCode = sourceCode
         this.output = output
         reader = CodeReader(sourceCode)
     }
 
-    constructor(reader: CodeReader, output: O?) {
+    public constructor(reader: CodeReader, output: O?) {
         this.output = output
         sourceCode = String(reader.peek(30))
         this.reader = reader

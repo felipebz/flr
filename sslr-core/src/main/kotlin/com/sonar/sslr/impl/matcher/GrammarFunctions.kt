@@ -26,13 +26,13 @@ import org.sonar.sslr.internal.vm.*
 import org.sonar.sslr.internal.vm.lexerful.*
 
 @Deprecated("in 1.19, use {@link org.sonar.sslr.grammar.LexerfulGrammarBuilder} instead.")
-object GrammarFunctions {
+public object GrammarFunctions {
     /**
      * @since 1.14
      */
     @JvmStatic
     @Deprecated("in 1.19, use {@link org.sonar.sslr.grammar.LexerfulGrammarBuilder#buildWithMemoizationOfMatchesForAllRules()} instead.")
-    fun enableMemoizationOfMatchesForAllRules(grammar: Grammar) {
+    public fun enableMemoizationOfMatchesForAllRules(grammar: Grammar) {
         for (ruleField in Grammar.getAllRuleFields(grammar.javaClass)) {
             val ruleName = ruleField.name
             val rule = try {
@@ -44,7 +44,7 @@ object GrammarFunctions {
         }
     }
 
-    fun convertToSingleExpression(e: Array<out Any>): ParsingExpression {
+    public fun convertToSingleExpression(e: Array<out Any>): ParsingExpression {
         checkSize(e)
         return if (e.size == 1) {
             convertToExpression(e[0])
@@ -89,35 +89,35 @@ object GrammarFunctions {
         require(!(e == null || e.isEmpty())) { "You must define at least one matcher." }
     }
 
-    object Standard {
+    public object Standard {
 
         @JvmStatic
         @Deprecated("in 1.19, use {@link org.sonar.sslr.grammar.LexerfulGrammarBuilder#zeroOrMore(Object)} instead.")
-        fun o2n(vararg e: Any): Matcher {
+        public fun o2n(vararg e: Any): Matcher {
             return ZeroOrMoreExpression(convertToSingleExpression(e))
         }
 
         @JvmStatic
         @Deprecated("in 1.19, use {@link org.sonar.sslr.grammar.LexerfulGrammarBuilder#oneOrMore(Object)} instead.")
-        fun one2n(vararg e: Any): Matcher {
+        public fun one2n(vararg e: Any): Matcher {
             return OneOrMoreExpression(convertToSingleExpression(e))
         }
 
         @JvmStatic
         @Deprecated("in 1.19, use {@link org.sonar.sslr.grammar.LexerfulGrammarBuilder#optional(Object)} instead.")
-        fun opt(vararg e: Any): Matcher {
+        public fun opt(vararg e: Any): Matcher {
             return OptionalExpression(convertToSingleExpression(e))
         }
 
         @JvmStatic
         @Deprecated("in 1.16, use {@link GrammarFunctions.Standard#firstOf(Object...)} instead")
-        fun or(vararg e: Any): Matcher {
+        public fun or(vararg e: Any): Matcher {
             return firstOf(*e)
         }
 
         @JvmStatic
         @Deprecated("in 1.19, use {@link org.sonar.sslr.grammar.LexerfulGrammarBuilder#firstOf(Object, Object)} instead.")
-        fun firstOf(vararg e: Any): Matcher {
+        public fun firstOf(vararg e: Any): Matcher {
             checkSize(e)
             return if (e.size == 1) {
                 convertToExpression(e[0])
@@ -128,80 +128,80 @@ object GrammarFunctions {
 
         @JvmStatic
         @Deprecated("in 1.19, use {@link org.sonar.sslr.grammar.LexerfulGrammarBuilder#sequence(Object, Object)} instead.")
-        fun and(vararg e: Any): Matcher {
+        public fun and(vararg e: Any): Matcher {
             return convertToSingleExpression(e)
         }
     }
 
-    object Predicate {
+    public object Predicate {
 
         @JvmStatic
         @Deprecated("in 1.19, use {@link org.sonar.sslr.grammar.LexerfulGrammarBuilder#nextNot(Object)} instead.")
-        fun not(e: Any): Matcher {
+        public fun not(e: Any): Matcher {
             return NextNotExpression(convertToExpression(e))
         }
 
         @JvmStatic
         @Deprecated("in 1.19, use {@link org.sonar.sslr.grammar.LexerfulGrammarBuilder#next(Object)} instead.")
-        fun next(vararg e: Any): Matcher {
+        public fun next(vararg e: Any): Matcher {
             return NextExpression(convertToSingleExpression(e))
         }
     }
 
-    object Advanced {
+    public object Advanced {
 
         @JvmStatic
         @Deprecated("in 1.19, use {@link org.sonar.sslr.grammar.LexerfulGrammarBuilder#adjacent(Object)} instead.")
-        fun adjacent(e: Any): Matcher {
+        public fun adjacent(e: Any): Matcher {
             return SequenceExpression(AdjacentExpression.INSTANCE, convertToExpression(e))
         }
 
         @JvmStatic
         @Deprecated("in 1.19, use {@link org.sonar.sslr.grammar.LexerfulGrammarBuilder#anyTokenButNot(Object)} instead.")
-        fun anyTokenButNot(e: Any): Matcher {
+        public fun anyTokenButNot(e: Any): Matcher {
             return SequenceExpression(NextNotExpression(convertToExpression(e)), AnyTokenExpression.INSTANCE)
         }
 
         @JvmStatic
         @Deprecated("in 1.19, use {@link org.sonar.sslr.grammar.LexerfulGrammarBuilder#isOneOfThem(TokenType, TokenType...)} instead.")
-        fun isOneOfThem(vararg types: TokenType): Matcher {
+        public fun isOneOfThem(vararg types: TokenType): Matcher {
             checkSize(types)
             return TokenTypesExpression(*types)
         }
 
         @JvmStatic
         @Deprecated("in 1.19, use {@link org.sonar.sslr.grammar.LexerfulGrammarBuilder#bridge(TokenType, TokenType)} instead.")
-        fun bridge(from: TokenType, to: TokenType): Matcher {
+        public fun bridge(from: TokenType, to: TokenType): Matcher {
             return TokensBridgeExpression(from, to)
         }
 
         @JvmStatic
         @Deprecated("in 1.19, use {@link org.sonar.sslr.grammar.LexerfulGrammarBuilder#anyToken()} instead.")
-        fun isTrue(): Matcher {
+        public fun isTrue(): Matcher {
             return AnyTokenExpression.INSTANCE
         }
 
         @JvmStatic
         @Deprecated("in 1.19, use {@link org.sonar.sslr.grammar.LexerfulGrammarBuilder#nothing()} instead.")
-        fun isFalse(): Matcher {
+        public fun isFalse(): Matcher {
             return NothingExpression.INSTANCE
         }
 
         @JvmStatic
         @Deprecated("in 1.19, use {@link org.sonar.sslr.grammar.LexerfulGrammarBuilder#anyToken()} instead.")
-        fun anyToken(): Matcher {
+        public fun anyToken(): Matcher {
             return AnyTokenExpression.INSTANCE
         }
 
         @JvmStatic
         @Deprecated("in 1.19, use {@link org.sonar.sslr.grammar.LexerfulGrammarBuilder#tillNewLine()} instead.")
-        fun tillNewLine(): Matcher {
+        public fun tillNewLine(): Matcher {
             return TillNewLineExpression.INSTANCE
         }
 
         @JvmStatic
         @Deprecated("in 1.19, use {@link org.sonar.sslr.grammar.LexerfulGrammarBuilder#till(Object)} instead.")
-        fun till(e: Any): Matcher {
+        public fun till(e: Any): Matcher {
             val expression = convertToExpression(e)
             return SequenceExpression(
                 ZeroOrMoreExpression(
@@ -216,7 +216,7 @@ object GrammarFunctions {
 
         @JvmStatic
         @Deprecated("in 1.19, use {@link org.sonar.sslr.grammar.LexerfulGrammarBuilder#exclusiveTill(Object)} instead.")
-        fun exclusiveTill(vararg e: Any): Matcher {
+        public fun exclusiveTill(vararg e: Any): Matcher {
             val expressions = convertToExpressions(e)
             val subExpression = if (expressions.size == 1) expressions[0] else FirstOfExpression(*expressions)
             return ZeroOrMoreExpression(

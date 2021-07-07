@@ -25,8 +25,8 @@ import org.sonar.sslr.examples.grammars.typed.api.*
 import org.sonar.sslr.examples.grammars.typed.impl.InternalSyntaxToken
 import org.sonar.sslr.examples.grammars.typed.impl.SyntaxList
 
-open class JsonGrammar(private val b: GrammarBuilder<InternalSyntaxToken?>, private val f: TreeFactory) {
-    open fun JSON(): JsonTree? {
+public open class JsonGrammar(private val b: GrammarBuilder<InternalSyntaxToken?>, private val f: TreeFactory) {
+    public open fun JSON(): JsonTree? {
         return b.nonterminal<JsonTree?>(JsonLexer.JSON).`is`(
             f.json(
                 b.firstOf(
@@ -38,7 +38,7 @@ open class JsonGrammar(private val b: GrammarBuilder<InternalSyntaxToken?>, priv
         )
     }
 
-    open fun OBJECT(): ObjectTree {
+    public open fun OBJECT(): ObjectTree {
         return b.nonterminal<ObjectTree>(JsonLexer.OBJECT).`is`(
             f.`object`(
                 b.token(JsonLexer.LCURLYBRACE),
@@ -48,7 +48,7 @@ open class JsonGrammar(private val b: GrammarBuilder<InternalSyntaxToken?>, priv
         )
     }
 
-    open fun PAIR_LIST(): SyntaxList<PairTree?>? {
+    public open fun PAIR_LIST(): SyntaxList<PairTree?>? {
         return b.nonterminal<SyntaxList<PairTree?>?>().`is`(
             b.firstOf(
                 f.pairList(PAIR(), b.token(JsonLexer.COMMA), PAIR_LIST()),
@@ -57,13 +57,13 @@ open class JsonGrammar(private val b: GrammarBuilder<InternalSyntaxToken?>, priv
         )
     }
 
-    open fun PAIR(): PairTree? {
+    public open fun PAIR(): PairTree? {
         return b.nonterminal<PairTree?>().`is`(
             f.pair(STRING(), b.token(JsonLexer.COLON), VALUE())
         )
     }
 
-    open fun ARRAY(): ArrayTree? {
+    public open fun ARRAY(): ArrayTree? {
         return b.nonterminal<ArrayTree?>(JsonLexer.ARRAY).`is`(
             f.array(
                 b.token(JsonLexer.LBRACKET),
@@ -73,7 +73,7 @@ open class JsonGrammar(private val b: GrammarBuilder<InternalSyntaxToken?>, priv
         )
     }
 
-    open fun VALUE_LIST(): SyntaxList<ValueTree?>? {
+    public open fun VALUE_LIST(): SyntaxList<ValueTree?>? {
         return b.nonterminal<SyntaxList<ValueTree?>?>().`is`(
             b.firstOf(
                 f.valueList(VALUE(), b.token(JsonLexer.COMMA), VALUE_LIST()),
@@ -82,7 +82,7 @@ open class JsonGrammar(private val b: GrammarBuilder<InternalSyntaxToken?>, priv
         )
     }
 
-    open fun VALUE(): ValueTree? {
+    public open fun VALUE(): ValueTree? {
         return b.nonterminal<ValueTree?>(JsonLexer.VALUE).`is`(
             b.firstOf(
                 STRING(),
@@ -94,19 +94,19 @@ open class JsonGrammar(private val b: GrammarBuilder<InternalSyntaxToken?>, priv
         )
     }
 
-    open fun STRING(): LiteralTree? {
+    public open fun STRING(): LiteralTree? {
         return b.nonterminal<LiteralTree?>().`is`(
             f.string(b.token(JsonLexer.STRING))
         )
     }
 
-    open fun NUMBER(): LiteralTree? {
+    public open fun NUMBER(): LiteralTree? {
         return b.nonterminal<LiteralTree?>().`is`(
             f.number(b.token(JsonLexer.NUMBER))
         )
     }
 
-    open fun BUILT_IN_VALUE(): BuiltInValueTree? {
+    public open fun BUILT_IN_VALUE(): BuiltInValueTree? {
         return b.nonterminal<BuiltInValueTree?>().`is`(
             f.buildInValue(
                 b.firstOf(

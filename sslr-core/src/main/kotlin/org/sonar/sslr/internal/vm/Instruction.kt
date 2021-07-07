@@ -23,12 +23,12 @@ package org.sonar.sslr.internal.vm
 import org.sonar.sslr.grammar.GrammarException
 import org.sonar.sslr.internal.matchers.*
 
-abstract class Instruction {
+public abstract class Instruction {
     /**
      * Executes this instruction.
      */
-    abstract fun execute(machine: Machine)
-    class JumpInstruction(private val offset: Int) : Instruction() {
+    public abstract fun execute(machine: Machine)
+    public class JumpInstruction(private val offset: Int) : Instruction() {
         override fun execute(machine: Machine) {
             machine.jump(offset)
         }
@@ -46,7 +46,7 @@ abstract class Instruction {
         }
     }
 
-    class CallInstruction(private val offset: Int, private val matcher: Matcher?) : Instruction() {
+    public class CallInstruction(private val offset: Int, private val matcher: Matcher?) : Instruction() {
         override fun execute(machine: Machine) {
             machine.pushReturn(1, matcher, offset)
         }
@@ -68,7 +68,7 @@ abstract class Instruction {
         }
     }
 
-    class ChoiceInstruction(private val offset: Int) : Instruction() {
+    public class ChoiceInstruction(private val offset: Int) : Instruction() {
         override fun execute(machine: Machine) {
             machine.pushBacktrack(offset)
             machine.jump(1)
@@ -87,7 +87,7 @@ abstract class Instruction {
         }
     }
 
-    class IgnoreErrorsInstruction : Instruction() {
+    public class IgnoreErrorsInstruction : Instruction() {
         override fun execute(machine: Machine) {
             machine.ignoreErrors = true
             machine.jump(1)
@@ -102,7 +102,7 @@ abstract class Instruction {
      * Instruction dedicated for predicates.
      * Behaves exactly as [ChoiceInstruction], but disables error reports.
      */
-    class PredicateChoiceInstruction(private val offset: Int) : Instruction() {
+    public class PredicateChoiceInstruction(private val offset: Int) : Instruction() {
         override fun execute(machine: Machine) {
             machine.pushBacktrack(offset)
             machine.ignoreErrors = true
@@ -122,7 +122,7 @@ abstract class Instruction {
         }
     }
 
-    class CommitInstruction(private val offset: Int) : Instruction() {
+    public class CommitInstruction(private val offset: Int) : Instruction() {
         override fun execute(machine: Machine) {
             // add all nodes to parent
             machine.peek().parent().subNodes.addAll(machine.peek().subNodes)
@@ -143,7 +143,7 @@ abstract class Instruction {
         }
     }
 
-    class CommitVerifyInstruction(private val offset: Int) : Instruction() {
+    public class CommitVerifyInstruction(private val offset: Int) : Instruction() {
         override fun execute(machine: Machine) {
             if (machine.index == machine.peek().index) {
                 // TODO better message, e.g. dump stack
@@ -168,7 +168,7 @@ abstract class Instruction {
         }
     }
 
-    class RetInstruction : Instruction() {
+    public class RetInstruction : Instruction() {
         override fun execute(machine: Machine) {
             machine.createNode()
             val stack = machine.peek()
@@ -182,7 +182,7 @@ abstract class Instruction {
         }
     }
 
-    class BacktrackInstruction : Instruction() {
+    public class BacktrackInstruction : Instruction() {
         override fun execute(machine: Machine) {
             machine.backtrack()
         }
@@ -192,7 +192,7 @@ abstract class Instruction {
         }
     }
 
-    class EndInstruction : Instruction() {
+    public class EndInstruction : Instruction() {
         override fun execute(machine: Machine) {
             machine.address = -1
         }
@@ -202,7 +202,7 @@ abstract class Instruction {
         }
     }
 
-    class FailTwiceInstruction : Instruction() {
+    public class FailTwiceInstruction : Instruction() {
         override fun execute(machine: Machine) {
             // restore state of machine to correctly report error during backtrack
             // note that there is no need restore value of "IgnoreErrors", because this will be done during backtrack
@@ -218,7 +218,7 @@ abstract class Instruction {
         }
     }
 
-    class BackCommitInstruction(private val offset: Int) : Instruction() {
+    public class BackCommitInstruction(private val offset: Int) : Instruction() {
         override fun execute(machine: Machine) {
             val stack = machine.peek()
             machine.index = stack.index
@@ -240,76 +240,76 @@ abstract class Instruction {
         }
     }
 
-    companion object {
+    public companion object {
         private val RET: Instruction = RetInstruction()
         private val BACKTRACK: Instruction = BacktrackInstruction()
         private val END: Instruction = EndInstruction()
         private val FAIL_TWICE: Instruction = FailTwiceInstruction()
         private val IGNORE_ERRORS: Instruction = IgnoreErrorsInstruction()
         @JvmStatic
-        fun addAll(list: MutableList<Instruction>, array: Array<Instruction>) {
+        public fun addAll(list: MutableList<Instruction>, array: Array<Instruction>) {
             for (i in array) {
                 list.add(i)
             }
         }
 
         @JvmStatic
-        fun jump(offset: Int): Instruction {
+        public fun jump(offset: Int): Instruction {
             return JumpInstruction(offset)
         }
 
         @JvmStatic
-        fun call(offset: Int, matcher: Matcher?): Instruction {
+        public fun call(offset: Int, matcher: Matcher?): Instruction {
             return CallInstruction(offset, matcher)
         }
 
         @JvmStatic
-        fun ret(): Instruction {
+        public fun ret(): Instruction {
             return RET
         }
 
         @JvmStatic
-        fun backtrack(): Instruction {
+        public fun backtrack(): Instruction {
             return BACKTRACK
         }
 
         @JvmStatic
-        fun end(): Instruction {
+        public fun end(): Instruction {
             return END
         }
 
         @JvmStatic
-        fun choice(offset: Int): Instruction {
+        public fun choice(offset: Int): Instruction {
             return ChoiceInstruction(offset)
         }
 
         @JvmStatic
-        fun predicateChoice(offset: Int): Instruction {
+        public fun predicateChoice(offset: Int): Instruction {
             return PredicateChoiceInstruction(offset)
         }
 
         @JvmStatic
-        fun commit(offset: Int): Instruction {
+        public fun commit(offset: Int): Instruction {
             return CommitInstruction(offset)
         }
 
         @JvmStatic
-        fun commitVerify(offset: Int): Instruction {
+        public fun commitVerify(offset: Int): Instruction {
             return CommitVerifyInstruction(offset)
         }
 
         @JvmStatic
-        fun failTwice(): Instruction {
+        public fun failTwice(): Instruction {
             return FAIL_TWICE
         }
 
         @JvmStatic
-        fun backCommit(offset: Int): Instruction {
+        public fun backCommit(offset: Int): Instruction {
             return BackCommitInstruction(offset)
         }
 
         @JvmStatic
-        fun ignoreErrors(): Instruction {
+        public fun ignoreErrors(): Instruction {
             return IGNORE_ERRORS
         }
     }

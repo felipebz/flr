@@ -24,12 +24,12 @@ import com.sonar.sslr.api.Grammar
 import org.sonar.sslr.grammar.GrammarRuleKey
 import org.sonar.sslr.grammar.LexerlessGrammarBuilder.Companion.create
 
-enum class MemoizationGrammar : GrammarRuleKey {
+public enum class MemoizationGrammar : GrammarRuleKey {
     A, B, C;
 
-    companion object {
+    public companion object {
         @JvmStatic
-        fun requiresNegativeMemoization(): Grammar {
+        public fun requiresNegativeMemoization(): Grammar {
             val b = create()
             b.rule(A).`is`(
                 'a',
@@ -42,7 +42,7 @@ enum class MemoizationGrammar : GrammarRuleKey {
         }
 
         @JvmStatic
-        fun requiresPositiveMemoization(): Grammar {
+        public fun requiresPositiveMemoization(): Grammar {
             val b = create()
             b.rule(A).`is`(
                 b.firstOf(
@@ -55,7 +55,7 @@ enum class MemoizationGrammar : GrammarRuleKey {
         }
 
         @JvmStatic
-        fun requiresPositiveMemoizationOnMoreThanJustLastRule(): Grammar {
+        public fun requiresPositiveMemoizationOnMoreThanJustLastRule(): Grammar {
             val b = create()
             b.rule(A).`is`(
                 b.firstOf(

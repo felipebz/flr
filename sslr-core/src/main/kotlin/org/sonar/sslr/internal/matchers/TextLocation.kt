@@ -24,23 +24,23 @@ import java.io.File
 import java.net.URI
 import java.util.*
 
-class TextLocation(private val file: File?, private val uri: URI?, private val line: Int, private val column: Int) {
-    fun getFile(): File? {
+public class TextLocation(private val file: File?, private val uri: URI?, private val line: Int, private val column: Int) {
+    public fun getFile(): File? {
         return file
     }
 
     /**
      * For internal use only.
      */
-    fun getFileURI(): URI? {
+    public fun getFileURI(): URI? {
         return uri
     }
 
-    fun getLine(): Int {
+    public fun getLine(): Int {
         return line
     }
 
-    fun getColumn(): Int {
+    public fun getColumn(): Int {
         return column
     }
 

@@ -24,7 +24,7 @@ import com.sonar.sslr.api.*
 import com.sonar.sslr.impl.matcher.RuleDefinition
 import org.sonar.sslr.internal.vm.lexerful.TokenTypeExpression
 
-class LexerfulAstCreator private constructor(private val tokens: List<Token>) {
+public class LexerfulAstCreator private constructor(private val tokens: List<Token>) {
     private fun visit(node: ParseNode): AstNode? {
         return if (node.matcher is RuleDefinition) {
             visitNonTerminal(node)
@@ -72,9 +72,9 @@ class LexerfulAstCreator private constructor(private val tokens: List<Token>) {
         return astNode
     }
 
-    companion object {
+    public companion object {
         @JvmStatic
-        fun create(node: ParseNode, tokens: List<Token>): AstNode {
+        public fun create(node: ParseNode, tokens: List<Token>): AstNode {
             val astNode = checkNotNull(LexerfulAstCreator(tokens).visit(node))
             // Unwrap AstNodeType for root node:
             astNode.hasToBeSkippedFromAst()

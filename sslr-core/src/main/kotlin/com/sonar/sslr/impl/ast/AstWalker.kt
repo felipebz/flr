@@ -23,7 +23,7 @@ package com.sonar.sslr.impl.ast
 import com.sonar.sslr.api.*
 import java.util.*
 
-class AstWalker(vararg visitors: AstVisitor) {
+public class AstWalker(vararg visitors: AstVisitor) {
     private val visitorsByNodeType: MutableMap<AstNodeType, Array<AstVisitor>> = IdentityHashMap()
     private val visitors: MutableList<AstVisitor> = ArrayList()
     private var astAndTokenVisitors = emptyArray<AstAndTokenVisitor>()
@@ -31,7 +31,7 @@ class AstWalker(vararg visitors: AstVisitor) {
 
     //constructor(vararg visitors: AstVisitor?) : this(visitors.toList()) {}
 
-    fun addVisitor(visitor: AstVisitor) {
+    public fun addVisitor(visitor: AstVisitor) {
         visitors.add(visitor)
         for (type in visitor.getAstNodeTypesToVisit()) {
             val visitorsByType = getAstVisitors(type)
@@ -45,7 +45,7 @@ class AstWalker(vararg visitors: AstVisitor) {
         }
     }
 
-    fun walkAndVisit(ast: AstNode) {
+    public fun walkAndVisit(ast: AstNode) {
         for (visitor in visitors) {
             visitor.visitFile(ast)
         }
@@ -56,7 +56,7 @@ class AstWalker(vararg visitors: AstVisitor) {
     }
 
     @Deprecated("in 1.18, use {@link #walkAndVisit(AstNode)} instead")
-    fun walkVisitAndListen(ast: AstNode, output: Any?) {
+    public fun walkVisitAndListen(ast: AstNode, output: Any?) {
         walkAndVisit(ast)
     }
 
@@ -100,7 +100,7 @@ class AstWalker(vararg visitors: AstVisitor) {
         return if (visitorsByType == null) ArrayList() else ArrayList(listOf(*visitorsByType))
     }
 
-    companion object {
+    private companion object {
         private fun leaveNode(ast: AstNode?, nodeVisitors: Array<AstVisitor>) {
             for (i in nodeVisitors.indices.reversed()) {
                 nodeVisitors[i].leaveNode(ast)

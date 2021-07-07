@@ -29,9 +29,9 @@ import java.nio.charset.Charset
 import java.nio.charset.IllegalCharsetNameException
 import java.nio.charset.UnsupportedCharsetException
 
-object MiniCToolkit {
+public object MiniCToolkit {
     @JvmStatic
-    fun main(args: Array<String>) {
+    public fun main(args: Array<String>) {
         val toolkit = Toolkit("SonarSource : MiniC : Toolkit", MiniCConfigurationModel())
         toolkit.run()
     }

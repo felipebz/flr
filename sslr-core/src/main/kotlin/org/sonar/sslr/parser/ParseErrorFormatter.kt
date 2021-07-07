@@ -33,8 +33,8 @@ import kotlin.math.min
  *
  * @since 1.16
  */
-class ParseErrorFormatter {
-    fun format(parseError: ParseError?): String {
+public class ParseErrorFormatter {
+    public fun format(parseError: ParseError?): String {
         requireNotNull(parseError)
         val inputBuffer = parseError.getInputBuffer()
         val position = inputBuffer.getPosition(parseError.getErrorIndex())
@@ -46,7 +46,7 @@ class ParseErrorFormatter {
         return sb.toString()
     }
 
-    companion object {
+    public companion object {
         /**
          * Number of lines in snippet before and after line with error.
          */

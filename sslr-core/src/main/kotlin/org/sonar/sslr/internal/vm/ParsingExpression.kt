@@ -25,9 +25,9 @@ import com.sonar.sslr.impl.matcher.Matcher
 /**
  * Parsing expression.
  */
-interface ParsingExpression : Matcher {
+public interface ParsingExpression : Matcher {
     /**
      * Compiles this expression into a sequence of instructions.
      */
-    fun compile(compiler: CompilationHandler): Array<Instruction>
+    public fun compile(compiler: CompilationHandler): Array<Instruction>
 }

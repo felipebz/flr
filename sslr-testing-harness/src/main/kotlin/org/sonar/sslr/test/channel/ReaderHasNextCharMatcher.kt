@@ -24,7 +24,7 @@ import org.hamcrest.BaseMatcher
 import org.hamcrest.Description
 import org.sonar.sslr.channel.CodeReader
 
-class ReaderHasNextCharMatcher(private val nextChar: Char) : BaseMatcher<CodeReader?>() {
+public class ReaderHasNextCharMatcher(private val nextChar: Char) : BaseMatcher<CodeReader?>() {
     override fun matches(arg0: Any?): Boolean {
         if (arg0 !is CodeReader) {
             return false

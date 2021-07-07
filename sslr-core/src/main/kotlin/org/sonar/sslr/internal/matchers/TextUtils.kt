@@ -20,9 +20,9 @@
  */
 package org.sonar.sslr.internal.matchers
 
-object TextUtils {
-    const val CR = '\r'
-    const val LF = '\n'
+public object TextUtils {
+    public const val CR: Char = '\r'
+    public const val LF: Char = '\n'
     private val ESCAPE = charArrayOf('\r', '\n', '\u000C', '\t', '"')
     private val ESCAPED = arrayOf("\\r", "\\n", "\\f", "\\t", "\\\"")
 
@@ -31,7 +31,7 @@ object TextUtils {
      * with their respective escape sequences.
      */
     @JvmStatic
-    fun escape(ch: Char): String {
+    public fun escape(ch: Char): String {
         for (i in ESCAPE.indices) {
             if (ESCAPE[i] == ch) {
                 return ESCAPED[i]
@@ -42,7 +42,7 @@ object TextUtils {
 
     // TODO Godin: can be replaced by com.google.common.base.CharMatcher.anyOf("\n\r").trimTrailingFrom(string)
     @JvmStatic
-    fun trimTrailingLineSeparatorFrom(string: String): String {
+    public fun trimTrailingLineSeparatorFrom(string: String): String {
         var last: Int = string.length - 1
         while (last >= 0) {
             if (string[last] != LF && string[last] != CR) {

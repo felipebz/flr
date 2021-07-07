@@ -27,12 +27,12 @@ package org.sonar.sslr.toolkit
  *
  * @since 1.17
  */
-interface ValidationCallback {
+public interface ValidationCallback {
     /**
      * Validate the new value candidate.
      *
      * @param newValueCandidate The value to be validated
      * @return The empty string if validation passed, else a non-empty error message
      */
-    fun validate(newValueCandidate: String): String
+    public fun validate(newValueCandidate: String): String
 }

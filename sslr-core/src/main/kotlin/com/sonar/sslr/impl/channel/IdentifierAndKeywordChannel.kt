@@ -29,7 +29,7 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 import kotlin.collections.HashMap
 
-class IdentifierAndKeywordChannel(regexp: String, caseSensitive: Boolean, vararg keywordSets: Array<out TokenType>) :
+public class IdentifierAndKeywordChannel(regexp: String, caseSensitive: Boolean, vararg keywordSets: Array<out TokenType>) :
     Channel<Lexer>() {
     private val keywordsMap: MutableMap<String?, TokenType> = HashMap()
     private val tmpBuilder = StringBuilder()

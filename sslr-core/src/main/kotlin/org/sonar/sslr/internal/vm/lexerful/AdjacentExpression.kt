@@ -23,7 +23,7 @@ package org.sonar.sslr.internal.vm.lexerful
 import org.sonar.sslr.internal.vm.Machine
 import org.sonar.sslr.internal.vm.NativeExpression
 
-class AdjacentExpression private constructor() : NativeExpression() {
+public class AdjacentExpression private constructor() : NativeExpression() {
     override fun execute(machine: Machine) {
         if (machine.index == 0) {
             machine.backtrack()
@@ -44,8 +44,8 @@ class AdjacentExpression private constructor() : NativeExpression() {
         return "Adjacent"
     }
 
-    companion object {
+    public companion object {
         @JvmField
-        val INSTANCE = AdjacentExpression()
+        public val INSTANCE: AdjacentExpression = AdjacentExpression()
     }
 }

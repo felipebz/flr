@@ -40,7 +40,7 @@ import java.util.*
  *
  * @since 1.16
  */
-class ParserAdapter<G : LexerlessGrammar>(charset: Charset, grammar: G) :
+public class ParserAdapter<G : LexerlessGrammar>(charset: Charset, grammar: G) :
     Parser<G>(Objects.requireNonNull(grammar, "grammar")) {
     private val charset: Charset = Objects.requireNonNull(charset, "charset")
     private val parseRunner: ParseRunner = ParseRunner(checkNotNull(grammar.getRootRule()))
@@ -86,7 +86,7 @@ class ParserAdapter<G : LexerlessGrammar>(charset: Charset, grammar: G) :
         throw UnsupportedOperationException()
     }
 
-    companion object {
+    public companion object {
         private fun fileToCharArray(file: File, charset: Charset): CharArray {
             return try {
                 String(Files.readAllBytes(Paths.get(file.path)), charset).toCharArray()

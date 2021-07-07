@@ -32,16 +32,16 @@ import java.util.*
  * @param validationCallback The validation callback. Note that handy ones are available out-of-the-box by the [Validators] class.
  * @since 1.17
  */
-class ConfigurationProperty @JvmOverloads constructor(
+public class ConfigurationProperty @JvmOverloads constructor(
     name: String,
     description: String,
     defaultValue: String,
     validationCallback: ValidationCallback = NO_VALIDATION
 ) {
-    val name: String
-    val description: String
+    public val name: String
+    public val description: String
 
-    var value: String = ""
+    public var value: String = ""
         set(value) {
             val errorMessage = validate(value)
             require("" == errorMessage) { "The value \"$value\" did not pass validation: $errorMessage" }
@@ -63,11 +63,11 @@ class ConfigurationProperty @JvmOverloads constructor(
         value = defaultValue
     }
 
-    fun validate(newValueCandidate: String): String {
+    public fun validate(newValueCandidate: String): String {
         return validationCallback.validate(newValueCandidate)
     }
 
-    companion object {
+    public companion object {
         private val NO_VALIDATION: ValidationCallback = object : ValidationCallback {
             override fun validate(newValueCandidate: String): String {
                 return ""

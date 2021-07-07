@@ -29,7 +29,7 @@ package org.sonar.sslr.grammar
  *
  * @since 1.18
  */
-class GrammarException : RuntimeException {
-    constructor(message: String?) : super(message)
-    constructor(cause: Throwable?, message: String?) : super(message, cause)
+public class GrammarException : RuntimeException {
+    public constructor(message: String?) : super(message)
+    public constructor(cause: Throwable?, message: String?) : super(message, cause)
 }

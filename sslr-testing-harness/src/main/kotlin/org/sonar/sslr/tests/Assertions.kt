@@ -26,13 +26,13 @@ import com.sonar.sslr.impl.Parser
 /**
  * @since 1.16
  */
-object Assertions {
+public object Assertions {
     /**
      * Creates a new instance of `[RuleAssert]`.
      * @param actual the value to be the target of the assertions methods.
      * @return the created assertion object.
      */
-    fun assertThat(actual: Rule?): RuleAssert {
+    public fun assertThat(actual: Rule?): RuleAssert {
         return RuleAssert(actual)
     }
 
@@ -42,7 +42,7 @@ object Assertions {
      * @return the created assertion object.
      */
     @JvmStatic
-    fun assertThat(actual: Parser<*>): ParserAssert {
+    public fun assertThat(actual: Parser<*>): ParserAssert {
         return ParserAssert(actual)
     }
 }

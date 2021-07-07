@@ -34,10 +34,10 @@ import org.sonar.sslr.internal.vm.MutableGrammarCompiler
  *
  * @since 1.16
  */
-class ParseRunner(rule: Rule) {
+public class ParseRunner(rule: Rule) {
     private val compiledGrammar: CompiledGrammar = MutableGrammarCompiler.compile(rule as CompilableGrammarRule)
 
-    fun parse(input: CharArray): ParsingResult {
+    public fun parse(input: CharArray): ParsingResult {
         return Machine.parse(input, compiledGrammar)
     }
 

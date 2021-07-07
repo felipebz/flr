@@ -23,9 +23,9 @@ package org.sonar.sslr.internal.vm
 import com.sonar.sslr.api.Trivia.TriviaKind
 import org.sonar.sslr.internal.matchers.Matcher
 
-class TriviaExpression(private val triviaKind: TriviaKind, private val subExpression: ParsingExpression) : Matcher,
+public class TriviaExpression(private val triviaKind: TriviaKind, private val subExpression: ParsingExpression) : Matcher,
     ParsingExpression {
-    fun getTriviaKind(): TriviaKind {
+    public fun getTriviaKind(): TriviaKind {
         return triviaKind
     }
 

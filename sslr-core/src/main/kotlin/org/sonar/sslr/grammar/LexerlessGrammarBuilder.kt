@@ -42,7 +42,7 @@ import java.util.*
  * @since 1.18
  * @see LexerfulGrammarBuilder
  */
-class LexerlessGrammarBuilder private constructor() : GrammarBuilder() {
+public class LexerlessGrammarBuilder private constructor() : GrammarBuilder() {
     private val definitions: MutableMap<GrammarRuleKey, MutableParsingRule> = HashMap()
     private var rootRuleKey: GrammarRuleKey? = null
 
@@ -72,7 +72,7 @@ class LexerlessGrammarBuilder private constructor() : GrammarBuilder() {
      * @throws GrammarException if some of rules were used, but not defined
      * @return grammar
      */
-    fun build(): LexerlessGrammar {
+    public fun build(): LexerlessGrammar {
         for (rule in definitions.values) {
             if (rule.expression == null) {
                 throw GrammarException("The rule '" + rule.ruleKey + "' hasn't been defined.")
@@ -87,7 +87,7 @@ class LexerlessGrammarBuilder private constructor() : GrammarBuilder() {
      * @param regexp  regular expression
      * @throws java.util.regex.PatternSyntaxException if the expression's syntax is invalid
      */
-    fun regexp(regexp: String): Any {
+    public fun regexp(regexp: String): Any {
         return PatternExpression(regexp)
     }
 
@@ -95,7 +95,7 @@ class LexerlessGrammarBuilder private constructor() : GrammarBuilder() {
      * Creates parsing expression - "end of input".
      * This expression succeeds only if parser reached end of input.
      */
-    fun endOfInput(): Any {
+    public fun endOfInput(): Any {
         return EndOfInputExpression.INSTANCE
     }
 
@@ -105,7 +105,7 @@ class LexerlessGrammarBuilder private constructor() : GrammarBuilder() {
      * @param e  sub-expression
      * @throws IllegalArgumentException if given argument is not a parsing expression
      */
-    fun token(tokenType: TokenType, e: Any): Any {
+    public fun token(tokenType: TokenType, e: Any): Any {
         return TokenExpression(tokenType, convertToExpression(e))
     }
 
@@ -115,7 +115,7 @@ class LexerlessGrammarBuilder private constructor() : GrammarBuilder() {
      * @param e  sub-expression
      * @throws IllegalArgumentException if given argument is not a parsing expression
      */
-    fun commentTrivia(e: Any): Any {
+    public fun commentTrivia(e: Any): Any {
         return TriviaExpression(TriviaKind.COMMENT, convertToExpression(e))
     }
 
@@ -125,7 +125,7 @@ class LexerlessGrammarBuilder private constructor() : GrammarBuilder() {
      * @param e  sub-expression
      * @throws IllegalArgumentException if given argument is not a parsing expression
      */
-    fun skippedTrivia(e: Any): Any {
+    public fun skippedTrivia(e: Any): Any {
         return TriviaExpression(TriviaKind.SKIPPED_TEXT, convertToExpression(e))
     }
 
@@ -150,9 +150,9 @@ class LexerlessGrammarBuilder private constructor() : GrammarBuilder() {
         }
     }
 
-    companion object {
+    public companion object {
         @JvmStatic
-        fun create(): LexerlessGrammarBuilder {
+        public fun create(): LexerlessGrammarBuilder {
             return LexerlessGrammarBuilder()
         }
     }

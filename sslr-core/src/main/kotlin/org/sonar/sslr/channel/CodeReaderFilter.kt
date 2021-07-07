@@ -29,13 +29,13 @@ import java.io.Reader
  * several filters to a CodeReader: they will be called one after another, following the declaration order in the CodeReader constructor, to
  * sequentially filter the character flow.
  */
-abstract class CodeReaderFilter<O : Any> {
+public abstract class CodeReaderFilter<O : Any> {
     private lateinit var reader: Reader
     private lateinit var output: O
     private var configuration: CodeReaderConfiguration? = null
 
-    constructor()
-    constructor(output: O) {
+    public constructor()
+    public constructor(output: O) {
         this.output = output
     }
 
@@ -44,7 +44,7 @@ abstract class CodeReaderFilter<O : Any> {
      *
      * @return the reader
      */
-    fun getReader(): Reader {
+    public fun getReader(): Reader {
         return reader
     }
 
@@ -54,7 +54,7 @@ abstract class CodeReaderFilter<O : Any> {
      * @param reader
      * the reader
      */
-    open fun setReader(reader: Reader) {
+    public open fun setReader(reader: Reader) {
         this.reader = reader
     }
 
@@ -63,7 +63,7 @@ abstract class CodeReaderFilter<O : Any> {
      *
      * @return the output
      */
-    fun getOutput(): O {
+    public fun getOutput(): O {
         return output
     }
 
@@ -73,7 +73,7 @@ abstract class CodeReaderFilter<O : Any> {
      * @param output
      * the output to set
      */
-    fun setOutput(output: O) {
+    public fun setOutput(output: O) {
         this.output = output
     }
 
@@ -82,7 +82,7 @@ abstract class CodeReaderFilter<O : Any> {
      *
      * @return the configuration
      */
-    fun getConfiguration(): CodeReaderConfiguration {
+    public fun getConfiguration(): CodeReaderConfiguration {
         return checkNotNull(configuration)
     }
 
@@ -92,7 +92,7 @@ abstract class CodeReaderFilter<O : Any> {
      * @param configuration
      * the configuration to set
      */
-    fun setConfiguration(configuration: CodeReaderConfiguration?) {
+    public fun setConfiguration(configuration: CodeReaderConfiguration?) {
         this.configuration = configuration
     }
 
@@ -118,5 +118,5 @@ abstract class CodeReaderFilter<O : Any> {
      * If an I/O error occurs
      */
     @Throws(IOException::class)
-    abstract fun read(filteredBuffer: CharArray, offset: Int, length: Int): Int
+    public abstract fun read(filteredBuffer: CharArray, offset: Int, length: Int): Int
 }

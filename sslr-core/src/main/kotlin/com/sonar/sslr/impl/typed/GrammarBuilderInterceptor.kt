@@ -31,7 +31,7 @@ import org.sonar.sslr.internal.vm.SequenceExpression
 import java.lang.reflect.Method
 import java.util.*
 
-class GrammarBuilderInterceptor<T>(private val b: LexerlessGrammarBuilder) : MethodInterceptor,
+public class GrammarBuilderInterceptor<T>(private val b: LexerlessGrammarBuilder) : MethodInterceptor,
     GrammarBuilder<T?>, NonterminalBuilder<Any?> {
     private val mappedRuleKeys: MutableSet<GrammarRuleKey> = HashSet()
     private val methodToRuleKey: MutableMap<Method?, GrammarRuleKey?> = HashMap()
@@ -118,7 +118,7 @@ class GrammarBuilderInterceptor<T>(private val b: LexerlessGrammarBuilder) : Met
         push(DelayedRuleInvocationExpression(b, grammarRuleKey))
     }
 
-    fun addAction(method: Method, stackElements: Int) {
+    public fun addAction(method: Method, stackElements: Int) {
         method.isAccessible = true
         val grammarRuleKey: GrammarRuleKey = DummyGrammarRuleKey(method)
         actions[grammarRuleKey] = method
@@ -143,27 +143,27 @@ class GrammarBuilderInterceptor<T>(private val b: LexerlessGrammarBuilder) : Met
         expressionStack.push(expression)
     }
 
-    fun actionForRuleKey(ruleKey: Any?): Method? {
+    public fun actionForRuleKey(ruleKey: Any?): Method? {
         return actions[ruleKey]
     }
 
-    fun ruleKeyForMethod(method: Method?): GrammarRuleKey? {
+    public fun ruleKeyForMethod(method: Method?): GrammarRuleKey? {
         return methodToRuleKey[method]
     }
 
-    fun hasMethodForRuleKey(ruleKey: Any?): Boolean {
+    public fun hasMethodForRuleKey(ruleKey: Any?): Boolean {
         return mappedRuleKeys.contains(ruleKey)
     }
 
-    fun isOptionalRule(ruleKey: Any?): Boolean {
+    public fun isOptionalRule(ruleKey: Any?): Boolean {
         return optionals.contains(ruleKey)
     }
 
-    fun isOneOrMoreRule(ruleKey: Any?): Boolean {
+    public fun isOneOrMoreRule(ruleKey: Any?): Boolean {
         return oneOrMores.contains(ruleKey)
     }
 
-    fun isZeroOrMoreRule(ruleKey: Any?): Boolean {
+    public fun isZeroOrMoreRule(ruleKey: Any?): Boolean {
         return zeroOrMores.contains(ruleKey)
     }
 

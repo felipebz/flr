@@ -33,7 +33,7 @@ import java.util.regex.Pattern
  *
  * @see RegexpChannelBuilder
  */
-class RegexpChannel(private val type: TokenType, private val regexp: String) : Channel<Lexer>() {
+public class RegexpChannel(private val type: TokenType, private val regexp: String) : Channel<Lexer>() {
     private val tmpBuilder = StringBuilder()
     private val matcher: Matcher = Pattern.compile(regexp).matcher("")
     private val tokenBuilder: Token.Builder = Token.builder()

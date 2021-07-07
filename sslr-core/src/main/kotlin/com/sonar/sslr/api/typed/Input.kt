@@ -27,17 +27,17 @@ import java.util.*
 /**
  * @since 1.21
  */
-class Input @JvmOverloads constructor(private val inputChars: CharArray, private val uri: URI = FAKE_URI) {
+public class Input @JvmOverloads constructor(private val inputChars: CharArray, private val uri: URI = FAKE_URI) {
     private val newLineIndexes: IntArray
-    fun input(): CharArray {
+    public fun input(): CharArray {
         return inputChars
     }
 
-    fun uri(): URI {
+    public fun uri(): URI {
         return uri
     }
 
-    fun substring(from: Int, to: Int): String {
+    public fun substring(from: Int, to: Int): String {
         val sb = StringBuilder()
         for (i in from until to) {
             sb.append(inputChars[i])
@@ -45,7 +45,7 @@ class Input @JvmOverloads constructor(private val inputChars: CharArray, private
         return sb.toString()
     }
 
-    fun lineAndColumnAt(index: Int): IntArray {
+    public fun lineAndColumnAt(index: Int): IntArray {
         val result = IntArray(2)
         result[0] = lineAt(index)
         result[1] = index - lineStartIndex(result[0]) + 1
@@ -61,7 +61,7 @@ class Input @JvmOverloads constructor(private val inputChars: CharArray, private
         return if (line == 1) 0 else newLineIndexes[line - 2]
     }
 
-    companion object {
+    public companion object {
         private val FAKE_URI = File("tests://unittests").toURI()
 
         /**

@@ -28,11 +28,11 @@ import org.junit.ComparisonFailure
  *
  * @since 1.16
  */
-class ParsingResultComparisonFailure(override val message: String, expected: String?, actual: String?) :
+public class ParsingResultComparisonFailure(override val message: String, expected: String?, actual: String?) :
     ComparisonFailure(
         message, expected, actual
     ) {
-    constructor(expected: String?, actual: String?) : this(
+    public constructor(expected: String?, actual: String?) : this(
         "$expected\n$actual", expected, actual
     )
 }

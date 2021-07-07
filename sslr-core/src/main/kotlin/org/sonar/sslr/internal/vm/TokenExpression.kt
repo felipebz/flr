@@ -23,9 +23,9 @@ package org.sonar.sslr.internal.vm
 import com.sonar.sslr.api.TokenType
 import org.sonar.sslr.internal.matchers.Matcher
 
-class TokenExpression(private val tokenType: TokenType, private val subExpression: ParsingExpression) : Matcher,
+public class TokenExpression(private val tokenType: TokenType, private val subExpression: ParsingExpression) : Matcher,
     ParsingExpression {
-    fun getTokenType(): TokenType {
+    public fun getTokenType(): TokenType {
         return tokenType
     }
 
@@ -47,11 +47,11 @@ class TokenExpression(private val tokenType: TokenType, private val subExpressio
         return "Token $tokenType[$subExpression]"
     }
 
-    companion object {
+    public companion object {
         /**
          * Helper method to reduce duplication between [TokenExpression] and [TriviaExpression].
          */
-        fun compile(
+        public fun compile(
             compiler: CompilationHandler,
             expression: Matcher,
             subExpression: ParsingExpression

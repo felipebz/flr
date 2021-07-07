@@ -20,7 +20,7 @@
  */
 package org.sonar.sslr.internal.vm
 
-class ErrorLocatingHandler : MachineHandler {
+public class ErrorLocatingHandler : MachineHandler {
     private var errorIndex = -1
     override fun onBacktrack(machine: Machine) {
         if (errorIndex < machine.index) {
@@ -28,7 +28,7 @@ class ErrorLocatingHandler : MachineHandler {
         }
     }
 
-    fun getErrorIndex(): Int {
+    public fun getErrorIndex(): Int {
         return errorIndex
     }
 }

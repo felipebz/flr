@@ -20,8 +20,8 @@
  */
 package org.sonar.sslr.internal.vm
 
-open class CompilationHandler {
-    open fun compile(expression: ParsingExpression): Array<Instruction> {
+public open class CompilationHandler {
+    public open fun compile(expression: ParsingExpression): Array<Instruction> {
         return expression.compile(this)
     }
 }

@@ -25,7 +25,7 @@ import com.sonar.sslr.impl.xpath.AstNodeNavigator
 import org.jaxen.BaseXPath
 import org.jaxen.JaxenException
 
-class AstNodeXPathQuery<T> private constructor(xpath: String) {
+public class AstNodeXPathQuery<T> private constructor(xpath: String) {
     private val astNodeNavigator = AstNodeNavigator()
     private var expression: BaseXPath = try {
         BaseXPath(xpath, astNodeNavigator)
@@ -50,7 +50,7 @@ class AstNodeXPathQuery<T> private constructor(xpath: String) {
      * The AstNode on which to evaluate the query against to.
      * @return The first result or null if there was no result.
      */
-    fun selectSingleNode(astNode: AstNode): T {
+    public fun selectSingleNode(astNode: AstNode): T {
         return try {
             astNodeNavigator.reset()
             expression.selectSingleNode(astNode) as T
@@ -76,7 +76,7 @@ class AstNodeXPathQuery<T> private constructor(xpath: String) {
      * The AstNode on which to evaluate the query against to.
      * @return The list of resulting elements, empty when no result available.
      */
-    fun selectNodes(astNode: AstNode): List<T> {
+    public fun selectNodes(astNode: AstNode): List<T> {
         return try {
             astNodeNavigator.reset()
             expression.selectNodes(astNode) as List<T>
@@ -85,7 +85,7 @@ class AstNodeXPathQuery<T> private constructor(xpath: String) {
         }
     }
 
-    companion object {
+    public companion object {
         /**
          * Creates a compiled XPath query, which can be evaluated multiple times on different AstNode.
          *
@@ -94,7 +94,7 @@ class AstNodeXPathQuery<T> private constructor(xpath: String) {
          * @return The compiled XPath query
          */
         @JvmStatic
-        fun <E> create(xpath: String): AstNodeXPathQuery<E> {
+        public fun <E> create(xpath: String): AstNodeXPathQuery<E> {
             return AstNodeXPathQuery(xpath)
         }
     }

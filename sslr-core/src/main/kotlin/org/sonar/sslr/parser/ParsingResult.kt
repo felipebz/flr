@@ -31,27 +31,27 @@ import org.sonar.sslr.internal.matchers.ParseNode
  *
  * @since 1.16
  */
-class ParsingResult(
+public class ParsingResult(
     private val inputBuffer: InputBuffer,
     private val matched: Boolean,
     private val parseTreeRoot: ParseNode?,
     private val parseError: ParseError?
 ) {
 
-    fun getInputBuffer(): InputBuffer {
+    public fun getInputBuffer(): InputBuffer {
         return inputBuffer
     }
 
-    fun isMatched(): Boolean {
+    public fun isMatched(): Boolean {
         return matched
     }
 
-    fun getParseError(): ParseError? {
+    public fun getParseError(): ParseError? {
         return parseError
     }
 
     // @VisibleForTesting
-    fun getParseTreeRoot(): ParseNode {
+    public fun getParseTreeRoot(): ParseNode {
         return checkNotNull(parseTreeRoot)
     }
 

@@ -25,12 +25,12 @@ import org.sonar.sslr.grammar.GrammarRuleKey
 import org.sonar.sslr.grammar.LexerlessGrammarBuilder
 import org.sonar.sslr.grammar.LexerlessGrammarBuilder.Companion.create
 
-enum class JsonLexer : GrammarRuleKey {
+public enum class JsonLexer : GrammarRuleKey {
     JSON, OBJECT, ARRAY, VALUE, TRUE, FALSE, NULL, STRING, NUMBER, LCURLYBRACE, RCURLYBRACE, LBRACKET, RBRACKET, COMMA, COLON, EOF, WHITESPACE;
 
-    companion object {
+    public companion object {
         @JvmStatic
-        fun createGrammarBuilder(): LexerlessGrammarBuilder {
+        public fun createGrammarBuilder(): LexerlessGrammarBuilder {
             val b = create()
             punctuator(b, LCURLYBRACE, "{")
             punctuator(b, RCURLYBRACE, "}")

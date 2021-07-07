@@ -22,12 +22,12 @@ package org.sonar.sslr.internal.vm
 
 import org.sonar.sslr.internal.matchers.MatcherPathElement
 
-class ErrorTreeNode {
-    var pathElement: MatcherPathElement? = null
-    var children: MutableList<ErrorTreeNode> = ArrayList()
+public class ErrorTreeNode {
+    public var pathElement: MatcherPathElement? = null
+    public var children: MutableList<ErrorTreeNode> = ArrayList()
 
-    companion object {
-        fun buildTree(paths: List<List<MatcherPathElement>>): ErrorTreeNode {
+    public companion object {
+        public fun buildTree(paths: List<List<MatcherPathElement>>): ErrorTreeNode {
             val root = ErrorTreeNode()
             root.pathElement = paths[0][0]
             for (path in paths) {

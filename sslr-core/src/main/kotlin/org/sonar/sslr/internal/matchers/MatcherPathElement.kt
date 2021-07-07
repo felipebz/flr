@@ -22,16 +22,16 @@ package org.sonar.sslr.internal.matchers
 
 import java.util.*
 
-class MatcherPathElement(private val matcher: Matcher, private val startIndex: Int, private val endIndex: Int) {
-    fun getMatcher(): Matcher {
+public class MatcherPathElement(private val matcher: Matcher, private val startIndex: Int, private val endIndex: Int) {
+    public fun getMatcher(): Matcher {
         return matcher
     }
 
-    fun getStartIndex(): Int {
+    public fun getStartIndex(): Int {
         return startIndex
     }
 
-    fun getEndIndex(): Int {
+    public fun getEndIndex(): Int {
         return endIndex
     }
 

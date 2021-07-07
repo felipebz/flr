@@ -28,20 +28,20 @@ import org.sonar.sslr.internal.vm.Instruction
 import org.sonar.sslr.internal.vm.ParsingExpression
 import java.lang.reflect.Method
 
-class DelayedRuleInvocationExpression : ParsingExpression {
+public class DelayedRuleInvocationExpression : ParsingExpression {
     private val b: LexerlessGrammarBuilder
     private val grammarBuilderInterceptor: GrammarBuilderInterceptor<*>?
     private val method: Method?
     private var ruleKey: GrammarRuleKey?
 
-    constructor(b: LexerlessGrammarBuilder, ruleKey: GrammarRuleKey?) {
+    public constructor(b: LexerlessGrammarBuilder, ruleKey: GrammarRuleKey?) {
         this.b = b
         grammarBuilderInterceptor = null
         method = null
         this.ruleKey = ruleKey
     }
 
-    constructor(b: LexerlessGrammarBuilder, grammarBuilderInterceptor: GrammarBuilderInterceptor<*>?, method: Method?) {
+    public constructor(b: LexerlessGrammarBuilder, grammarBuilderInterceptor: GrammarBuilderInterceptor<*>?, method: Method?) {
         this.b = b
         this.grammarBuilderInterceptor = grammarBuilderInterceptor
         this.method = method
@@ -72,7 +72,7 @@ class DelayedRuleInvocationExpression : ParsingExpression {
         }
     }
 
-    companion object {
+    public companion object {
         private val DEFINITIONS_FIELD = ReflectionUtils.getField(LexerlessGrammarBuilder::class.java, "definitions")
     }
 }
