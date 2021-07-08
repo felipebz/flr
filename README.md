@@ -10,19 +10,19 @@ FLR is a fork of [SonarSource Language Recognizer](https://github.com/SonarSourc
 Here are the main features of FLR:
 
 * Easy integration and use
-   * Just add a dependency on a jar file (or several jars, according to what you want to use: lexer/parser, xpath, ...)
+   * Just add a dependency on a jar file (or several jars, according to what you want to use: lexer/parser, toolkit...)
    * No special step to add to the build process
    * No "untouchable" generated code
 * Everything in Java
    * Definition of grammar and lexer directly in code, using Java or Kotlin
    * No break in IDE support (syntax highlighting, code navigation, refactoring, etc)
   
-### FLR in Action
+### FLR in action
 If you want to start working with FLR, you must be familiar with the following standard concepts: Lexical Analysis, Parsing Expression Grammar and AST (Abstract Syntax Tree). 
 
 FLR also comes with a MiniC language which has been created to easily and simply test all FLR features. This MiniC language can be a good starting point for a beginner to understand how to implement/define the different mandatory layers to analyse a language:
 
-* [Lexer](https://github.com/felipebz/flr/blob/main/sslr-testing-harness/src/main/kotlin/com/sonar/sslr/test/minic/MiniCLexer.kt)
-* [Grammar](https://github.com/felipebz/flr/blob/main/sslr-testing-harness/src/main/kotlin/com/sonar/sslr/test/minic/MiniCGrammar.kt)
-* [Parser](https://github.com/felipebz/flr/blob/main/sslr-testing-harness/src/main/kotlin/com/sonar/sslr/test/minic/MiniCParser.kt)
-* [Toolkit](https://github.com/felipebz/flr/blob/main/sslr-testing-harness/src/main/kotlin/com/sonar/sslr/test/minic/MiniCToolkit.kt)
+* [Lexer](https://github.com/felipebz/flr/blob/main/flr-testing-harness/src/main/kotlin/com/sonar/sslr/test/minic/MiniCLexer.kt)
+* [Grammar](https://github.com/felipebz/flr/blob/main/flr-testing-harness/src/main/kotlin/com/sonar/sslr/test/minic/MiniCGrammar.kt)
+* [Parser](https://github.com/felipebz/flr/blob/main/flr-testing-harness/src/main/kotlin/com/sonar/sslr/test/minic/MiniCParser.kt)
+* [Toolkit](https://github.com/felipebz/flr/blob/main/flr-testing-harness/src/main/kotlin/com/sonar/sslr/test/minic/MiniCToolkit.kt)
