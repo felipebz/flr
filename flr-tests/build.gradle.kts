@@ -1,7 +1,7 @@
 dependencies {
-    testImplementation(project(":sslr-core"))
-    testImplementation(project(":sslr-xpath"))
-    testImplementation(project(":sslr-testing-harness"))
+    testImplementation(project(":flr-core"))
+    testImplementation(project(":flr-xpath"))
+    testImplementation(project(":flr-testing-harness"))
     testImplementation("commons-io:commons-io:2.4")
     testImplementation("org.easytesting:fest-assert:1.4")
     testImplementation("org.hamcrest:hamcrest:2.2")
@@ -10,4 +10,4 @@ dependencies {
     testImplementation("org.mockito.kotlin:mockito-kotlin:3.2.0")
 }
 
-description = "SonarSource :: Language Recognizer :: Tests"
+description = "FLR :: Tests"

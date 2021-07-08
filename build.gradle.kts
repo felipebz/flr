@@ -24,7 +24,7 @@ allprojects {
         withSourcesJar()
     }
 
-    group = "org.sonarsource.sslr"
+    group = "com.felipebz.flr"
     version = "1.24-SNAPSHOT"
 }
 
@@ -79,31 +79,24 @@ subprojects {
                 pom {
                     description.set(project.description)
                     organization {
-                        name.set("SonarSource")
-                        url.set("http://www.sonarsource.com")
+                        name.set("Felipe Zorzo")
+                        url.set("https://felipezorzo.com.br")
                     }
                     licenses {
                         license {
                             name.set("GNU LGPL 3")
-                            url.set("http://www.gnu.org/licenses/lgpl.txt")
+                            url.set("https://www.gnu.org/licenses/lgpl.txt")
                             distribution.set("repo")
                         }
                     }
                     scm {
-                        url.set("https://github.com/SonarSource/sslr")
+                        url.set("https://github.com/felipebz/flr")
                     }
                     developers {
                         developer {
-                            id.set("dbolkensteyn")
-                            name.set("Dinesh Bolkensteyn")
-                            email.set("dinesh.bolkensteyn@sonarsource.com")
-                            organization.set("SonarSource")
-                        }
-                        developer {
-                            id.set("godin")
-                            name.set("Evgeny Mandrikov")
-                            email.set("evgeny.mandrikov@sonarsource.com")
-                            organization.set("SonarSource")
+                            id.set("felipebz")
+                            name.set("Felipe Zorzo")
+                            url.set("https://felipezorzo.com.br")
                         }
                     }
                 }

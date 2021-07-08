@@ -9,4 +9,4 @@ dependencies {
     testImplementation("org.mockito.kotlin:mockito-kotlin:3.2.0")
 }
 
-description = "SonarSource :: Language Recognizer :: Core"
+description = "FLR :: Core"

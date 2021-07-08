@@ -32,7 +32,7 @@ import java.nio.charset.UnsupportedCharsetException
 public object MiniCToolkit {
     @JvmStatic
     public fun main(args: Array<String>) {
-        val toolkit = Toolkit("SonarSource : MiniC : Toolkit", MiniCConfigurationModel())
+        val toolkit = Toolkit("MiniC : Toolkit", MiniCConfigurationModel())
         toolkit.run()
     }
 
