@@ -29,13 +29,12 @@ import java.nio.charset.Charset
 import java.nio.charset.IllegalCharsetNameException
 import java.nio.charset.UnsupportedCharsetException
 
-public object MiniCToolkit {
-    @JvmStatic
-    public fun main(args: Array<String>) {
-        val toolkit = Toolkit("MiniC : Toolkit", MiniCConfigurationModel())
-        toolkit.run()
-    }
+public fun main() {
+    val toolkit = Toolkit("MiniC : Toolkit", MiniCToolkit.MiniCConfigurationModel())
+    toolkit.run()
+}
 
+public object MiniCToolkit {
     internal class MiniCConfigurationModel : AbstractConfigurationModel() {
         private val charsetProperty: ConfigurationProperty =
             ConfigurationProperty("Charset", "Charset used when opening files.", "UTF-8", object : ValidationCallback {

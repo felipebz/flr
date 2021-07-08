@@ -26,12 +26,12 @@ import java.io.File
 
 public object MiniCParser {
     private val P = create()
-    @JvmStatic
+
     public fun create(): Parser<Grammar> {
         return Parser.builder(MiniCGrammar.create()).withLexer(MiniCLexer.create()).build()
     }
 
-    @JvmStatic
+
     public fun parseFile(filePath: String): AstNode {
         val file = File(MiniCParser::class.java.getResource(filePath).path)
         if (!file.exists()) {
@@ -40,7 +40,7 @@ public object MiniCParser {
         return P.parse(file)
     }
 
-    @JvmStatic
+
     public fun parseString(source: String): AstNode {
         return P.parse(source)
     }

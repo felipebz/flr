@@ -30,7 +30,7 @@ import com.sonar.sslr.impl.channel.RegexpChannelBuilder.commentRegexp
 import com.sonar.sslr.impl.channel.RegexpChannelBuilder.regexp
 
 public object MiniCLexer {
-    @JvmStatic
+
     public fun create(): Lexer {
         return Lexer.builder()
             .withFailIfNoChannelToConsumeOneCharacter(true)
@@ -45,10 +45,7 @@ public object MiniCLexer {
     public enum class Literals : TokenType {
         INTEGER;
 
-        override val value: String
-            get() {
-                return name
-            }
+        override val value: String = name
 
         override fun hasToBeSkippedFromAst(node: AstNode?): Boolean {
             return false
@@ -56,10 +53,26 @@ public object MiniCLexer {
     }
 
     public enum class Punctuators(override val value: String) : TokenType {
-        PAREN_L("("), PAREN_R(")"), BRACE_L("{"), BRACE_R("}"), EQ("="), COMMA(","), SEMICOLON(";"), ADD("+"), SUB("-"), MUL(
-            "*"
-        ),
-        DIV("/"), EQEQ("=="), NE("!="), LT("<"), LTE("<="), GT(">"), GTE(">="), INC("++"), DEC("--"), HASH("#");
+        PAREN_L("("),
+        PAREN_R(")"),
+        BRACE_L("{"),
+        BRACE_R("}"),
+        EQ("="),
+        COMMA(","),
+        SEMICOLON(";"),
+        ADD("+"),
+        SUB("-"),
+        MUL("*"),
+        DIV("/"),
+        EQEQ("=="),
+        NE("!="),
+        LT("<"),
+        LTE("<="),
+        GT(">"),
+        GTE(">="),
+        INC("++"),
+        DEC("--"),
+        HASH("#");
 
         override fun hasToBeSkippedFromAst(node: AstNode?): Boolean {
             return false
@@ -67,18 +80,18 @@ public object MiniCLexer {
     }
 
     public enum class Keywords(override val value: String) : TokenType {
-        STRUCT("struct"), INT("int"), VOID("void"), RETURN("return"), IF("if"), ELSE("else"), WHILE("while"), CONTINUE("continue"), BREAK(
-            "break"
-        );
+        STRUCT("struct"),
+        INT("int"),
+        VOID("void"),
+        RETURN("return"),
+        IF("if"),
+        ELSE("else"),
+        WHILE("while"),
+        CONTINUE("continue"),
+        BREAK("break");
 
         override fun hasToBeSkippedFromAst(node: AstNode?): Boolean {
             return false
-        }
-
-        public companion object {
-            public fun keywordValues(): Array<String> {
-                return values().map { it.value }.toTypedArray()
-            }
         }
     }
 }
