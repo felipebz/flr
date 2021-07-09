@@ -21,10 +21,13 @@ steps:
   - task: Gradle@2
     inputs:
       gradleWrapperFile: 'gradlew'
-      tasks: 'build jacocoTestReport'
+      tasks: 'build jacocoTestReport publish'
       options: '--build-cache -Dsonar.branch.name='
       jdkVersionOption: 1.11
       sonarQubeRunAnalysis: true
+    env:
+      DEPLOY_USERNAME: $(DEPLOY_USERNAME)
+      DEPLOY_TOKEN: $(DEPLOY_TOKEN)
 
   - script: |
       # stop the Gradle daemon to ensure no files are left open (impacting the save cache operation later)
