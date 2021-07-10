@@ -34,9 +34,9 @@ import javax.swing.text.DefaultCaret
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter
 import javax.swing.tree.*
 
-public class ToolkitViewImpl(presenter: ToolkitPresenter) : JFrame(), ToolkitView {
+internal class ToolkitViewImpl(presenter: ToolkitPresenter) : JFrame(), ToolkitView {
     @Transient
-    public val presenter: ToolkitPresenter
+    val presenter: ToolkitPresenter
     private val tabbedPane = JTabbedPane()
     private val astTree = JTree()
     private val astTreeScrollPane = JScrollPane(astTree)
@@ -388,7 +388,7 @@ public class ToolkitViewImpl(presenter: ToolkitPresenter) : JFrame(), ToolkitVie
         tabbedPane.selectedComponent = configurationScrollPane
     }
 
-    public companion object {
+    companion object {
         private const val serialVersionUID = 1L
         private val EMPTY_TREE_MODEL: TreeModel = DefaultTreeModel(null)
         private fun getTreeNode(astNode: AstNode): DefaultMutableTreeNode {

@@ -12,9 +12,9 @@
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ * Lesser General License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
+ * You should have received a copy of the GNU Lesser General License
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
@@ -30,159 +30,159 @@ import java.io.File
  * Note that *none* of the methods here-under should generate *any* event back to the presenter.
  * Only end-user interactions are supposed to generate events.
  */
-public interface ToolkitView {
+internal interface ToolkitView {
     /**
      * Launch the application.
      */
-    public fun run()
+    fun run()
 
     /**
      * Set the title of the application.
      *
      * @param title
      */
-    public fun setTitle(title: String?)
+    fun setTitle(title: String?)
 
     /**
      * Prompt the user for a file to parse and return it.
      *
      * @return The file to parse, or null if no file was picked
      */
-    public fun pickFileToParse(): File?
+    fun pickFileToParse(): File?
 
     /**
      * Display the given HTML highlighted source code in the source code editor.
      * Scrollbars state is undefined after a call to this method.
      *
-     * @param htmlHighlightedSourceCode The HTML highlighted source code
+     * @param newSourceCode The HTML highlighted source code
      */
-    public fun displaySourceCode(newSourceCode: String)
+    fun displaySourceCode(newSourceCode: String)
 
     /**
      * Display the abstract syntax tree view starting from a given node.
      *
      * @param astNode The root AST node or null if no abstract syntax tree must be shown
      */
-    public fun displayAst(astNode: AstNode?)
+    fun displayAst(astNode: AstNode?)
 
     /**
      * Display the given string in the XML view.
      *
      * @param xml The string to display
      */
-    public fun displayXml(xml: String)
+    fun displayXml(xml: String)
 
     /**
      * Get the current source code editor scrollbars' position point.
      *
      * @return The point
      */
-    public val sourceCodeScrollbarPosition: Point
+    val sourceCodeScrollbarPosition: Point
 
     /**
      * Scroll the source code editor in order to make the given point visible.
      *
      * @param point to make visible
      */
-    public fun scrollSourceCodeTo(point: Point)
+    fun scrollSourceCodeTo(point: Point)
 
     /**
      * Get the source code currently entered in the source code editor.
      *
      * @return The source code
      */
-    public val sourceCode: String?
+    val sourceCode: String?
 
     /**
      * Get the text currently entered in the XPath field.
      *
      * @return The XPath field text
      */
-    public val xPath: String?
+    val xPath: String?
 
     /**
      * Select the given AST node in the abstract syntax tree view.
      *
      * @param astNode The AST node to select, null will lead to a no operation
      */
-    public fun selectAstNode(astNode: AstNode?)
+    fun selectAstNode(astNode: AstNode?)
 
     /**
      * Clear all the selections in the abstract syntax tree view.
      */
-    public fun clearAstSelections()
+    fun clearAstSelections()
 
     /**
      * Scroll the abstract syntax tree view in order to make the given AST node visible.
      *
      * @param astNode The AST node to make visible, null will lead to a no operation
      */
-    public fun scrollAstTo(astNode: AstNode?)
+    fun scrollAstTo(astNode: AstNode?)
 
     /**
      * Highlight the given AST node in the source code editor.
      *
      * @param astNode The AST node to highlight
      */
-    public fun highlightSourceCode(astNode: AstNode)
+    fun highlightSourceCode(astNode: AstNode)
 
     /**
      * Clear all the highlights in the source code editor.
      */
-    public fun clearSourceCodeHighlights()
+    fun clearSourceCodeHighlights()
 
     /**
      * Scroll the source code editor in order to make the given AST node visible.
      *
      * @param astNode The AST node to make visible, null will lead to a no operation
      */
-    public fun scrollSourceCodeTo(astNode: AstNode?)
+    fun scrollSourceCodeTo(astNode: AstNode?)
 
     /**
      * Disable the XPath evaluate button.
      */
-    public fun disableXPathEvaluateButton()
+    fun disableXPathEvaluateButton()
 
     /**
      * Enable the XPath evaluate button.
      */
-    public fun enableXPathEvaluateButton()
+    fun enableXPathEvaluateButton()
 
     /**
      * Get the AST node which follows the current source code editor text cursor position.
      *
      * @return The following AST node, or null if there is no such node
      */
-    public val astNodeFollowingCurrentSourceCodeTextCursorPosition: AstNode?
+    val astNodeFollowingCurrentSourceCodeTextCursorPosition: AstNode?
 
     /**
      * Get the list of nodes currently selected in the abstract syntax tree view.
      *
      * @return The list of selected AST nodes
      */
-    public val selectedAstNodes: List<AstNode>
+    val selectedAstNodes: List<AstNode>
 
     /**
      * Append the given message to the console view.
      *
      * @param message The message to append
      */
-    public fun appendToConsole(message: String?)
+    fun appendToConsole(message: String?)
 
     /**
      * Set the focus on the console view.
      */
-    public fun setFocusOnConsoleView()
+    fun setFocusOnConsoleView()
 
     /**
      * Set the focus on the abstract syntax tree view.
      */
-    public fun setFocusOnAbstractSyntaxTreeView()
+    fun setFocusOnAbstractSyntaxTreeView()
 
     /**
      * Clear the console.
      */
-    public fun clearConsole()
+    fun clearConsole()
 
     /**
      * Add a new configuration property to the configuration tab.
@@ -190,7 +190,7 @@ public interface ToolkitView {
      * @param name
      * @param description
      */
-    public fun addConfigurationProperty(name: String, description: String)
+    fun addConfigurationProperty(name: String, description: String)
 
     /**
      * Get the value currently entered in the configuration property field identified by the given name.
@@ -198,7 +198,7 @@ public interface ToolkitView {
      * @param name The name of the configuration property
      * @return The current value of the field
      */
-    public fun getConfigurationPropertyValue(name: String): String
+    fun getConfigurationPropertyValue(name: String): String
 
     /**
      * Set the current value of the configuration property field identified by the given name.
@@ -206,7 +206,7 @@ public interface ToolkitView {
      * @param name The name of the configuration property
      * @param value The value to be set
      */
-    public fun setConfigurationPropertyValue(name: String, value: String)
+    fun setConfigurationPropertyValue(name: String, value: String)
 
     /**
      * Set the error message of the configuration property identified by the given name.
@@ -214,17 +214,17 @@ public interface ToolkitView {
      * @param name The name of the configuration property
      * @param errorMessage The error message
      */
-    public fun setConfigurationPropertyErrorMessage(name: String, errorMessage: String)
+    fun setConfigurationPropertyErrorMessage(name: String, errorMessage: String)
 
     /**
      * Set the focus on the configuration field identified by the given name.
      *
      * @param name
      */
-    public fun setFocusOnConfigurationPropertyField(name: String)
+    fun setFocusOnConfigurationPropertyField(name: String)
 
     /**
      * Set the focus on the configuration view.
      */
-    public fun setFocusOnConfigurationView()
+    fun setFocusOnConfigurationView()
 }

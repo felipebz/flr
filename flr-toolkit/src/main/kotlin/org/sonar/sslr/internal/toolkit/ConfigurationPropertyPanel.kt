@@ -27,10 +27,10 @@ import java.awt.Color
 import java.io.Serializable
 import javax.swing.*
 
-public class ConfigurationPropertyPanel(name: String?, description: String?) : Serializable {
-    public val panel: JPanel = JPanel(GridBagLayout())
-    public val valueTextField: JTextField
-    public val errorMessageLabel: JLabel
+internal class ConfigurationPropertyPanel(name: String?, description: String?) : Serializable {
+    val panel: JPanel = JPanel(GridBagLayout())
+    val valueTextField: JTextField
+    val errorMessageLabel: JLabel
 
     init {
         val constraints = GridBagConstraints()
@@ -53,7 +53,7 @@ public class ConfigurationPropertyPanel(name: String?, description: String?) : S
         panel.add(Box.createGlue(), constraints2)
     }
 
-    public companion object {
+    companion object {
         private const val serialVersionUID = 1L
     }
 }

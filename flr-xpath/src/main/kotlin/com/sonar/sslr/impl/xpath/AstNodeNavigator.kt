@@ -27,10 +27,10 @@ import java.lang.UnsupportedOperationException
 import org.jaxen.util.SingleObjectIterator
 import java.util.*
 
-public open class AstNodeNavigator : DefaultNavigator() {
+internal open class AstNodeNavigator : DefaultNavigator() {
     @Transient
     private var documentNode: AstNode? = null
-    public fun reset() {
+    fun reset() {
         documentNode = null
     }
 
@@ -224,11 +224,9 @@ public open class AstNodeNavigator : DefaultNavigator() {
         }
     }
 
-    /* Unknown */
     override fun parseXPath(arg0: String?): XPath? {
         return null
     }
 
-    // @VisibleForTesting
-    public open class Attribute(public open val name: String, public open val astNode: AstNode)
+    open class Attribute(open val name: String, open val astNode: AstNode)
 }

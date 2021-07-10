@@ -33,20 +33,18 @@ import java.lang.Thread.UncaughtExceptionHandler
 import java.nio.file.Files
 import java.nio.file.Paths
 
-public class ToolkitPresenter(private val configurationModel: ConfigurationModel, private val model: SourceCodeModel) {
+internal class ToolkitPresenter(private val configurationModel: ConfigurationModel, private val model: SourceCodeModel) {
     private lateinit var view: ToolkitView
 
-    public fun setView(view: ToolkitView) {
+    fun setView(view: ToolkitView) {
         this.view = view
     }
 
-    // @VisibleForTesting
-    public fun checkInitialized() {
+    fun checkInitialized() {
         check(::view.isInitialized) { "the view must be set before the presenter can be ran" }
     }
 
-    // @VisibleForTesting
-    public fun initUncaughtExceptionsHandler() {
+    fun initUncaughtExceptionsHandler() {
         Thread.currentThread().uncaughtExceptionHandler = UncaughtExceptionHandler { _, e ->
             val result: Writer = StringWriter()
             val printWriter = PrintWriter(result)
@@ -56,15 +54,14 @@ public class ToolkitPresenter(private val configurationModel: ConfigurationModel
         }
     }
 
-    // @VisibleForTesting
-    public fun initConfigurationTab() {
+    fun initConfigurationTab() {
         for (configurationProperty in configurationModel.properties) {
             view.addConfigurationProperty(configurationProperty.name, configurationProperty.description)
             view.setConfigurationPropertyValue(configurationProperty.name, configurationProperty.value)
         }
     }
 
-    public fun run(title: String?) {
+    fun run(title: String?) {
         checkInitialized()
         initUncaughtExceptionsHandler()
         view.setTitle(title)
@@ -76,7 +73,7 @@ public class ToolkitPresenter(private val configurationModel: ConfigurationModel
         view.run()
     }
 
-    public fun onSourceCodeOpenButtonClick() {
+    fun onSourceCodeOpenButtonClick() {
         val fileToParse = view.pickFileToParse()
         if (fileToParse != null) {
             view.clearConsole()
@@ -100,7 +97,7 @@ public class ToolkitPresenter(private val configurationModel: ConfigurationModel
         }
     }
 
-    public fun onSourceCodeParseButtonClick() {
+    fun onSourceCodeParseButtonClick() {
         view.clearConsole()
         val sourceCode = view.sourceCode
         model.setSourceCode(sourceCode)
@@ -113,7 +110,7 @@ public class ToolkitPresenter(private val configurationModel: ConfigurationModel
         view.enableXPathEvaluateButton()
     }
 
-    public fun onXPathEvaluateButtonClick() {
+    fun onXPathEvaluateButtonClick() {
         val xpath = view.xPath ?: return
         val xpathQuery = create<Any>(xpath)
         view.clearConsole()
@@ -134,21 +131,21 @@ public class ToolkitPresenter(private val configurationModel: ConfigurationModel
         view.setFocusOnAbstractSyntaxTreeView()
     }
 
-    public fun onSourceCodeKeyTyped() {
+    fun onSourceCodeKeyTyped() {
         view.displayAst(null)
         view.displayXml("")
         view.clearSourceCodeHighlights()
         view.disableXPathEvaluateButton()
     }
 
-    public fun onSourceCodeTextCursorMoved() {
+    fun onSourceCodeTextCursorMoved() {
         view.clearAstSelections()
         val astNode = view.astNodeFollowingCurrentSourceCodeTextCursorPosition
         view.selectAstNode(astNode)
         view.scrollAstTo(astNode)
     }
 
-    public fun onAstSelectionChanged() {
+    fun onAstSelectionChanged() {
         view.clearSourceCodeHighlights()
         var firstAstNode: AstNode? = null
         for (astNode in view.selectedAstNodes) {
@@ -160,7 +157,7 @@ public class ToolkitPresenter(private val configurationModel: ConfigurationModel
         view.scrollSourceCodeTo(firstAstNode)
     }
 
-    public fun onConfigurationPropertyFocusLost(name: String) {
+    fun onConfigurationPropertyFocusLost(name: String) {
         val configurationProperty = requireNotNull(getConfigurationPropertyByName(name)) {
             "No such configuration property: $name"
         }
