@@ -64,7 +64,7 @@ class CollapsibleIfVisitorTest {
         if (!node.`is`(MiniCGrammar.COMPOUND_STATEMENT) || node.numberOfChildren != 3) {
             return false
         }
-        val statementNode = node.getFirstChild(MiniCGrammar.STATEMENT)
+        val statementNode = node.getFirstChildOrNull(MiniCGrammar.STATEMENT)
             ?: // Null check was initially forgotten, did not led to a NPE because the unit test did not cover that case yet!
             return false
         return isIfStatementWithoutElse(checkNotNull(statementNode.firstChild))

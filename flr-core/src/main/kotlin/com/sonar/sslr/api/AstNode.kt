@@ -224,10 +224,31 @@ public open class AstNode(
      * |__ B3
     </pre> *
      *
+     * @return first child of one of specified types
+     * @throws [NoSuchElementException] if no such element is found.
+     * @since 1.17
+     */
+    public fun getFirstChild(vararg nodeTypes: AstNodeType): AstNode {
+        return children.first { it.type in nodeTypes }
+    }
+
+    /**
+     * Returns first child of one of specified types.
+     *
+     *
+     * In the following case, `getFirstChild("B")` would return "B2":
+     * <pre>
+     * A1
+     * |__ C1
+     * |    |__ B1
+     * |__ B2
+     * |__ B3
+    </pre> *
+     *
      * @return first child of one of specified types, or null if not found
      * @since 1.17
      */
-    public fun getFirstChild(vararg nodeTypes: AstNodeType): AstNode? {
+    public fun getFirstChildOrNull(vararg nodeTypes: AstNodeType): AstNode? {
         return children.firstOrNull { it.type in nodeTypes }
     }
 
@@ -263,9 +284,20 @@ public open class AstNode(
     /**
      * Returns the first child of this node.
      *
+     * @return the first child
+     * @throws [NoSuchElementException] if no such element is found.
+     */
+    public val firstChild: AstNode
+        get() {
+            return children.first()
+        }
+
+    /**
+     * Returns the first child of this node.
+     *
      * @return the first child, or null if there is no child
      */
-    public val firstChild: AstNode?
+    public val firstChildOrNull: AstNode?
         get() {
             return children.firstOrNull()
         }
@@ -330,9 +362,20 @@ public open class AstNode(
     /**
      * Returns the last child of this node.
      *
+     * @return the last child
+     * @throws [NoSuchElementException] if no such element is found.
+     */
+    public val lastChild: AstNode
+        get() {
+            return children.last()
+        }
+
+    /**
+     * Returns the last child of this node.
+     *
      * @return the last child, or null if there is no child
      */
-    public val lastChild: AstNode?
+    public val lastChildOrNull: AstNode?
         get() {
             return children.lastOrNull()
         }
@@ -351,10 +394,32 @@ public open class AstNode(
      * |__ B4
     </pre> *
      *
+     * @return last child of one of specified types
+     * @throws [NoSuchElementException] if no such element is found.
+     * @since 1.20
+     */
+    public fun getLastChild(vararg nodeTypes: AstNodeType): AstNode {
+        return children.last { it.type in nodeTypes }
+    }
+
+    /**
+     * Returns last child of one of specified types.
+     *
+     *
+     * In the following case, `getLastChild("B")` would return "B3":
+     * <pre>
+     * A1
+     * |__ C1
+     * |    |__ B1
+     * |__ B2
+     * |__ B3
+     * |__ B4
+    </pre> *
+     *
      * @return last child of one of specified types, or null if not found
      * @since 1.20
      */
-    public fun getLastChild(vararg nodeTypes: AstNodeType): AstNode? {
+    public fun getLastChildOrNull(vararg nodeTypes: AstNodeType): AstNode? {
         return children.lastOrNull { it.type in nodeTypes }
     }
 
@@ -362,7 +427,7 @@ public open class AstNode(
      * @return true if this node has some children with the requested node types
      */
     public fun hasDirectChildren(vararg nodeTypes: AstNodeType): Boolean {
-        return getFirstChild(*nodeTypes) != null
+        return getFirstChildOrNull(*nodeTypes) != null
     }
 
     /**
