@@ -7,7 +7,7 @@ plugins {
     `java-library`
     `maven-publish`
     jacoco
-    kotlin("jvm") version "1.5.20"
+    kotlin("jvm") version "1.5.21"
     id("com.github.hierynomus.license") version "0.16.1"
     id("org.sonarqube") version "3.3"
 }
