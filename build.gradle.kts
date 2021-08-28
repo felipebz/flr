@@ -1,13 +1,13 @@
-import java.util.Calendar
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import com.hierynomus.gradle.license.tasks.LicenseFormat
 import com.hierynomus.gradle.license.tasks.LicenseCheck
+import com.hierynomus.gradle.license.tasks.LicenseFormat
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import java.util.*
 
 plugins {
     `java-library`
     `maven-publish`
     jacoco
-    kotlin("jvm") version "1.5.21"
+    kotlin("jvm") version "1.5.30"
     id("com.github.hierynomus.license") version "0.16.1"
     id("org.sonarqube") version "3.3"
 }
