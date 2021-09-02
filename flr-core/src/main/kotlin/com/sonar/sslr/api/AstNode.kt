@@ -102,7 +102,7 @@ public open class AstNode(
      */
     public val nextAstNode: AstNode?
         get() {
-            return nextSibling ?: parent?.nextAstNode
+            return nextSiblingOrNull ?: parent?.nextAstNode
         }
 
     /**
@@ -112,7 +112,7 @@ public open class AstNode(
      */
     public val previousAstNode: AstNode?
         get() {
-            return previousSibling ?: parent?.previousAstNode
+            return previousSiblingOrNull ?: parent?.previousAstNode
         }
 
     /**
@@ -121,7 +121,7 @@ public open class AstNode(
      * @return next sibling, or null if not exists
      * @since 1.17
      */
-    public val nextSibling: AstNode?
+    public val nextSiblingOrNull: AstNode?
         get() {
             val parent = this.parent
             return if (parent != null && parent.numberOfChildren > childIndex + 1) {
@@ -129,19 +129,25 @@ public open class AstNode(
             } else null
         }
 
+    public val nextSibling: AstNode
+        get() = checkNotNull(nextSiblingOrNull)
+
     /**
      * Get the previous sibling AstNode if exists in the tree.
      *
      * @return previous sibling, or null if not exists
      * @since 1.17
      */
-    public val previousSibling: AstNode?
+    public val previousSiblingOrNull: AstNode?
         get() {
             val parent = this.parent ?: return null
             return if (childIndex > 0) {
                 parent.children[childIndex - 1]
             } else null
         }
+
+    public val previousSibling: AstNode
+        get() = checkNotNull(previousSiblingOrNull)
 
     /**
      * Get the Token's value associated to this AstNode

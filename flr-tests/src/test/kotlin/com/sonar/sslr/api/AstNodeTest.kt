@@ -105,8 +105,8 @@ class AstNodeTest {
         val statement = AstNode(NodeType(), "statement", null)
         statement.addChild(expr1)
         statement.addChild(expr2)
-        assertThat(expr1.nextSibling).isSameAs(expr2)
-        assertThat(expr2.nextSibling).isNull()
+        assertThat(expr1.nextSiblingOrNull).isSameAs(expr2)
+        assertThat(expr2.nextSiblingOrNull).isNull()
     }
 
     @Test
@@ -116,8 +116,8 @@ class AstNodeTest {
         val statement = AstNode(NodeType(), "statement", null)
         statement.addChild(expr1)
         statement.addChild(expr2)
-        assertThat(expr1.previousSibling).isNull()
-        assertThat(expr2.previousSibling).isSameAs(expr1)
+        assertThat(expr1.previousSiblingOrNull).isNull()
+        assertThat(expr2.previousSiblingOrNull).isSameAs(expr1)
     }
 
     @Test
