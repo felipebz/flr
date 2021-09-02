@@ -204,7 +204,7 @@ class AstNodeNavigatorTest {
     fun getDocumentNode() {
         val rootAstNode = mock<AstNode>()
         val astNode = mock<AstNode>()
-        whenever(astNode.parent).thenReturn(rootAstNode)
+        whenever(astNode.parentOrNull).thenReturn(rootAstNode)
         val attribute = mock<AstNodeNavigator.Attribute>()
         whenever(attribute.astNode).thenReturn(astNode)
         val documentNode = navigator.getDocumentNode(attribute) as AstNode
@@ -228,7 +228,7 @@ class AstNodeNavigatorTest {
     fun getParentNode() {
         val rootAstNode = mock<AstNode>()
         val astNode = mock<AstNode>()
-        whenever(astNode.parent).thenReturn(rootAstNode)
+        whenever(astNode.parentOrNull).thenReturn(rootAstNode)
         val attribute: AstNodeNavigator.Attribute = mock()
         whenever(attribute.astNode).thenReturn(astNode)
         assertThat(navigator.getParentNode(attribute)).isSameAs(astNode)

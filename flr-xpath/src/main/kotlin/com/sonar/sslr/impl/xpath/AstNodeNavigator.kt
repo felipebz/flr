@@ -137,8 +137,8 @@ internal open class AstNodeNavigator : DefaultNavigator() {
         if (documentNode == null) {
             if (isElement(contextNode)) {
                 var root: AstNode? = contextNode as AstNode?
-                while (root?.parent != null) {
-                    root = root.parent
+                while (root?.parentOrNull != null) {
+                    root = root.parentOrNull
                 }
                 documentNode = AstNode(null, "[root]", null).apply {
                     addChild(root)
@@ -176,7 +176,7 @@ internal open class AstNodeNavigator : DefaultNavigator() {
         return when {
             isElement(contextNode) -> {
                 val astNode = contextNode as AstNode
-                astNode.parent
+                astNode.parentOrNull
             }
             isAttribute(contextNode) -> {
                 val attribute = contextNode as Attribute
@@ -192,7 +192,7 @@ internal open class AstNodeNavigator : DefaultNavigator() {
         return when {
             isElement(contextNode) -> {
                 val astNode = contextNode as AstNode
-                val parent = astNode.parent
+                val parent = astNode.parentOrNull
                 parent?.let { SingleObjectIterator(it) } ?: Collections.emptyIterator<Any>()
             }
             isAttribute(contextNode) -> {

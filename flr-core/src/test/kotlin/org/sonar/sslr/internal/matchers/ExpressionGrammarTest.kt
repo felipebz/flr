@@ -100,7 +100,7 @@ class ExpressionGrammarTest {
         assertThat(firstToken.column).isEqualTo(0)
         assertThat(firstToken.value).isEqualTo("20")
         assertThat(firstToken.originalValue).isEqualTo("20")
-        val tokenWithTrivia = checkNotNull(astNode.getFirstDescendant(grammar.mul)).token
+        val tokenWithTrivia = astNode.getFirstDescendant(grammar.mul).token
         assertThat(tokenWithTrivia.line).isEqualTo(1)
         assertThat(tokenWithTrivia.column).isEqualTo(3)
         assertThat(tokenWithTrivia.trivia).hasSize(1)

@@ -58,8 +58,9 @@ public open class AstNode(
     /**
      * Get the parent of this node in the tree.
      */
-    public var parent: AstNode? = null
+    public var parentOrNull: AstNode? = null
         private set
+    public val parent: AstNode get() = checkNotNull(parentOrNull)
     public var fromIndex: Int = 0
     public var toIndex: Int = 0
 
@@ -80,7 +81,7 @@ public open class AstNode(
     private fun addChildToList(child: AstNode) {
         children.add(child)
         child.childIndex = children.size - 1
-        child.parent = this
+        child.parentOrNull = this
     }
 
     /**
@@ -100,20 +101,26 @@ public open class AstNode(
      *
      * @since 1.17
      */
-    public val nextAstNode: AstNode?
+    public val nextAstNodeOrNUll: AstNode?
         get() {
-            return nextSiblingOrNull ?: parent?.nextAstNode
+            return nextSiblingOrNull ?: parentOrNull?.nextAstNode
         }
+
+    public val nextAstNode: AstNode
+        get() = checkNotNull(nextAstNodeOrNUll)
 
     /**
      * Get the previous sibling AstNode in the tree and if this node doesn't exist try to get the next AST Node of the parent.
      *
      * @since 1.17
      */
-    public val previousAstNode: AstNode?
+    public val previousAstNodeOrNull: AstNode?
         get() {
-            return previousSiblingOrNull ?: parent?.previousAstNode
+            return previousSiblingOrNull ?: parentOrNull?.previousAstNode
         }
+
+    public val previousAstNode: AstNode
+        get() = checkNotNull(previousAstNodeOrNull)
 
     /**
      * Get the next sibling AstNode if exists in the tree.
@@ -123,7 +130,7 @@ public open class AstNode(
      */
     public val nextSiblingOrNull: AstNode?
         get() {
-            val parent = this.parent
+            val parent = this.parentOrNull
             return if (parent != null && parent.numberOfChildren > childIndex + 1) {
                 parent.children[childIndex + 1]
             } else null
@@ -140,7 +147,7 @@ public open class AstNode(
      */
     public val previousSiblingOrNull: AstNode?
         get() {
-            val parent = this.parent ?: return null
+            val parent = this.parentOrNull ?: return null
             return if (childIndex > 0) {
                 parent.children[childIndex - 1]
             } else null
@@ -269,18 +276,21 @@ public open class AstNode(
      * @return first descendant of one of specified types, or null if not found
      * @since 1.17
      */
-    public fun getFirstDescendant(vararg nodeTypes: AstNodeType): AstNode? {
+    public fun getFirstDescendantOrNull(vararg nodeTypes: AstNodeType): AstNode? {
         for (child in children) {
             if (child.`is`(*nodeTypes)) {
                 return child
             }
-            val node = child.getFirstDescendant(*nodeTypes)
+            val node = child.getFirstDescendantOrNull(*nodeTypes)
             if (node != null) {
                 return node
             }
         }
         return null
     }
+
+    public fun getFirstDescendant(vararg nodeTypes: AstNodeType): AstNode =
+        checkNotNull(getFirstDescendantOrNull(*nodeTypes))
 
     /**
      * Returns the first child of this node.
@@ -436,14 +446,14 @@ public open class AstNode(
      * @since 1.17
      */
     public fun hasDescendant(vararg nodeTypes: AstNodeType): Boolean {
-        return getFirstDescendant(*nodeTypes) != null
+        return getFirstDescendantOrNull(*nodeTypes) != null
     }
 
     /**
      * @since 1.19.2
      */
     public fun hasParent(vararg nodeTypes: AstNodeType): Boolean {
-        val parent = this.parent
+        val parent = this.parentOrNull
         return parent != null && parent.`is`(*nodeTypes)
     }
 
@@ -468,7 +478,7 @@ public open class AstNode(
      * @since 1.17
      */
     public fun getFirstAncestorOrNull(nodeType: AstNodeType): AstNode? {
-        val parent = this.parent
+        val parent = this.parentOrNull
         return when {
             parent == null -> {
                 null
@@ -489,12 +499,12 @@ public open class AstNode(
      * @since 1.19.2
      */
     public fun getFirstAncestorOrNull(vararg nodeTypes: AstNodeType): AstNode? {
-        var result = parent
+        var result = parentOrNull
         while (result != null) {
             if (result.`is`(*nodeTypes)) {
                 return result
             }
-            result = result.parent
+            result = result.parentOrNull
         }
         return null
     }
