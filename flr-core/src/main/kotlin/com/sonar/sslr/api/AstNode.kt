@@ -452,7 +452,7 @@ public open class AstNode(
      * @since 1.17
      */
     public fun hasAncestor(nodeType: AstNodeType): Boolean {
-        return getFirstAncestor(nodeType) != null
+        return getFirstAncestorOrNull(nodeType) != null
     }
 
     /**
@@ -460,14 +460,14 @@ public open class AstNode(
      * @since 1.19.2
      */
     public fun hasAncestor(vararg nodeTypes: AstNodeType): Boolean {
-        return getFirstAncestor(*nodeTypes) != null
+        return getFirstAncestorOrNull(*nodeTypes) != null
     }
 
     /**
      * @return first ancestor of the specified type, or null if not found
      * @since 1.17
      */
-    public fun getFirstAncestor(nodeType: AstNodeType): AstNode? {
+    public fun getFirstAncestorOrNull(nodeType: AstNodeType): AstNode? {
         val parent = this.parent
         return when {
             parent == null -> {
@@ -477,16 +477,18 @@ public open class AstNode(
                 parent
             }
             else -> {
-                parent.getFirstAncestor(nodeType)
+                parent.getFirstAncestorOrNull(nodeType)
             }
         }
     }
+
+    public fun getFirstAncestor(nodeType: AstNodeType): AstNode = checkNotNull(getFirstAncestorOrNull(nodeType))
 
     /**
      * @return first ancestor of one of specified types, or null if not found
      * @since 1.19.2
      */
-    public fun getFirstAncestor(vararg nodeTypes: AstNodeType): AstNode? {
+    public fun getFirstAncestorOrNull(vararg nodeTypes: AstNodeType): AstNode? {
         var result = parent
         while (result != null) {
             if (result.`is`(*nodeTypes)) {
@@ -496,6 +498,8 @@ public open class AstNode(
         }
         return null
     }
+
+    public fun getFirstAncestor(vararg nodeTypes: AstNodeType): AstNode = checkNotNull(getFirstAncestorOrNull(*nodeTypes))
 
     public val isCopyBookOrGeneratedNode: Boolean
         get() {
