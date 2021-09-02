@@ -131,10 +131,10 @@ class AstNodeTest {
         rootNode.addChild(nonemptyNode)
         rootNode.addChild(intermediateEmptyNode)
         intermediateEmptyNode.addChild(lastEmptyNode)
-        assertThat(rootNode.lastToken).isSameAs(token)
-        assertThat(firstEmptyNode.lastToken).isNull()
-        assertThat(intermediateEmptyNode.lastToken).isNull()
-        assertThat(lastEmptyNode.lastToken).isNull()
+        assertThat(rootNode.lastTokenOrNull).isSameAs(token)
+        assertThat(firstEmptyNode.lastTokenOrNull).isNull()
+        assertThat(intermediateEmptyNode.lastTokenOrNull).isNull()
+        assertThat(lastEmptyNode.lastTokenOrNull).isNull()
     }
 
     @Test

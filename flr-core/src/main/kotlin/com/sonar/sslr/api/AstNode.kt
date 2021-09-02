@@ -35,15 +35,10 @@ public open class AstNode(
     /**
      * Get the Token associated to this AstNode
      */
-    token: Token?
+    public val tokenOrNull: Token?
 ) {
-    private val _token = token
-
     public val token: Token
-        get() = _token.let {
-            checkNotNull(it)
-            return it
-        }
+        get() = checkNotNull(tokenOrNull)
 
     public val type: AstNodeType
         get() = _type.let {
@@ -155,7 +150,7 @@ public open class AstNode(
      */
     public val tokenValue: String
         get() {
-            return _token?.value.orEmpty()
+            return tokenOrNull?.value.orEmpty()
         }
 
     /**
@@ -165,7 +160,7 @@ public open class AstNode(
      */
     public open val tokenOriginalValue: String
         get() {
-            return _token?.originalValue.orEmpty()
+            return tokenOrNull?.originalValue.orEmpty()
         }
 
     /**
@@ -175,11 +170,11 @@ public open class AstNode(
      */
     public val tokenLine: Int
         get() {
-            return _token?.line ?: -1
+            return tokenOrNull?.line ?: -1
         }
 
     public fun hasToken(): Boolean {
-        return _token != null
+        return tokenOrNull != null
     }
 
     /**
@@ -498,7 +493,7 @@ public open class AstNode(
 
     public val isCopyBookOrGeneratedNode: Boolean
         get() {
-            return checkNotNull(_token).isCopyBook || _token.isGeneratedCode
+            return token.isCopyBook || token.isGeneratedCode
         }
 
     /**
@@ -513,7 +508,7 @@ public open class AstNode(
 
     private fun getTokens(tokens: MutableList<Token>) {
         if (!hasChildren()) {
-            if (_token != null) {
+            if (tokenOrNull != null) {
                 tokens.add(token)
             }
         } else {
@@ -526,7 +521,7 @@ public open class AstNode(
     override fun toString(): String {
         val result = StringBuilder()
         result.append(name)
-        if (_token != null) {
+        if (tokenOrNull != null) {
             result.append(" tokenValue='").append(token.value).append("'")
             result.append(" tokenLine=").append(token.line)
             result.append(" tokenColumn=").append(token.column)
@@ -534,7 +529,7 @@ public open class AstNode(
         return result.toString()
     }
 
-    public val lastToken: Token?
+    public val lastTokenOrNull: Token?
         get() {
             if (!hasToken()) {
                 return null
@@ -545,4 +540,7 @@ public open class AstNode(
             }
             return currentNode.token
         }
+
+    public val lastToken: Token
+        get() = checkNotNull(lastTokenOrNull)
 }
