@@ -25,8 +25,8 @@ import com.sonar.sslr.test.lexer.LexerMatchers.hasComment
 import com.sonar.sslr.test.lexer.LexerMatchers.hasOriginalComment
 import com.sonar.sslr.test.lexer.MockHelper.mockLexer
 import com.sonar.sslr.test.lexer.MockHelper.mockToken
+import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
-import org.junit.Assert
 import org.junit.Test
 import org.sonar.sslr.test.channel.ChannelMatchers.consume
 
@@ -36,10 +36,10 @@ class CommentChannelTest {
     @Test
     fun testCommentRegexp() {
         channel = CommentRegexpChannel("//.*")
-        Assert.assertThat(channel, Matchers.not(consume("This is not a comment", lexer)))
-        Assert.assertThat(channel, consume("//My Comment\n second line", lexer))
+        assertThat(channel, Matchers.not(consume("This is not a comment", lexer)))
+        assertThat(channel, consume("//My Comment\n second line", lexer))
         lexer.addToken(mockToken(GenericTokenType.EOF, "EOF"))
-        Assert.assertThat(lexer.tokens, hasComment("//My Comment"))
-        Assert.assertThat(lexer.tokens, hasOriginalComment("//My Comment"))
+        assertThat(lexer.tokens, hasComment("//My Comment"))
+        assertThat(lexer.tokens, hasOriginalComment("//My Comment"))
     }
 }

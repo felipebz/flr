@@ -24,8 +24,8 @@ import com.sonar.sslr.api.AstNode
 import com.sonar.sslr.api.TokenType
 import com.sonar.sslr.test.lexer.LexerMatchers.hasToken
 import com.sonar.sslr.test.lexer.MockHelper.mockLexer
-import org.fest.assertions.Assertions.assertThat
-import org.junit.Assert
+import org.hamcrest.MatcherAssert.assertThat
+import org.junit.Assert.assertFalse
 import org.junit.Test
 import org.sonar.sslr.channel.CodeReader
 import org.sonar.sslr.test.channel.ChannelMatchers.consume
@@ -35,22 +35,22 @@ class PunctuatorChannelTest {
     private val lexer = mockLexer()
     @Test
     fun testConsumeSpecialCharacters() {
-        Assert.assertThat(channel, consume("**=", lexer))
-        Assert.assertThat(lexer.tokens, hasToken("*", MyPunctuatorAndOperator.STAR))
-        Assert.assertThat(channel, consume(",=", lexer))
-        Assert.assertThat(lexer.tokens, hasToken(",", MyPunctuatorAndOperator.COLON))
-        Assert.assertThat(channel, consume("=*", lexer))
-        Assert.assertThat(lexer.tokens, hasToken("=", MyPunctuatorAndOperator.EQUAL))
-        Assert.assertThat(channel, consume("==,", lexer))
-        Assert.assertThat(lexer.tokens, hasToken("==", MyPunctuatorAndOperator.EQUAL_OP))
-        Assert.assertThat(channel, consume("*=,", lexer))
-        Assert.assertThat(lexer.tokens, hasToken("*=", MyPunctuatorAndOperator.MUL_ASSIGN))
-        assertThat(channel.consume(CodeReader("!"), lexer)).isFalse()
+        assertThat(channel, consume("**=", lexer))
+        assertThat(lexer.tokens, hasToken("*", MyPunctuatorAndOperator.STAR))
+        assertThat(channel, consume(",=", lexer))
+        assertThat(lexer.tokens, hasToken(",", MyPunctuatorAndOperator.COLON))
+        assertThat(channel, consume("=*", lexer))
+        assertThat(lexer.tokens, hasToken("=", MyPunctuatorAndOperator.EQUAL))
+        assertThat(channel, consume("==,", lexer))
+        assertThat(lexer.tokens, hasToken("==", MyPunctuatorAndOperator.EQUAL_OP))
+        assertThat(channel, consume("*=,", lexer))
+        assertThat(lexer.tokens, hasToken("*=", MyPunctuatorAndOperator.MUL_ASSIGN))
+        assertFalse(channel.consume(CodeReader("!"), lexer))
     }
 
     @Test
     fun testNotConsumeWord() {
-        assertThat(channel.consume(CodeReader("word"), lexer)).isFalse()
+        assertFalse(channel.consume(CodeReader("word"), lexer))
     }
 
     private enum class MyPunctuatorAndOperator(override val value: String) : TokenType {

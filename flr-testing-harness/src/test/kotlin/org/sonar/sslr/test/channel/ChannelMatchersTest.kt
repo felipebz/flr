@@ -20,9 +20,9 @@
  */
 package org.sonar.sslr.test.channel
 
+import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
-import org.hamcrest.core.Is
-import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.sonar.sslr.channel.Channel
 import org.sonar.sslr.channel.CodeReader
@@ -40,18 +40,18 @@ class ChannelMatchersTest {
             }
         }
         var output = StringBuilder()
-        Assert.assertThat(numberChannel, ChannelMatchers.consume("3", output))
-        Assert.assertThat(output.toString(), Is.`is`("3"))
-        Assert.assertThat(numberChannel, ChannelMatchers.consume(CodeReader("333333"), output))
+        assertThat(numberChannel, ChannelMatchers.consume("3", output))
+        assertEquals(output.toString(), "3")
+        assertThat(numberChannel, ChannelMatchers.consume(CodeReader("333333"), output))
         output = StringBuilder()
-        Assert.assertThat(numberChannel, Matchers.not(ChannelMatchers.consume("n", output)))
-        Assert.assertThat(output.toString(), Is.`is`(""))
-        Assert.assertThat(numberChannel, Matchers.not(ChannelMatchers.consume(CodeReader("n"), output)))
+        assertThat(numberChannel, Matchers.not(ChannelMatchers.consume("n", output)))
+        assertEquals(output.toString(), "")
+        assertThat(numberChannel, Matchers.not(ChannelMatchers.consume(CodeReader("n"), output)))
     }
 
     @Test
     fun testHasNextChar() {
-        Assert.assertThat(CodeReader("123"), ChannelMatchers.hasNextChar('1'))
-        Assert.assertThat(CodeReader("123"), Matchers.not(ChannelMatchers.hasNextChar('n')))
+        assertThat(CodeReader("123"), ChannelMatchers.hasNextChar('1'))
+        assertThat(CodeReader("123"), Matchers.not(ChannelMatchers.hasNextChar('n')))
     }
 }

@@ -20,9 +20,10 @@
  */
 package org.sonar.sslr.channel
 
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.hamcrest.MatcherAssert
 import org.hamcrest.Matchers
-import org.junit.Assert
 import org.junit.Test
 import org.sonar.sslr.channel.ChannelDispatcher.Companion.builder
 
@@ -32,17 +33,17 @@ class ChannelDispatcherTest {
         val dispatcher = builder().addChannel(SpaceDeletionChannel()).build<StringBuilder>()
         val output = StringBuilder()
         dispatcher.consume(CodeReader("two words"), output)
-        Assert.assertThat(output.toString(), Matchers.`is`("twowords"))
+        assertEquals(output.toString(), "twowords")
     }
 
     @Test
     fun shouldAddChannels() {
         val dispatcher = builder().addChannels(SpaceDeletionChannel(), FakeChannel()).build<StringBuilder>()
-        Assert.assertThat(dispatcher.getChannels().size, Matchers.`is`(2))
+        assertEquals(dispatcher.getChannels().size, 2)
         MatcherAssert.assertThat(
             dispatcher.getChannels()[0], Matchers.instanceOf(SpaceDeletionChannel::class.java)
         )
-        Assert.assertThat(dispatcher.getChannels()[1], Matchers.instanceOf(FakeChannel::class.java))
+        assertTrue(dispatcher.getChannels()[1] is FakeChannel)
     }
 
     @Test(expected = IllegalStateException::class)

@@ -21,8 +21,8 @@
 package com.sonar.sslr.impl.channel
 
 import com.sonar.sslr.impl.Lexer.Companion.builder
+import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
-import org.junit.Assert
 import org.junit.Test
 import org.sonar.sslr.channel.CodeReader
 import org.sonar.sslr.test.channel.ChannelMatchers.consume
@@ -33,17 +33,17 @@ class BlackHoleChannelTest {
     private val channel = BlackHoleChannel("[ \\t]+")
     @Test
     fun testConsumeOneCharacter() {
-        Assert.assertThat(channel, consume(" ", lexer))
-        Assert.assertThat(channel, consume("\t", lexer))
-        Assert.assertThat(channel, Matchers.not(consume("g", lexer)))
-        Assert.assertThat(channel, Matchers.not(consume("-", lexer)))
-        Assert.assertThat(channel, Matchers.not(consume("1", lexer)))
+        assertThat(channel, consume(" ", lexer))
+        assertThat(channel, consume("\t", lexer))
+        assertThat(channel, Matchers.not(consume("g", lexer)))
+        assertThat(channel, Matchers.not(consume("-", lexer)))
+        assertThat(channel, Matchers.not(consume("1", lexer)))
     }
 
     @Test
     fun consumeSeveralCharacters() {
         val reader = CodeReader("   \t123")
-        Assert.assertThat(channel, consume(reader, lexer))
-        Assert.assertThat(reader, hasNextChar('1'))
+        assertThat(channel, consume(reader, lexer))
+        assertThat(reader, hasNextChar('1'))
     }
 }

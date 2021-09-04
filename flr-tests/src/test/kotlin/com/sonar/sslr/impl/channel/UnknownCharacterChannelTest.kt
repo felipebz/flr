@@ -25,8 +25,7 @@ import com.sonar.sslr.api.TokenType
 import com.sonar.sslr.impl.Lexer
 import com.sonar.sslr.test.lexer.MockHelper.mockLexer
 import org.fest.assertions.Assertions.assertThat
-import org.hamcrest.CoreMatchers
-import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.sonar.sslr.channel.Channel
 import org.sonar.sslr.channel.CodeReader
@@ -55,8 +54,8 @@ class UnknownCharacterChannelTest {
     ) {
         val code = CodeReader(StringReader(input))
         assertThat(channel.consume(code, lexer)).isTrue()
-        Assert.assertThat(lexer.tokens.size, CoreMatchers.`is`(1))
-        Assert.assertThat(lexer.tokens[0].type, CoreMatchers.`is`(expectedTokenType))
-        Assert.assertThat(lexer.tokens[0].value, CoreMatchers.`is`(expectedTokenValue))
+        assertEquals(lexer.tokens.size, 1)
+        assertEquals(lexer.tokens[0].type, expectedTokenType)
+        assertEquals(lexer.tokens[0].value, expectedTokenValue)
     }
 }

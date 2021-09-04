@@ -26,8 +26,9 @@ import com.sonar.sslr.api.TokenType
 import com.sonar.sslr.test.lexer.LexerMatchers.hasOriginalToken
 import com.sonar.sslr.test.lexer.LexerMatchers.hasToken
 import com.sonar.sslr.test.lexer.MockHelper.mockLexer
+import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
-import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.sonar.sslr.channel.CodeReader
 import org.sonar.sslr.test.channel.ChannelMatchers.consume
@@ -38,30 +39,30 @@ class IdentifierAndKeywordChannelTest {
     @Test
     fun testConsumeWord() {
         channel = IdentifierAndKeywordChannel("[a-zA-Z_][a-zA-Z_0-9]*", true, MyKeywords.values())
-        Assert.assertThat(channel, consume("word", lexer))
-        Assert.assertThat(lexer.tokens, hasToken("word", GenericTokenType.IDENTIFIER))
+        assertThat(channel, consume("word", lexer))
+        assertThat(lexer.tokens, hasToken("word", GenericTokenType.IDENTIFIER))
     }
 
     @Test
     fun testConsumeCaseSensitiveKeywords() {
         channel = IdentifierAndKeywordChannel("[a-zA-Z_][a-zA-Z_0-9]*", true, MyKeywords.values())
-        Assert.assertThat(channel, consume("KEYWORD1", lexer))
-        Assert.assertThat(lexer.tokens, hasToken("KEYWORD1", MyKeywords.KEYWORD1))
-        Assert.assertThat(channel, consume("KeyWord2", lexer))
-        Assert.assertThat(lexer.tokens, hasToken("KeyWord2", MyKeywords.KeyWord2))
-        Assert.assertThat(channel, consume("KEYWORD2", lexer))
-        Assert.assertThat(lexer.tokens, hasToken("KEYWORD2", GenericTokenType.IDENTIFIER))
+        assertThat(channel, consume("KEYWORD1", lexer))
+        assertThat(lexer.tokens, hasToken("KEYWORD1", MyKeywords.KEYWORD1))
+        assertThat(channel, consume("KeyWord2", lexer))
+        assertThat(lexer.tokens, hasToken("KeyWord2", MyKeywords.KeyWord2))
+        assertThat(channel, consume("KEYWORD2", lexer))
+        assertThat(lexer.tokens, hasToken("KEYWORD2", GenericTokenType.IDENTIFIER))
     }
 
     @Test
     fun testConsumeNotCaseSensitiveKeywords() {
         channel = IdentifierAndKeywordChannel("[a-zA-Z_][a-zA-Z_0-9]*", false, MyKeywords.values())
-        Assert.assertThat(channel, consume("keyword1", lexer))
-        Assert.assertThat(lexer.tokens, hasToken("KEYWORD1", MyKeywords.KEYWORD1))
-        Assert.assertThat(lexer.tokens, hasToken("KEYWORD1"))
-        Assert.assertThat(lexer.tokens, hasOriginalToken("keyword1"))
-        Assert.assertThat(channel, consume("keyword2", lexer))
-        Assert.assertThat(lexer.tokens, hasToken("KEYWORD2", MyKeywords.KeyWord2))
+        assertThat(channel, consume("keyword1", lexer))
+        assertThat(lexer.tokens, hasToken("KEYWORD1", MyKeywords.KEYWORD1))
+        assertThat(lexer.tokens, hasToken("KEYWORD1"))
+        assertThat(lexer.tokens, hasOriginalToken("keyword1"))
+        assertThat(channel, consume("keyword2", lexer))
+        assertThat(lexer.tokens, hasToken("KEYWORD2", MyKeywords.KeyWord2))
     }
 
     @Test
@@ -72,15 +73,15 @@ class IdentifierAndKeywordChannelTest {
         reader.pop()
         reader.pop()
         reader.pop()
-        Assert.assertThat(channel, consume(reader, lexer))
+        assertThat(channel, consume(reader, lexer))
         val keyword = lexer.tokens[0]
-        Assert.assertThat(keyword.column, Matchers.`is`(2))
-        Assert.assertThat(keyword.line, Matchers.`is`(3))
+        assertEquals(keyword.column, 2)
+        assertEquals(keyword.line, 3)
     }
 
     @Test
     fun testNotConsumNumber() {
-        Assert.assertThat(channel, Matchers.not(consume("1234", lexer)))
+        assertThat(channel, Matchers.not(consume("1234", lexer)))
     }
 
     private enum class MyKeywords : TokenType {

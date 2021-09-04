@@ -20,8 +20,7 @@
  */
 package org.sonar.sslr.channel
 
-import org.hamcrest.core.Is
-import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.io.IOException
 import java.util.regex.Pattern
@@ -31,90 +30,90 @@ class CodeBufferTest {
     @Test
     fun testPop() {
         val code = CodeBuffer("pa", defaulConfiguration)
-        Assert.assertThat(code.pop().toChar(), Is.`is`('p'))
-        Assert.assertThat(code.pop().toChar(), Is.`is`('a'))
-        Assert.assertThat(code.pop(), Is.`is`(-1))
+        assertEquals(code.pop().toChar(), 'p')
+        assertEquals(code.pop().toChar(), 'a')
+        assertEquals(code.pop(), -1)
     }
 
     @Test
     fun testPeek() {
         val code = CodeBuffer("pa", defaulConfiguration)
-        Assert.assertThat(code.peek().toChar(), Is.`is`('p'))
-        Assert.assertThat(code.peek().toChar(), Is.`is`('p'))
+        assertEquals(code.peek().toChar(), 'p')
+        assertEquals(code.peek().toChar(), 'p')
         code.pop()
-        Assert.assertThat(code.peek().toChar(), Is.`is`('a'))
+        assertEquals(code.peek().toChar(), 'a')
         code.pop()
-        Assert.assertThat(code.peek(), Is.`is`(-1))
+        assertEquals(code.peek(), -1)
     }
 
     @Test
     fun testLastCharacter() {
         val reader = CodeBuffer("bar", defaulConfiguration)
-        Assert.assertThat(reader.lastChar(), Is.`is`(-1))
+        assertEquals(reader.lastChar(), -1)
         reader.pop()
-        Assert.assertThat(reader.lastChar().toChar(), Is.`is`('b'))
+        assertEquals(reader.lastChar().toChar(), 'b')
     }
 
     @Test
     fun testGetColumnAndLinePosition() {
         val reader = CodeBuffer("pa\nc\r\ns\r\n\r\n", defaulConfiguration)
-        Assert.assertThat(reader.getColumnPosition(), Is.`is`(0))
-        Assert.assertThat(reader.getLinePosition(), Is.`is`(1))
+        assertEquals(reader.getColumnPosition(), 0)
+        assertEquals(reader.getLinePosition(), 1)
         reader.pop() // p
         reader.pop() // a
-        Assert.assertThat(reader.getColumnPosition(), Is.`is`(2))
-        Assert.assertThat(reader.getLinePosition(), Is.`is`(1))
+        assertEquals(reader.getColumnPosition(), 2)
+        assertEquals(reader.getLinePosition(), 1)
         reader.peek() // \n
         reader.lastChar() // a
-        Assert.assertThat(reader.getColumnPosition(), Is.`is`(2))
-        Assert.assertThat(reader.getLinePosition(), Is.`is`(1))
+        assertEquals(reader.getColumnPosition(), 2)
+        assertEquals(reader.getLinePosition(), 1)
         reader.pop() // \n
-        Assert.assertThat(reader.getColumnPosition(), Is.`is`(0))
-        Assert.assertThat(reader.getLinePosition(), Is.`is`(2))
+        assertEquals(reader.getColumnPosition(), 0)
+        assertEquals(reader.getLinePosition(), 2)
         reader.pop() // c
-        Assert.assertThat(reader.getColumnPosition(), Is.`is`(1))
-        Assert.assertThat(reader.getLinePosition(), Is.`is`(2))
+        assertEquals(reader.getColumnPosition(), 1)
+        assertEquals(reader.getLinePosition(), 2)
         reader.pop() // \r
         reader.pop() // \n
-        Assert.assertThat(reader.getColumnPosition(), Is.`is`(0))
-        Assert.assertThat(reader.getLinePosition(), Is.`is`(3))
-        Assert.assertThat(reader.pop().toChar(), Is.`is`('s'))
+        assertEquals(reader.getColumnPosition(), 0)
+        assertEquals(reader.getLinePosition(), 3)
+        assertEquals(reader.pop().toChar(), 's')
         reader.pop() // \r
-        Assert.assertThat(reader.getColumnPosition(), Is.`is`(2))
-        Assert.assertThat(reader.getLinePosition(), Is.`is`(3))
+        assertEquals(reader.getColumnPosition(), 2)
+        assertEquals(reader.getLinePosition(), 3)
         reader.pop() // \n
-        Assert.assertThat(reader.getColumnPosition(), Is.`is`(0))
-        Assert.assertThat(reader.getLinePosition(), Is.`is`(4))
+        assertEquals(reader.getColumnPosition(), 0)
+        assertEquals(reader.getLinePosition(), 4)
         reader.pop() // \r
         reader.pop() // \n
-        Assert.assertThat(reader.getColumnPosition(), Is.`is`(0))
-        Assert.assertThat(reader.getLinePosition(), Is.`is`(5))
+        assertEquals(reader.getColumnPosition(), 0)
+        assertEquals(reader.getLinePosition(), 5)
     }
 
     @Test
     fun testStartAndStopRecording() {
         val reader = CodeBuffer("123456", defaulConfiguration)
         reader.pop()
-        Assert.assertEquals("", reader.stopRecording().toString())
+        assertEquals("", reader.stopRecording().toString())
         reader.startRecording()
         reader.pop()
         reader.pop()
         reader.peek()
-        Assert.assertEquals("23", reader.stopRecording().toString())
-        Assert.assertEquals("", reader.stopRecording().toString())
+        assertEquals("23", reader.stopRecording().toString())
+        assertEquals("", reader.stopRecording().toString())
     }
 
     @Test
     fun testCharAt() {
         val reader = CodeBuffer("123456", defaulConfiguration)
-        Assert.assertEquals('1', reader[0])
-        Assert.assertEquals('6', reader[5])
+        assertEquals('1', reader[0])
+        assertEquals('6', reader[5])
     }
 
     @Test
     fun testCharAtIndexOutOfBoundsException() {
         val reader = CodeBuffer("12345", defaulConfiguration)
-        Assert.assertEquals(reader[5], (-1).toChar())
+        assertEquals(reader[5], (-1).toChar())
     }
 
     @Test
@@ -122,28 +121,28 @@ class CodeBufferTest {
         val configuration = CodeReaderConfiguration()
         configuration.setTabWidth(4)
         val reader = CodeBuffer("pa\n\tc", configuration)
-        Assert.assertEquals('\n', reader[2])
-        Assert.assertEquals('\t', reader[3])
-        Assert.assertEquals('c', reader[4])
-        Assert.assertThat(reader.getColumnPosition(), Is.`is`(0))
-        Assert.assertThat(reader.getLinePosition(), Is.`is`(1))
+        assertEquals('\n', reader[2])
+        assertEquals('\t', reader[3])
+        assertEquals('c', reader[4])
+        assertEquals(reader.getColumnPosition(), 0)
+        assertEquals(reader.getLinePosition(), 1)
         reader.pop() // p
         reader.pop() // a
-        Assert.assertThat(reader.getColumnPosition(), Is.`is`(2))
-        Assert.assertThat(reader.getLinePosition(), Is.`is`(1))
+        assertEquals(reader.getColumnPosition(), 2)
+        assertEquals(reader.getLinePosition(), 1)
         reader.peek() // \n
         reader.lastChar() // a
-        Assert.assertThat(reader.getColumnPosition(), Is.`is`(2))
-        Assert.assertThat(reader.getLinePosition(), Is.`is`(1))
+        assertEquals(reader.getColumnPosition(), 2)
+        assertEquals(reader.getLinePosition(), 1)
         reader.pop() // \n
-        Assert.assertThat(reader.getColumnPosition(), Is.`is`(0))
-        Assert.assertThat(reader.getLinePosition(), Is.`is`(2))
+        assertEquals(reader.getColumnPosition(), 0)
+        assertEquals(reader.getLinePosition(), 2)
         reader.pop() // \t
-        Assert.assertThat(reader.getColumnPosition(), Is.`is`(4))
-        Assert.assertThat(reader.getLinePosition(), Is.`is`(2))
+        assertEquals(reader.getColumnPosition(), 4)
+        assertEquals(reader.getLinePosition(), 2)
         reader.pop() // c
-        Assert.assertThat(reader.getColumnPosition(), Is.`is`(5))
-        Assert.assertThat(reader.getLinePosition(), Is.`is`(2))
+        assertEquals(reader.getColumnPosition(), 5)
+        assertEquals(reader.getLinePosition(), 2)
     }
 
     @Test
@@ -153,33 +152,33 @@ class CodeBufferTest {
         configuration.setCodeReaderFilters(ReplaceNumbersFilter())
         val code = CodeBuffer("abcd12efgh34", configuration)
         // test #charAt
-        Assert.assertEquals('a', code[0])
-        Assert.assertEquals('-', code[4])
-        Assert.assertEquals('-', code[5])
-        Assert.assertEquals('e', code[6])
-        Assert.assertEquals('-', code[10])
-        Assert.assertEquals('-', code[11])
+        assertEquals('a', code[0])
+        assertEquals('-', code[4])
+        assertEquals('-', code[5])
+        assertEquals('e', code[6])
+        assertEquals('-', code[10])
+        assertEquals('-', code[11])
         // test peek and pop
-        Assert.assertThat(code.peek().toChar(), Is.`is`('a'))
-        Assert.assertThat(code.pop().toChar(), Is.`is`('a'))
-        Assert.assertThat(code.pop().toChar(), Is.`is`('b'))
-        Assert.assertThat(code.pop().toChar(), Is.`is`('c'))
-        Assert.assertThat(code.pop().toChar(), Is.`is`('d'))
-        Assert.assertThat(code.peek().toChar(), Is.`is`('-'))
-        Assert.assertThat(code.pop().toChar(), Is.`is`('-'))
-        Assert.assertThat(code.pop().toChar(), Is.`is`('-'))
-        Assert.assertThat(code.pop().toChar(), Is.`is`('e'))
-        Assert.assertThat(code.pop().toChar(), Is.`is`('f'))
-        Assert.assertThat(code.pop().toChar(), Is.`is`('g'))
-        Assert.assertThat(code.pop().toChar(), Is.`is`('h'))
-        Assert.assertThat(code.pop().toChar(), Is.`is`('-'))
-        Assert.assertThat(code.pop().toChar(), Is.`is`('-'))
+        assertEquals(code.peek().toChar(), 'a')
+        assertEquals(code.pop().toChar(), 'a')
+        assertEquals(code.pop().toChar(), 'b')
+        assertEquals(code.pop().toChar(), 'c')
+        assertEquals(code.pop().toChar(), 'd')
+        assertEquals(code.peek().toChar(), '-')
+        assertEquals(code.pop().toChar(), '-')
+        assertEquals(code.pop().toChar(), '-')
+        assertEquals(code.pop().toChar(), 'e')
+        assertEquals(code.pop().toChar(), 'f')
+        assertEquals(code.pop().toChar(), 'g')
+        assertEquals(code.pop().toChar(), 'h')
+        assertEquals(code.pop().toChar(), '-')
+        assertEquals(code.pop().toChar(), '-')
     }
 
     @Test
     fun theLengthShouldBeTheSameThanTheStringLength() {
         val myCode = "myCode"
-        Assert.assertThat(CodeBuffer(myCode, CodeReaderConfiguration()).length, Is.`is`(6))
+        assertEquals(CodeBuffer(myCode, CodeReaderConfiguration()).length, 6)
     }
 
     @Test
@@ -188,7 +187,7 @@ class CodeBufferTest {
         val codeBuffer = CodeBuffer(myCode, CodeReaderConfiguration())
         codeBuffer.pop()
         codeBuffer.pop()
-        Assert.assertThat(codeBuffer.length, Is.`is`(4))
+        assertEquals(codeBuffer.length, 4)
     }
 
     @Test
@@ -198,27 +197,27 @@ class CodeBufferTest {
         configuration.setCodeReaderFilters(ReplaceNumbersFilter(), ReplaceCharFilter())
         val code = CodeBuffer("abcd12efgh34", configuration)
         // test #charAt
-        Assert.assertEquals('*', code[0])
-        Assert.assertEquals('-', code[4])
-        Assert.assertEquals('-', code[5])
-        Assert.assertEquals('*', code[6])
-        Assert.assertEquals('-', code[10])
-        Assert.assertEquals('-', code[11])
+        assertEquals('*', code[0])
+        assertEquals('-', code[4])
+        assertEquals('-', code[5])
+        assertEquals('*', code[6])
+        assertEquals('-', code[10])
+        assertEquals('-', code[11])
         // test peek and pop
-        Assert.assertThat(code.peek().toChar(), Is.`is`('*'))
-        Assert.assertThat(code.pop().toChar(), Is.`is`('*'))
-        Assert.assertThat(code.pop().toChar(), Is.`is`('*'))
-        Assert.assertThat(code.pop().toChar(), Is.`is`('*'))
-        Assert.assertThat(code.pop().toChar(), Is.`is`('*'))
-        Assert.assertThat(code.peek().toChar(), Is.`is`('-'))
-        Assert.assertThat(code.pop().toChar(), Is.`is`('-'))
-        Assert.assertThat(code.pop().toChar(), Is.`is`('-'))
-        Assert.assertThat(code.pop().toChar(), Is.`is`('*'))
-        Assert.assertThat(code.pop().toChar(), Is.`is`('*'))
-        Assert.assertThat(code.pop().toChar(), Is.`is`('*'))
-        Assert.assertThat(code.pop().toChar(), Is.`is`('*'))
-        Assert.assertThat(code.pop().toChar(), Is.`is`('-'))
-        Assert.assertThat(code.pop().toChar(), Is.`is`('-'))
+        assertEquals(code.peek().toChar(), '*')
+        assertEquals(code.pop().toChar(), '*')
+        assertEquals(code.pop().toChar(), '*')
+        assertEquals(code.pop().toChar(), '*')
+        assertEquals(code.pop().toChar(), '*')
+        assertEquals(code.peek().toChar(), '-')
+        assertEquals(code.pop().toChar(), '-')
+        assertEquals(code.pop().toChar(), '-')
+        assertEquals(code.pop().toChar(), '*')
+        assertEquals(code.pop().toChar(), '*')
+        assertEquals(code.pop().toChar(), '*')
+        assertEquals(code.pop().toChar(), '*')
+        assertEquals(code.pop().toChar(), '-')
+        assertEquals(code.pop().toChar(), '-')
     }
 
     @Test
@@ -229,29 +228,29 @@ class CodeBufferTest {
         configuration.setCodeReaderFilters(ChannelCodeReaderFilter(Any(), WindowingChannel()))
         val code = CodeBuffer("0123456789\nABCDEFGHIJ", configuration)
         // test #charAt
-        Assert.assertEquals('2', code[0])
-        Assert.assertEquals('7', code[5])
-        Assert.assertEquals('\n', code[6])
-        Assert.assertEquals('C', code[7])
-        Assert.assertEquals('H', code[12])
-        Assert.assertEquals(-1, code.intAt(13))
+        assertEquals('2', code[0])
+        assertEquals('7', code[5])
+        assertEquals('\n', code[6])
+        assertEquals('C', code[7])
+        assertEquals('H', code[12])
+        assertEquals(-1, code.intAt(13))
         // test peek and pop
-        Assert.assertThat(code.peek().toChar(), Is.`is`('2'))
-        Assert.assertThat(code.pop().toChar(), Is.`is`('2'))
-        Assert.assertThat(code.pop().toChar(), Is.`is`('3'))
-        Assert.assertThat(code.pop().toChar(), Is.`is`('4'))
-        Assert.assertThat(code.pop().toChar(), Is.`is`('5'))
-        Assert.assertThat(code.pop().toChar(), Is.`is`('6'))
-        Assert.assertThat(code.pop().toChar(), Is.`is`('7')) // and 8 shouldn't show up
-        Assert.assertThat(code.pop().toChar(), Is.`is`('\n'))
-        Assert.assertThat(code.peek().toChar(), Is.`is`('C'))
-        Assert.assertThat(code.pop().toChar(), Is.`is`('C'))
-        Assert.assertThat(code.pop().toChar(), Is.`is`('D'))
-        Assert.assertThat(code.pop().toChar(), Is.`is`('E'))
-        Assert.assertThat(code.pop().toChar(), Is.`is`('F'))
-        Assert.assertThat(code.pop().toChar(), Is.`is`('G'))
-        Assert.assertThat(code.pop().toChar(), Is.`is`('H'))
-        Assert.assertThat(code.pop(), Is.`is`(-1))
+        assertEquals(code.peek().toChar(), '2')
+        assertEquals(code.pop().toChar(), '2')
+        assertEquals(code.pop().toChar(), '3')
+        assertEquals(code.pop().toChar(), '4')
+        assertEquals(code.pop().toChar(), '5')
+        assertEquals(code.pop().toChar(), '6')
+        assertEquals(code.pop().toChar(), '7') // and 8 shouldn't show up
+        assertEquals(code.pop().toChar(), '\n')
+        assertEquals(code.peek().toChar(), 'C')
+        assertEquals(code.pop().toChar(), 'C')
+        assertEquals(code.pop().toChar(), 'D')
+        assertEquals(code.pop().toChar(), 'E')
+        assertEquals(code.pop().toChar(), 'F')
+        assertEquals(code.pop().toChar(), 'G')
+        assertEquals(code.pop().toChar(), 'H')
+        assertEquals(code.pop(), -1)
     }
 
     /**

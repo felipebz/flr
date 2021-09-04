@@ -25,67 +25,67 @@ import com.sonar.sslr.test.lexer.LexerMatchers.hasComment
 import com.sonar.sslr.test.lexer.LexerMatchers.hasToken
 import com.sonar.sslr.test.minic.MiniCLexer.Literals
 import com.sonar.sslr.test.minic.MiniCLexer.Punctuators
-import org.junit.Assert
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
 
 class MiniCLexerTest {
     var lexer = MiniCLexer.create()
     @Test
     fun lexIdentifiers() {
-        Assert.assertThat(lexer.lex("abc"), hasToken("abc", GenericTokenType.IDENTIFIER))
-        Assert.assertThat(lexer.lex("abc0"), hasToken("abc0", GenericTokenType.IDENTIFIER))
-        Assert.assertThat(lexer.lex("abc_0"), hasToken("abc_0", GenericTokenType.IDENTIFIER))
-        Assert.assertThat(lexer.lex("i"), hasToken("i", GenericTokenType.IDENTIFIER))
+        assertThat(lexer.lex("abc"), hasToken("abc", GenericTokenType.IDENTIFIER))
+        assertThat(lexer.lex("abc0"), hasToken("abc0", GenericTokenType.IDENTIFIER))
+        assertThat(lexer.lex("abc_0"), hasToken("abc_0", GenericTokenType.IDENTIFIER))
+        assertThat(lexer.lex("i"), hasToken("i", GenericTokenType.IDENTIFIER))
     }
 
     @Test
     fun lexIntegers() {
-        Assert.assertThat(lexer.lex("0"), hasToken("0", Literals.INTEGER))
-        Assert.assertThat(lexer.lex("000"), hasToken("000", Literals.INTEGER))
-        Assert.assertThat(lexer.lex("1234"), hasToken("1234", Literals.INTEGER))
+        assertThat(lexer.lex("0"), hasToken("0", Literals.INTEGER))
+        assertThat(lexer.lex("000"), hasToken("000", Literals.INTEGER))
+        assertThat(lexer.lex("1234"), hasToken("1234", Literals.INTEGER))
     }
 
     @Test
     fun lexKeywords() {
-        Assert.assertThat(lexer.lex("int"), hasToken(MiniCLexer.Keywords.INT))
-        Assert.assertThat(lexer.lex("void"), hasToken(MiniCLexer.Keywords.VOID))
-        Assert.assertThat(lexer.lex("return"), hasToken(MiniCLexer.Keywords.RETURN))
-        Assert.assertThat(lexer.lex("if"), hasToken(MiniCLexer.Keywords.IF))
-        Assert.assertThat(lexer.lex("else"), hasToken(MiniCLexer.Keywords.ELSE))
-        Assert.assertThat(lexer.lex("while"), hasToken(MiniCLexer.Keywords.WHILE))
-        Assert.assertThat(lexer.lex("break"), hasToken(MiniCLexer.Keywords.BREAK))
-        Assert.assertThat(lexer.lex("continue"), hasToken(MiniCLexer.Keywords.CONTINUE))
-        Assert.assertThat(lexer.lex("struct"), hasToken(MiniCLexer.Keywords.STRUCT))
+        assertThat(lexer.lex("int"), hasToken(MiniCLexer.Keywords.INT))
+        assertThat(lexer.lex("void"), hasToken(MiniCLexer.Keywords.VOID))
+        assertThat(lexer.lex("return"), hasToken(MiniCLexer.Keywords.RETURN))
+        assertThat(lexer.lex("if"), hasToken(MiniCLexer.Keywords.IF))
+        assertThat(lexer.lex("else"), hasToken(MiniCLexer.Keywords.ELSE))
+        assertThat(lexer.lex("while"), hasToken(MiniCLexer.Keywords.WHILE))
+        assertThat(lexer.lex("break"), hasToken(MiniCLexer.Keywords.BREAK))
+        assertThat(lexer.lex("continue"), hasToken(MiniCLexer.Keywords.CONTINUE))
+        assertThat(lexer.lex("struct"), hasToken(MiniCLexer.Keywords.STRUCT))
     }
 
     @Test
     fun lexComments() {
-        Assert.assertThat(lexer.lex("/*test*/"), hasComment("/*test*/"))
-        Assert.assertThat(lexer.lex("/*test*/*/"), hasComment("/*test*/"))
-        Assert.assertThat(lexer.lex("/*test/* /**/"), hasComment("/*test/* /**/"))
-        Assert.assertThat(lexer.lex("/*test1\ntest2\ntest3*/"), hasComment("/*test1\ntest2\ntest3*/"))
+        assertThat(lexer.lex("/*test*/"), hasComment("/*test*/"))
+        assertThat(lexer.lex("/*test*/*/"), hasComment("/*test*/"))
+        assertThat(lexer.lex("/*test/* /**/"), hasComment("/*test/* /**/"))
+        assertThat(lexer.lex("/*test1\ntest2\ntest3*/"), hasComment("/*test1\ntest2\ntest3*/"))
     }
 
     @Test
     fun lexPunctuators() {
-        Assert.assertThat(lexer.lex("("), hasToken(Punctuators.PAREN_L))
-        Assert.assertThat(lexer.lex(")"), hasToken(Punctuators.PAREN_R))
-        Assert.assertThat(lexer.lex("{"), hasToken(Punctuators.BRACE_L))
-        Assert.assertThat(lexer.lex("}"), hasToken(Punctuators.BRACE_R))
-        Assert.assertThat(lexer.lex("="), hasToken(Punctuators.EQ))
-        Assert.assertThat(lexer.lex(","), hasToken(Punctuators.COMMA))
-        Assert.assertThat(lexer.lex(";"), hasToken(Punctuators.SEMICOLON))
-        Assert.assertThat(lexer.lex("+"), hasToken(Punctuators.ADD))
-        Assert.assertThat(lexer.lex("-"), hasToken(Punctuators.SUB))
-        Assert.assertThat(lexer.lex("*"), hasToken(Punctuators.MUL))
-        Assert.assertThat(lexer.lex("/"), hasToken(Punctuators.DIV))
-        Assert.assertThat(lexer.lex("<"), hasToken(Punctuators.LT))
-        Assert.assertThat(lexer.lex("<="), hasToken(Punctuators.LTE))
-        Assert.assertThat(lexer.lex(">"), hasToken(Punctuators.GT))
-        Assert.assertThat(lexer.lex(">="), hasToken(Punctuators.GTE))
-        Assert.assertThat(lexer.lex("=="), hasToken(Punctuators.EQEQ))
-        Assert.assertThat(lexer.lex("!="), hasToken(Punctuators.NE))
-        Assert.assertThat(lexer.lex("++"), hasToken(Punctuators.INC))
-        Assert.assertThat(lexer.lex("--"), hasToken(Punctuators.DEC))
+        assertThat(lexer.lex("("), hasToken(Punctuators.PAREN_L))
+        assertThat(lexer.lex(")"), hasToken(Punctuators.PAREN_R))
+        assertThat(lexer.lex("{"), hasToken(Punctuators.BRACE_L))
+        assertThat(lexer.lex("}"), hasToken(Punctuators.BRACE_R))
+        assertThat(lexer.lex("="), hasToken(Punctuators.EQ))
+        assertThat(lexer.lex(","), hasToken(Punctuators.COMMA))
+        assertThat(lexer.lex(";"), hasToken(Punctuators.SEMICOLON))
+        assertThat(lexer.lex("+"), hasToken(Punctuators.ADD))
+        assertThat(lexer.lex("-"), hasToken(Punctuators.SUB))
+        assertThat(lexer.lex("*"), hasToken(Punctuators.MUL))
+        assertThat(lexer.lex("/"), hasToken(Punctuators.DIV))
+        assertThat(lexer.lex("<"), hasToken(Punctuators.LT))
+        assertThat(lexer.lex("<="), hasToken(Punctuators.LTE))
+        assertThat(lexer.lex(">"), hasToken(Punctuators.GT))
+        assertThat(lexer.lex(">="), hasToken(Punctuators.GTE))
+        assertThat(lexer.lex("=="), hasToken(Punctuators.EQEQ))
+        assertThat(lexer.lex("!="), hasToken(Punctuators.NE))
+        assertThat(lexer.lex("++"), hasToken(Punctuators.INC))
+        assertThat(lexer.lex("--"), hasToken(Punctuators.DEC))
     }
 }

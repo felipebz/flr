@@ -20,8 +20,7 @@
  */
 package org.sonar.sslr.channel
 
-import org.hamcrest.Matchers
-import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.sonar.sslr.channel.ChannelDispatcher.Companion.builder
 
@@ -31,7 +30,7 @@ class RegexChannelTest {
         val dispatcher = builder().addChannel(MyWordChannel()).addChannel(BlackholeChannel()).build<StringBuilder>()
         val output = StringBuilder()
         dispatcher.consume(CodeReader("my word"), output)
-        Assert.assertThat(output.toString(), Matchers.`is`("<w>my</w> <w>word</w>"))
+        assertEquals(output.toString(), "<w>my</w> <w>word</w>")
     }
 
     @Test
@@ -41,9 +40,9 @@ class RegexChannelTest {
         val codeReaderConfiguration = CodeReaderConfiguration()
         val literalLength = 100000
         val veryLongLiteral = String.format(String.format("%%0%dd", literalLength), 0).replace("0", "a")
-        Assert.assertThat(veryLongLiteral.length, Matchers.`is`(100000))
+        assertEquals(veryLongLiteral.length, 100000)
         dispatcher.consume(CodeReader("\">$veryLongLiteral<\"", codeReaderConfiguration), output)
-        Assert.assertThat(output.toString(), Matchers.`is`("<literal>\">$veryLongLiteral<\"</literal>"))
+        assertEquals(output.toString(), "<literal>\">$veryLongLiteral<\"</literal>")
     }
 
     private class MyLiteralChannel : RegexChannel<StringBuilder>("\"[^\"]*+\"") {

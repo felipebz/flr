@@ -20,8 +20,7 @@
  */
 package org.sonar.sslr.channel
 
-import org.hamcrest.core.Is
-import org.junit.Assert
+import org.junit.Assert.*
 import org.junit.Test
 import java.io.StringReader
 import java.util.regex.Pattern
@@ -32,18 +31,18 @@ class CodeReaderTest {
         val reader = CodeReader("package org.sonar;")
         val sw = StringBuilder()
         reader.pop(sw)
-        Assert.assertEquals("p", sw.toString())
+        assertEquals("p", sw.toString())
         reader.pop(sw)
-        Assert.assertEquals("pa", sw.toString())
+        assertEquals("pa", sw.toString())
     }
 
     @Test
     fun testPeekACharArray() {
         val reader = CodeReader(StringReader("bar"))
         val chars = reader.peek(2)
-        Assert.assertThat(chars.size, Is.`is`(2))
-        Assert.assertThat(chars[0], Is.`is`('b'))
-        Assert.assertThat(chars[1], Is.`is`('a'))
+        assertEquals(chars.size, 2)
+        assertEquals(chars[0], 'b')
+        assertEquals(chars[1], 'a')
     }
 
     @Test
@@ -51,8 +50,8 @@ class CodeReaderTest {
         val reader = CodeReader(StringReader("package org.sonar;"))
         val result = StringBuilder()
         reader.peekTo({ endFlag -> 'r' == endFlag.toChar() }, result)
-        Assert.assertEquals("package o", result.toString())
-        Assert.assertThat(reader.peek(), Is.`is`('p'.code)) // never called pop()
+        assertEquals("package o", result.toString())
+        assertEquals(reader.peek(), 'p'.code) // never called pop()
     }
 
     @Test
@@ -60,28 +59,28 @@ class CodeReaderTest {
         val reader = CodeReader("foo")
         val result = StringBuilder()
         reader.peekTo({ i -> false }, result)
-        Assert.assertEquals("foo", result.toString())
+        assertEquals("foo", result.toString())
     }
 
     @Test
     fun testPopToWithRegex() {
         val reader = CodeReader(StringReader("123ABC"))
         val token = StringBuilder()
-        Assert.assertEquals(3, reader.popTo(Pattern.compile("\\d+").matcher(String()), token).toLong())
-        Assert.assertEquals("123", token.toString())
-        Assert.assertEquals(-1, reader.popTo(Pattern.compile("\\d+").matcher(String()), token).toLong())
-        Assert.assertEquals(3, reader.popTo(Pattern.compile("\\w+").matcher(String()), token).toLong())
-        Assert.assertEquals("123ABC", token.toString())
-        Assert.assertEquals(-1, reader.popTo(Pattern.compile("\\w+").matcher(String()), token).toLong())
+        assertEquals(3, reader.popTo(Pattern.compile("\\d+").matcher(String()), token).toLong())
+        assertEquals("123", token.toString())
+        assertEquals(-1, reader.popTo(Pattern.compile("\\d+").matcher(String()), token).toLong())
+        assertEquals(3, reader.popTo(Pattern.compile("\\w+").matcher(String()), token).toLong())
+        assertEquals("123ABC", token.toString())
+        assertEquals(-1, reader.popTo(Pattern.compile("\\w+").matcher(String()), token).toLong())
 
         // Should reset matcher with empty string:
         val matcher = Pattern.compile("\\d+").matcher("")
         reader.popTo(matcher, token)
         try {
             matcher.find(1)
-            Assert.fail("exception expected")
+            fail("exception expected")
         } catch (e: IndexOutOfBoundsException) {
-            Assert.assertEquals("Illegal start index", e.message)
+            assertEquals("Illegal start index", e.message)
         }
     }
 
@@ -96,7 +95,7 @@ class CodeReaderTest {
         reader.pop()
         reader.pop()
 
-        Assert.assertThrows(
+        assertThrows(
             "Unable to apply regular expression '([a-fA-F]|\\d)+' at line 2 and column 1," +
                     " because it led to a stack overflow error." +
                     " This error may be due to an inefficient use of alternations - see https://bugs.java.com/bugdatabase/view_bug.do?bug_id=5050507",
@@ -111,15 +110,15 @@ class CodeReaderTest {
         val digitMatcher = Pattern.compile("\\d+").matcher(String())
         val alphabeticMatcher = Pattern.compile("[a-zA-Z]").matcher(String())
         val token = StringBuilder()
-        Assert.assertEquals(
+        assertEquals(
             -1,
             CodeReader(StringReader("123 ABC")).popTo(digitMatcher, alphabeticMatcher, token).toLong()
         )
-        Assert.assertEquals("", token.toString())
-        Assert.assertEquals(
+        assertEquals("", token.toString())
+        assertEquals(
             3,
             CodeReader(StringReader("123ABC")).popTo(digitMatcher, alphabeticMatcher, token).toLong()
         )
-        Assert.assertEquals("123", token.toString())
+        assertEquals("123", token.toString())
     }
 }

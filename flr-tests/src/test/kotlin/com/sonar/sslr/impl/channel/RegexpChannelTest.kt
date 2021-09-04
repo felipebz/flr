@@ -23,8 +23,9 @@ package com.sonar.sslr.impl.channel
 import com.sonar.sslr.api.GenericTokenType
 import com.sonar.sslr.test.lexer.LexerMatchers.hasToken
 import com.sonar.sslr.test.lexer.MockHelper.mockLexer
+import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
-import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.sonar.sslr.channel.CodeReader
 import org.sonar.sslr.test.channel.ChannelMatchers.consume
@@ -35,15 +36,15 @@ class RegexpChannelTest {
     @Test
     fun testRegexpToHandleNumber() {
         channel = RegexpChannel(GenericTokenType.CONSTANT, "[0-9]*")
-        Assert.assertThat(channel, Matchers.not(consume("Not a number", lexer)))
-        Assert.assertThat(channel, consume(CodeReader("56;"), lexer))
-        Assert.assertThat(lexer.tokens, hasToken("56", GenericTokenType.CONSTANT))
+        assertThat(channel, Matchers.not(consume("Not a number", lexer)))
+        assertThat(channel, consume(CodeReader("56;"), lexer))
+        assertThat(lexer.tokens, hasToken("56", GenericTokenType.CONSTANT))
     }
 
     @Test
     fun testColumnNumber() {
         channel = RegexpChannel(GenericTokenType.CONSTANT, "[0-9]*")
-        Assert.assertThat(channel, consume("56;", lexer))
-        Assert.assertThat(lexer.tokens[0].column, Matchers.`is`(0))
+        assertThat(channel, consume("56;", lexer))
+        assertEquals(lexer.tokens[0].column, 0)
     }
 }

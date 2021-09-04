@@ -26,39 +26,38 @@ import com.sonar.sslr.impl.channel.RegexpChannelBuilder.o2n
 import com.sonar.sslr.impl.channel.RegexpChannelBuilder.one2n
 import com.sonar.sslr.impl.channel.RegexpChannelBuilder.opt
 import com.sonar.sslr.impl.channel.RegexpChannelBuilder.or
-import org.hamcrest.Matchers
-import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class RegexpChannelBuilderTest {
     @Test
     fun testOpt() {
-        Assert.assertThat(opt("L"), Matchers.equalTo("L?+"))
+        assertEquals(opt("L"), "L?+")
     }
 
     @Test
     fun testOne2n() {
-        Assert.assertThat(one2n("L"), Matchers.equalTo("L++"))
+         assertEquals(one2n("L"), "L++")
     }
 
     @Test
     fun testO2n() {
-        Assert.assertThat(o2n("L"), Matchers.equalTo("L*+"))
+         assertEquals(o2n("L"), "L*+")
     }
 
     @Test
     fun testg() {
-        Assert.assertThat(g("L"), Matchers.equalTo("(L)"))
-        Assert.assertThat(g("L", "l"), Matchers.equalTo("(Ll)"))
+         assertEquals(g("L"), "(L)")
+         assertEquals(g("L", "l"), "(Ll)")
     }
 
     @Test
     fun testOr() {
-        Assert.assertThat(or("L", "l", "U", "u"), Matchers.equalTo("(L|l|U|u)"))
+         assertEquals(or("L", "l", "U", "u"), "(L|l|U|u)")
     }
 
     @Test
     fun testAnyButNot() {
-        Assert.assertThat(anyButNot("L", "l"), Matchers.equalTo("[^Ll]"))
+         assertEquals(anyButNot("L", "l"), "[^Ll]")
     }
 }

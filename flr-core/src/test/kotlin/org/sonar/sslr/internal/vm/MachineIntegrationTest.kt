@@ -29,12 +29,13 @@ import org.junit.Test
 import org.junit.rules.Timeout
 import org.sonar.sslr.grammar.GrammarException
 import org.sonar.sslr.internal.vm.Machine.Companion.execute
+import java.util.concurrent.TimeUnit
 
 // TODO this test should also check state of machine after execution
 class MachineIntegrationTest {
     @JvmField
     @Rule
-    var timeout = Timeout(5000)
+    var timeout = Timeout(5, TimeUnit.SECONDS)
 
     @Test
     fun pattern() {
