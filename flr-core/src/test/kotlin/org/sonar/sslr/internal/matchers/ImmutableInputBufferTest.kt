@@ -21,7 +21,7 @@
 package org.sonar.sslr.internal.matchers
 
 import org.fest.assertions.Assertions.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class ImmutableInputBufferTest {
     @Test

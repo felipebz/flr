@@ -25,17 +25,22 @@ import com.sonar.sslr.api.RecognitionException
 import com.sonar.sslr.test.minic.MiniCParser.parseFile
 import com.sonar.sslr.test.minic.MiniCParser.parseString
 import org.fest.assertions.Assertions.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
 class ParserTest {
-    @Test(expected = RecognitionException::class)
+    @Test
     fun lexerErrorStringWrappedInRecognitionException() {
-        parseString(".")
+        assertThrows<RecognitionException> {
+            parseString(".")
+        }
     }
 
-    @Test(expected = RecognitionException::class)
+    @Test
     fun lexerErrorFileWrappedInRecognitionException() {
-        parseFile("/OwnExamples/lexererror.mc")
+        assertThrows<RecognitionException> {
+            parseFile("/OwnExamples/lexererror.mc")
+        }
     }
 
     @Test

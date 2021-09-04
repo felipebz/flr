@@ -38,8 +38,8 @@ import com.sonar.sslr.impl.matcher.GrammarFunctions.Standard.one2n
 import com.sonar.sslr.impl.matcher.GrammarFunctions.Standard.opt
 import com.sonar.sslr.impl.matcher.GrammarFunctions.Standard.or
 import org.fest.assertions.Assertions.assertThat
-import org.junit.Assert.assertThrows
-import org.junit.Test
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.mock
 import org.sonar.sslr.internal.vm.*
 import org.sonar.sslr.internal.vm.lexerful.*
@@ -88,34 +88,33 @@ class GrammarFunctionsTest {
 
     @Test
     fun firstOf_requires_at_least_one_argument() {
-        assertThrows("You must define at least one matcher.", IllegalArgumentException::class.java) {
+        assertThrows<IllegalArgumentException>("You must define at least one matcher.") {
             GrammarFunctions.Standard.firstOf()
         }
     }
 
     @Test
     fun and_requires_at_least_one_argument() {
-        assertThrows("You must define at least one matcher.", IllegalArgumentException::class.java) {
+        assertThrows<IllegalArgumentException>("You must define at least one matcher.") {
             and()
         }
     }
 
     @Test
     fun isOneOfThem_requires_at_least_one_argument() {
-        assertThrows("You must define at least one matcher.", IllegalArgumentException::class.java) {
+        assertThrows<IllegalArgumentException>("You must define at least one matcher.") {
             isOneOfThem()
         }
     }
 
     @Test
     fun test_incorrect_type_of_parsing_expression() {
-        assertThrows("java.lang.Object", IllegalArgumentException::class.java) {
+        assertThrows<IllegalArgumentException>("java.lang.Object") {
             and(Any())
         }
     }
 
     @Test
-    @Throws(Exception::class)
     fun private_constructors() {
         assertThat(hasPrivateConstructor(GrammarFunctions::class.java)).isTrue()
         assertThat(hasPrivateConstructor(GrammarFunctions.Standard::class.java)).isTrue()
@@ -124,7 +123,6 @@ class GrammarFunctionsTest {
     }
 
     companion object {
-        @Throws(Exception::class)
         private fun hasPrivateConstructor(cls: Class<*>): Boolean {
             val constructor = cls.getDeclaredConstructor()
             val result = !constructor.isAccessible

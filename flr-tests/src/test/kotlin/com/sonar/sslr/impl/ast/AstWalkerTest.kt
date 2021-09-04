@@ -26,8 +26,8 @@ import com.sonar.sslr.api.AstNodeType
 import com.sonar.sslr.api.AstVisitor
 import com.sonar.sslr.impl.MockTokenType
 import com.sonar.sslr.test.lexer.MockHelper.mockToken
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.kotlin.*
 import java.util.*
 
@@ -47,7 +47,7 @@ class AstWalkerTest {
     private val tiger: AstNodeType = object : AstNodeType {}
     private val astVisitor = mock<AstVisitor>()
     private val astAndTokenVisitor = mock<AstAndTokenVisitor>()
-    @Before
+    @BeforeEach
     fun init() {
         ast121 = AstNode(animal, "121", null)
         ast122 = AstNode(tiger, "122", null)

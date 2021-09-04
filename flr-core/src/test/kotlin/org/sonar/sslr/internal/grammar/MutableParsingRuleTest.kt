@@ -22,8 +22,8 @@ package org.sonar.sslr.internal.grammar
 
 import com.sonar.sslr.api.AstNode
 import org.fest.assertions.Assertions.assertThat
-import org.junit.Assert.assertThrows
-import org.junit.Test
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.sonar.sslr.grammar.GrammarException
@@ -37,7 +37,7 @@ class MutableParsingRuleTest {
         val ruleKey = mock<GrammarRuleKey>()
         val rule = MutableParsingRule(ruleKey)
         rule.`is`(mock<ParsingExpression>())
-        assertThrows("The rule '$ruleKey' has already been defined somewhere in the grammar.", GrammarException::class.java) {
+        assertThrows<GrammarException>("The rule '$ruleKey' has already been defined somewhere in the grammar.") {
             rule.`is`(mock<ParsingExpression>())
         }
     }

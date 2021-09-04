@@ -20,7 +20,7 @@
  */
 package org.sonar.sslr.examples.grammars
 
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.sonar.sslr.tests.Assertions.assertThat
 import java.util.regex.Pattern
 import java.util.regex.PatternSyntaxException

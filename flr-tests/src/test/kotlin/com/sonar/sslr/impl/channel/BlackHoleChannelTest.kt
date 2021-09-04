@@ -23,7 +23,7 @@ package com.sonar.sslr.impl.channel
 import com.sonar.sslr.impl.Lexer.Companion.builder
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.sonar.sslr.channel.CodeReader
 import org.sonar.sslr.test.channel.ChannelMatchers.consume
 import org.sonar.sslr.test.channel.ChannelMatchers.hasNextChar

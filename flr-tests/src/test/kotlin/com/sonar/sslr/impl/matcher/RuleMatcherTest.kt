@@ -25,14 +25,14 @@ import com.sonar.sslr.impl.channel.RegexpChannelBuilder.or
 import com.sonar.sslr.impl.matcher.GrammarFunctions.Standard.o2n
 import com.sonar.sslr.impl.matcher.GrammarFunctions.Standard.opt
 import org.fest.assertions.Assertions.assertThat
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class RuleMatcherTest {
     private lateinit var javaClassDefinition: RuleDefinition
     private lateinit var opMatcher: Matcher
 
-    @Before
+    @BeforeEach
     fun init() {
         javaClassDefinition = RuleDefinition("JavaClassDefinition")
         opMatcher = opt("implements", MockTokenType.WORD, o2n(",", MockTokenType.WORD))

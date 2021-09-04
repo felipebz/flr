@@ -27,7 +27,7 @@ import com.sonar.sslr.test.lexer.MockHelper.mockLexer
 import com.sonar.sslr.test.lexer.MockHelper.mockToken
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.sonar.sslr.test.channel.ChannelMatchers.consume
 
 class CommentChannelTest {

@@ -23,7 +23,7 @@ package org.sonar.sslr.toolkit
 import com.sonar.sslr.api.Grammar
 import com.sonar.sslr.impl.Parser
 import org.fest.assertions.Assertions.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 
 class AbstractConfigurationModelTest {

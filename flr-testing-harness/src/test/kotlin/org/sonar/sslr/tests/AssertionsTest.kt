@@ -21,12 +21,11 @@
 package org.sonar.sslr.tests
 
 import org.fest.assertions.Assertions.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.lang.reflect.Constructor
 
 class AssertionsTest {
     @Test
-    @Throws(Exception::class)
     fun private_constructor() {
         val constructor: Constructor<*> = Assertions::class.java.getDeclaredConstructor()
         assertThat(constructor.isAccessible).isFalse()

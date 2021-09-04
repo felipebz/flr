@@ -22,8 +22,8 @@ package org.sonar.sslr.test.channel
 
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
-import org.junit.Assert.assertEquals
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 import org.sonar.sslr.channel.Channel
 import org.sonar.sslr.channel.CodeReader
 

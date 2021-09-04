@@ -26,7 +26,7 @@ import com.sonar.sslr.test.lexer.LexerMatchers.hasToken
 import com.sonar.sslr.test.minic.MiniCLexer.Literals
 import com.sonar.sslr.test.minic.MiniCLexer.Punctuators
 import org.hamcrest.MatcherAssert.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class MiniCLexerTest {
     var lexer = MiniCLexer.create()

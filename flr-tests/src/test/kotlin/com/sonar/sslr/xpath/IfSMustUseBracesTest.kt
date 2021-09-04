@@ -25,13 +25,13 @@ import com.sonar.sslr.test.minic.MiniCGrammar
 import com.sonar.sslr.test.minic.MiniCParser.parseFile
 import com.sonar.sslr.xpath.api.AstNodeXPathQuery.Companion.create
 import org.fest.assertions.Assertions.assertThat
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class IfSMustUseBracesTest {
     private lateinit var fileNode: AstNode
 
-    @Before
+    @BeforeEach
     fun init() {
         fileNode = parseFile("/xpath/ifSMustUseBraces.mc")
     }

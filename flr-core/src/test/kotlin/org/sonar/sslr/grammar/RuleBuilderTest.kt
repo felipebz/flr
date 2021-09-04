@@ -20,12 +20,11 @@
  */
 package org.sonar.sslr.grammar
 
-import org.junit.Assert.assertThrows
-import org.junit.Test
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito
 import org.mockito.kotlin.*
 import org.sonar.sslr.grammar.GrammarBuilder.RuleBuilder
-import org.sonar.sslr.grammar.GrammarException
 import org.sonar.sslr.internal.vm.CompilableGrammarRule
 import org.sonar.sslr.internal.vm.ParsingExpression
 
@@ -59,7 +58,7 @@ class RuleBuilderTest {
         whenever(delegate.expression).thenReturn(e)
         val ruleKey = mock<GrammarRuleKey>()
         whenever(delegate.ruleKey).thenReturn(ruleKey)
-        assertThrows("The rule '$ruleKey' has already been defined somewhere in the grammar.", GrammarException::class.java) {
+        assertThrows<GrammarException>("The rule '$ruleKey' has already been defined somewhere in the grammar.") {
             ruleBuilder.`is`(e)
         }
     }

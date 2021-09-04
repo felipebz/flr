@@ -20,8 +20,8 @@
  */
 package org.sonar.sslr.examples.grammars
 
-import org.junit.Assert.assertThrows
-import org.junit.Test
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.sonar.sslr.examples.grammars.IncorrectGrammar.Companion.infiniteOneOrMore
 import org.sonar.sslr.examples.grammars.IncorrectGrammar.Companion.infiniteZeroOrMore
 import org.sonar.sslr.grammar.GrammarException
@@ -31,42 +31,42 @@ import java.util.regex.PatternSyntaxException
 class IncorrectGrammarTest {
     @Test
     fun undefined_rule() {
-        assertThrows("The rule 'A' hasn't been defined.", GrammarException::class.java) {
+        assertThrows<GrammarException>("The rule 'A' hasn't been defined.") {
             IncorrectGrammar.undefinedRule()
         }
     }
 
     @Test
     fun reference_to_undefined_rule() {
-        assertThrows("The rule 'B' hasn't been defined.", GrammarException::class.java) {
+        assertThrows<GrammarException>("The rule 'B' hasn't been defined.") {
             IncorrectGrammar.referenceToUndefinedRule()
         }
     }
 
     @Test
     fun rule_defined_twice() {
-        assertThrows("The rule 'A' has already been defined somewhere in the grammar.", GrammarException::class.java) {
+        assertThrows<GrammarException>("The rule 'A' has already been defined somewhere in the grammar.") {
             IncorrectGrammar.ruleDefinedTwice()
         }
     }
 
     @Test
     fun incorrect_regular_expression() {
-        assertThrows("Dangling meta character '*' near index 0", PatternSyntaxException::class.java) {
+        assertThrows<PatternSyntaxException>("Dangling meta character '*' near index 0") {
             IncorrectGrammar.incorrectRegularExpression()
         }
     }
 
     @Test
     fun infinite_zero_or_more_expression() {
-        assertThrows("The inner part of ZeroOrMore and OneOrMore must not allow empty matches", GrammarException::class.java) {
+        assertThrows<GrammarException>("The inner part of ZeroOrMore and OneOrMore must not allow empty matches") {
             ParseRunner(infiniteZeroOrMore().rule(IncorrectGrammar.A)).parse("foo".toCharArray())
         }
     }
 
     @Test
     fun infinite_one_or_more_expression() {
-        assertThrows("The inner part of ZeroOrMore and OneOrMore must not allow empty matches", GrammarException::class.java) {
+        assertThrows<GrammarException>("The inner part of ZeroOrMore and OneOrMore must not allow empty matches") {
             ParseRunner(infiniteOneOrMore().rule(IncorrectGrammar.A)).parse("foo".toCharArray())
         }
     }

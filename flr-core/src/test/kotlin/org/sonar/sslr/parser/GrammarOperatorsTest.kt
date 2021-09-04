@@ -23,8 +23,8 @@ package org.sonar.sslr.parser
 import com.sonar.sslr.api.TokenType
 import com.sonar.sslr.api.Trivia.TriviaKind
 import org.fest.assertions.Assertions.assertThat
-import org.junit.Assert.assertThrows
-import org.junit.Test
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.mock
 import org.sonar.sslr.internal.vm.*
 import org.sonar.sslr.parser.GrammarOperators.commentTrivia
@@ -88,13 +88,12 @@ class GrammarOperatorsTest {
 
     @Test
     fun illegal_argument() {
-        assertThrows("java.lang.Object", IllegalArgumentException::class.java) {
+        assertThrows<IllegalArgumentException>("java.lang.Object") {
             sequence(Any())
         }
     }
 
     @Test
-    @Throws(Exception::class)
     fun private_constructor() {
         val constructor: Constructor<*> = GrammarOperators::class.java.getDeclaredConstructor()
         assertThat(constructor.isAccessible).isFalse()

@@ -20,8 +20,10 @@
  */
 package org.sonar.sslr.channel
 
-import org.junit.Assert.*
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.fail
 import java.io.StringReader
 import java.util.regex.Pattern
 
@@ -95,11 +97,10 @@ class CodeReaderTest {
         reader.pop()
         reader.pop()
 
-        assertThrows(
+        assertThrows<ChannelException>(
             "Unable to apply regular expression '([a-fA-F]|\\d)+' at line 2 and column 1," +
                     " because it led to a stack overflow error." +
-                    " This error may be due to an inefficient use of alternations - see https://bugs.java.com/bugdatabase/view_bug.do?bug_id=5050507",
-            ChannelException::class.java
+                    " This error may be due to an inefficient use of alternations - see https://bugs.java.com/bugdatabase/view_bug.do?bug_id=5050507"
         ) {
             reader.popTo(Pattern.compile("([a-fA-F]|\\d)+").matcher(""), StringBuilder())
         }

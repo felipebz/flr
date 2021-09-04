@@ -22,7 +22,7 @@ package com.sonar.sslr.impl.channel
 
 import com.sonar.sslr.impl.Lexer.Companion.builder
 import org.fest.assertions.Assertions.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.sonar.sslr.channel.CodeReader
 
 class BomCharacterChannelTest {

@@ -24,28 +24,29 @@ import com.sonar.sslr.api.AstNode
 import com.sonar.sslr.api.GenericTokenType
 import com.sonar.sslr.test.lexer.MockHelper.mockToken
 import org.fest.assertions.Assertions.assertThat
-import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.mock
 
 class RuleDefinitionTest {
     @Test
     fun testEmptyIs() {
         val javaClassDefinition = RuleDefinition("JavaClassDefinition")
-        val thrown = Assert.assertThrows(
-            IllegalStateException::class.java
-        ) { javaClassDefinition.`is`() }
-        Assert.assertEquals("The rule 'JavaClassDefinition' should at least contains one matcher.", thrown.message)
+        val thrown = assertThrows<IllegalStateException> {
+            javaClassDefinition.`is`()
+        }
+        assertEquals("The rule 'JavaClassDefinition' should at least contains one matcher.", thrown.message)
     }
 
     @Test
     fun testMoreThanOneDefinitionForASigleRuleWithIs() {
         val javaClassDefinition = RuleDefinition("JavaClassDefinition")
         javaClassDefinition.`is`("option1")
-        val thrown = Assert.assertThrows(
-            IllegalStateException::class.java
-        ) { javaClassDefinition.`is`("option2") }
-        Assert.assertEquals(
+        val thrown = assertThrows<IllegalStateException> {
+            javaClassDefinition.`is`("option2")
+        }
+        assertEquals(
             "The rule 'JavaClassDefinition' has already been defined somewhere in the grammar.",
             thrown.message
         )

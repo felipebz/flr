@@ -21,8 +21,8 @@
 package org.sonar.sslr.toolkit
 
 import org.fest.assertions.Assertions.assertThat
-import org.junit.Assert.assertThrows
-import org.junit.Test
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
 class ConfigurationPropertyTest {
 
@@ -60,7 +60,7 @@ class ConfigurationPropertyTest {
 
     @Test
     fun setValue_should_fail_if_validation_fails() {
-        assertThrows("The value \"foo\" did not pass validation: Not valid!", IllegalArgumentException::class.java) {
+        assertThrows<IllegalArgumentException>("The value \"foo\" did not pass validation: Not valid!") {
             ConfigurationProperty("", "", "", object : ValidationCallback {
                 override fun validate(newValueCandidate: String): String {
                     return if (newValueCandidate.isEmpty()) "" else "The value \"$newValueCandidate\" did not pass validation: Not valid!"

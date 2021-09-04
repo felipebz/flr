@@ -21,8 +21,8 @@
 package org.sonar.sslr.toolkit
 
 import org.fest.assertions.Assertions.assertThat
-import org.junit.Assert.assertThrows
-import org.junit.Test
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.sonar.sslr.toolkit.Validators.integerRangeValidator
 
 class ValidatorsTest {
@@ -64,7 +64,7 @@ class ValidatorsTest {
 
     @Test
     fun integerRangeValidator_should_fail_with_upper_smaller_than_lower_bound() {
-        assertThrows("lowerBound(42) <= upperBound(0)", IllegalArgumentException::class.java) {
+        assertThrows<IllegalArgumentException>("lowerBound(42) <= upperBound(0)") {
             integerRangeValidator(42, 0)
         }
     }

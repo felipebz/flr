@@ -21,7 +21,7 @@
 package org.sonar.sslr.internal.vm
 
 import org.fest.assertions.Assertions.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class SequenceExpressionTest {
     @Test

@@ -28,14 +28,16 @@ import com.sonar.sslr.impl.Parser
 import com.sonar.sslr.impl.channel.BlackHoleChannel
 import com.sonar.sslr.impl.channel.RegexpChannel
 import com.sonar.sslr.impl.matcher.RuleDefinition
-import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
 class ParserAssertTest {
     private lateinit var rule: Rule
     private lateinit var parser: Parser<*>
-    @Before
+    @BeforeEach
     fun setUp() {
         val lexer = Lexer.builder()
             .withFailIfNoChannelToConsumeOneCharacter(true)
@@ -61,56 +63,56 @@ class ParserAssertTest {
 
     @Test
     fun test_matches_failure() {
-        val thrown = Assert.assertThrows(
-            ParsingResultComparisonFailure::class.java
-        ) { ParserAssert(parser).matches("bar") }
-        Assert.assertTrue(thrown.message.contains("Rule 'ruleName' should match:\nbar"))
+        val thrown = assertThrows<ParsingResultComparisonFailure> {
+            ParserAssert(parser).matches("bar")
+        }
+        assertTrue(thrown.message.contains("Rule 'ruleName' should match:\nbar"))
     }
 
     @Test
     fun test2_matches_failure() {
-        val thrown = Assert.assertThrows(
-            ParsingResultComparisonFailure::class.java
-        ) { ParserAssert(parser).matches("foo bar") }
-        Assert.assertTrue(thrown.message.contains("Rule 'ruleName' should match:\nfoo bar"))
+        val thrown = assertThrows<ParsingResultComparisonFailure> {
+            ParserAssert(parser).matches("foo bar")
+        }
+        assertTrue(thrown.message.contains("Rule 'ruleName' should match:\nfoo bar"))
     }
 
     @Test
     fun test_notMatches_failure() {
-        val thrown = Assert.assertThrows(
-            AssertionError::class.java
-        ) { ParserAssert(parser).notMatches("foo") }
-        Assert.assertEquals("Rule 'ruleName' should not match:\nfoo", thrown.message)
+        val thrown = assertThrows<AssertionError> {
+            ParserAssert(parser).notMatches("foo")
+        }
+        assertEquals("Rule 'ruleName' should not match:\nfoo", thrown.message)
     }
 
     @Test
     fun test_notMatches_failure2() {
         rule.override("foo", GenericTokenType.EOF)
-        val thrown = Assert.assertThrows(
-            AssertionError::class.java
-        ) { ParserAssert(parser).notMatches("foo") }
-        Assert.assertEquals("Rule 'ruleName' should not match:\nfoo", thrown.message)
+        val thrown = assertThrows<AssertionError> {
+            ParserAssert(parser).notMatches("foo")
+        }
+        assertEquals("Rule 'ruleName' should not match:\nfoo", thrown.message)
     }
 
     @Test
     fun should_not_accept_null_root_rule() {
         parser.setRootRule(null)
-        val thrown = Assert.assertThrows(
-            AssertionError::class.java
-        ) { ParserAssert(parser).matches("") }
-        Assert.assertEquals("Root rule of the parser should not be null", thrown.message)
+        val thrown = assertThrows<AssertionError> {
+            ParserAssert(parser).matches("")
+        }
+        assertEquals("Root rule of the parser should not be null", thrown.message)
     }
 
     @Test
     fun test_lexer_failure() {
-        val thrown = Assert.assertThrows(
-            ParsingResultComparisonFailure::class.java
-        ) { ParserAssert(parser).matches("_") }
+        val thrown = assertThrows<ParsingResultComparisonFailure> {
+            ParserAssert(parser).matches("_")
+        }
         val expectedMessage = StringBuilder()
             .append("Rule 'ruleName' should match:\n")
             .append("_\n")
             .append("Lexer error: Unable to lex")
             .toString()
-        Assert.assertTrue(thrown.message.contains(expectedMessage))
+        assertTrue(thrown.message.contains(expectedMessage))
     }
 }

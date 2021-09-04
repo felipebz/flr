@@ -21,12 +21,12 @@
 package com.sonar.sslr.test.minic.rules
 
 import com.sonar.sslr.test.minic.MiniCGrammar
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.sonar.sslr.tests.Assertions.assertThat
 
 class ExpressionTest : RuleTest() {
-    @Before
+    @BeforeEach
     override fun init() {
         p.setRootRule(g.rule(MiniCGrammar.EXPRESSION))
     }

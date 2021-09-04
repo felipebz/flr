@@ -21,8 +21,8 @@
 package org.sonar.sslr.internal.vm
 
 import org.fest.assertions.Assertions.assertThat
-import org.junit.Assert.assertThrows
-import org.junit.Test
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.*
 import org.sonar.sslr.grammar.GrammarException
 import org.sonar.sslr.internal.matchers.Matcher
@@ -149,7 +149,7 @@ class InstructionTest {
         stack.index = 13
         whenever(machine.peek()).thenReturn(stack)
         whenever(machine.index).thenReturn(13)
-        assertThrows("The inner part of ZeroOrMore and OneOrMore must not allow empty matches", GrammarException::class.java) {
+        assertThrows<GrammarException>("The inner part of ZeroOrMore and OneOrMore must not allow empty matches") {
             instruction.execute(machine)
         }
     }

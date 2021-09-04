@@ -24,24 +24,22 @@ import com.sonar.sslr.api.RecognitionException
 import com.sonar.sslr.api.Token
 import com.sonar.sslr.impl.Parser.Companion.builder
 import org.fest.assertions.Assertions.assertThat
-import org.junit.Assert.assertThrows
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
-import org.junit.rules.TemporaryFolder
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.io.TempDir
 import org.sonar.sslr.internal.matchers.ExpressionGrammar
 import java.io.File
 import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
+import java.nio.file.Path
 
 class ParserAdapterTest {
 
-    @JvmField
-    @Rule
-    var temporaryFolder = TemporaryFolder()
     private lateinit var grammar: ExpressionGrammar
     private lateinit var parser: ParserAdapter<*>
-    @Before
+
+    @BeforeEach
     fun setUp() {
         grammar = ExpressionGrammar()
         parser = ParserAdapter(Charset.forName("UTF-8"), grammar)
@@ -59,15 +57,14 @@ class ParserAdapterTest {
 
     @Test
     fun should_not_parse_invalid_string() {
-        assertThrows("Parse error", RecognitionException::class.java) {
+        assertThrows<RecognitionException>("Parse error") {
             parser.parse("")
         }
     }
 
     @Test
-    @Throws(Exception::class)
-    fun should_parse_file() {
-        val file = temporaryFolder.newFile()
+    fun should_parse_file(@TempDir temporaryFolder: Path) {
+        val file = temporaryFolder.resolve("test").toFile()
         file.writeText("1+1", StandardCharsets.UTF_8)
         parser.parse(file)
     }
@@ -75,7 +72,7 @@ class ParserAdapterTest {
     @Test
     fun should_not_parse_invalid_file() {
         val file = File("notfound")
-        assertThrows(RecognitionException::class.java) {
+        assertThrows<RecognitionException> {
             parser.parse(file)
         }
     }
@@ -88,14 +85,14 @@ class ParserAdapterTest {
     @Test
     fun parse_tokens_unsupported() {
         val tokens: List<Token> = listOf()
-        assertThrows(UnsupportedOperationException::class.java) {
+        assertThrows<UnsupportedOperationException> {
             parser.parse(tokens)
         }
     }
 
     @Test
     fun rootRule_unsupported() {
-        assertThrows(UnsupportedOperationException::class.java) {
+        assertThrows<UnsupportedOperationException> {
             parser.getRootRule()
         }
     }

@@ -23,7 +23,7 @@ package com.sonar.sslr.xpath.api
 import com.sonar.sslr.api.AstNode
 import com.sonar.sslr.api.AstNodeType
 import org.fest.assertions.Assertions.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class AstNodeXPathQueryTest {
     @Test

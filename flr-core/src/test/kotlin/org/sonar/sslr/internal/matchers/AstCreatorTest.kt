@@ -25,7 +25,7 @@ import com.sonar.sslr.api.GenericTokenType
 import com.sonar.sslr.api.TokenType
 import com.sonar.sslr.impl.ast.AstXmlPrinter.Companion.print
 import org.fest.assertions.Assertions.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever

@@ -22,8 +22,8 @@ package org.sonar.sslr.parser
 
 import com.sonar.sslr.api.Rule
 import org.fest.assertions.Assertions.assertThat
-import org.junit.Assert.assertThrows
-import org.junit.Test
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.mock
 import org.sonar.sslr.grammar.GrammarException
 import org.sonar.sslr.internal.grammar.MutableParsingRule
@@ -38,7 +38,7 @@ class LexerlessGrammarTest {
 
     @Test
     fun should_throw_exception() {
-        assertThrows("Unable to instanciate the rule 'rootRule': ", GrammarException::class.java) {
+        assertThrows<GrammarException>("Unable to instanciate the rule 'rootRule': ") {
             IllegalGrammar()
         }
     }

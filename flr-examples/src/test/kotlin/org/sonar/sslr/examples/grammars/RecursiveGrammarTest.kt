@@ -20,7 +20,7 @@
  */
 package org.sonar.sslr.examples.grammars
 
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.sonar.sslr.tests.Assertions.assertThat
 
 class RecursiveGrammarTest {

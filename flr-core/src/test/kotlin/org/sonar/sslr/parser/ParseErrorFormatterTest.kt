@@ -21,15 +21,15 @@
 package org.sonar.sslr.parser
 
 import org.fest.assertions.Assertions.assertThat
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.sonar.sslr.internal.matchers.ImmutableInputBuffer
 import org.sonar.sslr.internal.matchers.InputBuffer
 
 class ParseErrorFormatterTest {
     private lateinit var formatter: ParseErrorFormatter
 
-    @Before
+    @BeforeEach
     fun setUp() {
         formatter = ParseErrorFormatter()
     }

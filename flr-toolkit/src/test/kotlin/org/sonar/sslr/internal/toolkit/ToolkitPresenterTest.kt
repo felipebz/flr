@@ -24,8 +24,8 @@ import com.sonar.sslr.api.AstNode
 import com.sonar.sslr.api.GenericTokenType
 import com.sonar.sslr.api.Token
 import org.fest.assertions.Assertions.assertThat
-import org.junit.Assert.assertThrows
-import org.junit.Test
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.kotlin.*
@@ -40,7 +40,7 @@ import java.nio.charset.StandardCharsets
 class ToolkitPresenterTest {
     @Test
     fun checkInitializedBad() {
-        assertThrows("the view must be set before the presenter can be ran", IllegalStateException::class.java) {
+        assertThrows<IllegalStateException>("the view must be set before the presenter can be ran") {
             val presenter = ToolkitPresenter(mock(), mock())
             presenter.checkInitialized()
         }
@@ -54,7 +54,6 @@ class ToolkitPresenterTest {
     }
 
     @Test
-    @Throws(InterruptedException::class)
     fun initUncaughtExceptionsHandler() {
         val view = mock<ToolkitView>()
         val presenter = ToolkitPresenter(mock(), mock())
@@ -131,7 +130,7 @@ class ToolkitPresenterTest {
 
     @Test
     fun runFailsWithoutView() {
-        assertThrows(IllegalStateException::class.java) {
+        assertThrows<IllegalStateException> {
             ToolkitPresenter(mock(), mock()).run("foo")
         }
     }
@@ -263,7 +262,6 @@ class ToolkitPresenterTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun onXPathEvaluateButtonClickStringResult() {
         val view = mock<ToolkitView>()
         whenever(view.xPath).thenReturn("//foo/@tokenValue")
@@ -376,7 +374,7 @@ class ToolkitPresenterTest {
         val view = mock<ToolkitView>()
         val presenter = ToolkitPresenter(mock(), mock())
         presenter.setView(view)
-        assertThrows("No such configuration property: name", IllegalArgumentException::class.java) {
+        assertThrows<IllegalArgumentException>("No such configuration property: name") {
             presenter.onConfigurationPropertyFocusLost("name")
         }
     }

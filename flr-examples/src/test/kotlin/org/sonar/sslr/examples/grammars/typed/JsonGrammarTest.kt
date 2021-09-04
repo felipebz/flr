@@ -23,13 +23,13 @@ package org.sonar.sslr.examples.grammars.typed
 import com.sonar.sslr.api.RecognitionException
 import com.sonar.sslr.api.typed.ActionParser
 import org.fest.assertions.Assertions.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.sonar.sslr.examples.grammars.typed.api.*
 import java.nio.charset.StandardCharsets
 
 class JsonGrammarTest {
     @Test
-    @Throws(Exception::class)
     fun number() {
         assertLiteral("1234567890")
         assertLiteral("-1234567890")
@@ -41,14 +41,14 @@ class JsonGrammarTest {
         assertLiteral("1E-2")
     }
 
-    @Test(expected = RecognitionException::class)
-    @Throws(Exception::class)
+    @Test
     fun number_not_parsed() {
-        parser.parse("[ 01 ]")
+        assertThrows<RecognitionException> {
+            parser.parse("[ 01 ]")
+        }
     }
 
     @Test
-    @Throws(Exception::class)
     fun string() {
         assertLiteral("\"\"")
         assertLiteral("\"\\\"\"")
@@ -64,7 +64,6 @@ class JsonGrammarTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun value() {
         assertValue("\"string\"", LiteralTree::class.java)
         assertValue("{}", ObjectTree::class.java)
@@ -76,7 +75,6 @@ class JsonGrammarTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun `object`() {
         var tree = (parser.parse("{}") as JsonTree).arrayOrObject() as ObjectTree
         assertThat(tree.openCurlyBraceToken().value()).isEqualTo("{")

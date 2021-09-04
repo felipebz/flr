@@ -21,8 +21,8 @@
 package org.sonar.sslr.internal.vm
 
 import org.fest.assertions.Assertions.assertThat
-import org.junit.Assert.assertThrows
-import org.junit.Test
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.mock
 import org.sonar.sslr.grammar.GrammarRuleKey
 
@@ -30,6 +30,7 @@ class RuleRefExpressionTest {
     private val ruleKey = mock<GrammarRuleKey>()
     private val expression = RuleRefExpression(ruleKey)
     private val machine = mock<Machine>()
+
     @Test
     fun should_compile() {
         assertThat(expression.compile(CompilationHandler())).containsOnly(expression)
@@ -39,7 +40,7 @@ class RuleRefExpressionTest {
 
     @Test
     fun can_not_be_executed() {
-        assertThrows(UnsupportedOperationException::class.java) {
+        assertThrows<UnsupportedOperationException> {
             expression.execute(machine)
         }
     }

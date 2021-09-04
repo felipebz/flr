@@ -20,11 +20,12 @@
  */
 package org.sonar.sslr.channel
 
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
 import org.hamcrest.MatcherAssert
 import org.hamcrest.Matchers
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.sonar.sslr.channel.ChannelDispatcher.Companion.builder
 
 class ChannelDispatcherTest {
@@ -46,10 +47,12 @@ class ChannelDispatcherTest {
         assertTrue(dispatcher.getChannels()[1] is FakeChannel)
     }
 
-    @Test(expected = IllegalStateException::class)
+    @Test
     fun shouldThrowExceptionWhenNoChannelToConsumeNextCharacter() {
-        val dispatcher = builder().failIfNoChannelToConsumeOneCharacter().build<StringBuilder>()
-        dispatcher.consume(CodeReader("two words"), StringBuilder())
+        assertThrows<IllegalStateException> {
+            val dispatcher = builder().failIfNoChannelToConsumeOneCharacter().build<StringBuilder>()
+            dispatcher.consume(CodeReader("two words"), StringBuilder())
+        }
     }
 
     private class SpaceDeletionChannel : Channel<StringBuilder>() {

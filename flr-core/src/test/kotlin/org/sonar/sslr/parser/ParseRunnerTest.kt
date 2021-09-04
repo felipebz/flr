@@ -22,7 +22,7 @@ package org.sonar.sslr.parser
 
 import com.sonar.sslr.api.GenericTokenType
 import org.fest.assertions.Assertions.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.sonar.sslr.internal.grammar.MutableParsingRule
 import org.sonar.sslr.parser.GrammarOperators.endOfInput
 import org.sonar.sslr.parser.GrammarOperators.nextNot

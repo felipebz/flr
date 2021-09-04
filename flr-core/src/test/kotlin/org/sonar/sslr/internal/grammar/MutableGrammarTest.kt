@@ -21,7 +21,7 @@
 package org.sonar.sslr.internal.grammar
 
 import org.fest.assertions.Assertions.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 import org.sonar.sslr.grammar.GrammarRuleKey
 import org.sonar.sslr.internal.vm.CompilableGrammarRule

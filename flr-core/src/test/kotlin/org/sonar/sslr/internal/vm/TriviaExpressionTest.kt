@@ -22,7 +22,7 @@ package org.sonar.sslr.internal.vm
 
 import com.sonar.sslr.api.Trivia.TriviaKind
 import org.fest.assertions.Assertions.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 import org.sonar.sslr.internal.vm.Instruction.Companion.call
 import org.sonar.sslr.internal.vm.Instruction.Companion.ignoreErrors

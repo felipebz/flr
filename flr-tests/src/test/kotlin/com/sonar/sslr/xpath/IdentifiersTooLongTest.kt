@@ -24,13 +24,13 @@ import com.sonar.sslr.api.AstNode
 import com.sonar.sslr.test.minic.MiniCParser.parseFile
 import com.sonar.sslr.xpath.api.AstNodeXPathQuery.Companion.create
 import org.fest.assertions.Assertions.assertThat
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class IdentifiersTooLongTest {
     private lateinit var fileNode: AstNode
 
-    @Before
+    @BeforeEach
     fun init() {
         fileNode = parseFile("/xpath/identifiersTooLong.mc")
     }

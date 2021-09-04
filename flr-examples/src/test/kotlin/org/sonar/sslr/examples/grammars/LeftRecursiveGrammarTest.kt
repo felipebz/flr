@@ -20,8 +20,9 @@
  */
 package org.sonar.sslr.examples.grammars
 
-import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.sonar.sslr.examples.grammars.LeftRecursiveGrammar.Companion.eliminatedImmediateLeftRecursion
 import org.sonar.sslr.examples.grammars.LeftRecursiveGrammar.Companion.eliminatedIndirectLeftRecursion
 import org.sonar.sslr.examples.grammars.LeftRecursiveGrammar.Companion.immediateLeftRecursion
@@ -34,10 +35,10 @@ class LeftRecursiveGrammarTest {
     @Test
     fun should_detect_immediate_left_recursion() {
         val grammar = immediateLeftRecursion()
-        val thrown = Assert.assertThrows(
-            GrammarException::class.java
-        ) { ParseRunner(grammar.rule(LeftRecursiveGrammar.A)).parse("".toCharArray()) }
-        Assert.assertEquals(
+        val thrown = assertThrows<GrammarException> {
+            ParseRunner(grammar.rule(LeftRecursiveGrammar.A)).parse("".toCharArray())
+        }
+        assertEquals(
             "Left recursion has been detected, involved rule: " + LeftRecursiveGrammar.A,
             thrown.message
         )
@@ -62,10 +63,10 @@ class LeftRecursiveGrammarTest {
     @Test
     fun should_detect_indirect_left_recursion() {
         val grammar = indirectLeftRecursion()
-        val thrown = Assert.assertThrows(
-            GrammarException::class.java
-        ) { ParseRunner(grammar.rule(LeftRecursiveGrammar.A)).parse("".toCharArray()) }
-        Assert.assertEquals(
+        val thrown = assertThrows<GrammarException> {
+            ParseRunner(grammar.rule(LeftRecursiveGrammar.A)).parse("".toCharArray())
+        }
+        assertEquals(
             "Left recursion has been detected, involved rule: " + LeftRecursiveGrammar.B,
             thrown.message
         )

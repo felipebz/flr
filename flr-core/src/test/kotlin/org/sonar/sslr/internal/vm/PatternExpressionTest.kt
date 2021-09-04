@@ -21,9 +21,9 @@
 package org.sonar.sslr.internal.vm
 
 import org.fest.assertions.Assertions.assertThat
-import org.junit.Assert
-import org.junit.Assert.assertThrows
-import org.junit.Test
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.fail
 import org.mockito.kotlin.*
 import org.sonar.sslr.grammar.GrammarException
 
@@ -55,7 +55,7 @@ class PatternExpressionTest {
         // Should reset matcher with empty string:
         try {
             expression.getMatcher().find(1)
-            Assert.fail("exception expected")
+            fail("exception expected")
         } catch (e: IndexOutOfBoundsException) {
             assertThat(e.message).isEqualTo("Illegal start index")
         }
@@ -75,7 +75,7 @@ class PatternExpressionTest {
         // Should reset matcher with empty string:
         try {
             expression.getMatcher().find(1)
-            Assert.fail("exception expected")
+            fail("exception expected")
         } catch (e: IndexOutOfBoundsException) {
             assertThat(e.message).isEqualTo("Illegal start index")
         }
@@ -85,11 +85,9 @@ class PatternExpressionTest {
     fun should_catch_StackOverflowError() {
         whenever(machine.length).thenReturn(1)
         whenever(machine[0]).thenThrow(StackOverflowError::class.java)
-        assertThrows(
-            "The regular expression 'foo|bar' has led to a stack overflow error."
-                    + " This error is certainly due to an inefficient use of alternations. See https://bugs.java.com/bugdatabase/view_bug.do?bug_id=5050507",
-            GrammarException::class.java
-        ) {
+        assertThrows<GrammarException> (
+            "The regular expression 'foo|bar' has led to a stack overflow error." +
+                    " This error is certainly due to an inefficient use of alternations. See https://bugs.java.com/bugdatabase/view_bug.do?bug_id=5050507") {
             expression.execute(machine)
         }
     }

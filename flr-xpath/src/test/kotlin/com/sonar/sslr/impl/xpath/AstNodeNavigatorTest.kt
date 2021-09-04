@@ -24,39 +24,37 @@ import com.sonar.sslr.api.AstNode
 import com.sonar.sslr.api.GenericTokenType
 import com.sonar.sslr.api.Token
 import org.fest.assertions.Assertions.assertThat
-import org.junit.Assert.assertThrows
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import java.net.URI
-
 
 class AstNodeNavigatorTest {
 
     private lateinit var navigator: AstNodeNavigator
 
-    @Before
+    @BeforeEach
     fun setUp() {
         navigator = AstNodeNavigator()
     }
 
     @Test
     fun getTextStringValue() {
-        assertThrows(UnsupportedOperationException::class.java) {
+        assertThrows<UnsupportedOperationException> {
             navigator.getTextStringValue(null)
         }
     }
 
     @Test
     fun getCommentStringValue() {
-        assertThrows(UnsupportedOperationException::class.java) {
+        assertThrows<UnsupportedOperationException> {
             navigator.getCommentStringValue(null)
         }
     }
 
     @Test
-    @Throws(Exception::class)
     fun getAttributeStringValue() {
         val astNode = AstNode(Token.builder()
                 .setURI(URI("tests://unittest"))
@@ -74,14 +72,14 @@ class AstNodeNavigatorTest {
     fun getAttributeStringValue2() {
         val attribute = mock<AstNodeNavigator.Attribute>()
         whenever(attribute.name).thenReturn("foo")
-        assertThrows(UnsupportedOperationException::class.java) {
+        assertThrows<UnsupportedOperationException> {
             navigator.getAttributeStringValue(attribute)
         }
     }
 
     @Test
     fun getElementStringValue() {
-        assertThrows("Implicit nodes to string conversion is not supported. Use the tokenValue attribute instead.", UnsupportedOperationException::class.java) {
+        assertThrows<UnsupportedOperationException>("Implicit nodes to string conversion is not supported. Use the tokenValue attribute instead.") {
             navigator.getElementStringValue(null)
         }
     }
@@ -91,14 +89,14 @@ class AstNodeNavigatorTest {
     /* Namespaces */
     @Test
     fun getNamespacePrefix() {
-        assertThrows(UnsupportedOperationException::class.java) {
+        assertThrows<UnsupportedOperationException> {
             navigator.getNamespacePrefix(null)
         }
     }
 
     @Test
     fun getNamespaceStringValue() {
-        assertThrows(UnsupportedOperationException::class.java) {
+        assertThrows<UnsupportedOperationException> {
             navigator.getNamespaceStringValue(null)
         }
     }
@@ -219,7 +217,7 @@ class AstNodeNavigatorTest {
 
     @Test
     fun getChildAxisIterator2() {
-        assertThrows(UnsupportedOperationException::class.java) {
+        assertThrows<UnsupportedOperationException> {
             navigator.getChildAxisIterator(Any())
         }
     }
@@ -237,21 +235,21 @@ class AstNodeNavigatorTest {
 
     @Test
     fun getParentNode2() {
-        assertThrows(UnsupportedOperationException::class.java) {
+        assertThrows<UnsupportedOperationException> {
             navigator.getParentNode(Any())
         }
     }
 
     @Test
     fun getParentAxisIterator() {
-        assertThrows(UnsupportedOperationException::class.java) {
+        assertThrows<UnsupportedOperationException> {
             navigator.getParentAxisIterator(Any())
         }
     }
 
     @Test
     fun getAttributeAxisIterator() {
-        assertThrows(UnsupportedOperationException::class.java) {
+        assertThrows<UnsupportedOperationException> {
             navigator.getAttributeAxisIterator(Any())
         }
     }

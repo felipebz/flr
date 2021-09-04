@@ -25,8 +25,8 @@ import com.sonar.sslr.test.lexer.LexerMatchers.hasToken
 import com.sonar.sslr.test.lexer.MockHelper.mockLexer
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
-import org.junit.Assert.assertEquals
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 import org.sonar.sslr.channel.CodeReader
 import org.sonar.sslr.test.channel.ChannelMatchers.consume
 

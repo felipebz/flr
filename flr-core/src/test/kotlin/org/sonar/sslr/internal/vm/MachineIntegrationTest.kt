@@ -23,19 +23,16 @@ package org.sonar.sslr.internal.vm
 import com.sonar.sslr.api.GenericTokenType
 import com.sonar.sslr.api.Trivia.TriviaKind
 import org.fest.assertions.Assertions.assertThat
-import org.junit.Assert.assertThrows
-import org.junit.Rule
-import org.junit.Test
-import org.junit.rules.Timeout
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.Timeout
+import org.junit.jupiter.api.assertThrows
 import org.sonar.sslr.grammar.GrammarException
 import org.sonar.sslr.internal.vm.Machine.Companion.execute
 import java.util.concurrent.TimeUnit
 
 // TODO this test should also check state of machine after execution
+@Timeout(value = 5, unit = TimeUnit.SECONDS)
 class MachineIntegrationTest {
-    @JvmField
-    @Rule
-    var timeout = Timeout(5, TimeUnit.SECONDS)
 
     @Test
     fun pattern() {
@@ -111,7 +108,7 @@ class MachineIntegrationTest {
                 StringExpression("")
             )
         ).compile(CompilationHandler())
-        assertThrows("The inner part of ZeroOrMore and OneOrMore must not allow empty matches", GrammarException::class.java) {
+        assertThrows<GrammarException>("The inner part of ZeroOrMore and OneOrMore must not allow empty matches") {
             execute("foo", instructions)
         }
     }
@@ -132,7 +129,7 @@ class MachineIntegrationTest {
                 StringExpression("")
             )
         ).compile(CompilationHandler())
-        assertThrows("The inner part of ZeroOrMore and OneOrMore must not allow empty matches", GrammarException::class.java) {
+        assertThrows<GrammarException>("The inner part of ZeroOrMore and OneOrMore must not allow empty matches") {
             execute("foo", instructions)
         }
     }

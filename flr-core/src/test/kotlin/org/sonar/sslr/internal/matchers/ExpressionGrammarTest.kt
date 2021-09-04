@@ -22,8 +22,8 @@ package org.sonar.sslr.internal.matchers
 
 import com.sonar.sslr.impl.ast.AstXmlPrinter.Companion.print
 import org.fest.assertions.Assertions.assertThat
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.sonar.sslr.internal.matchers.AstCreator.Companion.create
 import org.sonar.sslr.parser.ParseErrorFormatter
 import org.sonar.sslr.parser.ParseRunner
@@ -31,7 +31,7 @@ import org.sonar.sslr.parser.ParseRunner
 class ExpressionGrammarTest {
     private lateinit var grammar: ExpressionGrammar
 
-    @Before
+    @BeforeEach
     fun setUp() {
         grammar = ExpressionGrammar()
     }
@@ -84,7 +84,6 @@ class ExpressionGrammarTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun should_create_ast() {
         val inputString = "20 * 2 + 2 - var"
         val grammar = ExpressionGrammar()

@@ -21,8 +21,8 @@
 package com.sonar.sslr.impl.typed
 
 import org.fest.assertions.Assertions.assertThat
-import org.junit.Assert.assertThrows
-import org.junit.Test
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.*
 import org.sonar.sslr.grammar.GrammarRuleKey
 import org.sonar.sslr.grammar.LexerlessGrammarBuilder
@@ -46,7 +46,6 @@ class DelayedRuleInvocationExpressionTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun should_compile_methods() {
         val b = spy(LexerlessGrammarBuilder.create())
         val ruleKey = mock<GrammarRuleKey>()
@@ -64,16 +63,14 @@ class DelayedRuleInvocationExpressionTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun should_fail_when_method_is_not_mapped() {
-        assertThrows("Cannot find the rule key corresponding to the invoked method: FOO()", IllegalStateException::class.java) {
+        assertThrows<IllegalStateException>("Cannot find the rule key corresponding to the invoked method: FOO()") {
             val method = DelayedRuleInvocationExpressionTest::class.java.getDeclaredMethod("FOO")
             DelayedRuleInvocationExpression(LexerlessGrammarBuilder.create(), mock(), method).compile(mock())
         }
     }
 
     @Test
-    @Throws(Exception::class)
     fun test_toString() {
         val ruleKey = mock<GrammarRuleKey>()
         whenever(ruleKey.toString()).thenReturn("foo")

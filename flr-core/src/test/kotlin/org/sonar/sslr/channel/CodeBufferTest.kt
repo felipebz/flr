@@ -20,9 +20,12 @@
  */
 package org.sonar.sslr.channel
 
-import org.junit.Assert.assertEquals
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertTimeout
 import java.io.IOException
+import java.time.Duration
+import java.time.Duration.ofSeconds
 import java.util.regex.Pattern
 
 class CodeBufferTest {
@@ -146,7 +149,6 @@ class CodeBufferTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun testCodeReaderFilter() {
         val configuration = CodeReaderConfiguration()
         configuration.setCodeReaderFilters(ReplaceNumbersFilter())
@@ -191,7 +193,6 @@ class CodeBufferTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun testSeveralCodeReaderFilter() {
         val configuration = CodeReaderConfiguration()
         configuration.setCodeReaderFilters(ReplaceNumbersFilter(), ReplaceCharFilter())
@@ -221,7 +222,6 @@ class CodeBufferTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun testChannelCodeReaderFilter() {
         // create a windowing channel that drops the 2 first characters, keeps 6 characters and drops the rest of the line
         val configuration = CodeReaderConfiguration()
@@ -256,15 +256,16 @@ class CodeBufferTest {
     /**
      * Backward compatibility with a COBOL plugin: filter returns 0 instead of -1, when end of the stream has been reached.
      */
-    @Test(timeout = 1000)
+    @Test
     fun testWrongEndOfStreamFilter() {
-        val configuration = CodeReaderConfiguration()
-        configuration.setCodeReaderFilters(WrongEndOfStreamFilter())
-        CodeBuffer("foo", configuration)
+        assertTimeout(ofSeconds(1)) {
+            val configuration = CodeReaderConfiguration()
+            configuration.setCodeReaderFilters(WrongEndOfStreamFilter())
+            CodeBuffer("foo", configuration)
+        }
     }
 
     internal inner class WrongEndOfStreamFilter : CodeReaderFilter<Any>() {
-        @Throws(IOException::class)
         override fun read(filteredBuffer: CharArray, offset: Int, length: Int): Int {
             return 0
         }
@@ -273,7 +274,6 @@ class CodeBufferTest {
     internal inner class ReplaceNumbersFilter : CodeReaderFilter<Any>() {
         private val pattern = Pattern.compile("\\d")
         private val REPLACEMENT = "-"
-        @Throws(IOException::class)
         override fun read(cbuf: CharArray, off: Int, len: Int): Int {
             val tempBuffer = CharArray(cbuf.size)
             val charCount = getReader().read(tempBuffer, off, len)
@@ -288,7 +288,6 @@ class CodeBufferTest {
     internal inner class ReplaceCharFilter : CodeReaderFilter<Any>() {
         private val pattern = Pattern.compile("[a-zA-Z]")
         private val REPLACEMENT = "*"
-        @Throws(IOException::class)
         override fun read(cbuf: CharArray, off: Int, len: Int): Int {
             val tempBuffer = CharArray(cbuf.size)
             val charCount = getReader().read(tempBuffer, off, len)

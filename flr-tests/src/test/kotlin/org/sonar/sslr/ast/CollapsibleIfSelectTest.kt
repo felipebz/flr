@@ -24,7 +24,7 @@ import com.sonar.sslr.api.AstNode
 import com.sonar.sslr.test.minic.MiniCGrammar
 import com.sonar.sslr.test.minic.MiniCParser
 import org.fest.assertions.Assertions.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.io.File
 
 class CollapsibleIfSelectTest {

@@ -22,9 +22,10 @@ package com.sonar.sslr.impl.typed
 
 import com.sonar.sslr.impl.typed.Interceptor.create
 import org.fest.assertions.Assertions.assertThat
-import org.junit.Assert
-import org.junit.Assert.assertEquals
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.objectweb.asm.ClassWriter
 import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes
@@ -86,7 +87,7 @@ class InterceptorTest {
         assertEquals("m()", interceptedTarget.m())
         assertEquals(1, interceptedMethods.size.toLong())
         intercept = true
-        Assert.assertNull(interceptedTarget.m())
+        assertNull(interceptedTarget.m())
         assertEquals(2, interceptedMethods.size.toLong())
     }
 
@@ -128,9 +129,9 @@ class InterceptorTest {
 
     @Test
     fun requires_class_to_be_public() {
-        val thrown = Assert.assertThrows(
-            IllegalAccessError::class.java
-        ) { create(NonPublicClass::class.java, arrayOf(), arrayOf(), methodInterceptor) }
+        val thrown = assertThrows<IllegalAccessError> {
+            create(NonPublicClass::class.java, arrayOf(), arrayOf(), methodInterceptor)
+        }
         assertThat(thrown.message) // Note that details of the message are different between JDK versions
             .startsWith("class GeneratedBySSLR cannot access its superclass com.sonar.sslr.impl.typed.InterceptorTest\$NonPublicClass")
     }
@@ -142,9 +143,9 @@ class InterceptorTest {
      */
     @Test
     fun requires_final_methods_to_be_non_public() {
-        val thrown = Assert.assertThrows(
-            VerifyError::class.java
-        ) { create(PublicFinalMethod::class.java, arrayOf(), arrayOf(), methodInterceptor) }
+        val thrown = assertThrows<VerifyError> {
+            create(PublicFinalMethod::class.java, arrayOf(), arrayOf(), methodInterceptor)
+        }
         assertThat(thrown.message) // Note that details of the message are different between JDK versions
             .startsWith("class GeneratedBySSLR overrides final method")
     }
@@ -157,9 +158,9 @@ class InterceptorTest {
 
     @Test
     fun requires_non_primitive_return_types() {
-        Assert.assertThrows(
-            UnsupportedOperationException::class.java
-        ) { create(PrimitiveReturnType::class.java, arrayOf(), arrayOf(), methodInterceptor) }
+        assertThrows<UnsupportedOperationException> {
+            create(PrimitiveReturnType::class.java, arrayOf(), arrayOf(), methodInterceptor)
+        }
     }
 
     class PrimitiveReturnType {
@@ -167,7 +168,6 @@ class InterceptorTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun should_use_ClassLoader_of_intercepted_class() {
         val cv = ClassWriter(ClassWriter.COMPUTE_MAXS or ClassWriter.COMPUTE_FRAMES)
         cv.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC, "Target", null, "java/lang/Object", null)

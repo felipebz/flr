@@ -24,8 +24,8 @@ import com.sonar.sslr.api.Grammar.Companion.getAllRuleFields
 import com.sonar.sslr.api.Grammar.Companion.getRuleFields
 import com.sonar.sslr.impl.matcher.RuleDefinition
 import org.fest.assertions.Assertions.assertThat
-import org.junit.Assert.assertThrows
-import org.junit.Test
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.mock
 import org.sonar.sslr.grammar.GrammarException
 import org.sonar.sslr.internal.grammar.MutableParsingRule
@@ -52,13 +52,12 @@ class GrammarTest {
 
     @Test
     fun method_rule_should_throw_exception_by_default() {
-        assertThrows(UnsupportedOperationException::class.java) {
+        assertThrows<UnsupportedOperationException> {
             MyGrammar().rule(mock())
         }
     }
 
     @Test
-    @Throws(IllegalAccessException::class)
     fun should_automatically_instanciate_lexerful_rules() {
         val ruleFields = getAllRuleFields(
             MyGrammar::class.java
@@ -74,7 +73,6 @@ class GrammarTest {
     }
 
     @Test
-    @Throws(IllegalAccessException::class)
     fun should_automatically_instanciate_lexerless_rules() {
         val ruleFields = getAllRuleFields(
             MyLexerlessGrammar::class.java
@@ -91,7 +89,7 @@ class GrammarTest {
 
     @Test
     fun should_throw_exception() {
-        assertThrows("Unable to instanciate the rule 'rootRule': ", GrammarException::class.java) {
+        assertThrows<GrammarException>("Unable to instanciate the rule 'rootRule': ") {
             IllegalGrammar()
         }
     }

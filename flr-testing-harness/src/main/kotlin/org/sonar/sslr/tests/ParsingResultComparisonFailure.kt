@@ -20,7 +20,7 @@
  */
 package org.sonar.sslr.tests
 
-import org.junit.ComparisonFailure
+import org.opentest4j.AssertionFailedError
 
 /**
  *
@@ -29,7 +29,7 @@ import org.junit.ComparisonFailure
  * @since 1.16
  */
 public class ParsingResultComparisonFailure(override val message: String, expected: String?, actual: String?) :
-    ComparisonFailure(
+    AssertionFailedError(
         message, expected, actual
     ) {
     public constructor(expected: String?, actual: String?) : this(

@@ -22,7 +22,7 @@ package com.sonar.sslr.impl.ast
 
 import com.sonar.sslr.api.AstNode
 import org.fest.assertions.Assertions.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 
 class AlwaysSkipFromAstTest {

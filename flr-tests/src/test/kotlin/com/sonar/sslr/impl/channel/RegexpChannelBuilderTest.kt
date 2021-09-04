@@ -26,8 +26,8 @@ import com.sonar.sslr.impl.channel.RegexpChannelBuilder.o2n
 import com.sonar.sslr.impl.channel.RegexpChannelBuilder.one2n
 import com.sonar.sslr.impl.channel.RegexpChannelBuilder.opt
 import com.sonar.sslr.impl.channel.RegexpChannelBuilder.or
-import org.junit.Assert.assertEquals
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 
 class RegexpChannelBuilderTest {
     @Test

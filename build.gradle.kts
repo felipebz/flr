@@ -36,7 +36,8 @@ subprojects {
 
     dependencies {
         implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
-        testImplementation("junit:junit:4.13.1")
+        testImplementation(platform("org.junit:junit-bom:5.7.2"))
+        testImplementation("org.junit.jupiter:junit-jupiter")
     }
 
     kotlin {
@@ -47,6 +48,10 @@ subprojects {
         kotlinOptions {
             this.jvmTarget = "1.8"
         }
+    }
+
+    tasks.test {
+        useJUnitPlatform()
     }
 
     jacoco {

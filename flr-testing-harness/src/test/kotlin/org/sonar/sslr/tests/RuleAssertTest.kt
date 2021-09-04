@@ -21,14 +21,16 @@
 package org.sonar.sslr.tests
 
 import com.sonar.sslr.api.Rule
-import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.sonar.sslr.internal.grammar.MutableParsingRule
 
 class RuleAssertTest {
     private lateinit var rule: Rule
-    @Before
+    @BeforeEach
     fun setUp() {
         rule = MutableParsingRule("ruleName").`is`("foo")
     }
@@ -42,18 +44,18 @@ class RuleAssertTest {
 
     @Test
     fun test_matches_failure() {
-        val thrown = Assert.assertThrows(
-            ParsingResultComparisonFailure::class.java
-        ) { RuleAssert(rule).matches("bar") }
-        Assert.assertTrue(thrown.message.contains("Rule 'ruleName' should match:\nbar"))
+        val thrown = assertThrows<ParsingResultComparisonFailure> {
+            RuleAssert(rule).matches("bar")
+        }
+        assertTrue(thrown.message.contains("Rule 'ruleName' should match:\nbar"))
     }
 
     @Test
     fun test_notMatches_failure() {
-        val thrown = Assert.assertThrows(
-            AssertionError::class.java
-        ) { RuleAssert(rule).notMatches("foo") }
-        Assert.assertEquals(thrown.message, "Rule 'ruleName' should not match:\nfoo")
+        val thrown = assertThrows<AssertionError> {
+            RuleAssert(rule).notMatches("foo")
+        }
+        assertEquals(thrown.message, "Rule 'ruleName' should not match:\nfoo")
     }
 
     @Test
@@ -70,18 +72,18 @@ class RuleAssertTest {
 
     @Test
     fun matchesPrefix_full_mistmatch() {
-        val thrown = Assert.assertThrows(
-            ParsingResultComparisonFailure::class.java
-        ) { RuleAssert(rule).matchesPrefix("bar", " baz") }
-        Assert.assertTrue(thrown.message.contains("Rule 'ruleName' should match:\nbar\nwhen followed by:\n baz"))
+        val thrown = assertThrows<ParsingResultComparisonFailure> {
+            RuleAssert(rule).matchesPrefix("bar", " baz")
+        }
+        assertTrue(thrown.message.contains("Rule 'ruleName' should match:\nbar\nwhen followed by:\n baz"))
     }
 
     @Test
     fun matchesPrefix_wrong_prefix() {
-        val thrown = Assert.assertThrows(
-            ParsingResultComparisonFailure::class.java
-        ) { RuleAssert(rule).matchesPrefix("foo bar", " baz") }
-        Assert.assertEquals(
+        val thrown = assertThrows<ParsingResultComparisonFailure> {
+            RuleAssert(rule).matchesPrefix("foo bar", " baz")
+        }
+        assertEquals(
             thrown.message,
             "Rule 'ruleName' should match:\nfoo bar\nwhen followed by:\n baz\nbut matched:\nfoo"
         )

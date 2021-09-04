@@ -23,7 +23,7 @@ package org.sonar.sslr.internal.vm.lexerful
 import com.sonar.sslr.api.Token
 import com.sonar.sslr.api.TokenType
 import org.fest.assertions.Assertions.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.mockito.kotlin.inOrder
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verifyNoMoreInteractions

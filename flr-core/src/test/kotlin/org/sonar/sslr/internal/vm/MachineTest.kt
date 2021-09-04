@@ -21,8 +21,8 @@
 package org.sonar.sslr.internal.vm
 
 import org.fest.assertions.Assertions.assertThat
-import org.junit.Assert.assertThrows
-import org.junit.Test
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.sonar.sslr.grammar.GrammarException
@@ -32,7 +32,7 @@ class MachineTest {
     @Test
     fun subSequence_not_supported() {
         val machine = Machine("", emptyArray())
-        assertThrows(UnsupportedOperationException::class.java) {
+        assertThrows<UnsupportedOperationException> {
             machine.subSequence(0, 0)
         }
     }
@@ -106,7 +106,7 @@ class MachineTest {
         assertThat(machine.peek().leftRecursion).isEqualTo(1)
 
         // same rule and index of input sequence
-        assertThrows("Left recursion has been detected, involved rule: $matcher", GrammarException::class.java) {
+        assertThrows<GrammarException>("Left recursion has been detected, involved rule: $matcher") {
             machine.pushReturn(0, matcher, 0)
         }
     }

@@ -25,8 +25,8 @@ import com.sonar.sslr.api.TokenType
 import com.sonar.sslr.impl.Lexer
 import com.sonar.sslr.test.lexer.MockHelper.mockLexer
 import org.fest.assertions.Assertions.assertThat
-import org.junit.Assert.assertEquals
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 import org.sonar.sslr.channel.Channel
 import org.sonar.sslr.channel.CodeReader
 import java.io.StringReader

@@ -27,7 +27,7 @@ import com.sonar.sslr.impl.matcher.RuleDefinition
 import com.sonar.sslr.test.lexer.MockHelper.mockToken
 import com.sonar.sslr.test.lexer.MockHelper.mockTokenBuilder
 import org.fest.assertions.Assertions.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class AstXmlPrinterTest {
     @Test

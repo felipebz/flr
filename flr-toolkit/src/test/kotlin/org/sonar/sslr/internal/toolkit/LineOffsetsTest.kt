@@ -23,8 +23,8 @@ package org.sonar.sslr.internal.toolkit
 import com.sonar.sslr.api.GenericTokenType
 import com.sonar.sslr.api.Token
 import org.fest.assertions.Assertions.assertThat
-import org.junit.Assert.assertThrows
-import org.junit.Test
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import java.net.URI
 import java.net.URISyntaxException
 
@@ -98,7 +98,7 @@ class LineOffsetsTest {
 
     @Test
     fun offsetBadLine() {
-        assertThrows(IllegalArgumentException::class.java) {
+        assertThrows<IllegalArgumentException> {
             val lineOffsets = LineOffsets("")
             lineOffsets.getOffset(0, 0)
         }
@@ -106,7 +106,7 @@ class LineOffsetsTest {
 
     @Test
     fun offsetBadColumn() {
-        assertThrows(IllegalArgumentException::class.java) {
+        assertThrows<IllegalArgumentException> {
             val lineOffsets = LineOffsets("")
             lineOffsets.getOffset(1, -1)
         }

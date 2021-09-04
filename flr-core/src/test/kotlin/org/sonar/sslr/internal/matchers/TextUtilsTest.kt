@@ -21,7 +21,7 @@
 package org.sonar.sslr.internal.matchers
 
 import org.fest.assertions.Assertions.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.sonar.sslr.internal.matchers.TextUtils.escape
 import org.sonar.sslr.internal.matchers.TextUtils.trimTrailingLineSeparatorFrom
 import java.lang.reflect.Constructor
@@ -44,7 +44,6 @@ class TextUtilsTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun private_constructor() {
         val constructor: Constructor<*> = TextUtils::class.java.getDeclaredConstructor()
         assertThat(constructor.isAccessible).isFalse()

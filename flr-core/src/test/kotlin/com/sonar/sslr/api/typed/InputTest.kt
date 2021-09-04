@@ -21,7 +21,7 @@
 package com.sonar.sslr.api.typed
 
 import org.fest.assertions.Assertions.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.io.File
 
 class InputTest {

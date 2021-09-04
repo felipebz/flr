@@ -24,7 +24,7 @@ import com.sonar.sslr.test.lexer.MockHelper.mockToken
 import com.sonar.sslr.test.minic.MiniCGrammar
 import com.sonar.sslr.test.minic.MiniCParser.parseString
 import org.fest.assertions.Assertions.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class AstNodeTest {
     @Test

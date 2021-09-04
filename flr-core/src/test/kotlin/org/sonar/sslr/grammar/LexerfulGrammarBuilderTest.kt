@@ -23,10 +23,9 @@ package org.sonar.sslr.grammar
 import com.sonar.sslr.api.TokenType
 import com.sonar.sslr.impl.matcher.RuleDefinition
 import org.fest.assertions.Assertions.assertThat
-import org.junit.Assert.assertThrows
-import org.junit.Test
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.mock
-import org.sonar.sslr.grammar.GrammarException
 import org.sonar.sslr.internal.grammar.MutableGrammar
 import org.sonar.sslr.internal.vm.*
 import org.sonar.sslr.internal.vm.lexerful.*
@@ -98,7 +97,7 @@ class LexerfulGrammarBuilderTest {
         val b = LexerfulGrammarBuilder.create()
         val ruleKey = mock<GrammarRuleKey>()
         b.setRootRule(ruleKey)
-        assertThrows("The rule '$ruleKey' hasn't been defined.", GrammarException::class.java) {
+        assertThrows<GrammarException>("The rule '$ruleKey' hasn't been defined.") {
             b.build()
         }
     }
@@ -108,7 +107,7 @@ class LexerfulGrammarBuilderTest {
         val b = LexerfulGrammarBuilder.create()
         val ruleKey = mock<GrammarRuleKey>()
         b.rule(ruleKey)
-        assertThrows("The rule '$ruleKey' hasn't been defined.", GrammarException::class.java) {
+        assertThrows<GrammarException>("The rule '$ruleKey' hasn't been defined.") {
             b.build()
         }
     }
@@ -119,14 +118,14 @@ class LexerfulGrammarBuilderTest {
         val ruleKey1 = mock<GrammarRuleKey>()
         val ruleKey2 = mock<GrammarRuleKey>()
         b.rule(ruleKey1).`is`(ruleKey2)
-        assertThrows("The rule '$ruleKey2' hasn't been defined.", GrammarException::class.java) {
+        assertThrows<GrammarException>("The rule '$ruleKey2' hasn't been defined.") {
             b.build()
         }
     }
 
     @Test
     fun test_incorrect_type_of_parsing_expression() {
-        assertThrows("Incorrect type of parsing expression: class java.lang.Object", IllegalArgumentException::class.java) {
+        assertThrows<IllegalArgumentException>("Incorrect type of parsing expression: class java.lang.Object") {
             LexerfulGrammarBuilder.create().convertToExpression(Any())
         }
     }
@@ -136,7 +135,7 @@ class LexerfulGrammarBuilderTest {
         val b = LexerfulGrammarBuilder.create()
         val ruleKey = mock<GrammarRuleKey>()
         b.rule(ruleKey).`is`("foo")
-        assertThrows("The rule '$ruleKey' has already been defined somewhere in the grammar.", GrammarException::class.java) {
+        assertThrows<GrammarException>("The rule '$ruleKey' has already been defined somewhere in the grammar.") {
             b.rule(ruleKey).`is`("foo")
         }
     }
@@ -146,7 +145,7 @@ class LexerfulGrammarBuilderTest {
         val b = LexerfulGrammarBuilder.create()
         val ruleKey = mock<GrammarRuleKey>()
         b.rule(ruleKey).`is`("foo", "bar")
-        assertThrows("The rule '$ruleKey' has already been defined somewhere in the grammar.", GrammarException::class.java) {
+        assertThrows<GrammarException>("The rule '$ruleKey' has already been defined somewhere in the grammar.") {
             b.rule(ruleKey).`is`("foo")
         }
     }
