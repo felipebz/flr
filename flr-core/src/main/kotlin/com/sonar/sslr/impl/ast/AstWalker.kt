@@ -55,11 +55,6 @@ public class AstWalker(vararg visitors: AstVisitor) {
         }
     }
 
-    @Deprecated("in 1.18, use {@link #walkAndVisit(AstNode)} instead")
-    public fun walkVisitAndListen(ast: AstNode, output: Any?) {
-        walkAndVisit(ast)
-    }
-
     private fun visit(ast: AstNode) {
         val nodeVisitors = getNodeVisitors(ast)
         visitNode(ast, nodeVisitors)

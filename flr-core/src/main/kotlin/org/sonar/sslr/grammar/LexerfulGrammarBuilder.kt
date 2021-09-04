@@ -155,11 +155,6 @@ public class LexerfulGrammarBuilder private constructor() : GrammarBuilder() {
         return TokensBridgeExpression(from, to)
     }
 
-    @Deprecated("in 1.19, use {@link #anyToken()} instead.")
-    public fun everything(): Any {
-        return AnyTokenExpression.INSTANCE
-    }
-
     /**
      * Creates parsing expression - "any token".
      * During execution of this expression parser will unconditionally consume following token.

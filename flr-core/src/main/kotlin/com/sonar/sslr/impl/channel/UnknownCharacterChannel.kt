@@ -36,9 +36,6 @@ public class UnknownCharacterChannel : Channel<Lexer> {
 
     public constructor()
 
-    @Deprecated("logging removed in 1.20, use {@link #UnknownCharacterChannel()} or implement your own Channel with logging")
-    public constructor(shouldLogWarning: Boolean)
-
     override fun consume(code: CodeReader, output: Lexer): Boolean {
         if (code.peek() != -1) {
             val unknownChar = code.pop().toChar()
