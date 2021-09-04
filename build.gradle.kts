@@ -22,6 +22,7 @@ allprojects {
 
     java {
         withSourcesJar()
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 
     group = "com.felipebz.flr"
