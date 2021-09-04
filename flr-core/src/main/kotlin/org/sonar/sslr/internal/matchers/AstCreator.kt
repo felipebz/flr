@@ -120,19 +120,11 @@ internal class AstCreator private constructor(private val input: LocatedText) {
 
     private fun updateTokenPositionAndValue(node: ParseNode) {
         val location = input.getLocation(node.startIndex)
-        if (location == null) {
-            tokenBuilder.setGeneratedCode(true)
-            // Godin: line, column and uri has no value for generated code, but we should bypass checks in TokenBuilder
-            tokenBuilder.setLine(1)
-            tokenBuilder.setColumn(0)
-            tokenBuilder.setURI(FAKE_URI)
-        } else {
-            tokenBuilder.setGeneratedCode(false)
-            tokenBuilder.setLine(location.getLine())
-            tokenBuilder.setColumn(location.getColumn() - 1)
-            tokenBuilder.setURI(if (location.getFileURI() == null) FAKE_URI else location.getFileURI())
-            tokenBuilder.notCopyBook()
-        }
+        tokenBuilder.setGeneratedCode(false)
+        tokenBuilder.setLine(location.getLine())
+        tokenBuilder.setColumn(location.getColumn() - 1)
+        tokenBuilder.setURI(if (location.getFileURI() == null) FAKE_URI else location.getFileURI())
+        tokenBuilder.notCopyBook()
         val value = getValue(node)
         tokenBuilder.setValueAndOriginalValue(value)
     }

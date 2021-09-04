@@ -86,7 +86,7 @@ public object GrammarFunctions {
     }
 
     private fun checkSize(e: Array<out Any>) {
-        require(!(e == null || e.isEmpty())) { "You must define at least one matcher." }
+        require(e.isNotEmpty()) { "You must define at least one matcher." }
     }
 
     public object Standard {
