@@ -1,11 +1,11 @@
 dependencies {
     implementation(project(":flr-core"))
     implementation(project(":flr-toolkit"))
-    api("org.easytesting:fest-assert:1.4")
-    api("org.hamcrest:hamcrest:2.2")
-    implementation(platform("org.junit:junit-bom:5.7.2"))
-    implementation("org.junit.jupiter:junit-jupiter")
-    testImplementation("org.hamcrest:hamcrest-library:2.2")
+    api(Libs.fest_assert)
+    api(Libs.hamcrest)
+    implementation(platform(Libs.junit_bom))
+    implementation(Libs.junit_jupiter)
+    testImplementation(Libs.hamcrest)
 }
 
 description = "FLR :: Testing Harness"

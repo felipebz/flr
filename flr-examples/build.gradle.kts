@@ -1,7 +1,7 @@
 dependencies {
     implementation(project(":flr-core"))
-    testImplementation("org.easytesting:fest-assert:1.4")
-    testImplementation("org.mockito:mockito-core:3.11.1")
+    testImplementation(Libs.fest_assert)
+    testImplementation(Libs.mockito)
     testImplementation(project(":flr-testing-harness"))
 }
 

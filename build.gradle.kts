@@ -36,8 +36,8 @@ subprojects {
 
     dependencies {
         implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
-        testImplementation(platform("org.junit:junit-bom:5.7.2"))
-        testImplementation("org.junit.jupiter:junit-jupiter")
+        testImplementation(platform(Libs.junit_bom))
+        testImplementation(Libs.junit_jupiter)
     }
 
     kotlin {
