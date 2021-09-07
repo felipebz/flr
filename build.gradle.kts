@@ -120,3 +120,9 @@ subprojects {
         }
     }
 }
+
+sonarqube {
+    properties {
+        property("sonar.projectName", "FLR")
+    }
+}
