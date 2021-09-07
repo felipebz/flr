@@ -8,6 +8,7 @@ plugins {
     `maven-publish`
     jacoco
     kotlin("jvm") version "1.5.30"
+    id("org.jetbrains.dokka") version ("1.4.32")
     id("com.github.hierynomus.license") version "0.16.1"
     id("org.sonarqube") version "3.3"
 }
@@ -33,6 +34,7 @@ subprojects {
     apply(plugin = "com.github.hierynomus.license")
     apply(plugin = "org.jetbrains.kotlin.jvm")
     apply(plugin = "jacoco")
+    apply(plugin = "org.jetbrains.dokka")
 
     dependencies {
         implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
@@ -78,6 +80,12 @@ subprojects {
         skipExistingHeaders = true
     }
 
+    val dokkaJavadocJar by tasks.register<Jar>("dokkaJavadocJar") {
+        dependsOn(tasks.dokkaJavadoc)
+        from(tasks.dokkaJavadoc.flatMap { it.outputDirectory })
+        archiveClassifier.set("javadoc")
+    }
+
     publishing {
         repositories {
             maven {
@@ -92,6 +100,7 @@ subprojects {
         publications {
             create<MavenPublication>("maven") {
                 from(components["java"])
+                artifact(dokkaJavadocJar)
                 pom {
                     description.set(project.description)
                     organization {
