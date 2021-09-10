@@ -27,7 +27,7 @@ package org.sonar.sslr.toolkit
  *
  * @since 1.17
  */
-public interface ValidationCallback {
+public fun interface ValidationCallback {
     /**
      * Validate the new value candidate.
      *

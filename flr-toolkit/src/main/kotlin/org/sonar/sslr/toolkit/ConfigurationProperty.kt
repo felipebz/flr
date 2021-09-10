@@ -68,10 +68,6 @@ public class ConfigurationProperty @JvmOverloads constructor(
     }
 
     public companion object {
-        private val NO_VALIDATION: ValidationCallback = object : ValidationCallback {
-            override fun validate(newValueCandidate: String): String {
-                return ""
-            }
-        }
+        private val NO_VALIDATION: ValidationCallback = ValidationCallback { "" }
     }
 }

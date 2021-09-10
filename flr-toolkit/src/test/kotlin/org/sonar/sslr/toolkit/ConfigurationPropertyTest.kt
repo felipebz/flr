@@ -42,11 +42,9 @@ class ConfigurationPropertyTest {
     fun validate() {
         assertThat(ConfigurationProperty("", "", "").validate("")).isEmpty()
         assertThat(ConfigurationProperty("", "", "").validate("foo")).isEmpty()
-        val property = ConfigurationProperty("", "", "foo", object : ValidationCallback {
-            override fun validate(newValueCandidate: String): String {
-                return if ("foo" == newValueCandidate) "" else "Only the value \"foo\" is allowed."
-            }
-        })
+        val property = ConfigurationProperty("", "", "foo") {
+            if ("foo" == it) "" else "Only the value \"foo\" is allowed."
+        }
         assertThat(property.validate("")).isEqualTo("Only the value \"foo\" is allowed.")
         assertThat(property.validate("foo")).isEmpty()
         assertThat(property.validate("bar")).isEqualTo("Only the value \"foo\" is allowed.")
@@ -61,11 +59,9 @@ class ConfigurationPropertyTest {
     @Test
     fun setValue_should_fail_if_validation_fails() {
         assertThrows<IllegalArgumentException>("The value \"foo\" did not pass validation: Not valid!") {
-            ConfigurationProperty("", "", "", object : ValidationCallback {
-                override fun validate(newValueCandidate: String): String {
-                    return if (newValueCandidate.isEmpty()) "" else "The value \"$newValueCandidate\" did not pass validation: Not valid!"
-                }
-            }).value = "foo"
+            ConfigurationProperty("", "", "") {
+                if (it.isEmpty()) "" else "The value \"$it\" did not pass validation: Not valid!"
+            }.value = "foo"
         }
     }
 
