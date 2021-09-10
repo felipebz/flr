@@ -27,10 +27,15 @@ import java.util.*
 import javax.swing.SwingUtilities
 import javax.swing.UIManager
 
-public class Toolkit(title: String?, configurationModel: ConfigurationModel) {
-    private val title: String?
-    private val configurationModel: ConfigurationModel
-
+/**
+ * Creates a Toolkit with a title, and the given [ConfigurationModel].
+ *
+ * @param title
+ * @param configurationModel
+ *
+ * @since 1.17
+ */
+public class Toolkit(private val title: String, private val configurationModel: ConfigurationModel) {
     public fun run() {
         SwingUtilities.invokeLater {
             try {
@@ -48,19 +53,5 @@ public class Toolkit(title: String?, configurationModel: ConfigurationModel) {
             presenter.setView(ToolkitViewImpl(presenter))
             presenter.run(title)
         }
-    }
-
-    /**
-     * Creates a Toolkit with a title, and the given [ConfigurationModel].
-     *
-     * @param title
-     * @param configurationModel
-     *
-     * @since 1.17
-     */
-    init {
-        Objects.requireNonNull(title)
-        this.title = title
-        this.configurationModel = configurationModel
     }
 }
