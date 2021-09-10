@@ -80,7 +80,7 @@ subprojects {
         skipExistingHeaders = true
     }
 
-    val dokkaJavadocJar by tasks.register<Jar>("dokkaJavadocJar") {
+    val dokka by tasks.register<Jar>("dokka") {
         dependsOn(tasks.dokkaJavadoc)
         from(tasks.dokkaJavadoc.flatMap { it.outputDirectory })
         archiveClassifier.set("javadoc")
@@ -100,7 +100,11 @@ subprojects {
         publications {
             create<MavenPublication>("maven") {
                 from(components["java"])
-                artifact(dokkaJavadocJar)
+
+                if (dokka.archiveFile.get().asFile.exists()) {
+                    artifact(dokka)
+                }
+
                 pom {
                     description.set(project.description)
                     organization {
