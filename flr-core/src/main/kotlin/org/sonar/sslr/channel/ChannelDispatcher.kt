@@ -20,7 +20,7 @@
  */
 package org.sonar.sslr.channel
 
-public class ChannelDispatcher<O> private constructor(builder: Builder) : Channel<O>() {
+public class ChannelDispatcher<O> private constructor(builder: Builder) : Channel<O> {
     private val failIfNoChannelToConsumeOneCharacter: Boolean
     private val channels: Array<Channel<O>> = builder.channels.toTypedArray() as Array<Channel<O>>
     override fun consume(code: CodeReader, output: O): Boolean {

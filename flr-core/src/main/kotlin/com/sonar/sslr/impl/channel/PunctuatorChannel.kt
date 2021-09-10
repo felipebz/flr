@@ -27,7 +27,7 @@ import org.sonar.sslr.channel.CodeReader
 import java.util.*
 import kotlin.math.max
 
-public class PunctuatorChannel(vararg punctuators: TokenType) : Channel<Lexer>() {
+public class PunctuatorChannel(vararg punctuators: TokenType) : Channel<Lexer> {
     private val lookahead: Int
     private val sortedPunctuators: Array<out TokenType> = punctuators
     private val sortedPunctuatorsChars: Array<CharArray>

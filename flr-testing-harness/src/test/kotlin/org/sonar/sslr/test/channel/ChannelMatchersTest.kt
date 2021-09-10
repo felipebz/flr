@@ -30,7 +30,7 @@ import org.sonar.sslr.channel.CodeReader
 class ChannelMatchersTest {
     @Test
     fun testConsumeMatcher() {
-        val numberChannel: Channel<StringBuilder> = object : Channel<StringBuilder>() {
+        val numberChannel: Channel<StringBuilder> = object : Channel<StringBuilder> {
             override fun consume(code: CodeReader, output: StringBuilder): Boolean {
                 if (Character.isDigit(code.peek())) {
                     output.append(code.pop().toChar())

@@ -29,7 +29,7 @@ import org.sonar.sslr.channel.CodeReader
  *
  * @since 1.17
  */
-public class BomCharacterChannel : Channel<Lexer>() {
+public class BomCharacterChannel : Channel<Lexer> {
     override fun consume(code: CodeReader, output: Lexer): Boolean {
         if (code.peek() == BOM_CHAR) {
             code.pop()

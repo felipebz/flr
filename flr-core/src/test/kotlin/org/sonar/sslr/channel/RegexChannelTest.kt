@@ -57,7 +57,7 @@ class RegexChannelTest {
         }
     }
 
-    private class BlackholeChannel : Channel<StringBuilder>() {
+    private class BlackholeChannel : Channel<StringBuilder> {
         override fun consume(code: CodeReader, output: StringBuilder): Boolean {
             output.append(code.pop().toChar())
             return true

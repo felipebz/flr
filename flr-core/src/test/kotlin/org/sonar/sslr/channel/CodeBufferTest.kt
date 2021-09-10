@@ -299,7 +299,7 @@ class CodeBufferTest {
         }
     }
 
-    internal inner class WindowingChannel : Channel<Any>() {
+    internal inner class WindowingChannel : Channel<Any> {
         override fun consume(code: CodeReader, output: Any): Boolean {
             val columnPosition = code.getColumnPosition()
             if (code.peek() == '\n'.code) {

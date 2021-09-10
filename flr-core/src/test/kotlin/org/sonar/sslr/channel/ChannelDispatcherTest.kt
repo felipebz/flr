@@ -55,7 +55,7 @@ class ChannelDispatcherTest {
         }
     }
 
-    private class SpaceDeletionChannel : Channel<StringBuilder>() {
+    private class SpaceDeletionChannel : Channel<StringBuilder> {
         override fun consume(code: CodeReader, output: StringBuilder): Boolean {
             if (code.peek() == ' '.code) {
                 code.pop()
@@ -66,7 +66,7 @@ class ChannelDispatcherTest {
         }
     }
 
-    private class FakeChannel : Channel<StringBuilder>() {
+    private class FakeChannel : Channel<StringBuilder> {
         override fun consume(code: CodeReader, output: StringBuilder): Boolean {
             return true
         }

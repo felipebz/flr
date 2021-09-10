@@ -35,7 +35,7 @@ import java.util.regex.Pattern
  *
  * @see RegexpChannelBuilder
  */
-public class CommentRegexpChannel(private val regexp: String) : Channel<Lexer>() {
+public class CommentRegexpChannel(private val regexp: String) : Channel<Lexer> {
     private val tmpBuilder = StringBuilder()
     private val matcher: Matcher = Pattern.compile(regexp).matcher("")
     private val tokenBuilder: Token.Builder = Token.builder()

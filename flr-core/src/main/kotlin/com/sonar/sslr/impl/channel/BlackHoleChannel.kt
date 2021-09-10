@@ -36,7 +36,7 @@ import java.util.regex.Pattern
  * because generally whitespace characters are encountered more often than all other and especially between others.
  *
  */
-public class BlackHoleChannel(regexp: String) : Channel<Lexer>() {
+public class BlackHoleChannel(regexp: String) : Channel<Lexer> {
     private val matcher: Matcher = Pattern.compile(regexp).matcher("")
     override fun consume(code: CodeReader, output: Lexer): Boolean {
         return code.popTo(matcher, EmptyAppendable.INSTANCE) != -1
