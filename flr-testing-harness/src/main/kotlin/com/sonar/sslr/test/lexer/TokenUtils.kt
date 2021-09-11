@@ -50,8 +50,8 @@ public object TokenUtils {
         return tokens
     }
 
-    public fun lex(sourceCode: String): MutableList<Token?> {
-        val tokens: MutableList<Token?> = ArrayList()
+    public fun lex(sourceCode: String): MutableList<Token> {
+        val tokens = mutableListOf<Token>()
         val reader = CodeReader(sourceCode)
         val matcher = Pattern.compile("[a-zA-Z_0-9\\+\\-\\*/]+").matcher("")
         while (reader.peek() != -1) {

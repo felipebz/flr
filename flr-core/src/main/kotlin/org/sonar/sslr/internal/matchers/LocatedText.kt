@@ -76,7 +76,7 @@ public class LocatedText(private val file: File?, private val chars: CharArray) 
     public companion object {
         private val EMPTY_INT_ARRAY = IntArray(0)
         private fun computeLines(chars: CharArray): IntArray {
-            val newlines: MutableList<Int> = ArrayList()
+            val newlines = mutableListOf<Int>()
             var i = 0
             while (i < chars.size) {
                 if (isEndOfLine(chars, i)) {

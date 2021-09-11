@@ -70,7 +70,7 @@ public class ImmutableInputBuffer(private val buffer: CharArray) : InputBuffer {
     }
 
     init {
-        val newlines: MutableList<Int> = ArrayList()
+        val newlines = mutableListOf<Int>()
         var i = 0
         newlines.add(0)
         while (i < buffer.size) {

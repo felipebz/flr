@@ -34,7 +34,7 @@ public class SequenceExpression(private vararg val subExpressions: ParsingExpres
     </pre> *
      */
     override fun compile(compiler: CompilationHandler): Array<Instruction> {
-        val result: MutableList<Instruction> = ArrayList()
+        val result = mutableListOf<Instruction>()
         for (subExpression in subExpressions) {
             Instruction.addAll(result, compiler.compile(subExpression))
         }

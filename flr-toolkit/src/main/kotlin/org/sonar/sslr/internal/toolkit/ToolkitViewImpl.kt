@@ -322,7 +322,7 @@ internal class ToolkitViewImpl(presenter: ToolkitPresenter) : JFrame(), ToolkitV
 
     override val selectedAstNodes: List<AstNode>
         get() {
-            val acc: MutableList<AstNode> = ArrayList()
+            val acc = mutableListOf<AstNode>()
             val selectedPaths = astTree.selectionPaths
             if (selectedPaths != null) {
                 for (selectedPath in selectedPaths) {

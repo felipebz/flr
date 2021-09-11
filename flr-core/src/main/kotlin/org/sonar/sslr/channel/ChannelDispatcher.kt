@@ -52,7 +52,7 @@ public class ChannelDispatcher<O> private constructor(builder: Builder) : Channe
     }
 
     public class Builder {
-        public val channels: MutableList<Channel<*>> = ArrayList()
+        public val channels: MutableList<Channel<*>> = mutableListOf()
         public var failIfNoChannelToConsumeOneCharacter: Boolean = false
         public fun addChannel(channel: Channel<*>): Builder {
             channels.add(channel)

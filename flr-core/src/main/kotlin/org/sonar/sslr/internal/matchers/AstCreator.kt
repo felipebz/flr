@@ -69,8 +69,8 @@ internal class AstCreator private constructor(private val input: LocatedText) {
         }
     }
 
-    private val tokenBuilder: Token.Builder = Token.builder()
-    private val trivias: MutableList<Trivia> = ArrayList()
+    private val tokenBuilder = Token.builder()
+    private val trivias = mutableListOf<Trivia>()
     private fun visit(node: ParseNode): AstNode? {
         return if (node.matcher is MutableParsingRule) {
             visitNonTerminal(node)
@@ -131,7 +131,7 @@ internal class AstCreator private constructor(private val input: LocatedText) {
 
     private fun visitNonTerminal(node: ParseNode): AstNode {
         val ruleMatcher = node.matcher as MutableParsingRule
-        val astNodes: MutableList<AstNode> = ArrayList()
+        val astNodes = mutableListOf<AstNode>()
         for (child in node.children) {
             val astNode = visit(child)
             if (astNode != null) {

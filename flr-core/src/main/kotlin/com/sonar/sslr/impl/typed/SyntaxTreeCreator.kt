@@ -38,8 +38,8 @@ public class SyntaxTreeCreator<T>(
     private val mapping: GrammarBuilderInterceptor<*>,
     private val nodeBuilder: NodeBuilder
 ) {
-    private val tokenBuilder: Token.Builder = Token.builder()
-    private val trivias: MutableList<Trivia> = ArrayList()
+    private val tokenBuilder = Token.builder()
+    private val trivias = mutableListOf<Trivia>()
     private lateinit var input: Input
 
     public fun create(node: ParseNode, input: Input): T? {

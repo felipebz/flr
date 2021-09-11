@@ -25,11 +25,9 @@ import java.util.*
 
 public class AstWalker(vararg visitors: AstVisitor) {
     private val visitorsByNodeType: MutableMap<AstNodeType, Array<AstVisitor>> = IdentityHashMap()
-    private val visitors: MutableList<AstVisitor> = ArrayList()
+    private val visitors = mutableListOf<AstVisitor>()
     private var astAndTokenVisitors = emptyArray<AstAndTokenVisitor>()
     private var lastVisitedToken: Token? = null
-
-    //constructor(vararg visitors: AstVisitor?) : this(visitors.toList()) {}
 
     public fun addVisitor(visitor: AstVisitor) {
         visitors.add(visitor)
@@ -39,7 +37,7 @@ public class AstWalker(vararg visitors: AstVisitor) {
             putAstVisitors(type, visitorsByType)
         }
         if (visitor is AstAndTokenVisitor) {
-            val tokenVisitorsList: MutableList<AstAndTokenVisitor> = ArrayList(listOf(*astAndTokenVisitors))
+            val tokenVisitorsList = astAndTokenVisitors.toMutableList()
             tokenVisitorsList.add(visitor)
             astAndTokenVisitors = tokenVisitorsList.toTypedArray()
         }
@@ -92,7 +90,7 @@ public class AstWalker(vararg visitors: AstVisitor) {
 
     private fun getAstVisitors(type: AstNodeType?): MutableList<AstVisitor> {
         val visitorsByType = visitorsByNodeType[type]
-        return if (visitorsByType == null) ArrayList() else ArrayList(listOf(*visitorsByType))
+        return visitorsByType?.toMutableList() ?: mutableListOf()
     }
 
     private companion object {

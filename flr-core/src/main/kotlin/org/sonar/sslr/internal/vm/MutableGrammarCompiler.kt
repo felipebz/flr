@@ -28,7 +28,7 @@ public class MutableGrammarCompiler : CompilationHandler() {
     private val matchers: MutableMap<GrammarRuleKey, CompilableGrammarRule> = HashMap()
     private val offsets: MutableMap<GrammarRuleKey, Int> = HashMap()
     private fun doCompile(start: CompilableGrammarRule): CompiledGrammar {
-        val instructions: MutableList<Instruction> = ArrayList()
+        val instructions = mutableListOf<Instruction>()
 
         // Compile
         compilationQueue.add(start)

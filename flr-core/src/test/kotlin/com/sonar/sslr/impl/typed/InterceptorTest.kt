@@ -67,7 +67,7 @@ class InterceptorTest {
     }
 
     private var intercept = false
-    private val interceptedMethods = ArrayList<Method>()
+    private val interceptedMethods = mutableListOf<Method>()
     private val methodInterceptor: MethodInterceptor = MethodInterceptor { method: Method ->
         interceptedMethods.add(method)
         intercept

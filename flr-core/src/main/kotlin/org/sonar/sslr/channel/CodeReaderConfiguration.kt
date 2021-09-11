@@ -20,8 +20,6 @@
  */
 package org.sonar.sslr.channel
 
-import java.util.*
-
 /**
  * Configuration parameters used by a CodeReader to handle some specificities.
  */
@@ -55,8 +53,8 @@ public class CodeReaderConfiguration {
      * @param codeReaderFilters
      * the codeReaderFilters to set
      */
-    public fun setCodeReaderFilters(vararg codeReaderFilters: CodeReaderFilter<*>?) {
-        this.codeReaderFilters = ArrayList(listOf(*codeReaderFilters))
+    public fun setCodeReaderFilters(vararg codeReaderFilters: CodeReaderFilter<*>) {
+        this.codeReaderFilters = codeReaderFilters.toMutableList()
     }
 
     /**

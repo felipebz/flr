@@ -24,7 +24,7 @@ import org.sonar.sslr.internal.matchers.MatcherPathElement
 
 public class ErrorTreeNode {
     public var pathElement: MatcherPathElement? = null
-    public var children: MutableList<ErrorTreeNode> = ArrayList()
+    public var children: MutableList<ErrorTreeNode> = mutableListOf()
 
     public companion object {
         public fun buildTree(paths: List<List<MatcherPathElement>>): ErrorTreeNode {

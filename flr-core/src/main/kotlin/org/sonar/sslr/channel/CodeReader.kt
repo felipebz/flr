@@ -32,10 +32,7 @@ public class CodeReader : CodeBuffer {
     private var _previousCursor: Cursor? = null
 
     public val previousCursor: Cursor
-        get() = _previousCursor.let {
-            checkNotNull(it)
-            return it
-        }
+        get() = checkNotNull(_previousCursor)
 
     /*
    * Constructor needed to be backward compatible (before using CodeReaderFilter)

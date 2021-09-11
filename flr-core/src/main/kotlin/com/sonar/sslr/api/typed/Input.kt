@@ -74,7 +74,7 @@ public class Input @JvmOverloads constructor(private val inputChars: CharArray, 
     }
 
     init {
-        val newLineIndexesBuilder: MutableList<Int> = ArrayList()
+        val newLineIndexesBuilder = mutableListOf<Int>()
         for (i in inputChars.indices) {
             if (isNewLine(inputChars, i)) {
                 newLineIndexesBuilder.add(i + 1)

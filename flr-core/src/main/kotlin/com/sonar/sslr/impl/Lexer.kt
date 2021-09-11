@@ -38,10 +38,10 @@ public class Lexer private constructor(builder: Builder) {
     private val configuration: CodeReaderConfiguration
     private val channelDispatcher: ChannelDispatcher<Lexer>?
     private val trivia: MutableList<Trivia> = LinkedList()
-    private var _tokens: MutableList<Token> = ArrayList()
+    private var _tokens = mutableListOf<Token>()
 
     public val tokens: List<Token>
-        get() = Collections.unmodifiableList(_tokens)
+        get() = _tokens.toList()
 
     public var uri: URI? = null
         private set
@@ -86,7 +86,7 @@ public class Lexer private constructor(builder: Builder) {
 
     private fun lex(reader: Reader): List<Token> {
         checkNotNull(channelDispatcher) { "the channel dispatcher should be set" }
-        _tokens = ArrayList()
+        _tokens = mutableListOf()
         val code = CodeReader(reader, configuration)
         return try {
             channelDispatcher.consume(code, this)
@@ -137,7 +137,7 @@ public class Lexer private constructor(builder: Builder) {
     public class Builder {
         public var charset: Charset = Charset.defaultCharset()
         public val configuration: CodeReaderConfiguration = CodeReaderConfiguration()
-        private val channels: MutableList<Channel<Lexer>> = ArrayList()
+        private val channels = mutableListOf<Channel<Lexer>>()
         private var failIfNoChannelToConsumeOneCharacter = false
         public fun build(): Lexer {
             return Lexer(this)

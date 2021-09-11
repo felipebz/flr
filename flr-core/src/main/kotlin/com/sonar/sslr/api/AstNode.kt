@@ -41,10 +41,7 @@ public open class AstNode(
         get() = checkNotNull(tokenOrNull)
 
     public val type: AstNodeType
-        get() = _type.let {
-            checkNotNull(it)
-            return it
-        }
+        get() = checkNotNull(_type)
 
     /**
      * Get the list of children.
@@ -352,7 +349,7 @@ public open class AstNode(
      * @since 1.17
      */
     public fun getDescendants(vararg nodeTypes: AstNodeType): List<AstNode> {
-        val result: MutableList<AstNode> = ArrayList()
+        val result = mutableListOf<AstNode>()
         for (child in children) {
             child.getDescendants(result, *nodeTypes)
         }

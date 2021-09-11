@@ -81,7 +81,7 @@ public abstract class Grammar {
         @JvmStatic
         public fun getRuleFields(grammarClass: Class<*>): MutableList<Field> {
             val fields = grammarClass.declaredFields
-            val ruleFields: MutableList<Field> = ArrayList()
+            val ruleFields = mutableListOf<Field>()
             for (field in fields) {
                 if (Rule::class.java.isAssignableFrom(field.type)) {
                     ruleFields.add(field)

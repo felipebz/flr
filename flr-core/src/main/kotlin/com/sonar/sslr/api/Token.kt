@@ -151,13 +151,13 @@ public class Token private constructor(builder: Builder) {
         }
 
         public fun setTrivia(trivia: List<Trivia>): Builder {
-            this.trivia = ArrayList(trivia)
+            this.trivia = trivia.toMutableList()
             return this
         }
 
         public fun addTrivia(trivia: Trivia): Builder {
             if (this.trivia.isEmpty()) {
-                this.trivia = ArrayList()
+                this.trivia = mutableListOf()
             }
             this.trivia.add(trivia)
             return this
