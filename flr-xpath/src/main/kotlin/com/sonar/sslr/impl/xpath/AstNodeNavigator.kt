@@ -22,6 +22,7 @@ package com.sonar.sslr.impl.xpath
 
 import org.jaxen.DefaultNavigator
 import com.sonar.sslr.api.AstNode
+import com.sonar.sslr.api.GenericTokenType
 import org.jaxen.XPath
 import java.lang.UnsupportedOperationException
 import org.jaxen.util.SingleObjectIterator
@@ -89,7 +90,7 @@ internal open class AstNodeNavigator : DefaultNavigator() {
     }
 
     /* Elements */
-    override fun getElementName(astNodeObject: Any): String? {
+    override fun getElementName(astNodeObject: Any): String {
         val astNode = astNodeObject as AstNode
         return astNode.name
     }
@@ -140,7 +141,7 @@ internal open class AstNodeNavigator : DefaultNavigator() {
                 while (root?.parentOrNull != null) {
                     root = root.parentOrNull
                 }
-                documentNode = AstNode(null, "[root]", null).apply {
+                documentNode = AstNode(GenericTokenType.UNKNOWN_CHAR, "[root]", null).apply {
                     addChild(root)
                 }
             } else if (isAttribute(contextNode)) {

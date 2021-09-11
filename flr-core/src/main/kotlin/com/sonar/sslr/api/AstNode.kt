@@ -31,7 +31,7 @@ import org.sonar.sslr.internal.grammar.MutableParsingRule
  * @see Token
  */
 public open class AstNode(
-    private var _type: AstNodeType?, public val name: String?,
+    type: AstNodeType, public val name: String,
     /**
      * Get the Token associated to this AstNode
      */
@@ -40,16 +40,15 @@ public open class AstNode(
     public val token: Token
         get() = checkNotNull(tokenOrNull)
 
-    public val type: AstNodeType
-        get() = checkNotNull(_type)
+    public var type: AstNodeType = type
+        private set
 
     /**
      * Get the list of children.
      *
      * @return list of children
      */
-    public var children: MutableList<AstNode> = mutableListOf()
-        private set
+    public val children: MutableList<AstNode> = mutableListOf()
     private var childIndex = -1
 
     /**
@@ -191,18 +190,18 @@ public open class AstNode(
      * For internal use only.
      */
     public fun hasToBeSkippedFromAst(): Boolean {
-        val type = _type ?: return true
+        val internalType = type
 
-        val result = (type as? AstNodeSkippingPolicy)?.hasToBeSkippedFromAst(this) ?: false
+        val result = (internalType as? AstNodeSkippingPolicy)?.hasToBeSkippedFromAst(this) ?: false
 
         // For LexerlessGrammarBuilder and LexerfulGrammarBuilder
         // unwrap AstNodeType to get a real one, i.e. detach node from tree of matchers:
-        when (type) {
+        when (internalType) {
             is MutableParsingRule -> {
-                _type = type.getRealAstNodeType()
+                type = internalType.getRealAstNodeType()
             }
             is RuleDefinition -> {
-                _type = type.getRealAstNodeType()
+                type = internalType.getRealAstNodeType()
             }
         }
         return result
