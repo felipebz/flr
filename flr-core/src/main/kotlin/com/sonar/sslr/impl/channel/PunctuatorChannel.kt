@@ -33,6 +33,19 @@ public class PunctuatorChannel(vararg punctuators: TokenType) : Channel<Lexer> {
     private val sortedPunctuatorsChars: Array<CharArray>
     private val tokenBuilder: Token.Builder = Token.builder()
 
+    init {
+        Arrays.sort(sortedPunctuators, PunctuatorComparator())
+        var maxLength = 0
+
+        sortedPunctuatorsChars = sortedPunctuators.map {
+            val array = it.value.toCharArray()
+            maxLength = max(maxLength, array.size)
+            array
+        }.toTypedArray()
+
+        lookahead = maxLength
+    }
+
     private class PunctuatorComparator : Comparator<TokenType> {
         override fun compare(a: TokenType, b: TokenType): Int {
             if (a.value.length == b.value.length) {
@@ -78,18 +91,5 @@ public class PunctuatorChannel(vararg punctuators: TokenType) : Channel<Lexer> {
             }
             return true
         }
-    }
-
-    init {
-        Arrays.sort(sortedPunctuators, PunctuatorComparator())
-        var maxLength = 0
-
-        sortedPunctuatorsChars = sortedPunctuators.map {
-            val array = it.value.toCharArray()
-            maxLength = max(maxLength, array.size)
-            array
-        }.toTypedArray()
-
-        lookahead = maxLength
     }
 }

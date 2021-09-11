@@ -27,12 +27,12 @@ import org.sonar.sslr.internal.vm.TokenExpression
 import org.sonar.sslr.internal.vm.TriviaExpression
 import org.sonar.sslr.parser.ParsingResult
 import java.net.URI
-import java.net.URISyntaxException
 import kotlin.math.min
 
 internal class AstCreator private constructor(private val input: LocatedText) {
     companion object {
-        private var FAKE_URI: URI
+        private var FAKE_URI = URI("tests://unittest")
+
         @JvmStatic
         fun create(parsingResult: ParsingResult, input: LocatedText): AstNode {
             val astNode = AstCreator(input).visit(parsingResult.getParseTreeRoot())
@@ -56,15 +56,6 @@ internal class AstCreator private constructor(private val input: LocatedText) {
 
             override fun hasToBeSkippedFromAst(node: AstNode?): Boolean {
                 return false
-            }
-        }
-
-        init {
-            try {
-                FAKE_URI = URI("tests://unittest")
-            } catch (e: URISyntaxException) {
-                // Can't happen
-                throw IllegalStateException(e)
             }
         }
     }

@@ -29,6 +29,17 @@ import java.util.*
  */
 public class Input @JvmOverloads constructor(private val inputChars: CharArray, private val uri: URI = FAKE_URI) {
     private val newLineIndexes: IntArray
+
+    init {
+        val newLineIndexesBuilder = mutableListOf<Int>()
+        for (i in inputChars.indices) {
+            if (isNewLine(inputChars, i)) {
+                newLineIndexesBuilder.add(i + 1)
+            }
+        }
+        newLineIndexes = newLineIndexesBuilder.toIntArray()
+    }
+
     public fun input(): CharArray {
         return inputChars
     }
@@ -70,19 +81,6 @@ public class Input @JvmOverloads constructor(private val inputChars: CharArray, 
         private fun isNewLine(input: CharArray, i: Int): Boolean {
             return input[i] == '\n' ||
                     input[i] == '\r' && (i + 1 == input.size || input[i + 1] != '\n')
-        }
-    }
-
-    init {
-        val newLineIndexesBuilder = mutableListOf<Int>()
-        for (i in inputChars.indices) {
-            if (isNewLine(inputChars, i)) {
-                newLineIndexesBuilder.add(i + 1)
-            }
-        }
-        newLineIndexes = IntArray(newLineIndexesBuilder.size)
-        for (i in newLineIndexes.indices) {
-            newLineIndexes[i] = newLineIndexesBuilder[i]
         }
     }
 }

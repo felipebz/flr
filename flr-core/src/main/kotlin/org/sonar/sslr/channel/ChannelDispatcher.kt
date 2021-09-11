@@ -21,7 +21,7 @@
 package org.sonar.sslr.channel
 
 public class ChannelDispatcher<O> private constructor(builder: Builder) : Channel<O> {
-    private val failIfNoChannelToConsumeOneCharacter: Boolean
+    private val failIfNoChannelToConsumeOneCharacter = builder.failIfNoChannelToConsumeOneCharacter
     private val channels: Array<Channel<O>> = builder.channels.toTypedArray() as Array<Channel<O>>
     override fun consume(code: CodeReader, output: O): Boolean {
         var nextChar = code.peek()
@@ -87,9 +87,5 @@ public class ChannelDispatcher<O> private constructor(builder: Builder) : Channe
         public fun builder(): Builder {
             return Builder()
         }
-    }
-
-    init {
-        failIfNoChannelToConsumeOneCharacter = builder.failIfNoChannelToConsumeOneCharacter
     }
 }

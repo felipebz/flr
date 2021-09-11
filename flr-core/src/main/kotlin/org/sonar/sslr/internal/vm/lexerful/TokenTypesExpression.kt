@@ -24,10 +24,10 @@ import com.sonar.sslr.api.TokenType
 import org.sonar.sslr.internal.matchers.Matcher
 import org.sonar.sslr.internal.vm.Machine
 import org.sonar.sslr.internal.vm.NativeExpression
-import java.util.*
 
-public class TokenTypesExpression(vararg types: TokenType?) : NativeExpression(), Matcher {
-    private val types: MutableSet<TokenType?>
+public class TokenTypesExpression(vararg types: TokenType) : NativeExpression(), Matcher {
+    private val types: MutableSet<TokenType> = types.toHashSet()
+
     override fun execute(machine: Machine) {
         if (machine.isEmpty() || !types.contains(machine.tokenAt(0).type)) {
             machine.backtrack()
@@ -39,10 +39,5 @@ public class TokenTypesExpression(vararg types: TokenType?) : NativeExpression()
 
     override fun toString(): String {
         return "TokenTypes $types"
-    }
-
-    init {
-        this.types = HashSet()
-        this.types.addAll(listOf(*types))
     }
 }

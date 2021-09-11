@@ -34,6 +34,10 @@ import java.lang.reflect.Field
  * This class is not intended to be instantiated or subclassed by clients.
  */
 public abstract class Grammar {
+    init {
+        instanciateRuleFields()
+    }
+
     private fun instanciateRuleFields() {
         for (ruleField in getAllRuleFields(this.javaClass)) {
             val ruleName = ruleField.name
@@ -109,9 +113,5 @@ public abstract class Grammar {
             }
             return ruleFields
         }
-    }
-
-    init {
-        instanciateRuleFields()
     }
 }

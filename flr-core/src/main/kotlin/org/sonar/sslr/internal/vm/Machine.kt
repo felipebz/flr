@@ -38,7 +38,7 @@ public class Machine private constructor(
     private val handler: MachineHandler
 ) : CharSequence {
     private var inputLength = if (input.isNotEmpty()) input.size else tokens.size
-    private var stack = MachineStack()
+    private var stack = MachineStack().getOrCreateChild()
     private var matched = true
     private val memos: Array<ParseNode?> = arrayOfNulls(inputLength + 1)
 
@@ -48,6 +48,11 @@ public class Machine private constructor(
     public var address: Int = 0
     public var index: Int = 0
     public var ignoreErrors: Boolean = false
+
+    init {
+        stack.index = -1
+        calls.fill(-1)
+    }
 
     private fun execute(matcher: Matcher?, offset: Int, instructions: Array<Instruction>) {
         // Place first rule on top of stack
@@ -251,11 +256,5 @@ public class Machine private constructor(
                 // nop
             }
         }
-    }
-
-    init {
-        stack = stack.getOrCreateChild()
-        stack.index = -1
-        calls.fill(-1)
     }
 }

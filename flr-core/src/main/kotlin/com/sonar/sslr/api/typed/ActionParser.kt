@@ -46,11 +46,33 @@ public class ActionParser<N>(
     grammarClass: Class<*>,
     treeFactory: Any,
     nodeBuilder: NodeBuilder,
-    rootRule: GrammarRuleKey
+    private val rootRule: GrammarRuleKey
 ) {
     private val syntaxTreeCreator: SyntaxTreeCreator<N>
-    private val rootRule: GrammarRuleKey
     private val parseRunner: ParseRunner
+
+    init {
+        val grammarBuilderInterceptor: GrammarBuilderInterceptor<*> = GrammarBuilderInterceptor<Any?>(b)
+        val treeFactoryInterceptor = Interceptor.create(
+            treeFactory.javaClass, arrayOf(), arrayOf(),
+            ActionMethodInterceptor(grammarBuilderInterceptor)
+        )
+        val grammar = Interceptor.create(
+            grammarClass,
+            arrayOf(GrammarBuilder::class.java, treeFactory.javaClass),
+            arrayOf(grammarBuilderInterceptor, treeFactoryInterceptor),
+            grammarBuilderInterceptor
+        )
+        for (method in grammarClass.methods) {
+            if (method.declaringClass != Any::class.java) {
+                invokeMethod(method, grammar)
+            }
+        }
+        syntaxTreeCreator = SyntaxTreeCreator(treeFactory, grammarBuilderInterceptor, nodeBuilder)
+        b.setRootRule(rootRule)
+        parseRunner = ParseRunner(checkNotNull(b.build().getRootRule()))
+    }
+
     public fun parse(file: File): N? {
         return try {
             val chars = String(Files.readAllBytes(Paths.get(file.path)), charset).toCharArray()
@@ -86,29 +108,5 @@ public class ActionParser<N>(
             grammarBuilderInterceptor.addAction(method, method.parameterCount)
             return true
         }
-    }
-
-    init {
-        val grammarBuilderInterceptor: GrammarBuilderInterceptor<*> = GrammarBuilderInterceptor<Any?>(b)
-        val treeFactoryInterceptor = Interceptor.create(
-            treeFactory.javaClass, arrayOf(), arrayOf(),
-            ActionMethodInterceptor(grammarBuilderInterceptor)
-        )
-        val grammar = Interceptor.create(
-            grammarClass,
-            arrayOf(GrammarBuilder::class.java, treeFactory.javaClass),
-            arrayOf(grammarBuilderInterceptor, treeFactoryInterceptor),
-            grammarBuilderInterceptor
-        )
-        for (method in grammarClass.methods) {
-            if (method.declaringClass == Any::class.java) {
-                continue
-            }
-            invokeMethod(method, grammar)
-        }
-        syntaxTreeCreator = SyntaxTreeCreator(treeFactory, grammarBuilderInterceptor, nodeBuilder)
-        b.setRootRule(rootRule)
-        this.rootRule = rootRule
-        parseRunner = ParseRunner(checkNotNull(b.build().getRootRule()))
     }
 }

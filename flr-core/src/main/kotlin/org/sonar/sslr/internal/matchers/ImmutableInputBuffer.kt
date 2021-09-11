@@ -28,6 +28,21 @@ public class ImmutableInputBuffer(private val buffer: CharArray) : InputBuffer {
      * Indices of lines in buffer.
      */
     private val lines: IntArray
+
+    init {
+        val newlines = mutableListOf<Int>()
+        var i = 0
+        newlines.add(0)
+        while (i < buffer.size) {
+            if (isEndOfLine(buffer, i)) {
+                newlines.add(i + 1)
+            }
+            i++
+        }
+        newlines.add(i)
+        lines = newlines.toIntArray()
+    }
+
     override fun length(): Int {
         return buffer.size
     }
@@ -66,25 +81,6 @@ public class ImmutableInputBuffer(private val buffer: CharArray) : InputBuffer {
         private fun isEndOfLine(buffer: CharArray, i: Int): Boolean {
             return buffer[i] == TextUtils.LF ||
                     buffer[i] == TextUtils.CR && (i + 1 < buffer.size && buffer[i + 1] != TextUtils.LF || i + 1 == buffer.size)
-        }
-    }
-
-    init {
-        val newlines = mutableListOf<Int>()
-        var i = 0
-        newlines.add(0)
-        while (i < buffer.size) {
-            if (isEndOfLine(buffer, i)) {
-                newlines.add(i + 1)
-            }
-            i++
-        }
-        newlines.add(i)
-        lines = IntArray(newlines.size)
-        i = 0
-        while (i < newlines.size) {
-            lines[i] = newlines[i]
-            i++
         }
     }
 }

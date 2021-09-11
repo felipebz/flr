@@ -39,6 +39,10 @@ public class Trivia private constructor(
     public val isSkippedText: Boolean
         get() = kind == TriviaKind.SKIPPED_TEXT
 
+    init {
+        require(this.tokens.isNotEmpty()) { "the trivia must have at least one associated token to be able to call getToken()" }
+    }
+
     override fun toString(): String {
         return when {
             tokens.isEmpty() -> {
@@ -72,9 +76,5 @@ public class Trivia private constructor(
         public fun createSkippedText(vararg tokens: Token): Trivia {
             return Trivia(TriviaKind.SKIPPED_TEXT, *tokens)
         }
-    }
-
-    init {
-        require(this.tokens.isNotEmpty()) { "the trivia must have at least one associated token to be able to call getToken()" }
     }
 }

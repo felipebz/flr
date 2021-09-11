@@ -28,22 +28,21 @@ import org.sonar.sslr.channel.CodeReaderConfiguration
 import java.io.*
 import java.net.MalformedURLException
 import java.net.URI
-import java.net.URISyntaxException
 import java.net.URL
 import java.nio.charset.Charset
 import java.util.*
 
 public class Lexer private constructor(builder: Builder) {
-    private val charset: Charset
-    private val configuration: CodeReaderConfiguration
-    private val channelDispatcher: ChannelDispatcher<Lexer>?
+    private val charset = builder.charset
+    private val configuration = builder.configuration
+    private val channelDispatcher = builder.channelDispatcher
     private val trivia: MutableList<Trivia> = LinkedList()
     private var _tokens = mutableListOf<Token>()
 
     public val tokens: List<Token>
         get() = _tokens.toList()
 
-    public var uri: URI? = null
+    public var uri: URI = URI("tests://unittest")
         private set
 
     public fun lex(file: File): List<Token> {
@@ -85,7 +84,6 @@ public class Lexer private constructor(builder: Builder) {
     }
 
     private fun lex(reader: Reader): List<Token> {
-        checkNotNull(channelDispatcher) { "the channel dispatcher should be set" }
         _tokens = mutableListOf()
         val code = CodeReader(reader, configuration)
         return try {
@@ -173,18 +171,6 @@ public class Lexer private constructor(builder: Builder) {
         @JvmStatic
         public fun builder(): Builder {
             return Builder()
-        }
-    }
-
-    init {
-        charset = builder.charset
-        configuration = builder.configuration
-        channelDispatcher = builder.channelDispatcher
-        try {
-            uri = URI("tests://unittest")
-        } catch (e: URISyntaxException) {
-            // Can't happen
-            throw IllegalStateException(e)
         }
     }
 }

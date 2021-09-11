@@ -29,38 +29,38 @@ import java.util.*
  * attached to the next token.
  */
 public class Token private constructor(builder: Builder) {
-    public val type: TokenType
-    public val value: String
+    public val type: TokenType = builder.type
+    public val value: String = builder.value
 
     /**
      * @return the original value of the token. This method is useful when a language is case-insensitive as in that case all token values are
      * capitalized.
      */
-    public val originalValue: String
+    public val originalValue: String = builder.originalValue
 
     /**
      * @return the line of the token in the source code
      */
-    public val line: Int
+    public val line: Int = builder.line
 
     /**
      * @return the column of the token in the source code
      */
-    public val column: Int
+    public val column: Int = builder.column
 
     /**
      * @return the URI this token belongs to
      */
-    public val uRI: URI?
-    public val isGeneratedCode: Boolean
+    public val uRI: URI? = builder.uri
+    public val isGeneratedCode: Boolean = builder.generatedCode
 
     /**
      * @return the list of trivia located between this token and the previous one
      */
-    public val trivia: List<Trivia>
-    public val isCopyBook: Boolean
-    public val copyBookOriginalLine: Int
-    public val copyBookOriginalFileName: String
+    public val trivia: List<Trivia> = if (builder.trivia.isEmpty()) emptyList() else ArrayList(builder.trivia)
+    public val isCopyBook: Boolean= builder.copyBook
+    public val copyBookOriginalLine: Int = builder.copyBookOriginalLine
+    public val copyBookOriginalFileName: String = builder.copyBookOriginalFileName
 
     /**
      * @return true if there is some trivia like some comments or preprocessing directive between this token and the previous one.
@@ -202,19 +202,5 @@ public class Token private constructor(builder: Builder) {
         public fun builder(token: Token): Builder {
             return Builder(token)
         }
-    }
-
-    init {
-        type = builder.type
-        value = builder.value
-        originalValue = builder.originalValue
-        line = builder.line
-        column = builder.column
-        uRI = builder.uri
-        isGeneratedCode = builder.generatedCode
-        trivia = if (builder.trivia.isEmpty()) emptyList() else ArrayList(builder.trivia)
-        isCopyBook = builder.copyBook
-        copyBookOriginalLine = builder.copyBookOriginalLine
-        copyBookOriginalFileName = builder.copyBookOriginalFileName
     }
 }

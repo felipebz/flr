@@ -36,6 +36,21 @@ public class IdentifierAndKeywordChannel(regexp: String, caseSensitive: Boolean,
     private val matcher: Matcher
     private val caseSensitive: Boolean
     private val tokenBuilder: Token.Builder = Token.builder()
+
+    /**
+     * @throws java.util.regex.PatternSyntaxException if the expression's syntax is invalid
+     */
+    init {
+        for (keywords in keywordSets) {
+            for (keyword in keywords) {
+                val keywordValue = if (caseSensitive) keyword.value else keyword.value.uppercase(Locale.getDefault())
+                keywordsMap[keywordValue] = keyword
+            }
+        }
+        this.caseSensitive = caseSensitive
+        matcher = Pattern.compile(regexp).matcher("")
+    }
+
     override fun consume(code: CodeReader, output: Lexer): Boolean {
         if (code.popTo(matcher, tmpBuilder) > 0) {
             var word = tmpBuilder.toString()
@@ -56,19 +71,5 @@ public class IdentifierAndKeywordChannel(regexp: String, caseSensitive: Boolean,
             return true
         }
         return false
-    }
-
-    /**
-     * @throws java.util.regex.PatternSyntaxException if the expression's syntax is invalid
-     */
-    init {
-        for (keywords in keywordSets) {
-            for (keyword in keywords) {
-                val keywordValue = if (caseSensitive) keyword.value else keyword.value.uppercase(Locale.getDefault())
-                keywordsMap[keywordValue] = keyword
-            }
-        }
-        this.caseSensitive = caseSensitive
-        matcher = Pattern.compile(regexp).matcher("")
     }
 }

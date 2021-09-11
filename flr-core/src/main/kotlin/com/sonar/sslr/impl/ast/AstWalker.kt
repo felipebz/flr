@@ -29,6 +29,12 @@ public class AstWalker(vararg visitors: AstVisitor) {
     private var astAndTokenVisitors = emptyArray<AstAndTokenVisitor>()
     private var lastVisitedToken: Token? = null
 
+    init {
+        for (visitor in visitors) {
+            addVisitor(visitor)
+        }
+    }
+
     public fun addVisitor(visitor: AstVisitor) {
         visitors.add(visitor)
         for (type in visitor.getAstNodeTypesToVisit()) {
@@ -104,12 +110,6 @@ public class AstWalker(vararg visitors: AstVisitor) {
             for (nodeVisitor in nodeVisitors) {
                 nodeVisitor.visitNode(ast)
             }
-        }
-    }
-
-    init {
-        for (visitor in visitors) {
-            addVisitor(visitor)
         }
     }
 }

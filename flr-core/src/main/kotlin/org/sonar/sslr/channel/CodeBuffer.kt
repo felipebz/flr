@@ -45,6 +45,28 @@ public open class CodeBuffer protected constructor(initialCodeReader: Reader, co
     private var recordingMode = false
     private var recordedCharacters = StringBuilder()
 
+    /**
+     * Note that this constructor will read everything from reader and will close it.
+     */
+    init {
+        /* Make sure the reader passed-in gets closed when done. */
+        try {
+            initialCodeReader.use { reader ->
+                lastChar = -1
+                cursor = Cursor()
+                tabWidth = configuration.getTabWidth()
+                var filteredReader = reader
+
+                /* Setup the filters on the reader */for (codeReaderFilter in configuration.getCodeReaderFilters()) {
+                filteredReader = Filter(filteredReader, codeReaderFilter, configuration)
+            }
+                filteredReader.use { usedReader -> buffer = read(usedReader) }
+            }
+        } catch (e: IOException) {
+            throw ChannelException(e.message, e)
+        }
+    }
+
     public constructor(code: String, configuration: CodeReaderConfiguration) : this(StringReader(code), configuration)
 
     @Throws(IOException::class)
@@ -215,6 +237,11 @@ public open class CodeBuffer protected constructor(initialCodeReader: Reader, co
         private val codeReaderFilter: CodeReaderFilter<*>,
         configuration: CodeReaderConfiguration
     ) : FilterReader(`in`) {
+        init {
+            codeReaderFilter.setConfiguration(configuration.cloneWithoutCodeReaderFilters())
+            codeReaderFilter.setReader(`in`)
+        }
+
         @Throws(IOException::class)
         override fun read(): Int {
             throw UnsupportedOperationException()
@@ -230,37 +257,10 @@ public open class CodeBuffer protected constructor(initialCodeReader: Reader, co
         override fun skip(n: Long): Long {
             throw UnsupportedOperationException()
         }
-
-        init {
-            codeReaderFilter.setConfiguration(configuration.cloneWithoutCodeReaderFilters())
-            codeReaderFilter.setReader(`in`)
-        }
     }
 
     private companion object {
         private const val LF = '\n'
         private const val CR = '\r'
-    }
-
-    /**
-     * Note that this constructor will read everything from reader and will close it.
-     */
-    init {
-        /* Make sure the reader passed-in gets closed when done. */
-        try {
-            initialCodeReader.use { reader ->
-                lastChar = -1
-                cursor = Cursor()
-                tabWidth = configuration.getTabWidth()
-                var filteredReader = reader
-
-                /* Setup the filters on the reader */for (codeReaderFilter in configuration.getCodeReaderFilters()) {
-                filteredReader = Filter(filteredReader, codeReaderFilter, configuration)
-            }
-                filteredReader.use { usedReader -> buffer = read(usedReader) }
-            }
-        } catch (e: IOException) {
-            throw ChannelException(e.message, e)
-        }
     }
 }

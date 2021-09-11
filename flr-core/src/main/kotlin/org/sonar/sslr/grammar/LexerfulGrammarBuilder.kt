@@ -129,11 +129,11 @@ public class LexerfulGrammarBuilder private constructor() : GrammarBuilder() {
      * @param t1  first type of token
      * @param rest  rest of types
      */
-    public fun isOneOfThem(t1: TokenType?, vararg rest: TokenType?): Any {
+    public fun isOneOfThem(t1: TokenType, vararg rest: TokenType): Any {
         val types = arrayOfNulls<TokenType>(1 + rest.size)
         types[0] = t1
         System.arraycopy(rest, 0, types, 1, rest.size)
-        return TokenTypesExpression(*types)
+        return TokenTypesExpression(*types.requireNoNulls())
     }
 
     /**
