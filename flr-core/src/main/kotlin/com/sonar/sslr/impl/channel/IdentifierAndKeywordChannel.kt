@@ -38,7 +38,7 @@ public class IdentifierAndKeywordChannel(regexp: String, caseSensitive: Boolean,
     private val tokenBuilder: Token.Builder = Token.builder()
 
     /**
-     * @throws java.util.regex.PatternSyntaxException if the expression's syntax is invalid
+     * @throws PatternSyntaxException if the expression's syntax is invalid
      */
     init {
         for (keywords in keywordSets) {

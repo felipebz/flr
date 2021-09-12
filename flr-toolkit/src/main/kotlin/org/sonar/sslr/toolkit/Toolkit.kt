@@ -23,7 +23,6 @@ package org.sonar.sslr.toolkit
 import org.sonar.sslr.internal.toolkit.SourceCodeModel
 import org.sonar.sslr.internal.toolkit.ToolkitPresenter
 import org.sonar.sslr.internal.toolkit.ToolkitViewImpl
-import java.util.*
 import javax.swing.SwingUtilities
 import javax.swing.UIManager
 

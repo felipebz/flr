@@ -20,8 +20,6 @@
  */
 package org.sonar.sslr.internal.vm
 
-import java.util.*
-
 public class SequenceExpression(private vararg val subExpressions: ParsingExpression) : ParsingExpression {
 
     /**

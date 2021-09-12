@@ -31,10 +31,8 @@ import org.sonar.sslr.channel.CodeReader
  *
  * @since 1.2
  */
-public class UnknownCharacterChannel : Channel<Lexer> {
+public class UnknownCharacterChannel public constructor() : Channel<Lexer> {
     private val tokenBuilder: Token.Builder = Token.builder()
-
-    public constructor()
 
     override fun consume(code: CodeReader, output: Lexer): Boolean {
         if (code.peek() != -1) {

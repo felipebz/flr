@@ -24,10 +24,8 @@ import com.sonar.sslr.impl.Parser
 import org.sonar.sslr.toolkit.AbstractConfigurationModel
 import org.sonar.sslr.toolkit.ConfigurationProperty
 import org.sonar.sslr.toolkit.Toolkit
-import org.sonar.sslr.toolkit.ValidationCallback
+import org.sonar.sslr.toolkit.Validators
 import java.nio.charset.Charset
-import java.nio.charset.IllegalCharsetNameException
-import java.nio.charset.UnsupportedCharsetException
 
 public fun main() {
     val toolkit = Toolkit("MiniC : Toolkit", MiniCToolkit.MiniCConfigurationModel())
@@ -37,18 +35,7 @@ public fun main() {
 public object MiniCToolkit {
     internal class MiniCConfigurationModel : AbstractConfigurationModel() {
         private val charsetProperty: ConfigurationProperty =
-            ConfigurationProperty("Charset", "Charset used when opening files.", "UTF-8", object : ValidationCallback {
-                override fun validate(newValueCandidate: String): String {
-                    return try {
-                        Charset.forName(newValueCandidate)
-                        ""
-                    } catch (e: IllegalCharsetNameException) {
-                        "Illegal charset name: $newValueCandidate"
-                    } catch (e: UnsupportedCharsetException) {
-                        "Unsupported charset: $newValueCandidate"
-                    }
-                }
-            })
+            ConfigurationProperty("Charset", "Charset used when opening files.", "UTF-8", Validators.charsetValidator())
 
         override val properties: List<ConfigurationProperty>
             get() {

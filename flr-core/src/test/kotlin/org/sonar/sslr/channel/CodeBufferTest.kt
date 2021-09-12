@@ -23,8 +23,6 @@ package org.sonar.sslr.channel
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertTimeout
-import java.io.IOException
-import java.time.Duration
 import java.time.Duration.ofSeconds
 import java.util.regex.Pattern
 
