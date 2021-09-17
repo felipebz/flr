@@ -31,7 +31,6 @@ import org.sonar.sslr.grammar.GrammarException
 import org.sonar.sslr.grammar.GrammarRuleKey
 import org.sonar.sslr.internal.matchers.Matcher
 import org.sonar.sslr.internal.vm.*
-import org.sonar.sslr.parser.GrammarOperators
 
 public class MutableParsingRule : CompilableGrammarRule, Matcher, Rule, AstNodeSkippingPolicy, MemoParsingExpression,
     GrammarRuleKey {
@@ -62,12 +61,12 @@ public class MutableParsingRule : CompilableGrammarRule, Matcher, Rule, AstNodeS
         if (expression != null) {
             throw GrammarException("The rule '$ruleKey' has already been defined somewhere in the grammar.")
         }
-        expression = GrammarOperators.sequence(*e) as ParsingExpression
+        expression = sequence(*e)
         return this
     }
 
     override fun override(vararg e: Any): Rule {
-        expression = GrammarOperators.sequence(*e) as ParsingExpression
+        expression = sequence(*e)
         return this
     }
 
@@ -104,5 +103,41 @@ public class MutableParsingRule : CompilableGrammarRule, Matcher, Rule, AstNodeS
 
     override fun shouldMemoize(): Boolean {
         return true
+    }
+
+    private fun sequence(vararg e: Any): ParsingExpression {
+        return convertToSingleExpression(*e)
+    }
+
+    private fun convertToSingleExpression(vararg elements: Any): ParsingExpression {
+        return if (elements.size == 1) {
+            convertToExpression(elements[0])
+        } else SequenceExpression(*convertToExpressions(*elements))
+    }
+
+    private fun convertToExpressions(vararg elements: Any): Array<ParsingExpression> {
+        require(elements.isNotEmpty())
+        val matchers = arrayOfNulls<ParsingExpression>(elements.size)
+        for (i in matchers.indices) {
+            matchers[i] = convertToExpression(elements[i])
+        }
+        return matchers.requireNoNulls()
+    }
+
+    private fun convertToExpression(e: Any): ParsingExpression {
+        return when (e) {
+            is ParsingExpression -> {
+                e
+            }
+            is String -> {
+                StringExpression(e)
+            }
+            is Char -> {
+                StringExpression(e.toString())
+            }
+            else -> {
+                throw IllegalArgumentException("Incorrect type of parsing expression: " + e.javaClass.toString())
+            }
+        }
     }
 }
