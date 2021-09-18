@@ -34,9 +34,7 @@ import javax.swing.text.DefaultCaret
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter
 import javax.swing.tree.*
 
-internal class ToolkitViewImpl(presenter: ToolkitPresenter) : JFrame(), ToolkitView {
-    @Transient
-    val presenter: ToolkitPresenter
+internal class ToolkitViewImpl(@Transient val presenter: ToolkitPresenter) : JFrame(), ToolkitView {
     private val tabbedPane = JTabbedPane()
     private val astTree = JTree()
     private val astTreeScrollPane = JScrollPane(astTree)
@@ -72,6 +70,11 @@ internal class ToolkitViewImpl(presenter: ToolkitPresenter) : JFrame(), ToolkitV
     private val highlighter = DefaultHighlightPainter(Color.LIGHT_GRAY)
     private var sourceCodeTextCursorMovedEventDisabled = false
     private var astSelectionEventDisabled = false
+
+    init {
+        initComponents()
+    }
+
     private fun initComponents() {
         setSize(1000, 700)
         defaultCloseOperation = EXIT_ON_CLOSE
@@ -404,11 +407,5 @@ internal class ToolkitViewImpl(presenter: ToolkitPresenter) : JFrame(), ToolkitV
             }
             return treeNode
         }
-    }
-
-    init {
-        Objects.requireNonNull(presenter)
-        this.presenter = presenter
-        initComponents()
     }
 }

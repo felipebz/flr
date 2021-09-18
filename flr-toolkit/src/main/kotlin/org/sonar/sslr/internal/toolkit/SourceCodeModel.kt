@@ -28,10 +28,8 @@ import java.io.IOException
 import java.nio.charset.Charset
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.util.*
 
-internal class SourceCodeModel(configurationModel: ConfigurationModel) {
-    private val configurationModel: ConfigurationModel
+internal class SourceCodeModel(private val configurationModel: ConfigurationModel) {
     lateinit var sourceCode: String
         private set
     lateinit var astNode: AstNode
@@ -53,9 +51,4 @@ internal class SourceCodeModel(configurationModel: ConfigurationModel) {
 
     val xml: String
         get() = AstXmlPrinter.print(astNode)
-
-    init {
-        Objects.requireNonNull(configurationModel)
-        this.configurationModel = configurationModel
-    }
 }

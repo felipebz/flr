@@ -20,8 +20,6 @@
  */
 package org.sonar.sslr.toolkit
 
-import java.util.*
-
 /**
  * This class represents a configuration property, which is made of a name, a description (which may be empty),
  * a default value, and optionnally a validation callback.
@@ -51,10 +49,6 @@ public class ConfigurationProperty @JvmOverloads constructor(
     private val validationCallback: ValidationCallback
 
     init {
-        Objects.requireNonNull(name)
-        Objects.requireNonNull(description)
-        Objects.requireNonNull(defaultValue)
-        Objects.requireNonNull(validationCallback)
         val errorMessage = validationCallback.validate(defaultValue)
         require("" == errorMessage) { "The default value \"$defaultValue\" did not pass validation: $errorMessage" }
         this.name = name
