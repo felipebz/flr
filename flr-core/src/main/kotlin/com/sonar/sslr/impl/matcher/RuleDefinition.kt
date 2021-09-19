@@ -20,15 +20,15 @@
  */
 package com.sonar.sslr.impl.matcher
 
-import com.sonar.sslr.api.AstNode
-import com.sonar.sslr.api.AstNodeSkippingPolicy
-import com.sonar.sslr.api.AstNodeType
-import com.sonar.sslr.api.Rule
+import com.sonar.sslr.api.*
 import com.sonar.sslr.impl.ast.AlwaysSkipFromAst
 import com.sonar.sslr.impl.ast.NeverSkipFromAst
 import com.sonar.sslr.impl.ast.SkipFromAstIfOnlyOneChild
 import org.sonar.sslr.grammar.GrammarRuleKey
 import org.sonar.sslr.internal.vm.*
+import org.sonar.sslr.internal.vm.lexerful.TokenTypeClassExpression
+import org.sonar.sslr.internal.vm.lexerful.TokenTypeExpression
+import org.sonar.sslr.internal.vm.lexerful.TokenValueExpression
 import java.util.*
 
 /**
@@ -59,18 +59,18 @@ public class RuleDefinition : Rule, AstNodeSkippingPolicy, GrammarRuleKey, Compi
     override fun `is`(vararg e: Any): RuleDefinition {
         throwExceptionIfRuleAlreadyDefined("The rule '$ruleKey' has already been defined somewhere in the grammar.")
         throwExceptionIfEmptyListOfMatchers(e)
-        expression = GrammarFunctions.convertToSingleExpression(e)
+        expression = convertToSingleExpression(e)
         return this
     }
 
     override fun override(vararg e: Any): RuleDefinition {
         throwExceptionIfEmptyListOfMatchers(e)
-        expression = GrammarFunctions.convertToSingleExpression(e)
+        expression = convertToSingleExpression(e)
         return this
     }
 
     override fun mock() {
-        expression = GrammarFunctions.Standard.firstOf(getName(), getName().uppercase(Locale.getDefault())) as ParsingExpression
+        expression = firstOf(getName(), getName().uppercase(Locale.getDefault())) as ParsingExpression
     }
 
     override fun skip() {
@@ -116,5 +116,59 @@ public class RuleDefinition : Rule, AstNodeSkippingPolicy, GrammarRuleKey, Compi
 
     public fun enableMemoization() {
         memoize = true
+    }
+
+    private fun firstOf(vararg e: Any): Matcher {
+        checkSize(e)
+        return if (e.size == 1) {
+            convertToExpression(e[0])
+        } else {
+            FirstOfExpression(*convertToExpressions(e))
+        }
+    }
+
+    private fun convertToSingleExpression(e: Array<out Any>): ParsingExpression {
+        checkSize(e)
+        return if (e.size == 1) {
+            convertToExpression(e[0])
+        } else {
+            SequenceExpression(*convertToExpressions(e))
+        }
+    }
+
+    private fun convertToExpressions(e: Array<out Any>): Array<out ParsingExpression> {
+        checkSize(e)
+        val matchers = arrayOfNulls<ParsingExpression>(e.size)
+        for (i in matchers.indices) {
+            matchers[i] = convertToExpression(e[i])
+        }
+        return matchers.requireNoNulls()
+    }
+
+    private fun convertToExpression(e: Any): ParsingExpression {
+        return when (e) {
+            is String -> {
+                TokenValueExpression(e)
+            }
+            is TokenType -> {
+                TokenTypeExpression(e)
+            }
+            is RuleDefinition -> {
+                e
+            }
+            is Class<*> -> {
+                TokenTypeClassExpression(e)
+            }
+            is ParsingExpression -> {
+                e
+            }
+            else -> {
+                throw IllegalArgumentException("The matcher object can't be anything else than a Rule, Matcher, String, TokenType or Class. Object = $e")
+            }
+        }
+    }
+
+    private fun checkSize(e: Array<out Any>) {
+        require(e.isNotEmpty()) { "You must define at least one matcher." }
     }
 }
