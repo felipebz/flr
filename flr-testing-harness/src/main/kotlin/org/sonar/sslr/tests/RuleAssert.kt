@@ -23,6 +23,7 @@ package org.sonar.sslr.tests
 import com.sonar.sslr.api.Rule
 import org.fest.assertions.GenericAssert
 import org.sonar.sslr.grammar.GrammarRuleKey
+import org.sonar.sslr.grammar.LexerlessGrammarBuilder
 import org.sonar.sslr.internal.grammar.MutableParsingRule
 import org.sonar.sslr.internal.vm.EndOfInputExpression
 import org.sonar.sslr.parser.ParseErrorFormatter
@@ -45,20 +46,15 @@ public class RuleAssert(actual: Rule?) : GenericAssert<RuleAssert, Rule>(
         }
     }
 
-    internal class EndOfInput : GrammarRuleKey {
-        override fun toString(): String {
-            return "end of input"
-        }
-    }
-
     private fun createParseRunnerWithEofMatcher(): ParseRunner {
         isNotNull
         val rule = actual as MutableParsingRule
-        val endOfInput = MutableParsingRule(EndOfInput())
-            .`is`(EndOfInputExpression.INSTANCE) as MutableParsingRule
-        val withEndOfInput = MutableParsingRule(WithEndOfInput(rule.ruleKey))
-            .`is`(actual, endOfInput) as MutableParsingRule
-        return ParseRunner(withEndOfInput)
+
+        val builder = LexerlessGrammarBuilder.create()
+        val withEndOfInputKey = WithEndOfInput(rule.ruleKey)
+        builder.rule(withEndOfInputKey).`is`(actual, EndOfInputExpression.INSTANCE)
+        builder.setRootRule(withEndOfInputKey)
+        return ParseRunner(checkNotNull(builder.build().getRootRule()))
     }
 
     /**

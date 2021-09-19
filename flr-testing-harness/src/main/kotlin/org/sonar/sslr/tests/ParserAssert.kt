@@ -20,15 +20,15 @@
  */
 package org.sonar.sslr.tests
 
-import com.sonar.sslr.api.*
+import com.sonar.sslr.api.GenericTokenType
+import com.sonar.sslr.api.RecognitionException
 import com.sonar.sslr.impl.Parser
-import com.sonar.sslr.impl.matcher.RuleDefinition
 import org.fest.assertions.GenericAssert
+import org.sonar.sslr.grammar.LexerfulGrammarBuilder
 import org.sonar.sslr.internal.vm.EndOfInputExpression
 import org.sonar.sslr.internal.vm.FirstOfExpression
 import org.sonar.sslr.internal.vm.lexerful.TokenTypeExpression
 import org.sonar.sslr.tests.Assertions.assertThat
-import org.sonar.sslr.tests.RuleAssert.EndOfInput
 import org.sonar.sslr.tests.RuleAssert.WithEndOfInput
 
 /**
@@ -44,12 +44,12 @@ public class ParserAssert(actual: Parser<*>) : GenericAssert<ParserAssert, Parse
 ) {
     private fun createParserWithEofMatcher(): Parser<*> {
         val rule = checkNotNull(actual.getRootRule())
-        val endOfInput = RuleDefinition(EndOfInput())
-            .`is`(FirstOfExpression(EndOfInputExpression.INSTANCE, TokenTypeExpression(GenericTokenType.EOF)))
-        val withEndOfInput = RuleDefinition(WithEndOfInput(rule.ruleKey))
-            .`is`(rule, endOfInput)
+        val builder = LexerfulGrammarBuilder.create()
+        val withEndOfInputKey = WithEndOfInput(rule.ruleKey)
+        builder.rule(withEndOfInputKey).`is`(rule, FirstOfExpression(EndOfInputExpression.INSTANCE, TokenTypeExpression(GenericTokenType.EOF)))
+        builder.setRootRule(withEndOfInputKey)
         val parser: Parser<*> = Parser.builder(actual).build()
-        parser.setRootRule(withEndOfInput)
+        parser.setRootRule(checkNotNull(builder.build().getRootRule()))
         return parser
     }
 
