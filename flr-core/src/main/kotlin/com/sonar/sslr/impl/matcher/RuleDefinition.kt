@@ -29,7 +29,6 @@ import org.sonar.sslr.internal.vm.*
 import org.sonar.sslr.internal.vm.lexerful.TokenTypeClassExpression
 import org.sonar.sslr.internal.vm.lexerful.TokenTypeExpression
 import org.sonar.sslr.internal.vm.lexerful.TokenValueExpression
-import java.util.*
 
 /**
  *
@@ -67,10 +66,6 @@ public class RuleDefinition : Rule, AstNodeSkippingPolicy, GrammarRuleKey, Compi
         throwExceptionIfEmptyListOfMatchers(e)
         expression = convertToSingleExpression(e)
         return this
-    }
-
-    override fun mock() {
-        expression = firstOf(getName(), getName().uppercase(Locale.getDefault())) as ParsingExpression
     }
 
     override fun skip() {
@@ -116,15 +111,6 @@ public class RuleDefinition : Rule, AstNodeSkippingPolicy, GrammarRuleKey, Compi
 
     public fun enableMemoization() {
         memoize = true
-    }
-
-    private fun firstOf(vararg e: Any): Matcher {
-        checkSize(e)
-        return if (e.size == 1) {
-            convertToExpression(e[0])
-        } else {
-            FirstOfExpression(*convertToExpressions(e))
-        }
     }
 
     private fun convertToSingleExpression(e: Array<out Any>): ParsingExpression {

@@ -65,12 +65,4 @@ public interface Rule : AstNodeType {
      */
     @Deprecated("in 1.19, use {@link org.sonar.sslr.grammar.GrammarRuleBuilder#skipIfOneChild()} instead.")
     public fun skipIfOneChild()
-
-    /**
-     * Utility method used for unit testing in order to dynamically replace the definition of the rule to match as soon as a token whose value
-     * equals the name of the rule is encountered.
-     *
-     */
-    @Deprecated("in 1.18, use {@link #override(Object...)} instead.")
-    public fun mock()
 }

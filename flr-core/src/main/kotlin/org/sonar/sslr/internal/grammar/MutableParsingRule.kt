@@ -70,17 +70,6 @@ public class MutableParsingRule : CompilableGrammarRule, Matcher, Rule, AstNodeS
         return this
     }
 
-    override fun mock() {
-        expression =
-            SequenceExpression(
-                StringExpression(getName()),
-                FirstOfExpression(
-                    PatternExpression("\\s++"),
-                    EndOfInputExpression.INSTANCE
-                )
-            )
-    }
-
     override fun skip() {
         astNodeSkippingPolicy = AlwaysSkipFromAst.INSTANCE
     }
