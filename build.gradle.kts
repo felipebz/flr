@@ -27,7 +27,7 @@ allprojects {
     }
 
     group = "com.felipebz.flr"
-    version = "1.24-SNAPSHOT"
+    version = "1.0.0-SNAPSHOT"
 }
 
 subprojects {
