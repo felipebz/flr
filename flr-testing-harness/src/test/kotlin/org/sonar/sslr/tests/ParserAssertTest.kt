@@ -46,9 +46,7 @@ class ParserAssertTest {
             .build()
         rule = RuleDefinition("ruleName").`is`("foo")
         val grammar: Grammar = object : Grammar() {
-            override fun getRootRule(): Rule {
-                return rule
-            }
+            override val rootRule = rule
         }
         parser = Parser.builder(grammar).withLexer(lexer).build()
     }
@@ -92,15 +90,6 @@ class ParserAssertTest {
             ParserAssert(parser).notMatches("foo")
         }
         assertEquals("Rule 'ruleName' should not match:\nfoo", thrown.message)
-    }
-
-    @Test
-    fun should_not_accept_null_root_rule() {
-        parser.setRootRule(null)
-        val thrown = assertThrows<AssertionError> {
-            ParserAssert(parser).matches("")
-        }
-        assertEquals("Root rule of the parser should not be null", thrown.message)
     }
 
     @Test

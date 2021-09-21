@@ -20,7 +20,9 @@
  */
 package org.sonar.sslr.parser
 
-import com.sonar.sslr.api.*
+import com.sonar.sslr.api.AstNode
+import com.sonar.sslr.api.RecognitionException
+import com.sonar.sslr.api.Token
 import com.sonar.sslr.impl.Parser
 import com.sonar.sslr.impl.matcher.RuleDefinition
 import org.sonar.sslr.internal.matchers.AstCreator
@@ -43,7 +45,7 @@ import java.util.*
 public class ParserAdapter<G : LexerlessGrammar>(charset: Charset, grammar: G) :
     Parser<G>(Objects.requireNonNull(grammar, "grammar")) {
     private val charset: Charset = Objects.requireNonNull(charset, "charset")
-    private val parseRunner: ParseRunner = ParseRunner(checkNotNull(grammar.getRootRule()))
+    private val parseRunner: ParseRunner = ParseRunner(grammar.rootRule)
 
     /**
      * @return constructed AST
@@ -82,7 +84,7 @@ public class ParserAdapter<G : LexerlessGrammar>(charset: Charset, grammar: G) :
         throw UnsupportedOperationException()
     }
 
-    override fun getRootRule(): RuleDefinition? {
+    override fun getRootRule(): RuleDefinition {
         throw UnsupportedOperationException()
     }
 

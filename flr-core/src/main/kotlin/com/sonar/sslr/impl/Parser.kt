@@ -27,7 +27,7 @@ import org.sonar.sslr.internal.vm.CompilableGrammarRule
 import org.sonar.sslr.internal.vm.CompiledGrammar
 import org.sonar.sslr.internal.vm.Machine
 import org.sonar.sslr.internal.vm.MutableGrammarCompiler
-import org.sonar.sslr.parser.*
+import org.sonar.sslr.parser.ParserAdapter
 import java.io.File
 
 /**
@@ -37,7 +37,7 @@ import java.io.File
  * This class is not intended to be instantiated or subclassed by clients.
  */
 public open class Parser<G : Grammar> {
-    private var rootRule: RuleDefinition? = null
+    private lateinit var rootRule: RuleDefinition
     private val lexer: Lexer?
     private val _grammar: G
 
@@ -52,7 +52,7 @@ public open class Parser<G : Grammar> {
     private constructor(builder: Builder<G>) {
         lexer = builder.lexer
         _grammar = builder.grammar
-        rootRule = _grammar.getRootRule() as RuleDefinition
+        rootRule = _grammar.rootRule as RuleDefinition
     }
 
     public open fun parse(file: File): AstNode {
@@ -84,12 +84,12 @@ public open class Parser<G : Grammar> {
     public val grammar: G
         get() = _grammar
 
-    public open fun getRootRule(): RuleDefinition? {
+    public open fun getRootRule(): RuleDefinition {
         return rootRule
     }
 
-    public fun setRootRule(rootRule: Rule?) {
-        this.rootRule = rootRule as RuleDefinition?
+    public fun setRootRule(rootRule: Rule) {
+        this.rootRule = rootRule as RuleDefinition
     }
 
     public class Builder<G : Grammar> {

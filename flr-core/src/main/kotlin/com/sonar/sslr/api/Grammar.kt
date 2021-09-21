@@ -70,7 +70,7 @@ public abstract class Grammar {
      *
      * @return the entry point of this Grammar
      */
-    public abstract fun getRootRule(): Rule?
+    public abstract val rootRule: Rule
 
     public companion object {
         /**

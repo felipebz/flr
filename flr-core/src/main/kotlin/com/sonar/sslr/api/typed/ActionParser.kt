@@ -70,7 +70,7 @@ public class ActionParser<N>(
         }
         syntaxTreeCreator = SyntaxTreeCreator(treeFactory, grammarBuilderInterceptor, nodeBuilder)
         b.setRootRule(rootRule)
-        parseRunner = ParseRunner(checkNotNull(b.build().getRootRule()))
+        parseRunner = ParseRunner(b.build().rootRule)
     }
 
     public fun parse(file: File): N? {

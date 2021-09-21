@@ -33,7 +33,6 @@ public class MutableGrammar(
         return requireNotNull(rules[ruleKey])
     }
 
-    override fun getRootRule(): Rule {
-        return rule(checkNotNull(rootRuleKey))
-    }
+    override val rootRule: Rule
+        get() = rule(checkNotNull(rootRuleKey))
 }

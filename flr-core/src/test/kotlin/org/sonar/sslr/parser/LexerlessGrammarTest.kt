@@ -32,8 +32,8 @@ class LexerlessGrammarTest {
     @Test
     fun should_instanciate_rule_fields() {
         val grammar = TestGrammar()
-        assertThat(grammar.getRootRule()).isInstanceOf(MutableParsingRule::class.java)
-        assertThat((grammar.getRootRule() as MutableParsingRule).getName()).isEqualTo("rootRule")
+        assertThat(grammar.rootRule).isInstanceOf(MutableParsingRule::class.java)
+        assertThat((grammar.rootRule as MutableParsingRule).getName()).isEqualTo("rule")
     }
 
     @Test
@@ -44,19 +44,17 @@ class LexerlessGrammarTest {
     }
 
     private class TestGrammar : LexerlessGrammar() {
-        private val rootRule: Rule? = null
-        override fun getRootRule(): Rule {
-            return checkNotNull(rootRule)
-        }
+        private val rule: Rule? = null
+        override val rootRule: Rule
+            get() = checkNotNull(rule)
     }
 
     private class IllegalGrammar : LexerlessGrammar() {
-        override fun getRootRule(): Rule {
-            return rootRule
-        }
+        override val rootRule: Rule
+            get() = rule
 
         companion object {
-            private val rootRule = mock<Rule>()
+            private val rule = mock<Rule>()
         }
     }
 }

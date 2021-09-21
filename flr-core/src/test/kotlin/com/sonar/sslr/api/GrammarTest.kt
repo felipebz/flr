@@ -105,30 +105,25 @@ class GrammarTest {
         private val junkIntField = 0
         var junkObjectField: Any? = null
 
-        @JvmField
-        var rootRule: Rule? = null
+        private lateinit var rule: Rule
 
-        override fun getRootRule(): Rule? {
-            return rootRule
-        }
+        override val rootRule: Rule
+            get() = rule
     }
 
     private class MyLexerlessGrammar : LexerlessGrammar() {
-        @JvmField
-        var rootRule: Rule? = null
+        private lateinit var rule: Rule
 
-        override fun getRootRule(): Rule? {
-            return rootRule
-        }
+        override val rootRule: Rule
+            get() = rule
     }
 
     private class IllegalGrammar : Grammar() {
-        override fun getRootRule(): Rule {
-            return rootRule
-        }
+        override val rootRule: Rule
+            get() = rule
 
         companion object {
-            private val rootRule = mock<Rule>()
+            private val rule = mock<Rule>()
         }
     }
 }

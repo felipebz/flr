@@ -95,7 +95,7 @@ class LexerlessGrammarBuilderTest {
         b.rule(ruleKey).`is`(b.nothing())
         b.setRootRule(ruleKey)
         val grammar = b.build() as MutableGrammar
-        assertThat((grammar.getRootRule() as CompilableGrammarRule).ruleKey).isSameAs(ruleKey)
+        assertThat((grammar.rootRule as CompilableGrammarRule).ruleKey).isSameAs(ruleKey)
     }
 
     @Test

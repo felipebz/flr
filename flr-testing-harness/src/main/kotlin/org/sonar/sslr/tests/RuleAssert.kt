@@ -54,7 +54,7 @@ public class RuleAssert(actual: Rule?) : GenericAssert<RuleAssert, Rule>(
         val withEndOfInputKey = WithEndOfInput(rule.ruleKey)
         builder.rule(withEndOfInputKey).`is`(actual, EndOfInputExpression.INSTANCE)
         builder.setRootRule(withEndOfInputKey)
-        return ParseRunner(checkNotNull(builder.build().getRootRule()))
+        return ParseRunner(builder.build().rootRule)
     }
 
     /**

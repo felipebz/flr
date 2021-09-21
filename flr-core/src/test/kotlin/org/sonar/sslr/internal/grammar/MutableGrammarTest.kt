@@ -35,6 +35,6 @@ class MutableGrammarTest {
         val rootRule = mock<CompilableGrammarRule>()
         val grammar = MutableGrammar(mapOf(Pair(ruleKey, rule), Pair(rootRuleKey, rootRule)), rootRuleKey)
         assertThat(grammar.rule(ruleKey)).isSameAs(rule)
-        assertThat(grammar.getRootRule()).isSameAs(rootRule)
+        assertThat(grammar.rootRule).isSameAs(rootRule)
     }
 }
