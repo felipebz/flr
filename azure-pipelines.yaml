@@ -19,6 +19,7 @@ steps:
       path: $(Pipeline.Workspace)/.cache
 
   - task: SonarQubePrepare@4
+    condition: and(succeeded(), eq(variables.isMain, 'true'))
     inputs:
       SonarQube: 'SonarQube'
       scannerMode: 'Other'
@@ -28,7 +29,7 @@ steps:
       tasks: 'build jacocoTestReport'
       options: '--build-cache -Dsonar.branch.name='
       jdkVersionOption: 1.11
-      sonarQubeRunAnalysis: true
+      sonarQubeRunAnalysis: eq(variables.isMain, 'true')
 
   - task: Gradle@2
     condition: and(succeeded(), eq(variables.isMain, 'true'))
@@ -39,6 +40,8 @@ steps:
     env:
       DEPLOY_USERNAME: $(DEPLOY_USERNAME)
       DEPLOY_TOKEN: $(DEPLOY_TOKEN)
+      OSSRH_USERNAME: $(OSSRH_USERNAME)
+      OSSRH_PASSWORD: $(OSSRH_PASSWORD)
 
   - script: |
       # stop the Gradle daemon to ensure no files are left open (impacting the save cache operation later)
