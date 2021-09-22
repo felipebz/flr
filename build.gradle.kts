@@ -124,7 +124,9 @@ subprojects {
                 }
 
                 pom {
+                    name.set(project.description)
                     description.set(project.description)
+                    url.set("https://github.com/felipebz/flr")
                     organization {
                         name.set("Felipe Zorzo")
                         url.set("https://felipezorzo.com.br")
@@ -138,6 +140,8 @@ subprojects {
                     }
                     scm {
                         url.set("https://github.com/felipebz/flr")
+                        connection.set("scm:git:https://github.com/felipebz/flr.git")
+                        developerConnection.set("scm:git:https://github.com/felipebz/flr.git")
                     }
                     developers {
                         developer {
