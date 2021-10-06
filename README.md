@@ -22,7 +22,7 @@ If you want to start working with FLR, you must be familiar with the following s
 
 FLR also comes with a MiniC language which has been created to easily and simply test all FLR features. This MiniC language can be a good starting point for a beginner to understand how to implement/define the different mandatory layers to analyse a language:
 
-* [Lexer](https://github.com/felipebz/flr/blob/main/flr-testing-harness/src/main/kotlin/com/sonar/sslr/test/minic/MiniCLexer.kt)
-* [Grammar](https://github.com/felipebz/flr/blob/main/flr-testing-harness/src/main/kotlin/com/sonar/sslr/test/minic/MiniCGrammar.kt)
-* [Parser](https://github.com/felipebz/flr/blob/main/flr-testing-harness/src/main/kotlin/com/sonar/sslr/test/minic/MiniCParser.kt)
-* [Toolkit](https://github.com/felipebz/flr/blob/main/flr-testing-harness/src/main/kotlin/com/sonar/sslr/test/minic/MiniCToolkit.kt)
+* [Lexer](https://github.com/felipebz/flr/blob/main/flr-testing-harness/src/main/kotlin/com/felipebz/flr/test/minic/MiniCLexer.kt)
+* [Grammar](https://github.com/felipebz/flr/blob/main/flr-testing-harness/src/main/kotlin/com/felipebz/flr/test/minic/MiniCGrammar.kt)
+* [Parser](https://github.com/felipebz/flr/blob/main/flr-testing-harness/src/main/kotlin/com/felipebz/flr/test/minic/MiniCParser.kt)
+* [Toolkit](https://github.com/felipebz/flr/blob/main/flr-testing-harness/src/main/kotlin/com/felipebz/flr/test/minic/MiniCToolkit.kt)

@@ -1,0 +1,58 @@
+/**
+ * FLR
+ * Copyright (C) 2010-2021 SonarSource SA
+ * Copyright (C) 2021-2021 Felipe Zorzo
+ * mailto:felipe AT felipezorzo DOT com DOT br
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+package com.felipebz.flr.parser
+
+import com.felipebz.flr.internal.matchers.InputBuffer
+import com.felipebz.flr.internal.matchers.ParseNode
+
+/**
+ * Parsing result.
+ *
+ *
+ * This class is not intended to be instantiated or subclassed by clients.
+ *
+ * @since 1.16
+ */
+public class ParsingResult(
+    private val inputBuffer: InputBuffer,
+    private val matched: Boolean,
+    private val parseTreeRoot: ParseNode?,
+    private val parseError: ParseError?
+) {
+
+    public fun getInputBuffer(): InputBuffer {
+        return inputBuffer
+    }
+
+    public fun isMatched(): Boolean {
+        return matched
+    }
+
+    public fun getParseError(): ParseError? {
+        return parseError
+    }
+
+    // @VisibleForTesting
+    public fun getParseTreeRoot(): ParseNode {
+        return checkNotNull(parseTreeRoot)
+    }
+
+}
