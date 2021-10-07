@@ -30,8 +30,6 @@ import org.objectweb.asm.ClassWriter
 import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes
 import java.lang.reflect.Method
-import java.util.*
-import java.util.stream.Collectors
 
 class InterceptorTest {
     open class Target(open val p: Any) : BaseTarget() {
@@ -121,10 +119,10 @@ class InterceptorTest {
         assertEquals(0, interceptedMethods.size.toLong())
         assertEquals(
             listOf("base", "getP", "m", "overloaded", "overloaded", "overridden"),
-            Arrays.stream(interceptedTarget.javaClass.declaredMethods)
-                .map { obj: Method -> obj.name }
+            interceptedTarget.javaClass.declaredMethods
+                .map { it.name }
                 .sorted()
-                .collect(Collectors.toList()))
+                .toList())
     }
 
     @Test

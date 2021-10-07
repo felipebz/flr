@@ -26,7 +26,6 @@ import org.objectweb.asm.Opcodes
 import org.objectweb.asm.Type
 import java.lang.reflect.Method
 import java.util.*
-import kotlin.streams.toList
 
 public object Interceptor {
     @JvmStatic
@@ -63,8 +62,8 @@ public object Interceptor {
         )
         val constructorDescriptor = Type.getMethodDescriptor(
             Type.getType(Void.TYPE),
-            *Arrays.stream(constructorParameterTypes)
-                .map { clazz: Class<*>? -> Type.getType(clazz) }
+            *constructorParameterTypes
+                .map { Type.getType(it) }
                 .toList().toTypedArray())
         var mv = cv.visitMethod(
             Opcodes.ACC_PUBLIC,
