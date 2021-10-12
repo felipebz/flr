@@ -118,14 +118,10 @@ subprojects {
         publications {
             create<MavenPublication>("maven") {
                 from(components["java"])
-
-                if (dokka.archiveFile.get().asFile.exists()) {
-                    artifact(dokka)
-                }
-
+                artifact(dokka)
                 pom {
-                    name.set(project.description)
-                    description.set(project.description)
+                    name.set(provider { project.description })
+                    description.set(provider { project.description })
                     url.set("https://github.com/felipebz/flr")
                     organization {
                         name.set("Felipe Zorzo")
