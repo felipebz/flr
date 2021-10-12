@@ -28,7 +28,7 @@ allprojects {
     }
 
     group = "com.felipebz.flr"
-    version = "1.0.0"
+    version = "1.1.0-SNAPSHOT"
 }
 
 subprojects {
@@ -97,6 +97,16 @@ subprojects {
 
     publishing {
         repositories {
+            if (project.version.toString().endsWith("SNAPSHOT")) {
+                maven {
+                    name = "AzureArtifacts"
+                    url = uri("https://pkgs.dev.azure.com/felipebz/z-plsql-analyzer/_packaging/public_feed/maven/v1")
+                    credentials {
+                        username = project.findProperty("gpr.user") as String? ?: System.getenv("DEPLOY_USERNAME")
+                        password = project.findProperty("gpr.key") as String? ?: System.getenv("DEPLOY_TOKEN")
+                    }
+                }
+            }
             maven {
                 val releaseRepo = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
                 val snapshotRepo = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
