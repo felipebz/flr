@@ -25,7 +25,6 @@ import com.felipebz.flr.api.GenericTokenType
 import com.felipebz.flr.api.Token
 import com.felipebz.flr.api.TokenType
 import com.felipebz.flr.impl.Lexer
-import java.net.URI
 import java.net.URISyntaxException
 
 @Deprecated("in 1.17 All classes can now be mocked since none of them are final anymore, hence this helper is useless.")
@@ -46,7 +45,6 @@ public object MockHelper {
             Token.builder()
                 .setType(type)
                 .setValueAndOriginalValue(value)
-                .setURI(URI("tests://unittest"))
                 .setLine(1)
                 .setColumn(1)
         } catch (e: URISyntaxException) {

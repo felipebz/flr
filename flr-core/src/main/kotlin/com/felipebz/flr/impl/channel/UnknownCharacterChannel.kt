@@ -20,10 +20,11 @@
  */
 package com.felipebz.flr.impl.channel
 
-import com.felipebz.flr.api.*
-import com.felipebz.flr.impl.Lexer
+import com.felipebz.flr.api.GenericTokenType
+import com.felipebz.flr.api.Token
 import com.felipebz.flr.channel.Channel
 import com.felipebz.flr.channel.CodeReader
+import com.felipebz.flr.impl.Lexer
 
 /**
  * Creates token with type [com.felipebz.flr.api.GenericTokenType.UNKNOWN_CHAR] for any character.
@@ -40,7 +41,6 @@ public class UnknownCharacterChannel public constructor() : Channel<Lexer> {
             val token = tokenBuilder
                 .setType(GenericTokenType.UNKNOWN_CHAR)
                 .setValueAndOriginalValue(unknownChar.toString())
-                .setURI(output.uri)
                 .setLine(code.getLinePosition())
                 .setColumn(code.getColumnPosition() - 1)
                 .build()

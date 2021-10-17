@@ -126,7 +126,6 @@ public class SyntaxTreeCreator<T>(
         val lineAndColumn = input.lineAndColumnAt(node.startIndex)
         tokenBuilder.setLine(lineAndColumn[0])
         tokenBuilder.setColumn(lineAndColumn[1] - 1)
-        tokenBuilder.setURI(input.uri())
         val value = input.substring(node.startIndex, node.endIndex)
         tokenBuilder.setValueAndOriginalValue(value)
         tokenBuilder.setTrivia(emptyList())

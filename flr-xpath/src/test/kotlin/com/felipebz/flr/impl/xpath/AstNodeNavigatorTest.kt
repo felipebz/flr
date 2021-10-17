@@ -29,7 +29,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
-import java.net.URI
 
 class AstNodeNavigatorTest {
 
@@ -58,7 +57,6 @@ class AstNodeNavigatorTest {
     fun getAttributeStringValue() {
         val astNode = AstNode(
             Token.builder()
-                .setURI(URI("tests://unittest"))
                 .setType(GenericTokenType.IDENTIFIER)
                 .setLine(1)
                 .setColumn(2)

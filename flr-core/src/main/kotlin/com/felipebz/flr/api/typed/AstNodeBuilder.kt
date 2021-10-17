@@ -63,7 +63,6 @@ internal class AstNodeBuilder : NodeBuilder {
             .setLine(lineAndColumn[0])
             .setColumn(lineAndColumn[1] - 1)
             .setValueAndOriginalValue(input.substring(startIndex, endIndex))
-            .setURI(input.uri())
             .setGeneratedCode(false)
             .setTrivia(trivias)
             .build()

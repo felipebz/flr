@@ -21,13 +21,12 @@
 package com.felipebz.flr.impl.channel
 
 import com.felipebz.flr.api.*
-import com.felipebz.flr.impl.Lexer
 import com.felipebz.flr.channel.Channel
 import com.felipebz.flr.channel.CodeReader
+import com.felipebz.flr.impl.Lexer
 import java.util.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
-import kotlin.collections.HashMap
 
 public class IdentifierAndKeywordChannel(regexp: String, caseSensitive: Boolean, vararg keywordSets: Array<out TokenType>) :
     Channel<Lexer> {
@@ -62,7 +61,6 @@ public class IdentifierAndKeywordChannel(regexp: String, caseSensitive: Boolean,
             val token = tokenBuilder
                 .setType(keywordType ?: GenericTokenType.IDENTIFIER)
                 .setValueAndOriginalValue(word, wordOriginal)
-                .setURI(output.uri)
                 .setLine(code.previousCursor.line)
                 .setColumn(code.previousCursor.column)
                 .build()

@@ -20,11 +20,12 @@
  */
 package com.felipebz.flr.impl.channel
 
-import com.felipebz.flr.api.*
-import com.felipebz.flr.impl.Lexer
-import com.felipebz.flr.impl.LexerException
+import com.felipebz.flr.api.Token
+import com.felipebz.flr.api.TokenType
 import com.felipebz.flr.channel.Channel
 import com.felipebz.flr.channel.CodeReader
+import com.felipebz.flr.impl.Lexer
+import com.felipebz.flr.impl.LexerException
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
@@ -45,7 +46,6 @@ public class RegexpChannel(private val type: TokenType, private val regexp: Stri
                 val token = tokenBuilder
                     .setType(type)
                     .setValueAndOriginalValue(value)
-                    .setURI(output.uri)
                     .setLine(code.previousCursor.line)
                     .setColumn(code.previousCursor.column)
                     .build()

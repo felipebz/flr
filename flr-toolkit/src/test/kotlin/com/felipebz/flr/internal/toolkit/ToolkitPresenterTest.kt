@@ -23,18 +23,17 @@ package com.felipebz.flr.internal.toolkit
 import com.felipebz.flr.api.AstNode
 import com.felipebz.flr.api.GenericTokenType
 import com.felipebz.flr.api.Token
+import com.felipebz.flr.toolkit.ConfigurationModel
+import com.felipebz.flr.toolkit.ConfigurationProperty
 import org.fest.assertions.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.kotlin.*
-import com.felipebz.flr.toolkit.ConfigurationModel
-import com.felipebz.flr.toolkit.ConfigurationProperty
 import java.awt.Point
 import java.io.File
 import java.io.PrintWriter
-import java.net.URI
 import java.nio.charset.StandardCharsets
 
 class ToolkitPresenterTest {
@@ -269,7 +268,6 @@ class ToolkitPresenterTest {
         val token = Token.builder()
             .setType(GenericTokenType.IDENTIFIER)
             .setValueAndOriginalValue("bar")
-            .setURI(URI("tests://unittest"))
             .setLine(1)
             .setColumn(1)
             .build()

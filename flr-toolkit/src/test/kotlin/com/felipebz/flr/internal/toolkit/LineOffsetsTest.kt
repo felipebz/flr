@@ -25,7 +25,6 @@ import com.felipebz.flr.api.Token
 import org.fest.assertions.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.net.URI
 import java.net.URISyntaxException
 
 class LineOffsetsTest {
@@ -120,7 +119,6 @@ class LineOffsetsTest {
                     .setColumn(column)
                     .setValueAndOriginalValue(value!!)
                     .setType(GenericTokenType.IDENTIFIER)
-                    .setURI(URI("tests://unittest"))
                     .build()
             } catch (e: URISyntaxException) {
                 throw RuntimeException(e)

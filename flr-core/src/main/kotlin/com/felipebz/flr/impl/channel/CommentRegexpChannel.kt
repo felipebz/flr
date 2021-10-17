@@ -23,10 +23,10 @@ package com.felipebz.flr.impl.channel
 import com.felipebz.flr.api.GenericTokenType
 import com.felipebz.flr.api.Token
 import com.felipebz.flr.api.Trivia
-import com.felipebz.flr.impl.Lexer
-import com.felipebz.flr.impl.LexerException
 import com.felipebz.flr.channel.Channel
 import com.felipebz.flr.channel.CodeReader
+import com.felipebz.flr.impl.Lexer
+import com.felipebz.flr.impl.LexerException
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
@@ -46,7 +46,6 @@ public class CommentRegexpChannel(private val regexp: String) : Channel<Lexer> {
                 val token = tokenBuilder
                     .setType(GenericTokenType.COMMENT)
                     .setValueAndOriginalValue(value)
-                    .setURI(output.uri)
                     .setLine(code.previousCursor.line)
                     .setColumn(code.previousCursor.column)
                     .build()

@@ -20,12 +20,17 @@
  */
 package com.felipebz.flr.impl
 
-import com.felipebz.flr.api.*
+import com.felipebz.flr.api.GenericTokenType
+import com.felipebz.flr.api.Token
+import com.felipebz.flr.api.Trivia
 import com.felipebz.flr.channel.Channel
 import com.felipebz.flr.channel.ChannelDispatcher
 import com.felipebz.flr.channel.CodeReader
 import com.felipebz.flr.channel.CodeReaderConfiguration
-import java.io.*
+import java.io.File
+import java.io.InputStreamReader
+import java.io.Reader
+import java.io.StringReader
 import java.net.MalformedURLException
 import java.net.URI
 import java.net.URL
@@ -92,7 +97,6 @@ public class Lexer private constructor(builder: Builder) {
                 Token.builder()
                     .setType(GenericTokenType.EOF)
                     .setValueAndOriginalValue("EOF")
-                    .setURI(uri)
                     .setLine(code.getLinePosition())
                     .setColumn(code.getColumnPosition())
                     .build()

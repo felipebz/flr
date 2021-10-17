@@ -20,7 +20,6 @@
  */
 package com.felipebz.flr.api
 
-import java.net.URI
 import java.util.*
 
 /**
@@ -48,10 +47,6 @@ public class Token private constructor(builder: Builder) {
      */
     public val column: Int = builder.column
 
-    /**
-     * @return the URI this token belongs to
-     */
-    public val uRI: URI? = builder.uri
     public val isGeneratedCode: Boolean = builder.generatedCode
 
     /**
@@ -85,7 +80,6 @@ public class Token private constructor(builder: Builder) {
         internal lateinit var type: TokenType
         internal var value: String = ""
         internal var originalValue: String = ""
-        internal var uri: URI? = null
         internal var line = 0
         internal var column = -1
         internal var trivia = mutableListOf<Trivia>()
@@ -99,7 +93,6 @@ public class Token private constructor(builder: Builder) {
             type = token.type
             value = token.value
             originalValue = token.originalValue
-            uri = token.uRI
             line = token.line
             column = token.column
             trivia.addAll(token.trivia)
@@ -136,12 +129,6 @@ public class Token private constructor(builder: Builder) {
 
         public fun setColumn(column: Int): Builder {
             this.column = column
-            return this
-        }
-
-        public fun setURI(uri: URI?): Builder {
-            Objects.requireNonNull(uri, "uri cannot be null")
-            this.uri = uri
             return this
         }
 
@@ -185,7 +172,6 @@ public class Token private constructor(builder: Builder) {
             Objects.requireNonNull(type, "type must be set")
             Objects.requireNonNull(value, "value must be set")
             Objects.requireNonNull(originalValue, "originalValue must be set")
-            Objects.requireNonNull(uri, "file must be set")
             require(line >= 1) { "line must be greater or equal than 1" }
             require(column >= 0) { "column must be greater or equal than 0" }
             return Token(this)

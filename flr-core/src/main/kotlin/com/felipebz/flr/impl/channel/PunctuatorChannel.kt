@@ -20,10 +20,11 @@
  */
 package com.felipebz.flr.impl.channel
 
-import com.felipebz.flr.api.*
-import com.felipebz.flr.impl.Lexer
+import com.felipebz.flr.api.Token
+import com.felipebz.flr.api.TokenType
 import com.felipebz.flr.channel.Channel
 import com.felipebz.flr.channel.CodeReader
+import com.felipebz.flr.impl.Lexer
 import java.util.*
 import kotlin.math.max
 
@@ -62,7 +63,6 @@ public class PunctuatorChannel(vararg punctuators: TokenType) : Channel<Lexer> {
                 val token = tokenBuilder
                     .setType(sortedPunctuators[i])
                     .setValueAndOriginalValue(sortedPunctuators[i].value)
-                    .setURI(output.uri)
                     .setLine(code.getLinePosition())
                     .setColumn(code.getColumnPosition())
                     .build()
