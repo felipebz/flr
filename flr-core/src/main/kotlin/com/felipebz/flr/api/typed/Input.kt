@@ -21,13 +21,12 @@
 package com.felipebz.flr.api.typed
 
 import java.io.File
-import java.net.URI
 import java.util.*
 
 /**
  * @since 1.21
  */
-public class Input @JvmOverloads constructor(private val inputChars: CharArray, private val uri: URI = FAKE_URI) {
+public class Input constructor(private val inputChars: CharArray) {
     private val newLineIndexes: IntArray
 
     init {
@@ -42,10 +41,6 @@ public class Input @JvmOverloads constructor(private val inputChars: CharArray, 
 
     public fun input(): CharArray {
         return inputChars
-    }
-
-    public fun uri(): URI {
-        return uri
     }
 
     public fun substring(from: Int, to: Int): String {

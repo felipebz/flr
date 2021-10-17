@@ -21,13 +21,13 @@
 package com.felipebz.flr.api.typed
 
 import com.felipebz.flr.api.RecognitionException
+import com.felipebz.flr.grammar.GrammarRuleKey
+import com.felipebz.flr.grammar.LexerlessGrammarBuilder
 import com.felipebz.flr.impl.typed.GrammarBuilderInterceptor
 import com.felipebz.flr.impl.typed.Interceptor
 import com.felipebz.flr.impl.typed.MethodInterceptor
 import com.felipebz.flr.impl.typed.ReflectionUtils.invokeMethod
 import com.felipebz.flr.impl.typed.SyntaxTreeCreator
-import com.felipebz.flr.grammar.GrammarRuleKey
-import com.felipebz.flr.grammar.LexerlessGrammarBuilder
 import com.felipebz.flr.parser.ParseErrorFormatter
 import com.felipebz.flr.parser.ParseRunner
 import java.io.File
@@ -76,7 +76,7 @@ public class ActionParser<N>(
     public fun parse(file: File): N? {
         return try {
             val chars = String(Files.readAllBytes(Paths.get(file.path)), charset).toCharArray()
-            parse(Input(chars, file.toURI()))
+            parse(Input(chars))
         } catch (e: IOException) {
             throw RuntimeException(e)
         }

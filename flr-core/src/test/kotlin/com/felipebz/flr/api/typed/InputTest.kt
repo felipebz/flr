@@ -22,19 +22,12 @@ package com.felipebz.flr.api.typed
 
 import org.fest.assertions.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import java.io.File
 
 class InputTest {
     @Test
     fun input() {
         val input = CharArray(0)
         assertThat(Input(input).input()).isSameAs(input)
-    }
-
-    @Test
-    fun uri() {
-        val uri = File("tests://something").toURI()
-        assertThat(Input("".toCharArray(), uri).uri()).isSameAs(uri)
     }
 
     @Test
