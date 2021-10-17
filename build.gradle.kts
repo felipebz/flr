@@ -56,6 +56,10 @@ subprojects {
 
     tasks.test {
         useJUnitPlatform()
+        testLogging {
+            events("passed", "skipped", "failed")
+        }
+        finalizedBy(tasks.jacocoTestReport)
     }
 
     jacoco {
@@ -63,6 +67,7 @@ subprojects {
     }
 
     tasks.jacocoTestReport {
+        dependsOn(tasks.test) // tests are required to run before generating the report
         reports {
             xml.required.set(true)
         }

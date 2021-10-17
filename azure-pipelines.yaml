@@ -26,7 +26,7 @@ steps:
 
   - task: Gradle@2
     inputs:
-      tasks: 'build jacocoTestReport'
+      tasks: 'build'
       options: '--build-cache -Dsonar.branch.name='
       jdkVersionOption: 1.11
       sonarQubeRunAnalysis: eq(variables.isMain, 'true')
