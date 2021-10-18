@@ -23,7 +23,6 @@ package com.felipebz.flr.impl.channel
 import com.felipebz.flr.channel.Channel
 import com.felipebz.flr.channel.CodeReader
 import com.felipebz.flr.impl.LexerOutput
-import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 /**
@@ -36,13 +35,15 @@ import java.util.regex.Pattern
  *
  */
 public class BlackHoleChannel(regexp: String) : Channel<LexerOutput> {
-    private val matcher: Matcher = Pattern.compile(regexp).matcher("")
+    private val pattern = Pattern.compile(regexp)
+
     override fun consume(code: CodeReader, output: LexerOutput): Boolean {
-        return code.popTo(matcher, EmptyAppendable.INSTANCE) != -1
+        val matcher = pattern.matcher("")
+        return code.popTo(matcher, EmptyAppendable) != -1
     }
 
-    private class EmptyAppendable : Appendable {
-        override fun append(csq: CharSequence): Appendable {
+    private object EmptyAppendable : Appendable {
+        override fun append(csq: CharSequence?): Appendable {
             return this
         }
 
@@ -50,12 +51,8 @@ public class BlackHoleChannel(regexp: String) : Channel<LexerOutput> {
             return this
         }
 
-        override fun append(csq: CharSequence, start: Int, end: Int): Appendable {
+        override fun append(csq: CharSequence?, start: Int, end: Int): Appendable {
             return this
-        }
-
-        companion object {
-            val INSTANCE: Appendable = EmptyAppendable()
         }
     }
 

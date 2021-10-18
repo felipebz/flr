@@ -30,9 +30,8 @@ import kotlin.math.max
 
 public class PunctuatorChannel(vararg punctuators: TokenType) : Channel<LexerOutput> {
     private val lookahead: Int
-    private val sortedPunctuators: Array<out TokenType> = punctuators
+    private val sortedPunctuators = punctuators
     private val sortedPunctuatorsChars: Array<CharArray>
-    private val tokenBuilder: Token.Builder = Token.builder()
 
     init {
         Arrays.sort(sortedPunctuators, PunctuatorComparator())
@@ -60,7 +59,7 @@ public class PunctuatorChannel(vararg punctuators: TokenType) : Channel<LexerOut
         val next = code.peek(lookahead)
         for (i in sortedPunctuators.indices) {
             if (arraysEquals(next, sortedPunctuatorsChars[i])) {
-                val token = tokenBuilder
+                val token = Token.builder()
                     .setType(sortedPunctuators[i])
                     .setValueAndOriginalValue(sortedPunctuators[i].value)
                     .setLine(code.getLinePosition())

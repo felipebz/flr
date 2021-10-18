@@ -20,37 +20,26 @@
  */
 package com.felipebz.flr.impl.channel
 
-import com.felipebz.flr.api.*
+import com.felipebz.flr.api.GenericTokenType
+import com.felipebz.flr.api.Token
+import com.felipebz.flr.api.TokenType
 import com.felipebz.flr.channel.Channel
 import com.felipebz.flr.channel.CodeReader
 import com.felipebz.flr.impl.LexerOutput
 import java.util.*
-import java.util.regex.Matcher
 import java.util.regex.Pattern
 
-public class IdentifierAndKeywordChannel(regexp: String, caseSensitive: Boolean, vararg keywordSets: Array<out TokenType>) :
+public class IdentifierAndKeywordChannel(regexp: String, private val caseSensitive: Boolean, vararg keywordSets: Array<out TokenType>) :
     Channel<LexerOutput> {
-    private val keywordsMap: MutableMap<String?, TokenType> = HashMap()
-    private val tmpBuilder = StringBuilder()
-    private val matcher: Matcher
-    private val caseSensitive: Boolean
-    private val tokenBuilder: Token.Builder = Token.builder()
-
-    /**
-     * @throws PatternSyntaxException if the expression's syntax is invalid
-     */
-    init {
-        for (keywords in keywordSets) {
-            for (keyword in keywords) {
-                val keywordValue = if (caseSensitive) keyword.value else keyword.value.uppercase(Locale.getDefault())
-                keywordsMap[keywordValue] = keyword
-            }
-        }
-        this.caseSensitive = caseSensitive
-        matcher = Pattern.compile(regexp).matcher("")
-    }
+    private val keywordsMap = keywordSets.flatten().associateBy(
+        { if (caseSensitive) it.value else it.value.uppercase(Locale.getDefault()) },
+        { it })
+    private val pattern = Pattern.compile(regexp)
 
     override fun consume(code: CodeReader, output: LexerOutput): Boolean {
+        val tmpBuilder = StringBuilder()
+        val matcher = pattern.matcher("")
+
         if (code.popTo(matcher, tmpBuilder) > 0) {
             var word = tmpBuilder.toString()
             val wordOriginal = word
@@ -58,7 +47,7 @@ public class IdentifierAndKeywordChannel(regexp: String, caseSensitive: Boolean,
                 word = word.uppercase(Locale.getDefault())
             }
             val keywordType = keywordsMap[word]
-            val token = tokenBuilder
+            val token = Token.builder()
                 .setType(keywordType ?: GenericTokenType.IDENTIFIER)
                 .setValueAndOriginalValue(word, wordOriginal)
                 .setLine(code.previousCursor.line)

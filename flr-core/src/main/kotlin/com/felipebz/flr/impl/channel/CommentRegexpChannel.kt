@@ -27,7 +27,6 @@ import com.felipebz.flr.channel.Channel
 import com.felipebz.flr.channel.CodeReader
 import com.felipebz.flr.impl.LexerException
 import com.felipebz.flr.impl.LexerOutput
-import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 /**
@@ -36,14 +35,16 @@ import java.util.regex.Pattern
  * @see RegexpChannelBuilder
  */
 public class CommentRegexpChannel(private val regexp: String) : Channel<LexerOutput> {
-    private val tmpBuilder = StringBuilder()
-    private val matcher: Matcher = Pattern.compile(regexp).matcher("")
-    private val tokenBuilder: Token.Builder = Token.builder()
+    private val pattern = Pattern.compile(regexp)
+
     override fun consume(code: CodeReader, output: LexerOutput): Boolean {
+        val tmpBuilder = StringBuilder()
+        val matcher = pattern.matcher("")
+
         return try {
             if (code.popTo(matcher, tmpBuilder) > 0) {
                 val value = tmpBuilder.toString()
-                val token = tokenBuilder
+                val token = Token.builder()
                     .setType(GenericTokenType.COMMENT)
                     .setValueAndOriginalValue(value)
                     .setLine(code.previousCursor.line)
