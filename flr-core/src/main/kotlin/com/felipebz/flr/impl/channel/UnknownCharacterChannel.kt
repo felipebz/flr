@@ -24,7 +24,7 @@ import com.felipebz.flr.api.GenericTokenType
 import com.felipebz.flr.api.Token
 import com.felipebz.flr.channel.Channel
 import com.felipebz.flr.channel.CodeReader
-import com.felipebz.flr.impl.Lexer
+import com.felipebz.flr.impl.LexerOutput
 
 /**
  * Creates token with type [com.felipebz.flr.api.GenericTokenType.UNKNOWN_CHAR] for any character.
@@ -32,10 +32,10 @@ import com.felipebz.flr.impl.Lexer
  *
  * @since 1.2
  */
-public class UnknownCharacterChannel public constructor() : Channel<Lexer> {
+public class UnknownCharacterChannel public constructor() : Channel<LexerOutput> {
     private val tokenBuilder: Token.Builder = Token.builder()
 
-    override fun consume(code: CodeReader, output: Lexer): Boolean {
+    override fun consume(code: CodeReader, output: LexerOutput): Boolean {
         if (code.peek() != -1) {
             val unknownChar = code.pop().toChar()
             val token = tokenBuilder

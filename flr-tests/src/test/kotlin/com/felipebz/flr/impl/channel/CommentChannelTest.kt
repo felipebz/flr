@@ -21,25 +21,25 @@
 package com.felipebz.flr.impl.channel
 
 import com.felipebz.flr.api.GenericTokenType
+import com.felipebz.flr.impl.LexerOutput
+import com.felipebz.flr.test.channel.ChannelMatchers.consume
 import com.felipebz.flr.test.lexer.LexerMatchers.hasComment
 import com.felipebz.flr.test.lexer.LexerMatchers.hasOriginalComment
-import com.felipebz.flr.test.lexer.MockHelper.mockLexer
 import com.felipebz.flr.test.lexer.MockHelper.mockToken
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
 import org.junit.jupiter.api.Test
-import com.felipebz.flr.test.channel.ChannelMatchers.consume
 
 class CommentChannelTest {
     private var channel: CommentRegexpChannel? = null
-    private val lexer = mockLexer()
+    private val output = LexerOutput()
     @Test
     fun testCommentRegexp() {
         channel = CommentRegexpChannel("//.*")
-        assertThat(channel, Matchers.not(consume("This is not a comment", lexer)))
-        assertThat(channel, consume("//My Comment\n second line", lexer))
-        lexer.addToken(mockToken(GenericTokenType.EOF, "EOF"))
-        assertThat(lexer.tokens, hasComment("//My Comment"))
-        assertThat(lexer.tokens, hasOriginalComment("//My Comment"))
+        assertThat(channel, Matchers.not(consume("This is not a comment", output)))
+        assertThat(channel, consume("//My Comment\n second line", output))
+        output.addToken(mockToken(GenericTokenType.EOF, "EOF"))
+        assertThat(output.tokens, hasComment("//My Comment"))
+        assertThat(output.tokens, hasOriginalComment("//My Comment"))
     }
 }

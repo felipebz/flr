@@ -20,30 +20,30 @@
  */
 package com.felipebz.flr.impl.channel
 
-import com.felipebz.flr.impl.Lexer.Companion.builder
+import com.felipebz.flr.channel.CodeReader
+import com.felipebz.flr.impl.LexerOutput
+import com.felipebz.flr.test.channel.ChannelMatchers.consume
+import com.felipebz.flr.test.channel.ChannelMatchers.hasNextChar
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
 import org.junit.jupiter.api.Test
-import com.felipebz.flr.channel.CodeReader
-import com.felipebz.flr.test.channel.ChannelMatchers.consume
-import com.felipebz.flr.test.channel.ChannelMatchers.hasNextChar
 
 class BlackHoleChannelTest {
-    private val lexer = builder().build()
+    private val output = LexerOutput()
     private val channel = BlackHoleChannel("[ \\t]+")
     @Test
     fun testConsumeOneCharacter() {
-        assertThat(channel, consume(" ", lexer))
-        assertThat(channel, consume("\t", lexer))
-        assertThat(channel, Matchers.not(consume("g", lexer)))
-        assertThat(channel, Matchers.not(consume("-", lexer)))
-        assertThat(channel, Matchers.not(consume("1", lexer)))
+        assertThat(channel, consume(" ", output))
+        assertThat(channel, consume("\t", output))
+        assertThat(channel, Matchers.not(consume("g", output)))
+        assertThat(channel, Matchers.not(consume("-", output)))
+        assertThat(channel, Matchers.not(consume("1", output)))
     }
 
     @Test
     fun consumeSeveralCharacters() {
         val reader = CodeReader("   \t123")
-        assertThat(channel, consume(reader, lexer))
+        assertThat(channel, consume(reader, output))
         assertThat(reader, hasNextChar('1'))
     }
 }

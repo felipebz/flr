@@ -24,11 +24,11 @@ import com.felipebz.flr.api.Token
 import com.felipebz.flr.api.TokenType
 import com.felipebz.flr.channel.Channel
 import com.felipebz.flr.channel.CodeReader
-import com.felipebz.flr.impl.Lexer
+import com.felipebz.flr.impl.LexerOutput
 import java.util.*
 import kotlin.math.max
 
-public class PunctuatorChannel(vararg punctuators: TokenType) : Channel<Lexer> {
+public class PunctuatorChannel(vararg punctuators: TokenType) : Channel<LexerOutput> {
     private val lookahead: Int
     private val sortedPunctuators: Array<out TokenType> = punctuators
     private val sortedPunctuatorsChars: Array<CharArray>
@@ -56,7 +56,7 @@ public class PunctuatorChannel(vararg punctuators: TokenType) : Channel<Lexer> {
         }
     }
 
-    override fun consume(code: CodeReader, output: Lexer): Boolean {
+    override fun consume(code: CodeReader, output: LexerOutput): Boolean {
         val next = code.peek(lookahead)
         for (i in sortedPunctuators.indices) {
             if (arraysEquals(next, sortedPunctuatorsChars[i])) {

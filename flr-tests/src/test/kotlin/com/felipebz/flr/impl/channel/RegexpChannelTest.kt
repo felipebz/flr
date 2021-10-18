@@ -21,30 +21,30 @@
 package com.felipebz.flr.impl.channel
 
 import com.felipebz.flr.api.GenericTokenType
+import com.felipebz.flr.channel.CodeReader
+import com.felipebz.flr.impl.LexerOutput
+import com.felipebz.flr.test.channel.ChannelMatchers.consume
 import com.felipebz.flr.test.lexer.LexerMatchers.hasToken
-import com.felipebz.flr.test.lexer.MockHelper.mockLexer
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import com.felipebz.flr.channel.CodeReader
-import com.felipebz.flr.test.channel.ChannelMatchers.consume
 
 class RegexpChannelTest {
     private var channel: RegexpChannel? = null
-    private val lexer = mockLexer()
+    private val output = LexerOutput()
     @Test
     fun testRegexpToHandleNumber() {
         channel = RegexpChannel(GenericTokenType.CONSTANT, "[0-9]*")
-        assertThat(channel, Matchers.not(consume("Not a number", lexer)))
-        assertThat(channel, consume(CodeReader("56;"), lexer))
-        assertThat(lexer.tokens, hasToken("56", GenericTokenType.CONSTANT))
+        assertThat(channel, Matchers.not(consume("Not a number", output)))
+        assertThat(channel, consume(CodeReader("56;"), output))
+        assertThat(output.tokens, hasToken("56", GenericTokenType.CONSTANT))
     }
 
     @Test
     fun testColumnNumber() {
         channel = RegexpChannel(GenericTokenType.CONSTANT, "[0-9]*")
-        assertThat(channel, consume("56;", lexer))
-        assertEquals(lexer.tokens[0].column, 0)
+        assertThat(channel, consume("56;", output))
+        assertEquals(output.tokens[0].column, 0)
     }
 }

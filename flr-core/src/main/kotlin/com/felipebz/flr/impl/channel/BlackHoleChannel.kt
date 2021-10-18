@@ -20,10 +20,9 @@
  */
 package com.felipebz.flr.impl.channel
 
-import com.felipebz.flr.impl.Lexer
 import com.felipebz.flr.channel.Channel
 import com.felipebz.flr.channel.CodeReader
-import java.io.IOException
+import com.felipebz.flr.impl.LexerOutput
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
@@ -36,24 +35,21 @@ import java.util.regex.Pattern
  * because generally whitespace characters are encountered more often than all other and especially between others.
  *
  */
-public class BlackHoleChannel(regexp: String) : Channel<Lexer> {
+public class BlackHoleChannel(regexp: String) : Channel<LexerOutput> {
     private val matcher: Matcher = Pattern.compile(regexp).matcher("")
-    override fun consume(code: CodeReader, output: Lexer): Boolean {
+    override fun consume(code: CodeReader, output: LexerOutput): Boolean {
         return code.popTo(matcher, EmptyAppendable.INSTANCE) != -1
     }
 
     private class EmptyAppendable : Appendable {
-        @Throws(IOException::class)
         override fun append(csq: CharSequence): Appendable {
             return this
         }
 
-        @Throws(IOException::class)
         override fun append(c: Char): Appendable {
             return this
         }
 
-        @Throws(IOException::class)
         override fun append(csq: CharSequence, start: Int, end: Int): Appendable {
             return this
         }

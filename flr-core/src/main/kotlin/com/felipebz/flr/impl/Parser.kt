@@ -57,22 +57,22 @@ public open class Parser<G : Grammar> {
 
     public open fun parse(file: File): AstNode {
         checkNotNull(lexer) { "a lexer should be provided" }
-        try {
+        val tokens = try {
             lexer.lex(file)
         } catch (e: LexerException) {
             throw RecognitionException(e)
         }
-        return parse(lexer.tokens)
+        return parse(tokens)
     }
 
     public open fun parse(source: String): AstNode {
         checkNotNull(lexer) { "a lexer should be provided" }
-        try {
+        val tokens = try {
             lexer.lex(source)
         } catch (e: LexerException) {
             throw RecognitionException(e)
         }
-        return parse(lexer.tokens)
+        return parse(tokens)
     }
 
     public open fun parse(tokens: List<Token>): AstNode {

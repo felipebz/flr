@@ -20,17 +20,17 @@
  */
 package com.felipebz.flr.impl.channel
 
-import com.felipebz.flr.impl.Lexer
 import com.felipebz.flr.channel.Channel
 import com.felipebz.flr.channel.CodeReader
+import com.felipebz.flr.impl.LexerOutput
 
 /**
  * Ignores all BOM characters.
  *
  * @since 1.17
  */
-public class BomCharacterChannel : Channel<Lexer> {
-    override fun consume(code: CodeReader, output: Lexer): Boolean {
+public class BomCharacterChannel : Channel<LexerOutput> {
+    override fun consume(code: CodeReader, output: LexerOutput): Boolean {
         if (code.peek() == BOM_CHAR) {
             code.pop()
             return true

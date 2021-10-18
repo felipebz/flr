@@ -24,15 +24,10 @@ import com.felipebz.flr.api.AstNode
 import com.felipebz.flr.api.GenericTokenType
 import com.felipebz.flr.api.Token
 import com.felipebz.flr.api.TokenType
-import com.felipebz.flr.impl.Lexer
 import java.net.URISyntaxException
 
 @Deprecated("in 1.17 All classes can now be mocked since none of them are final anymore, hence this helper is useless.")
 public object MockHelper {
-    @JvmStatic
-    public fun mockLexer(): Lexer {
-        return Lexer.builder().build()
-    }
 
     @JvmStatic
     public fun mockToken(type: TokenType, value: String): Token {

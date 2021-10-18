@@ -23,13 +23,13 @@ package com.felipebz.flr.impl.channel
 import com.felipebz.flr.api.*
 import com.felipebz.flr.channel.Channel
 import com.felipebz.flr.channel.CodeReader
-import com.felipebz.flr.impl.Lexer
+import com.felipebz.flr.impl.LexerOutput
 import java.util.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 public class IdentifierAndKeywordChannel(regexp: String, caseSensitive: Boolean, vararg keywordSets: Array<out TokenType>) :
-    Channel<Lexer> {
+    Channel<LexerOutput> {
     private val keywordsMap: MutableMap<String?, TokenType> = HashMap()
     private val tmpBuilder = StringBuilder()
     private val matcher: Matcher
@@ -50,7 +50,7 @@ public class IdentifierAndKeywordChannel(regexp: String, caseSensitive: Boolean,
         matcher = Pattern.compile(regexp).matcher("")
     }
 
-    override fun consume(code: CodeReader, output: Lexer): Boolean {
+    override fun consume(code: CodeReader, output: LexerOutput): Boolean {
         if (code.popTo(matcher, tmpBuilder) > 0) {
             var word = tmpBuilder.toString()
             val wordOriginal = word

@@ -22,53 +22,29 @@ package com.felipebz.flr.impl
 
 import com.felipebz.flr.api.GenericTokenType
 import com.felipebz.flr.api.Token
-import com.felipebz.flr.api.Trivia
 import com.felipebz.flr.channel.Channel
 import com.felipebz.flr.channel.ChannelDispatcher
 import com.felipebz.flr.channel.CodeReader
 import com.felipebz.flr.channel.CodeReaderConfiguration
 import java.io.File
-import java.io.InputStreamReader
 import java.io.Reader
 import java.io.StringReader
 import java.net.MalformedURLException
-import java.net.URI
-import java.net.URL
 import java.nio.charset.Charset
-import java.util.*
 
 public class Lexer private constructor(builder: Builder) {
     private val charset = builder.charset
     private val configuration = builder.configuration
     private val channelDispatcher = builder.channelDispatcher
-    private val trivia: MutableList<Trivia> = LinkedList()
-    private var _tokens = mutableListOf<Token>()
-
-    public val tokens: List<Token>
-        get() = _tokens.toList()
-
-    public var uri: URI = URI("tests://unittest")
-        private set
 
     public fun lex(file: File): List<Token> {
-        Objects.requireNonNull(file, "file cannot be null")
         require(file.isFile) { "file \"" + file.absolutePath + "\" must be a file" }
-        return try {
-            lex(file.toURI().toURL())
+        try {
+            file.reader(charset).use { reader ->
+                return lex(reader, LexerOutput(file.toURI()))
+            }
         } catch (e: MalformedURLException) {
             throw LexerException("Unable to lex file: " + file.absolutePath, e)
-        }
-    }
-
-    public fun lex(url: URL): List<Token> {
-        Objects.requireNonNull(url, "url cannot be null")
-        try {
-            InputStreamReader(url.openStream(), charset).use { reader ->
-                uri = url.toURI()
-                return lex(reader)
-            }
-        } catch (e: Exception) {
-            throw LexerException("Unable to lex url: $uri", e)
         }
     }
 
@@ -78,22 +54,19 @@ public class Lexer private constructor(builder: Builder) {
      * @param sourceCode
      * @return
      */
-    // @VisibleForTesting
     public fun lex(sourceCode: String): List<Token> {
-        Objects.requireNonNull(sourceCode, "sourceCode cannot be null")
         return try {
-            lex(StringReader(sourceCode))
+            lex(StringReader(sourceCode), LexerOutput())
         } catch (e: Exception) {
             throw LexerException("Unable to lex string source code \"$sourceCode\"", e)
         }
     }
 
-    private fun lex(reader: Reader): List<Token> {
-        _tokens = mutableListOf()
+    private fun lex(reader: Reader, output: LexerOutput): List<Token> {
         val code = CodeReader(reader, configuration)
         return try {
-            channelDispatcher.consume(code, this)
-            addToken(
+            channelDispatcher.consume(code, output)
+            output.addToken(
                 Token.builder()
                     .setType(GenericTokenType.EOF)
                     .setValueAndOriginalValue("EOF")
@@ -101,45 +74,19 @@ public class Lexer private constructor(builder: Builder) {
                     .setColumn(code.getColumnPosition())
                     .build()
             )
-            tokens
+            output.tokens
         } catch (e: Exception) {
             throw LexerException(
                 "Unable to lex source code at line : " + code.getLinePosition() + " and column : "
-                        + code.getColumnPosition() + " in file : " + uri, e
+                        + code.getColumnPosition() + " in file : " + output.uri, e
             )
-        }
-    }
-
-    public fun addTrivia(vararg trivia: Trivia) {
-        addTrivia(listOf(*trivia))
-    }
-
-    public fun addTrivia(trivia: List<Trivia>) {
-        this.trivia.addAll(trivia)
-    }
-
-    public fun addToken(vararg tokens: Token) {
-        require(tokens.isNotEmpty()) { "at least one token must be given" }
-        val firstToken = tokens[0]
-        val firstTokenWithTrivia: Token
-
-        // Performance optimization: no need to rebuild token, if there is no trivia
-        if (trivia.isEmpty() && !firstToken.hasTrivia()) {
-            firstTokenWithTrivia = firstToken
-        } else {
-            firstTokenWithTrivia = Token.builder(firstToken).setTrivia(trivia).build()
-            trivia.clear()
-        }
-        this._tokens.add(firstTokenWithTrivia)
-        if (tokens.size > 1) {
-            this._tokens.addAll(listOf(*tokens).subList(1, tokens.size))
         }
     }
 
     public class Builder {
         public var charset: Charset = Charset.defaultCharset()
         public val configuration: CodeReaderConfiguration = CodeReaderConfiguration()
-        private val channels = mutableListOf<Channel<Lexer>>()
+        private val channels = mutableListOf<Channel<LexerOutput>>()
         private var failIfNoChannelToConsumeOneCharacter = false
         public fun build(): Lexer {
             return Lexer(this)
@@ -150,7 +97,7 @@ public class Lexer private constructor(builder: Builder) {
             return this
         }
 
-        public fun withChannel(channel: Channel<Lexer>): Builder {
+        public fun withChannel(channel: Channel<LexerOutput>): Builder {
             channels.add(channel)
             return this
         }
@@ -160,7 +107,7 @@ public class Lexer private constructor(builder: Builder) {
             return this
         }
 
-        public val channelDispatcher: ChannelDispatcher<Lexer>
+        public val channelDispatcher: ChannelDispatcher<LexerOutput>
             get() {
                 val builder: ChannelDispatcher.Builder = ChannelDispatcher.builder()
                     .addChannels(*channels.toTypedArray())
