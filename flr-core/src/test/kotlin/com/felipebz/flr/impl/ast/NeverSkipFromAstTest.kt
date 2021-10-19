@@ -29,6 +29,6 @@ class NeverSkipFromAstTest {
     @Test
     fun test() {
         val astNode = mock<AstNode>()
-        assertThat(NeverSkipFromAst.INSTANCE.hasToBeSkippedFromAst(astNode)).isFalse()
+        assertThat(NeverSkipFromAst.hasToBeSkippedFromAst(astNode)).isFalse()
     }
 }

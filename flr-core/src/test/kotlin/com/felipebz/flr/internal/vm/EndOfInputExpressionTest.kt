@@ -28,7 +28,7 @@ import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 
 class EndOfInputExpressionTest {
-    private val expression = EndOfInputExpression.INSTANCE
+    private val expression = EndOfInputExpression
     private val machine = mock<Machine>()
     @Test
     fun should_compile() {

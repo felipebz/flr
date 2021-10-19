@@ -20,17 +20,12 @@
  */
 package com.felipebz.flr.internal.vm
 
-public class NothingExpression private constructor() : NativeExpression() {
+public object NothingExpression : NativeExpression() {
     override fun execute(machine: Machine) {
         machine.backtrack()
     }
 
     override fun toString(): String {
         return "Nothing"
-    }
-
-    public companion object {
-        @JvmField
-        public val INSTANCE: NothingExpression = NothingExpression()
     }
 }

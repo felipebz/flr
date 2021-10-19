@@ -21,10 +21,10 @@
 package com.felipebz.flr.impl.matcher
 
 import com.felipebz.flr.api.*
+import com.felipebz.flr.grammar.GrammarRuleKey
 import com.felipebz.flr.impl.ast.AlwaysSkipFromAst
 import com.felipebz.flr.impl.ast.NeverSkipFromAst
 import com.felipebz.flr.impl.ast.SkipFromAstIfOnlyOneChild
-import com.felipebz.flr.grammar.GrammarRuleKey
 import com.felipebz.flr.internal.vm.*
 import com.felipebz.flr.internal.vm.lexerful.TokenTypeClassExpression
 import com.felipebz.flr.internal.vm.lexerful.TokenTypeExpression
@@ -38,7 +38,7 @@ public class RuleDefinition : Rule, AstNodeSkippingPolicy, GrammarRuleKey, Compi
     override val ruleKey: GrammarRuleKey
     private val name: String
     override var expression: ParsingExpression? = null
-    private var astNodeSkippingPolicy: AstNodeType = NeverSkipFromAst.INSTANCE
+    private var astNodeSkippingPolicy: AstNodeType = NeverSkipFromAst
     private var memoize = false
 
     public constructor(name: String) {
@@ -69,11 +69,11 @@ public class RuleDefinition : Rule, AstNodeSkippingPolicy, GrammarRuleKey, Compi
     }
 
     override fun skip() {
-        astNodeSkippingPolicy = AlwaysSkipFromAst.INSTANCE
+        astNodeSkippingPolicy = AlwaysSkipFromAst
     }
 
     override fun skipIfOneChild() {
-        astNodeSkippingPolicy = SkipFromAstIfOnlyOneChild.INSTANCE
+        astNodeSkippingPolicy = SkipFromAstIfOnlyOneChild
     }
 
     private fun throwExceptionIfRuleAlreadyDefined(exceptionMessage: String) {

@@ -246,7 +246,7 @@ public abstract class GrammarBuilder {
      * This expression always fails.
      */
     public fun nothing(): Any {
-        return NothingExpression.INSTANCE
+        return NothingExpression
     }
 
     public abstract fun convertToExpression(e: Any): ParsingExpression

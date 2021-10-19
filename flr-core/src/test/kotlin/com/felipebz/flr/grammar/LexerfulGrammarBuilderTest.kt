@@ -22,13 +22,13 @@ package com.felipebz.flr.grammar
 
 import com.felipebz.flr.api.TokenType
 import com.felipebz.flr.impl.matcher.RuleDefinition
+import com.felipebz.flr.internal.grammar.MutableGrammar
+import com.felipebz.flr.internal.vm.*
+import com.felipebz.flr.internal.vm.lexerful.*
 import org.fest.assertions.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.mock
-import com.felipebz.flr.internal.grammar.MutableGrammar
-import com.felipebz.flr.internal.vm.*
-import com.felipebz.flr.internal.vm.lexerful.*
 
 class LexerfulGrammarBuilderTest {
     @Test
@@ -59,7 +59,7 @@ class LexerfulGrammarBuilderTest {
         assertThat(b.next(e1, e2)).isInstanceOf(NextExpression::class.java)
         assertThat(b.nextNot(e1)).isInstanceOf(NextNotExpression::class.java)
         assertThat(b.nextNot(e1, e2)).isInstanceOf(NextNotExpression::class.java)
-        assertThat(b.nothing()).`as`("singleton").isSameAs(NothingExpression.INSTANCE)
+        assertThat(b.nothing()).`as`("singleton").isSameAs(NothingExpression)
         assertThat(b.isOneOfThem(mock(), mock())).isInstanceOf(TokenTypesExpression::class.java)
         assertThat(b.bridge(mock(), mock())).isInstanceOf(TokensBridgeExpression::class.java)
         assertThat(b.adjacent(e1).toString()).isEqualTo("Sequence[Adjacent, $e1]")
@@ -69,8 +69,8 @@ class LexerfulGrammarBuilderTest {
         assertThat(b.exclusiveTill(e1).toString()).isEqualTo("ZeroOrMore[Sequence[NextNot[$e1], AnyToken]]")
         assertThat(b.exclusiveTill(e1, e2).toString())
             .isEqualTo("ZeroOrMore[Sequence[NextNot[FirstOf[$e1, $e2]], AnyToken]]")
-        assertThat(b.anyToken()).`as`("singleton").isSameAs(AnyTokenExpression.INSTANCE)
-        assertThat(b.tillNewLine()).`as`("singleton").isSameAs(TillNewLineExpression.INSTANCE)
+        assertThat(b.anyToken()).`as`("singleton").isSameAs(AnyTokenExpression)
+        assertThat(b.tillNewLine()).`as`("singleton").isSameAs(TillNewLineExpression)
     }
 
     @Test

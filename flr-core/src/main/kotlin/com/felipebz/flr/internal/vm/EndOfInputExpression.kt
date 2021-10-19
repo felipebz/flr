@@ -20,7 +20,7 @@
  */
 package com.felipebz.flr.internal.vm
 
-public class EndOfInputExpression private constructor() : NativeExpression() {
+public object EndOfInputExpression : NativeExpression() {
     override fun execute(machine: Machine) {
         if (machine.isEmpty()) {
             machine.jump(1)
@@ -31,10 +31,5 @@ public class EndOfInputExpression private constructor() : NativeExpression() {
 
     override fun toString(): String {
         return "EndOfInput"
-    }
-
-    public companion object {
-        @JvmField
-        public val INSTANCE: EndOfInputExpression = EndOfInputExpression()
     }
 }

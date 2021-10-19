@@ -26,7 +26,6 @@ import com.felipebz.flr.internal.grammar.MutableGrammar
 import com.felipebz.flr.internal.grammar.MutableParsingRule
 import com.felipebz.flr.internal.vm.*
 import com.felipebz.flr.parser.LexerlessGrammar
-import java.util.*
 
 /**
  * A builder for creating [Parsing Expression Grammars](http://en.wikipedia.org/wiki/Parsing_expression_grammar) for lexerless parsing.
@@ -96,7 +95,7 @@ public class LexerlessGrammarBuilder private constructor() : GrammarBuilder() {
      * This expression succeeds only if parser reached end of input.
      */
     public fun endOfInput(): Any {
-        return EndOfInputExpression.INSTANCE
+        return EndOfInputExpression
     }
 
     /**

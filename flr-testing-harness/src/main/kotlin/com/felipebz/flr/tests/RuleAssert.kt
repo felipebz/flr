@@ -21,13 +21,13 @@
 package com.felipebz.flr.tests
 
 import com.felipebz.flr.api.Rule
-import org.fest.assertions.GenericAssert
 import com.felipebz.flr.grammar.GrammarRuleKey
 import com.felipebz.flr.grammar.LexerlessGrammarBuilder
 import com.felipebz.flr.internal.grammar.MutableParsingRule
 import com.felipebz.flr.internal.vm.EndOfInputExpression
 import com.felipebz.flr.parser.ParseErrorFormatter
 import com.felipebz.flr.parser.ParseRunner
+import org.fest.assertions.GenericAssert
 
 /**
  * To create a new instance of this class invoke `[Assertions.assertThat]`.
@@ -52,7 +52,7 @@ public class RuleAssert(actual: Rule?) : GenericAssert<RuleAssert, Rule>(
 
         val builder = LexerlessGrammarBuilder.create()
         val withEndOfInputKey = WithEndOfInput(rule.ruleKey)
-        builder.rule(withEndOfInputKey).`is`(actual, EndOfInputExpression.INSTANCE)
+        builder.rule(withEndOfInputKey).`is`(actual, EndOfInputExpression)
         builder.setRootRule(withEndOfInputKey)
         return ParseRunner(builder.build().rootRule)
     }

@@ -21,17 +21,17 @@
 package com.felipebz.flr.internal.vm.lexerful
 
 import com.felipebz.flr.api.Token
+import com.felipebz.flr.internal.vm.CompilationHandler
+import com.felipebz.flr.internal.vm.Machine
 import org.fest.assertions.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.inOrder
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
-import com.felipebz.flr.internal.vm.CompilationHandler
-import com.felipebz.flr.internal.vm.Machine
 
 class AdjacentExpressionTest {
-    private val expression = AdjacentExpression.INSTANCE
+    private val expression = AdjacentExpression
     private val machine = mock<Machine>()
     @Test
     fun should_compile() {

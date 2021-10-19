@@ -23,13 +23,13 @@ package com.felipebz.flr.internal.vm.lexerful
 import com.felipebz.flr.api.GenericTokenType
 import com.felipebz.flr.api.Token
 import com.felipebz.flr.api.TokenType
+import com.felipebz.flr.internal.vm.CompilationHandler
+import com.felipebz.flr.internal.vm.Machine.Companion.execute
+import com.felipebz.flr.internal.vm.SequenceExpression
 import org.fest.assertions.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
-import com.felipebz.flr.internal.vm.CompilationHandler
-import com.felipebz.flr.internal.vm.Machine.Companion.execute
-import com.felipebz.flr.internal.vm.SequenceExpression
 
 class LexerfulMachineIntegrationTest {
     @Test
@@ -60,7 +60,7 @@ class LexerfulMachineIntegrationTest {
 
     @Test
     fun anyToken() {
-        val instructions = AnyTokenExpression.INSTANCE.compile(CompilationHandler())
+        val instructions = AnyTokenExpression.compile(CompilationHandler())
         assertThat(execute(instructions, token("foo"))).isTrue()
     }
 
@@ -104,7 +104,7 @@ class LexerfulMachineIntegrationTest {
     fun adjacent() {
         val instructions = SequenceExpression(
             TokenValueExpression("foo"),
-            AdjacentExpression.INSTANCE,
+            AdjacentExpression,
             TokenValueExpression("bar")
         ).compile(CompilationHandler())
         var tokens = arrayOf(token(1, 1, "foo"), token(1, 4, "bar"))

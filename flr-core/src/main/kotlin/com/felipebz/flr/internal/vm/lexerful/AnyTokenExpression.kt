@@ -24,7 +24,7 @@ import com.felipebz.flr.internal.matchers.Matcher
 import com.felipebz.flr.internal.vm.Machine
 import com.felipebz.flr.internal.vm.NativeExpression
 
-public class AnyTokenExpression private constructor() : NativeExpression(), Matcher {
+public object AnyTokenExpression : NativeExpression(), Matcher {
     override fun execute(machine: Machine) {
         if (machine.isEmpty()) {
             machine.backtrack()
@@ -36,10 +36,5 @@ public class AnyTokenExpression private constructor() : NativeExpression(), Matc
 
     override fun toString(): String {
         return "AnyToken"
-    }
-
-    public companion object {
-        @JvmField
-        public val INSTANCE: AnyTokenExpression = AnyTokenExpression()
     }
 }

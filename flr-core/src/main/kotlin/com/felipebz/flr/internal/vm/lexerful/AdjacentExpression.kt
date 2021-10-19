@@ -23,7 +23,7 @@ package com.felipebz.flr.internal.vm.lexerful
 import com.felipebz.flr.internal.vm.Machine
 import com.felipebz.flr.internal.vm.NativeExpression
 
-public class AdjacentExpression private constructor() : NativeExpression() {
+public object AdjacentExpression : NativeExpression() {
     override fun execute(machine: Machine) {
         if (machine.index == 0) {
             machine.backtrack()
@@ -42,10 +42,5 @@ public class AdjacentExpression private constructor() : NativeExpression() {
 
     override fun toString(): String {
         return "Adjacent"
-    }
-
-    public companion object {
-        @JvmField
-        public val INSTANCE: AdjacentExpression = AdjacentExpression()
     }
 }

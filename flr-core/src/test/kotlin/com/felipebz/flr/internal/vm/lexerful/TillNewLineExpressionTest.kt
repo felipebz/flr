@@ -23,14 +23,14 @@ package com.felipebz.flr.internal.vm.lexerful
 import com.felipebz.flr.api.GenericTokenType
 import com.felipebz.flr.api.Token
 import com.felipebz.flr.api.TokenType
+import com.felipebz.flr.internal.vm.CompilationHandler
+import com.felipebz.flr.internal.vm.Machine
 import org.fest.assertions.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.*
-import com.felipebz.flr.internal.vm.CompilationHandler
-import com.felipebz.flr.internal.vm.Machine
 
 class TillNewLineExpressionTest {
-    private val expression = TillNewLineExpression.INSTANCE
+    private val expression = TillNewLineExpression
     private val machine = mock<Machine>()
     @Test
     fun should_compile() {

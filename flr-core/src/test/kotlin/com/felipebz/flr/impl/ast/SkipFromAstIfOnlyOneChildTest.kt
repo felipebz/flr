@@ -31,8 +31,8 @@ class SkipFromAstIfOnlyOneChildTest {
     fun testHasToBeSkippedFromAst() {
         val astNode = mock<AstNode>()
         whenever(astNode.numberOfChildren).thenReturn(1)
-        assertThat(SkipFromAstIfOnlyOneChild.INSTANCE.hasToBeSkippedFromAst(astNode)).isTrue()
+        assertThat(SkipFromAstIfOnlyOneChild.hasToBeSkippedFromAst(astNode)).isTrue()
         whenever(astNode.numberOfChildren).thenReturn(2)
-        assertThat(SkipFromAstIfOnlyOneChild.INSTANCE.hasToBeSkippedFromAst(astNode)).isFalse()
+        assertThat(SkipFromAstIfOnlyOneChild.hasToBeSkippedFromAst(astNode)).isFalse()
     }
 }

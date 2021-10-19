@@ -23,13 +23,8 @@ package com.felipebz.flr.impl.ast
 import com.felipebz.flr.api.AstNode
 import com.felipebz.flr.api.AstNodeSkippingPolicy
 
-internal class AlwaysSkipFromAst private constructor() : AstNodeSkippingPolicy {
+internal object AlwaysSkipFromAst : AstNodeSkippingPolicy {
     override fun hasToBeSkippedFromAst(node: AstNode): Boolean {
         return true
-    }
-
-    companion object {
-        @JvmField
-        val INSTANCE = AlwaysSkipFromAst()
     }
 }

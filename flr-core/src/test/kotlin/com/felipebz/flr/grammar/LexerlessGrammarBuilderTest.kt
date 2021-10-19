@@ -22,13 +22,13 @@ package com.felipebz.flr.grammar
 
 import com.felipebz.flr.api.TokenType
 import com.felipebz.flr.api.Trivia.TriviaKind
+import com.felipebz.flr.internal.grammar.MutableGrammar
+import com.felipebz.flr.internal.grammar.MutableParsingRule
+import com.felipebz.flr.internal.vm.*
 import org.fest.assertions.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.mock
-import com.felipebz.flr.internal.grammar.MutableGrammar
-import com.felipebz.flr.internal.grammar.MutableParsingRule
-import com.felipebz.flr.internal.vm.*
 import java.util.regex.PatternSyntaxException
 
 class LexerlessGrammarBuilderTest {
@@ -58,9 +58,9 @@ class LexerlessGrammarBuilderTest {
         assertThat(b.next(e1, e2)).isInstanceOf(NextExpression::class.java)
         assertThat(b.nextNot(e1)).isInstanceOf(NextNotExpression::class.java)
         assertThat(b.nextNot(e1, e2)).isInstanceOf(NextNotExpression::class.java)
-        assertThat(b.nothing()).`as`("singleton").isSameAs(NothingExpression.INSTANCE)
+        assertThat(b.nothing()).`as`("singleton").isSameAs(NothingExpression)
         assertThat(b.regexp("")).isInstanceOf(PatternExpression::class.java)
-        assertThat(b.endOfInput()).`as`("singleton").isSameAs(EndOfInputExpression.INSTANCE)
+        assertThat(b.endOfInput()).`as`("singleton").isSameAs(EndOfInputExpression)
     }
 
     @Test

@@ -25,7 +25,7 @@ import com.felipebz.flr.internal.matchers.Matcher
 import com.felipebz.flr.internal.vm.Machine
 import com.felipebz.flr.internal.vm.NativeExpression
 
-public class TillNewLineExpression private constructor() : NativeExpression(), Matcher {
+public object TillNewLineExpression : NativeExpression(), Matcher {
     override fun execute(machine: Machine) {
         val currentLine = if (machine.index == 0) 1 else machine.tokenAt(-1).line
         var offset = 0
@@ -42,10 +42,5 @@ public class TillNewLineExpression private constructor() : NativeExpression(), M
 
     override fun toString(): String {
         return "TillNewLine"
-    }
-
-    public companion object {
-        @JvmField
-        public val INSTANCE: TillNewLineExpression = TillNewLineExpression()
     }
 }

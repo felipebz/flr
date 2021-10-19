@@ -26,7 +26,6 @@ import com.felipebz.flr.impl.matcher.RuleDefinition
 import com.felipebz.flr.internal.grammar.MutableGrammar
 import com.felipebz.flr.internal.vm.*
 import com.felipebz.flr.internal.vm.lexerful.*
-import java.util.*
 
 /**
  * A builder for creating [Parsing Expression Grammars](http://en.wikipedia.org/wiki/Parsing_expression_grammar) for lexerful parsing.
@@ -105,7 +104,7 @@ public class LexerfulGrammarBuilder private constructor() : GrammarBuilder() {
      * @throws IllegalArgumentException if given argument is not a parsing expression
      */
     public fun adjacent(e: Any): Any {
-        return SequenceExpression(AdjacentExpression.INSTANCE, convertToExpression(e))
+        return SequenceExpression(AdjacentExpression, convertToExpression(e))
     }
 
     /**
@@ -117,7 +116,7 @@ public class LexerfulGrammarBuilder private constructor() : GrammarBuilder() {
      * @throws IllegalArgumentException if given argument is not a parsing expression
      */
     public fun anyTokenButNot(e: Any): Any {
-        return SequenceExpression(NextNotExpression(convertToExpression(e)), AnyTokenExpression.INSTANCE)
+        return SequenceExpression(NextNotExpression(convertToExpression(e)), AnyTokenExpression)
     }
 
     /**
@@ -161,7 +160,7 @@ public class LexerfulGrammarBuilder private constructor() : GrammarBuilder() {
      * This expression fails, if end of input reached.
      */
     public fun anyToken(): Any {
-        return AnyTokenExpression.INSTANCE
+        return AnyTokenExpression
     }
 
     /**
@@ -171,7 +170,7 @@ public class LexerfulGrammarBuilder private constructor() : GrammarBuilder() {
      * Do not overuse this expression.
      */
     public fun tillNewLine(): Any {
-        return TillNewLineExpression.INSTANCE
+        return TillNewLineExpression
     }
 
     /**
@@ -189,7 +188,7 @@ public class LexerfulGrammarBuilder private constructor() : GrammarBuilder() {
             ZeroOrMoreExpression(
                 SequenceExpression(
                     NextNotExpression(expression),
-                    AnyTokenExpression.INSTANCE
+                    AnyTokenExpression
                 )
             ),
             expression
@@ -208,7 +207,7 @@ public class LexerfulGrammarBuilder private constructor() : GrammarBuilder() {
         return ZeroOrMoreExpression(
             SequenceExpression(
                 NextNotExpression(convertToExpression(e)),
-                AnyTokenExpression.INSTANCE
+                AnyTokenExpression
             )
         )
     }

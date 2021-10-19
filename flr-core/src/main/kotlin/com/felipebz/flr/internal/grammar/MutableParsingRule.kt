@@ -24,11 +24,11 @@ import com.felipebz.flr.api.AstNode
 import com.felipebz.flr.api.AstNodeSkippingPolicy
 import com.felipebz.flr.api.AstNodeType
 import com.felipebz.flr.api.Rule
+import com.felipebz.flr.grammar.GrammarException
+import com.felipebz.flr.grammar.GrammarRuleKey
 import com.felipebz.flr.impl.ast.AlwaysSkipFromAst
 import com.felipebz.flr.impl.ast.NeverSkipFromAst
 import com.felipebz.flr.impl.ast.SkipFromAstIfOnlyOneChild
-import com.felipebz.flr.grammar.GrammarException
-import com.felipebz.flr.grammar.GrammarRuleKey
 import com.felipebz.flr.internal.matchers.Matcher
 import com.felipebz.flr.internal.vm.*
 
@@ -37,7 +37,7 @@ public class MutableParsingRule : CompilableGrammarRule, Matcher, Rule, AstNodeS
     override val ruleKey: GrammarRuleKey
     private val name: String
     override var expression: ParsingExpression? = null
-    private var astNodeSkippingPolicy: AstNodeSkippingPolicy = NeverSkipFromAst.INSTANCE
+    private var astNodeSkippingPolicy: AstNodeSkippingPolicy = NeverSkipFromAst
 
     public constructor(name: String) {
         ruleKey = this
@@ -71,11 +71,11 @@ public class MutableParsingRule : CompilableGrammarRule, Matcher, Rule, AstNodeS
     }
 
     override fun skip() {
-        astNodeSkippingPolicy = AlwaysSkipFromAst.INSTANCE
+        astNodeSkippingPolicy = AlwaysSkipFromAst
     }
 
     override fun skipIfOneChild() {
-        astNodeSkippingPolicy = SkipFromAstIfOnlyOneChild.INSTANCE
+        astNodeSkippingPolicy = SkipFromAstIfOnlyOneChild
     }
 
     override fun hasToBeSkippedFromAst(node: AstNode): Boolean {

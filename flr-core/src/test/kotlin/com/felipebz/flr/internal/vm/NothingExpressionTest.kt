@@ -27,7 +27,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
 
 class NothingExpressionTest {
-    private val expression = NothingExpression.INSTANCE
+    private val expression = NothingExpression
     private val machine = mock<Machine>()
     @Test
     fun should_compile() {

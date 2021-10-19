@@ -23,13 +23,8 @@ package com.felipebz.flr.impl.ast
 import com.felipebz.flr.api.AstNode
 import com.felipebz.flr.api.AstNodeSkippingPolicy
 
-public class SkipFromAstIfOnlyOneChild private constructor() : AstNodeSkippingPolicy {
+public object SkipFromAstIfOnlyOneChild : AstNodeSkippingPolicy {
     override fun hasToBeSkippedFromAst(node: AstNode): Boolean {
         return node.numberOfChildren == 1
-    }
-
-    public companion object {
-        @JvmField
-        public val INSTANCE: SkipFromAstIfOnlyOneChild = SkipFromAstIfOnlyOneChild()
     }
 }
