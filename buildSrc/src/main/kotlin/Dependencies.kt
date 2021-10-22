@@ -4,9 +4,9 @@ object Versions {
     const val fest = "1.4"
     const val hamcrest = "2.2"
     const val jaxen = "1.2.0"
-    const val junit = "5.7.2"
-    const val mockito = "3.12.4"
-    const val mockito_kotlin = "3.2.0"
+    const val junit = "5.8.1"
+    const val mockito = "4.0.0"
+    const val mockito_kotlin = "4.0.0"
 }
 
 object Libs {
