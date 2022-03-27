@@ -233,7 +233,7 @@ public open class AstNode(
      * @since 1.17
      */
     public fun getFirstChild(vararg nodeTypes: AstNodeType): AstNode {
-        return children.first { it.type in nodeTypes }
+        return children.first { nodeTypes.isEmpty() || it.type in nodeTypes }
     }
 
     /**
@@ -253,7 +253,7 @@ public open class AstNode(
      * @since 1.17
      */
     public fun getFirstChildOrNull(vararg nodeTypes: AstNodeType): AstNode? {
-        return children.firstOrNull { it.type in nodeTypes }
+        return children.firstOrNull { nodeTypes.isEmpty() || it.type in nodeTypes }
     }
 
     /**
@@ -326,7 +326,7 @@ public open class AstNode(
      * @since 1.17
      */
     public fun getChildren(vararg nodeTypes: AstNodeType): List<AstNode> {
-        return children.filter { it.type in nodeTypes }
+        return children.filter { nodeTypes.isEmpty() || it.type in nodeTypes }
     }
 
     /**
@@ -406,7 +406,7 @@ public open class AstNode(
      * @since 1.20
      */
     public fun getLastChild(vararg nodeTypes: AstNodeType): AstNode {
-        return children.last { it.type in nodeTypes }
+        return children.last { nodeTypes.isEmpty() || it.type in nodeTypes }
     }
 
     /**
@@ -427,7 +427,7 @@ public open class AstNode(
      * @since 1.20
      */
     public fun getLastChildOrNull(vararg nodeTypes: AstNodeType): AstNode? {
-        return children.lastOrNull { it.type in nodeTypes }
+        return children.lastOrNull { nodeTypes.isEmpty() || it.type in nodeTypes }
     }
 
     /**
