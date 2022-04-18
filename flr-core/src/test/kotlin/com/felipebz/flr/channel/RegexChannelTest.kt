@@ -27,7 +27,7 @@ import com.felipebz.flr.channel.ChannelDispatcher.Companion.builder
 class RegexChannelTest {
     @Test
     fun shouldMatch() {
-        val dispatcher = builder().addChannel(MyWordChannel()).addChannel(BlackholeChannel()).build<StringBuilder>()
+        val dispatcher = builder<StringBuilder>().addChannel(MyWordChannel()).addChannel(BlackholeChannel()).build()
         val output = StringBuilder()
         dispatcher.consume(CodeReader("my word"), output)
         assertEquals(output.toString(), "<w>my</w> <w>word</w>")
@@ -35,7 +35,7 @@ class RegexChannelTest {
 
     @Test
     fun shouldMatchTokenLongerThanBuffer() {
-        val dispatcher = builder().addChannel(MyLiteralChannel()).build<StringBuilder>()
+        val dispatcher = builder<StringBuilder>().addChannel(MyLiteralChannel()).build()
         val output = StringBuilder()
         val codeReaderConfiguration = CodeReaderConfiguration()
         val literalLength = 100000

@@ -20,10 +20,10 @@
  */
 package com.felipebz.flr.channel
 
-public class ChannelDispatcher<O> private constructor(builder: Builder) :
+public class ChannelDispatcher<O> private constructor(builder: Builder<O>) :
     Channel<O> {
     private val failIfNoChannelToConsumeOneCharacter = builder.failIfNoChannelToConsumeOneCharacter
-    private val channels: Array<Channel<O>> = builder.channels.toTypedArray() as Array<Channel<O>>
+    private val channels: Array<Channel<O>> = builder.channels.toTypedArray()
     override fun consume(code: CodeReader, output: O): Boolean {
         var nextChar = code.peek()
         while (nextChar != -1) {
@@ -52,15 +52,15 @@ public class ChannelDispatcher<O> private constructor(builder: Builder) :
         return channels
     }
 
-    public class Builder {
-        public val channels: MutableList<Channel<*>> = mutableListOf()
+    public class Builder<O> {
+        public val channels: MutableList<Channel<O>> = mutableListOf()
         public var failIfNoChannelToConsumeOneCharacter: Boolean = false
-        public fun addChannel(channel: Channel<*>): Builder {
+        public fun addChannel(channel: Channel<O>): Builder<O> {
             channels.add(channel)
             return this
         }
 
-        public fun addChannels(vararg c: Channel<*>): Builder {
+        public fun addChannels(vararg c: Channel<O>): Builder<O> {
             for (channel in c) {
                 addChannel(channel)
             }
@@ -70,12 +70,12 @@ public class ChannelDispatcher<O> private constructor(builder: Builder) :
         /**
          * If this option is activated, an IllegalStateException will be thrown as soon as a character won't be consumed by any channel.
          */
-        public fun failIfNoChannelToConsumeOneCharacter(): Builder {
+        public fun failIfNoChannelToConsumeOneCharacter(): Builder<O> {
             failIfNoChannelToConsumeOneCharacter = true
             return this
         }
 
-        public fun <O> build(): ChannelDispatcher<O> {
+        public fun build(): ChannelDispatcher<O> {
             return ChannelDispatcher(this)
         }
     }
@@ -85,7 +85,7 @@ public class ChannelDispatcher<O> private constructor(builder: Builder) :
          * Get a Builder instance to build a new ChannelDispatcher
          */
         @JvmStatic
-        public fun builder(): Builder {
+        public fun <O>builder(): Builder<O> {
             return Builder()
         }
     }

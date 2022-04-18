@@ -109,7 +109,7 @@ public class Lexer private constructor(builder: Builder) {
 
         public val channelDispatcher: ChannelDispatcher<LexerOutput>
             get() {
-                val builder: ChannelDispatcher.Builder = ChannelDispatcher.builder()
+                val builder: ChannelDispatcher.Builder<LexerOutput> = ChannelDispatcher.builder<LexerOutput>()
                     .addChannels(*channels.toTypedArray())
                 if (failIfNoChannelToConsumeOneCharacter) {
                     builder.failIfNoChannelToConsumeOneCharacter()

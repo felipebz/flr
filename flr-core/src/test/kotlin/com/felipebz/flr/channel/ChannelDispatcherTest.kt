@@ -20,18 +20,18 @@
  */
 package com.felipebz.flr.channel
 
+import com.felipebz.flr.channel.ChannelDispatcher.Companion.builder
 import org.hamcrest.MatcherAssert
 import org.hamcrest.Matchers
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import com.felipebz.flr.channel.ChannelDispatcher.Companion.builder
 
 class ChannelDispatcherTest {
     @Test
     fun shouldRemoveSpacesFromString() {
-        val dispatcher = builder().addChannel(SpaceDeletionChannel()).build<StringBuilder>()
+        val dispatcher = builder<StringBuilder>().addChannel(SpaceDeletionChannel()).build()
         val output = StringBuilder()
         dispatcher.consume(CodeReader("two words"), output)
         assertEquals(output.toString(), "twowords")
@@ -39,7 +39,7 @@ class ChannelDispatcherTest {
 
     @Test
     fun shouldAddChannels() {
-        val dispatcher = builder().addChannels(SpaceDeletionChannel(), FakeChannel()).build<StringBuilder>()
+        val dispatcher = builder<StringBuilder>().addChannels(SpaceDeletionChannel(), FakeChannel()).build()
         assertEquals(dispatcher.getChannels().size, 2)
         MatcherAssert.assertThat(
             dispatcher.getChannels()[0], Matchers.instanceOf(SpaceDeletionChannel::class.java)
@@ -50,7 +50,7 @@ class ChannelDispatcherTest {
     @Test
     fun shouldThrowExceptionWhenNoChannelToConsumeNextCharacter() {
         assertThrows<IllegalStateException> {
-            val dispatcher = builder().failIfNoChannelToConsumeOneCharacter().build<StringBuilder>()
+            val dispatcher = builder<StringBuilder>().failIfNoChannelToConsumeOneCharacter().build()
             dispatcher.consume(CodeReader("two words"), StringBuilder())
         }
     }
