@@ -55,10 +55,10 @@ public open class TreeFactory {
 
     public open fun array(
         openBracketToken: InternalSyntaxToken?,
-        values: Optional<SyntaxList<ValueTree?>?>,
+        values: Optional<SyntaxList<ValueTree?>?>?,
         closeBracketToken: InternalSyntaxToken?
     ): ArrayTree {
-        return ArrayTreeImpl(openBracketToken, values.orElse(null), closeBracketToken)
+        return ArrayTreeImpl(openBracketToken, values?.orElse(null), closeBracketToken)
     }
 
     public open fun pair(string: LiteralTree?, colonToken: InternalSyntaxToken?, value: ValueTree?): PairTree {
@@ -75,9 +75,9 @@ public open class TreeFactory {
 
     public open fun `object`(
         openCurlyBraceToken: InternalSyntaxToken?,
-        pairs: Optional<SyntaxList<PairTree?>?>,
+        pairs: Optional<SyntaxList<PairTree?>?>?,
         closeCurlyBraceToken: InternalSyntaxToken?
     ): ObjectTree {
-        return ObjectTreeImpl(openCurlyBraceToken!!, pairs.orElse(null), closeCurlyBraceToken!!)
+        return ObjectTreeImpl(openCurlyBraceToken!!, pairs?.orElse(null), closeCurlyBraceToken!!)
     }
 }

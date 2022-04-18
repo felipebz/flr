@@ -31,7 +31,7 @@ public interface GrammarBuilder<T> {
     public fun <U> nonterminal(): NonterminalBuilder<U>
     public fun <U> nonterminal(ruleKey: GrammarRuleKey): NonterminalBuilder<U>
     public fun <U> firstOf(vararg methods: U?): U?
-    public fun <U> optional(method: U): Optional<U>
+    public fun <U> optional(method: U): Optional<U>?
     public fun <U> oneOrMore(method: U): List<U>?
     public fun <U> zeroOrMore(method: U): Optional<List<U>>?
     public fun invokeRule(ruleKey: GrammarRuleKey): AstNode?

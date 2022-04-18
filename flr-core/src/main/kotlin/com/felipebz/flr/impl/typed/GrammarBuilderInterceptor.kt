@@ -77,13 +77,13 @@ public class GrammarBuilderInterceptor<T>(private val b: LexerlessGrammarBuilder
         return null
     }
 
-    override fun <U> optional(method: U): Optional<U> {
+    override fun <U> optional(method: U): Optional<U>? {
         val expression = pop()
         val grammarRuleKey: GrammarRuleKey = DummyGrammarRuleKey("optional", expression)
         optionals.add(grammarRuleKey)
         b.rule(grammarRuleKey).`is`(b.optional(expression))
         invokeRule(grammarRuleKey)
-        return Optional.empty()
+        return null
     }
 
     override fun <U> oneOrMore(method: U): List<U>? {
