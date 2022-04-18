@@ -24,6 +24,7 @@ import com.felipebz.flr.api.AstNode
 import java.awt.*
 import java.awt.event.FocusAdapter
 import java.awt.event.FocusEvent
+import java.awt.geom.Rectangle2D
 import java.io.File
 import java.util.*
 import javax.swing.*
@@ -271,14 +272,9 @@ internal class ToolkitViewImpl(@Transient val presenter: ToolkitPresenter) : JFr
                 sourceCodeEditorPane.visibleRect.height / sourceCodeEditorPane.getFontMetrics(sourceCodeEditorPane.font).height
             val line = astNode.token.line + visibleLines / 2
             try {
-                sourceCodeEditorPane.scrollRectToVisible(sourceCodeEditorPane.modelToView(0))
+                sourceCodeEditorPane.scrollRectToVisible(toRectangle(sourceCodeEditorPane.modelToView2D(0)))
                 sourceCodeEditorPane.scrollRectToVisible(
-                    sourceCodeEditorPane.modelToView(
-                        lineOffsets.getOffset(
-                            line,
-                            0
-                        )
-                    )
+                    toRectangle(sourceCodeEditorPane.modelToView2D(lineOffsets.getOffset(line,0)))
                 )
             } catch (e: BadLocationException) {
                 throw RuntimeException(e)
@@ -407,5 +403,9 @@ internal class ToolkitViewImpl(@Transient val presenter: ToolkitPresenter) : JFr
             }
             return treeNode
         }
+    }
+
+    private fun toRectangle(rectangle2D: Rectangle2D?): Rectangle? {
+        return rectangle2D?.let { Rectangle(it.x.toInt(), it.y.toInt(), it.width.toInt(), it.height.toInt()) }
     }
 }
