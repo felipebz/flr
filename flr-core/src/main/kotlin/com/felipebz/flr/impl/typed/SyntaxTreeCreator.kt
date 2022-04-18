@@ -104,9 +104,6 @@ public class SyntaxTreeCreator<T>(
                     addComment(node)
                     null
                 }
-                else -> {
-                    throw IllegalStateException("Unexpected trivia kind: " + ruleMatcher.getTriviaKind())
-                }
             }
         } else if (node.matcher is TokenExpression) {
             val ruleMatcher = node.matcher
