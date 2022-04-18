@@ -55,6 +55,7 @@ public class RuleDefinition : Rule, AstNodeSkippingPolicy, GrammarRuleKey, Compi
         return name
     }
 
+    @Deprecated("in 1.19, use {@link com.felipebz.flr.grammar.GrammarRuleBuilder#is(Object)} instead.")
     override fun `is`(vararg e: Any): RuleDefinition {
         throwExceptionIfRuleAlreadyDefined("The rule '$ruleKey' has already been defined somewhere in the grammar.")
         throwExceptionIfEmptyListOfMatchers(e)
@@ -62,16 +63,19 @@ public class RuleDefinition : Rule, AstNodeSkippingPolicy, GrammarRuleKey, Compi
         return this
     }
 
+    @Deprecated("in 1.19, use {@link com.felipebz.flr.grammar.GrammarRuleBuilder#override(Object)} instead.")
     override fun override(vararg e: Any): RuleDefinition {
         throwExceptionIfEmptyListOfMatchers(e)
         expression = convertToSingleExpression(e)
         return this
     }
 
+    @Deprecated("in 1.19, use {@link com.felipebz.flr.grammar.GrammarRuleBuilder#skip()} instead.")
     override fun skip() {
         astNodeSkippingPolicy = AlwaysSkipFromAst
     }
 
+    @Deprecated("in 1.19, use {@link com.felipebz.flr.grammar.GrammarRuleBuilder#skipIfOneChild()} instead.")
     override fun skipIfOneChild() {
         astNodeSkippingPolicy = SkipFromAstIfOnlyOneChild
     }

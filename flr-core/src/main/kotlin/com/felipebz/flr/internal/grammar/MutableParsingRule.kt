@@ -57,6 +57,7 @@ public class MutableParsingRule : CompilableGrammarRule, Matcher, Rule, AstNodeS
         return ruleKey
     }
 
+    @Deprecated("in 1.19, use {@link com.felipebz.flr.grammar.GrammarRuleBuilder#is(Object)} instead.")
     override fun `is`(vararg e: Any): Rule {
         if (expression != null) {
             throw GrammarException("The rule '$ruleKey' has already been defined somewhere in the grammar.")
@@ -65,15 +66,18 @@ public class MutableParsingRule : CompilableGrammarRule, Matcher, Rule, AstNodeS
         return this
     }
 
+    @Deprecated("in 1.19, use {@link com.felipebz.flr.grammar.GrammarRuleBuilder#override(Object)} instead.")
     override fun override(vararg e: Any): Rule {
         expression = sequence(*e)
         return this
     }
 
+    @Deprecated("in 1.19, use {@link com.felipebz.flr.grammar.GrammarRuleBuilder#skip()} instead.")
     override fun skip() {
         astNodeSkippingPolicy = AlwaysSkipFromAst
     }
 
+    @Deprecated("in 1.19, use {@link com.felipebz.flr.grammar.GrammarRuleBuilder#skipIfOneChild()} instead.")
     override fun skipIfOneChild() {
         astNodeSkippingPolicy = SkipFromAstIfOnlyOneChild
     }
