@@ -114,7 +114,6 @@ internal class AstCreator private constructor(private val input: LocatedText) {
         tokenBuilder.setGeneratedCode(false)
         tokenBuilder.setLine(location.getLine())
         tokenBuilder.setColumn(location.getColumn() - 1)
-        tokenBuilder.notCopyBook()
         val value = getValue(node)
         tokenBuilder.setValueAndOriginalValue(value)
     }

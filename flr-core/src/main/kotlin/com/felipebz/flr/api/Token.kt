@@ -53,9 +53,6 @@ public class Token private constructor(builder: Builder) {
      * @return the list of trivia located between this token and the previous one
      */
     public val trivia: List<Trivia> = if (builder.trivia.isEmpty()) emptyList() else ArrayList(builder.trivia)
-    public val isCopyBook: Boolean= builder.copyBook
-    public val copyBookOriginalLine: Int = builder.copyBookOriginalLine
-    public val copyBookOriginalFileName: String = builder.copyBookOriginalFileName
 
     /**
      * @return true if there is some trivia like some comments or preprocessing directive between this token and the previous one.
@@ -84,9 +81,6 @@ public class Token private constructor(builder: Builder) {
         internal var column = -1
         internal var trivia = mutableListOf<Trivia>()
         internal var generatedCode = false
-        internal var copyBook = false
-        internal var copyBookOriginalLine = -1
-        internal var copyBookOriginalFileName = ""
 
         public constructor()
         public constructor(token: Token) {
@@ -97,9 +91,6 @@ public class Token private constructor(builder: Builder) {
             column = token.column
             trivia.addAll(token.trivia)
             generatedCode = token.isGeneratedCode
-            copyBook = token.isCopyBook
-            copyBookOriginalLine = token.copyBookOriginalLine
-            copyBookOriginalFileName = token.copyBookOriginalFileName
         }
 
         public fun setType(type: TokenType): Builder {
@@ -147,24 +138,6 @@ public class Token private constructor(builder: Builder) {
                 this.trivia = mutableListOf()
             }
             this.trivia.add(trivia)
-            return this
-        }
-
-        /**
-         * @since 1.17
-         */
-        public fun notCopyBook(): Builder {
-            copyBook = false
-            copyBookOriginalLine = -1
-            copyBookOriginalFileName = ""
-            return this
-        }
-
-        public fun setCopyBook(copyBookOriginalFileName: String, copyBookOriginalLine: Int): Builder {
-            Objects.requireNonNull(copyBookOriginalFileName, "copyBookOriginalFileName cannot be null")
-            copyBook = true
-            this.copyBookOriginalFileName = copyBookOriginalFileName
-            this.copyBookOriginalLine = copyBookOriginalLine
             return this
         }
 

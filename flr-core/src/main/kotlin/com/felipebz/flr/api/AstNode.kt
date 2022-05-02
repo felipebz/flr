@@ -507,11 +507,6 @@ public open class AstNode(
 
     public fun getFirstAncestor(vararg nodeTypes: AstNodeType): AstNode = checkNotNull(getFirstAncestorOrNull(*nodeTypes))
 
-    public val isCopyBookOrGeneratedNode: Boolean
-        get() {
-            return token.isCopyBook || token.isGeneratedCode
-        }
-
     /**
      * Return all tokens contained in this tree node. Those tokens can be directly or indirectly attached to this node.
      */
