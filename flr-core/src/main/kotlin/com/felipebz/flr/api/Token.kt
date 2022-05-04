@@ -47,12 +47,37 @@ public class Token private constructor(builder: Builder) {
      */
     public val column: Int = builder.column
 
+    public val endLine: Int
+
+    public val endColumn: Int
+
     public val isGeneratedCode: Boolean = builder.generatedCode
 
     /**
      * @return the list of trivia located between this token and the previous one
      */
     public val trivia: List<Trivia> = if (builder.trivia.isEmpty()) emptyList() else ArrayList(builder.trivia)
+
+    init {
+        var lastLineLength = 0
+
+        val lines = pattern.split(value)
+        val lineCount = if (lines.size > 1) {
+            lastLineLength = lines[lines.size - 1].length
+            lines.size
+        } else {
+            1
+        }
+
+        endLine = line + lineCount - 1
+        val endLineOffset = if (endLine != line) {
+            lastLineLength
+        } else {
+            column + value.length
+        }
+
+        endColumn = endLineOffset
+    }
 
     /**
      * @return true if there is some trivia like some comments or preprocessing directive between this token and the previous one.
@@ -161,5 +186,7 @@ public class Token private constructor(builder: Builder) {
         public fun builder(token: Token): Builder {
             return Builder(token)
         }
+
+        private val pattern = Regex("\\R")
     }
 }
