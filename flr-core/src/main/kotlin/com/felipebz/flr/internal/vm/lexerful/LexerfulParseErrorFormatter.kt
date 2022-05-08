@@ -20,7 +20,7 @@
  */
 package com.felipebz.flr.internal.vm.lexerful
 
-import com.felipebz.flr.api.*
+import com.felipebz.flr.api.Token
 import kotlin.math.max
 import kotlin.math.min
 
@@ -46,6 +46,8 @@ public class LexerfulParseErrorFormatter {
     }
 
     public companion object {
+        private val pattern = Regex("\\R")
+
         /**
          * Number of tokens in snippet before and after token with error.
          */
@@ -61,7 +63,7 @@ public class LexerfulParseErrorFormatter {
             val pos = Pos()
             pos.line = token.line
             pos.column = token.column
-            val tokenLines = token.originalValue.split(Regex("(\r)?\n|\r")).toTypedArray()
+            val tokenLines = token.originalValue.split(pattern).toTypedArray()
             if (tokenLines.size == 1) {
                 pos.column += tokenLines[0].length
             } else {
@@ -89,8 +91,7 @@ public class LexerfulParseErrorFormatter {
                     sb.append(' ')
                     column++
                 }
-                val tokenLines =
-                    token.originalValue.split(Regex("(\r)?\n|\r")).toTypedArray()
+                val tokenLines = token.originalValue.split(pattern).toTypedArray()
                 sb.append(tokenLines[0])
                 column += tokenLines[0].length
                 for (j in 1 until tokenLines.size) {
