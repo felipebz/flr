@@ -26,16 +26,13 @@ import kotlin.math.min
 internal class LineOffsets(code: String) {
     private val lineOffsets: MutableMap<Int, Int> = HashMap()
     private val endOffset: Int
+
     fun getStartOffset(token: Token): Int {
         return getOffset(token.line, token.column)
     }
 
     fun getEndOffset(token: Token): Int {
-        val tokenLines = token.originalValue.split(NEWLINE_REGEX).toTypedArray()
-        val tokenLastLine = token.line + tokenLines.size - 1
-        val tokenLastLineColumn =
-            (if (tokenLines.size > 1) 0 else token.column) + tokenLines[tokenLines.size - 1].length
-        return getOffset(tokenLastLine, tokenLastLineColumn)
+        return getOffset(token.endLine, token.endColumn)
     }
 
     fun getOffset(line: Int, column: Int): Int {
@@ -50,7 +47,7 @@ internal class LineOffsets(code: String) {
     }
 
     companion object {
-        private val NEWLINE_REGEX = Regex("(\r)?\n|\r")
+        private val NEWLINE_REGEX = Regex("\\R")
     }
 
     init {
