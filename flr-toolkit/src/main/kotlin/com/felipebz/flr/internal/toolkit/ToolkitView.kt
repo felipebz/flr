@@ -91,7 +91,7 @@ internal interface ToolkitView {
      *
      * @return The source code
      */
-    val sourceCode: String?
+    val sourceCode: String
 
     /**
      * Get the text currently entered in the XPath field.

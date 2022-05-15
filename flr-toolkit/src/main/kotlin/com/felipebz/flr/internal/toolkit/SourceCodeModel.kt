@@ -35,17 +35,17 @@ internal class SourceCodeModel(private val configurationModel: ConfigurationMode
     lateinit var astNode: AstNode
         private set
 
-    fun setSourceCode(source: File, charset: Charset?) {
-        astNode = configurationModel.parser!!.parse(source)
+    fun setSourceCode(source: File, charset: Charset) {
+        astNode = configurationModel.parser.parse(source)
         try {
-            sourceCode = String(Files.readAllBytes(Paths.get(source.path)), charset!!)
+            sourceCode = String(Files.readAllBytes(Paths.get(source.path)), charset)
         } catch (e: IOException) {
             throw RuntimeException(e)
         }
     }
 
-    fun setSourceCode(sourceCode: String?) {
-        astNode = configurationModel.parser!!.parse(sourceCode!!)
+    fun setSourceCode(sourceCode: String) {
+        astNode = configurationModel.parser.parse(sourceCode)
         this.sourceCode = sourceCode
     }
 

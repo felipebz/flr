@@ -56,10 +56,10 @@ public abstract class AbstractConfigurationModel : ConfigurationModel {
             return Charset.defaultCharset()
         }
 
-    override val parser: Parser<*>?
+    override val parser: Parser<*>
         get() {
             ensureUpToDate()
-            return internalParser
+            return internalParser ?: throw IllegalStateException("Parser not initialized")
         }
 
     /**
@@ -68,5 +68,5 @@ public abstract class AbstractConfigurationModel : ConfigurationModel {
      *
      * @return A parser for the current configuration
      */
-    public abstract fun doGetParser(): Parser<*>?
+    public abstract fun doGetParser(): Parser<*>
 }

@@ -60,5 +60,5 @@ public interface ConfigurationModel {
      *
      * @return A parser for the current configuration
      */
-    public val parser: Parser<*>?
+    public val parser: Parser<*>
 }

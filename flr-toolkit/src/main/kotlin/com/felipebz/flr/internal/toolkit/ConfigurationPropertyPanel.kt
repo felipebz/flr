@@ -20,14 +20,14 @@
  */
 package com.felipebz.flr.internal.toolkit
 
-import java.awt.GridBagLayout
-import java.awt.GridBagConstraints
-import java.awt.Insets
 import java.awt.Color
+import java.awt.GridBagConstraints
+import java.awt.GridBagLayout
+import java.awt.Insets
 import java.io.Serializable
 import javax.swing.*
 
-internal class ConfigurationPropertyPanel(name: String?, description: String?) : Serializable {
+internal class ConfigurationPropertyPanel(name: String, description: String) : Serializable {
     val panel: JPanel = JPanel(GridBagLayout())
     val valueTextField: JTextField
     val errorMessageLabel: JLabel

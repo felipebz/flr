@@ -59,13 +59,13 @@ class AbstractConfigurationModelTest {
     }
 
     private class MyConfigurationModel : AbstractConfigurationModel() {
-        private var internalParser: Parser<out Grammar>? = null
+        private lateinit var internalParser: Parser<out Grammar>
 
-        fun setParser(parser: Parser<out Grammar>?) {
+        fun setParser(parser: Parser<out Grammar>) {
             internalParser = parser
         }
 
-        override fun doGetParser(): Parser<*>? {
+        override fun doGetParser(): Parser<*> {
             return internalParser
         }
 

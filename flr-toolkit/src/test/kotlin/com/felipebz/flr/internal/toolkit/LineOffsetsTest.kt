@@ -112,12 +112,12 @@ class LineOffsetsTest {
     }
 
     companion object {
-        fun mockToken(line: Int, column: Int, value: String?): Token {
+        fun mockToken(line: Int, column: Int, value: String): Token {
             return try {
                 Token.builder()
                     .setLine(line)
                     .setColumn(column)
-                    .setValueAndOriginalValue(value!!)
+                    .setValueAndOriginalValue(value)
                     .setType(GenericTokenType.IDENTIFIER)
                     .build()
             } catch (e: URISyntaxException) {
