@@ -1,17 +1,15 @@
 object Versions {
-    const val asm = "9.2"
-    const val commons_io = "2.4"
+    const val asm = "9.4"
     const val fest = "1.4"
     const val hamcrest = "2.2"
     const val jaxen = "1.2.0"
-    const val junit = "5.8.1"
-    const val mockito = "4.0.0"
+    const val junit = "5.9.1"
+    const val mockito = "4.9.0"
     const val mockito_kotlin = "4.0.0"
 }
 
 object Libs {
     const val asm = "org.ow2.asm:asm:${Versions.asm}"
-    const val commons_io = "commons-io:commons-io:${Versions.commons_io}"
     const val fest_assert = "org.easytesting:fest-assert:${Versions.fest}"
     const val hamcrest = "org.hamcrest:hamcrest-library:${Versions.hamcrest}"
     const val jaxen = "jaxen:jaxen:${Versions.jaxen}"

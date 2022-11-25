@@ -21,7 +21,6 @@
 package com.felipebz.flr.test.minic.integration
 
 import com.felipebz.flr.test.minic.MiniCParser
-import org.apache.commons.io.FileUtils
 import org.fest.assertions.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.io.File
@@ -29,7 +28,7 @@ import java.io.File
 class MiniCOwnExamplesTest {
     @Test
     fun test() {
-        val files = FileUtils.listFiles(File("src/test/resources/MiniCIntegration"), null, true)
+        val files = File("src/test/resources/MiniCIntegration").listFiles().requireNoNulls()
         assertThat(files).isNotEmpty
         for (file in files) {
             try {
