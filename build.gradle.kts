@@ -24,7 +24,9 @@ allprojects {
 
     java {
         withSourcesJar()
-        targetCompatibility = JavaVersion.VERSION_1_8
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(11))
+        }
     }
 
     group = "com.felipebz.flr"
@@ -50,7 +52,7 @@ subprojects {
 
     tasks.withType<KotlinCompile>().configureEach {
         kotlinOptions {
-            this.jvmTarget = "1.8"
+            this.jvmTarget = "11"
         }
     }
 
