@@ -41,7 +41,7 @@ steps:
   - task: Gradle@2
     condition: and(succeeded(), eq(variables.isMain, 'true'))
     inputs:
-      tasks: 'publish'
+      tasks: 'publish jreleaserFullRelease'
       options: '--build-cache -Psigning.secretKeyRingFile=$(gpgKey.secureFilePath) -Psigning.keyId=$(GPG_KEY_ID) -Psigning.password=$(GPG_KEY_PASSWORD)'
       jdkVersionOption: 1.11
     env:
@@ -49,6 +49,7 @@ steps:
       DEPLOY_TOKEN: $(DEPLOY_TOKEN)
       OSSRH_USERNAME: $(OSSRH_USERNAME)
       OSSRH_PASSWORD: $(OSSRH_PASSWORD)
+      JRELEASER_GITHUB_TOKEN: $(JRELEASER_GITHUB_TOKEN)
 
   - script: |
       # stop the Gradle daemon to ensure no files are left open (impacting the save cache operation later)
