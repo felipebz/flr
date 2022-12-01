@@ -31,7 +31,7 @@ allprojects {
     }
 
     group = "com.felipebz.flr"
-    version = "1.2.0-SNAPSHOT"
+    version = "1.2.0"
 }
 
 subprojects {
@@ -165,6 +165,7 @@ jreleaser {
     release {
         github {
             overwrite.set(true)
+            tagName.set("{{projectVersion}}")
             changelog {
                 formatted.set(org.jreleaser.model.Active.ALWAYS)
                 preset.set("conventional-commits")
