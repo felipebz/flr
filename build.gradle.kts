@@ -161,6 +161,9 @@ jreleaser {
             homepage.set("https://felipezorzo.com.br/zpa/")
         }
         inceptionYear.set("2021")
+        snapshot {
+            fullChangelog.set(true)
+        }
     }
     release {
         github {
