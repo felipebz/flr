@@ -18,19 +18,19 @@ steps:
       key: 'gradle | "$(Agent.OS)" | **/build.gradle.kts'
       path: $(Pipeline.Workspace)/.cache
 
-  - task: Gradle@2
+  - task: Gradle@3
     inputs:
       tasks: 'build'
       options: '--build-cache -Dsonar.branch.name='
       jdkVersionOption: 1.11
 
-  - task: SonarQubePrepare@4
+  - task: SonarQubePrepare@5
     condition: and(succeeded(), eq(variables.isMain, 'true'))
     inputs:
       SonarQube: 'SonarQube'
       scannerMode: 'Other'
 
-  - task: Gradle@2
+  - task: Gradle@3
     displayName: Run SonarQube analysis
     condition: and(succeeded(), eq(variables.isMain, 'true'))
     inputs:
@@ -38,7 +38,7 @@ steps:
       options: '--build-cache -Dsonar.branch.name='
       sonarQubeRunAnalysis: true
 
-  - task: Gradle@2
+  - task: Gradle@3
     condition: and(succeeded(), eq(variables.isMain, 'true'))
     inputs:
       tasks: 'publish jreleaserFullRelease'
