@@ -1,0 +1,39 @@
+name: flr
+
+on:
+  push:
+    branches:
+    - "*"
+  pull_request:
+    branches:
+    - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout
+      uses: actions/checkout@v3
+    
+    - name: Setup Gradle
+      uses: gradle/gradle-build-action@v2
+    
+    - name: Run build with Gradle Wrapper
+      run: ./gradlew build --build-cache
+
+    - name: Run SonarQube Scanner
+      run: ./gradlew sonar --build-cache
+      if: github.ref == 'refs/heads/main'
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+    - name: Release artifacts
+      run: ./gradlew publish jreleaserFullRelease --build-cache
+      if: github.ref == 'refs/heads/main'
+      env:
+        OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+        OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
+        JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GPG_KEY_PASSWORD: ${{ secrets.GPG_KEY_PASSWORD }}
+        GPG_PRIVATE_KEY: ${{ secrets.GPG_KEY }}
