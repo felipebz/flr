@@ -1,6 +1,7 @@
 # FLR
 
-[![Build Status](https://dev.azure.com/felipebz/z-plsql-analyzer/_apis/build/status/flr?branchName=main)](https://dev.azure.com/felipebz/z-plsql-analyzer/_build/latest?definitionId=13&branchName=main)
+[![Build and Release](https://github.com/felipebz/flr/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/felipebz/flr/actions/workflows/main.yml)
+[![Quality Gate Status](https://sonarqube.felipezorzo.com.br/api/project_badges/measure?project=com.felipebz.flr%3Aflr&metric=alert_status&token=sqb_6d18637c91a4b22ae95a16b83a41be69b7aa900d)](https://sonarqube.felipezorzo.com.br/dashboard?id=com.felipebz.flr%3Aflr)
 
 FLR is a lightweight Java library which provides everything required to analyse any piece of source code. Using FLR, you can quickly create a lexer, a parser, and some AST visitors to implement quality rules or compute measures.
 
