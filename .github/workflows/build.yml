@@ -16,21 +16,24 @@ jobs:
     - name: checkout
       uses: actions/checkout@v3
     
-    - name: Setup Gradle
+    - name: Build with Gradle
       uses: gradle/gradle-build-action@v2
-    
-    - name: Run build with Gradle Wrapper
-      run: ./gradlew build
+      with:
+        arguments: build
 
     - name: Run SonarQube Scanner
-      run: ./gradlew sonar
+      uses: gradle/gradle-build-action@v2
+      with:
+        arguments: sonar
       if: github.ref == 'refs/heads/main'
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
     - name: Release artifacts
-      run: ./gradlew publish jreleaserFullRelease
+      uses: gradle/gradle-build-action@v2
+      with:
+        arguments: publish jreleaserFullRelease
       if: github.ref == 'refs/heads/main'
       env:
         OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
