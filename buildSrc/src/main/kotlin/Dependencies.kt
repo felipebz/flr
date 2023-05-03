@@ -1,11 +1,11 @@
 object Versions {
-    const val asm = "9.4"
+    const val asm = "9.5"
     const val fest = "1.4"
     const val hamcrest = "2.2"
-    const val jaxen = "1.2.0"
-    const val junit = "5.9.1"
-    const val mockito = "4.9.0"
-    const val mockito_kotlin = "4.0.0"
+    const val jaxen = "2.0.0"
+    const val junit = "5.9.3"
+    const val mockito = "5.3.1"
+    const val mockito_kotlin = "4.1.0"
 }
 
 object Libs {
