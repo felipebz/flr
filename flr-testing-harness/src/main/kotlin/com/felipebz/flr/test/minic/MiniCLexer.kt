@@ -34,10 +34,12 @@ public object MiniCLexer {
     public fun create(): Lexer {
         return Lexer.builder()
             .withFailIfNoChannelToConsumeOneCharacter(true)
-            .withChannel(IdentifierAndKeywordChannel("[a-zA-Z]([a-zA-Z0-9_]*[a-zA-Z0-9])?+", true, Keywords.values()))
+            .withChannel(IdentifierAndKeywordChannel("[a-zA-Z]([a-zA-Z0-9_]*[a-zA-Z0-9])?+", true,
+                Keywords.entries.toTypedArray()
+            ))
             .withChannel(regexp(Literals.INTEGER, "[0-9]+"))
             .withChannel(commentRegexp("(?s)/\\*.*?\\*/"))
-            .withChannel(PunctuatorChannel(*Punctuators.values()))
+            .withChannel(PunctuatorChannel(*Punctuators.entries.toTypedArray()))
             .withChannel(BlackHoleChannel("[ \t\r\n]+"))
             .build()
     }

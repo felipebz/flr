@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Test
 
 class PunctuatorChannelTest {
-    private val channel = PunctuatorChannel(*MyPunctuatorAndOperator.values())
+    private val channel = PunctuatorChannel(*MyPunctuatorAndOperator.entries.toTypedArray())
     private val output = LexerOutput()
     @Test
     fun testConsumeSpecialCharacters() {

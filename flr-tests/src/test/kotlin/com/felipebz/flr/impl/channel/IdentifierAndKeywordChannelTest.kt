@@ -38,14 +38,14 @@ class IdentifierAndKeywordChannelTest {
     private val output = LexerOutput()
     @Test
     fun testConsumeWord() {
-        channel = IdentifierAndKeywordChannel("[a-zA-Z_][a-zA-Z_0-9]*", true, MyKeywords.values())
+        channel = IdentifierAndKeywordChannel("[a-zA-Z_][a-zA-Z_0-9]*", true, MyKeywords.entries.toTypedArray())
         assertThat(channel, consume("word", output))
         assertThat(output.tokens, hasToken("word", GenericTokenType.IDENTIFIER))
     }
 
     @Test
     fun testConsumeCaseSensitiveKeywords() {
-        channel = IdentifierAndKeywordChannel("[a-zA-Z_][a-zA-Z_0-9]*", true, MyKeywords.values())
+        channel = IdentifierAndKeywordChannel("[a-zA-Z_][a-zA-Z_0-9]*", true, MyKeywords.entries.toTypedArray())
         assertThat(channel, consume("KEYWORD1", output))
         assertThat(output.tokens, hasToken("KEYWORD1", MyKeywords.KEYWORD1))
         assertThat(channel, consume("KeyWord2", output))
@@ -56,7 +56,7 @@ class IdentifierAndKeywordChannelTest {
 
     @Test
     fun testConsumeNotCaseSensitiveKeywords() {
-        channel = IdentifierAndKeywordChannel("[a-zA-Z_][a-zA-Z_0-9]*", false, MyKeywords.values())
+        channel = IdentifierAndKeywordChannel("[a-zA-Z_][a-zA-Z_0-9]*", false, MyKeywords.entries.toTypedArray())
         assertThat(channel, consume("keyword1", output))
         assertThat(output.tokens, hasToken("KEYWORD1", MyKeywords.KEYWORD1))
         assertThat(output.tokens, hasToken("KEYWORD1"))
@@ -67,7 +67,7 @@ class IdentifierAndKeywordChannelTest {
 
     @Test
     fun testColumnAndLineNumbers() {
-        channel = IdentifierAndKeywordChannel("[a-zA-Z_][a-zA-Z_0-9]*", false, MyKeywords.values())
+        channel = IdentifierAndKeywordChannel("[a-zA-Z_][a-zA-Z_0-9]*", false, MyKeywords.entries.toTypedArray())
         val reader = CodeReader("\n\n  keyword1")
         reader.pop()
         reader.pop()
