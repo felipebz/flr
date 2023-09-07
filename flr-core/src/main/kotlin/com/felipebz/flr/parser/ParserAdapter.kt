@@ -84,10 +84,6 @@ public class ParserAdapter<G : LexerlessGrammar>(charset: Charset, grammar: G) :
         throw UnsupportedOperationException()
     }
 
-    override fun getRootRule(): RuleDefinition {
-        throw UnsupportedOperationException()
-    }
-
     public companion object {
         private fun fileToCharArray(file: File, charset: Charset): CharArray {
             return try {

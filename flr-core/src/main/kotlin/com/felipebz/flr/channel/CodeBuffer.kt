@@ -38,12 +38,13 @@ import java.io.StringReader
 public open class CodeBuffer protected constructor(initialCodeReader: Reader, configuration: CodeReaderConfiguration) :
     CharSequence {
     private var lastChar = -1
-    private val cursor: Cursor
     private val buffer: CharArray
     private var bufferPosition = 0
     private var tabWidth = 0
     private var recordingMode = false
     private var recordedCharacters = StringBuilder()
+
+    public val cursor: Cursor
 
     /**
      * Note that this constructor will read everything from reader and will close it.
@@ -134,10 +135,6 @@ public open class CodeBuffer protected constructor(initialCodeReader: Reader, co
      */
     public fun getLinePosition(): Int {
         return cursor.line
-    }
-
-    public fun getCursor(): Cursor {
-        return cursor
     }
 
     /**
@@ -238,8 +235,8 @@ public open class CodeBuffer protected constructor(initialCodeReader: Reader, co
         configuration: CodeReaderConfiguration
     ) : FilterReader(`in`) {
         init {
-            codeReaderFilter.setConfiguration(configuration.cloneWithoutCodeReaderFilters())
-            codeReaderFilter.setReader(`in`)
+            codeReaderFilter.configuration = configuration.cloneWithoutCodeReaderFilters()
+            codeReaderFilter.reader = `in`
         }
 
         @Throws(IOException::class)

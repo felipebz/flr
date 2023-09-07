@@ -30,70 +30,13 @@ import java.io.Reader
  * sequentially filter the character flow.
  */
 public abstract class CodeReaderFilter<O : Any> {
-    private lateinit var reader: Reader
-    private lateinit var output: O
-    private var configuration: CodeReaderConfiguration? = null
+    open public lateinit var reader: Reader
+    public lateinit var output: O
+    public lateinit var configuration: CodeReaderConfiguration
 
     public constructor()
     public constructor(output: O) {
         this.output = output
-    }
-
-    /**
-     * Returns the reader from which this class reads the character stream.
-     *
-     * @return the reader
-     */
-    public fun getReader(): Reader {
-        return reader
-    }
-
-    /**
-     * Sets the reader from which this class will read the character stream.
-     *
-     * @param reader
-     * the reader
-     */
-    public open fun setReader(reader: Reader) {
-        this.reader = reader
-    }
-
-    /**
-     * Returns the output object.
-     *
-     * @return the output
-     */
-    public fun getOutput(): O {
-        return output
-    }
-
-    /**
-     * Sets the output object
-     *
-     * @param output
-     * the output to set
-     */
-    public fun setOutput(output: O) {
-        this.output = output
-    }
-
-    /**
-     * Returns the configuration used for the CodeReader
-     *
-     * @return the configuration
-     */
-    public fun getConfiguration(): CodeReaderConfiguration {
-        return checkNotNull(configuration)
-    }
-
-    /**
-     * Sets the configuration that must be used by the CodeReader
-     *
-     * @param configuration
-     * the configuration to set
-     */
-    public fun setConfiguration(configuration: CodeReaderConfiguration?) {
-        this.configuration = configuration
     }
 
     /**

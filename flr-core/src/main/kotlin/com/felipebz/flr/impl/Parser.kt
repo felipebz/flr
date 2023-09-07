@@ -37,7 +37,7 @@ import java.io.File
  * This class is not intended to be instantiated or subclassed by clients.
  */
 public open class Parser<G : Grammar> {
-    private lateinit var rootRule: RuleDefinition
+    public lateinit var rootRule: RuleDefinition
     private val lexer: Lexer?
     private val _grammar: G
 
@@ -83,10 +83,6 @@ public open class Parser<G : Grammar> {
 
     public val grammar: G
         get() = _grammar
-
-    public open fun getRootRule(): RuleDefinition {
-        return rootRule
-    }
 
     public fun setRootRule(rootRule: Rule) {
         this.rootRule = rootRule as RuleDefinition

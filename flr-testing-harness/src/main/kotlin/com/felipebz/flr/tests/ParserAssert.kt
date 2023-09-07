@@ -43,7 +43,7 @@ public class ParserAssert(actual: Parser<*>) : GenericAssert<ParserAssert, Parse
     ParserAssert::class.java, actual
 ) {
     private fun createParserWithEofMatcher(): Parser<*> {
-        val rule = actual.getRootRule()
+        val rule = actual.rootRule
         val builder = LexerfulGrammarBuilder.create()
         val withEndOfInputKey = WithEndOfInput(rule.ruleKey)
         builder.rule(withEndOfInputKey).`is`(rule, FirstOfExpression(EndOfInputExpression, TokenTypeExpression(GenericTokenType.EOF)))
@@ -97,12 +97,12 @@ public class ParserAssert(actual: Parser<*>) : GenericAssert<ParserAssert, Parse
     }
 
     private fun hasRootRule() {
-        assertThat(actual.getRootRule())
+        assertThat(actual.rootRule)
             .overridingErrorMessage("Root rule of the parser should not be null")
             .isNotNull
     }
 
     private fun getRuleName(): String {
-        return actual.getRootRule().getName()
+        return actual.rootRule.getName()
     }
 }

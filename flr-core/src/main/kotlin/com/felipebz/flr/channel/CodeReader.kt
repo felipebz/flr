@@ -156,7 +156,7 @@ public class CodeReader : CodeBuffer {
                         return -1
                     }
                 }
-                _previousCursor = getCursor().clone()
+                _previousCursor = cursor.clone()
                 for (i in 0 until matcher.end()) {
                     appendable.append(pop().toChar())
                 }
@@ -165,7 +165,7 @@ public class CodeReader : CodeBuffer {
         } catch (e: StackOverflowError) {
             throw ChannelException(
                 "Unable to apply regular expression '" + matcher.pattern().pattern()
-                        + "' at line " + getCursor().line + " and column " + getCursor().column
+                        + "' at line " + cursor.line + " and column " + cursor.column
                         + ", because it led to a stack overflow error."
                         + " This error may be due to an inefficient use of alternations - see https://bugs.java.com/bugdatabase/view_bug.do?bug_id=5050507",
                 e

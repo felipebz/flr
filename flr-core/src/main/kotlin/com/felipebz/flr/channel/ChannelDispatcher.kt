@@ -23,7 +23,7 @@ package com.felipebz.flr.channel
 public class ChannelDispatcher<O> private constructor(builder: Builder<O>) :
     Channel<O> {
     private val failIfNoChannelToConsumeOneCharacter = builder.failIfNoChannelToConsumeOneCharacter
-    private val channels: Array<Channel<O>> = builder.channels.toTypedArray()
+    public val channels: Array<Channel<O>> = builder.channels.toTypedArray()
     override fun consume(code: CodeReader, output: O): Boolean {
         var nextChar = code.peek()
         while (nextChar != -1) {
@@ -46,10 +46,6 @@ public class ChannelDispatcher<O> private constructor(builder: Builder<O>) :
             nextChar = code.peek()
         }
         return true
-    }
-
-    public fun getChannels(): Array<Channel<O>> {
-        return channels
     }
 
     public class Builder<O> {

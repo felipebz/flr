@@ -274,7 +274,7 @@ class CodeBufferTest {
         private val REPLACEMENT = "-"
         override fun read(cbuf: CharArray, off: Int, len: Int): Int {
             val tempBuffer = CharArray(cbuf.size)
-            val charCount = getReader().read(tempBuffer, off, len)
+            val charCount = reader.read(tempBuffer, off, len)
             if (charCount != -1) {
                 val filteredString = pattern.matcher(String(tempBuffer)).replaceAll(REPLACEMENT)
                 System.arraycopy(filteredString.toCharArray(), 0, cbuf, 0, tempBuffer.size)
@@ -288,7 +288,7 @@ class CodeBufferTest {
         private val REPLACEMENT = "*"
         override fun read(cbuf: CharArray, off: Int, len: Int): Int {
             val tempBuffer = CharArray(cbuf.size)
-            val charCount = getReader().read(tempBuffer, off, len)
+            val charCount = reader.read(tempBuffer, off, len)
             if (charCount != -1) {
                 val filteredString = pattern.matcher(String(tempBuffer)).replaceAll(REPLACEMENT)
                 System.arraycopy(filteredString.toCharArray(), 0, cbuf, 0, tempBuffer.size)

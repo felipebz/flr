@@ -58,10 +58,12 @@ public class ChannelCodeReaderFilter<O : Any> : CodeReaderFilter<O> {
     /**
      * {@inheritDoc}
      */
-    override fun setReader(reader: Reader) {
-        super.setReader(reader)
-        internalCodeReader = CodeReader(reader, getConfiguration())
-    }
+    override var reader: Reader
+        get() = super.reader
+        set(reader) {
+            super.reader = reader
+            internalCodeReader = CodeReader(reader, configuration)
+        }
 
     /**
      * {@inheritDoc}
@@ -79,7 +81,7 @@ public class ChannelCodeReaderFilter<O : Any> : CodeReaderFilter<O> {
             }
             var consumed = false
             for (channel in channels) {
-                if (channel.consume(internalCodeReader, getOutput())) {
+                if (channel.consume(internalCodeReader, output)) {
                     consumed = true
                     break
                 }

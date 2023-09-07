@@ -40,11 +40,11 @@ class ChannelDispatcherTest {
     @Test
     fun shouldAddChannels() {
         val dispatcher = builder<StringBuilder>().addChannels(SpaceDeletionChannel(), FakeChannel()).build()
-        assertEquals(dispatcher.getChannels().size, 2)
+        assertEquals(dispatcher.channels.size, 2)
         MatcherAssert.assertThat(
-            dispatcher.getChannels()[0], Matchers.instanceOf(SpaceDeletionChannel::class.java)
+            dispatcher.channels[0], Matchers.instanceOf(SpaceDeletionChannel::class.java)
         )
-        assertTrue(dispatcher.getChannels()[1] is FakeChannel)
+        assertTrue(dispatcher.channels[1] is FakeChannel)
     }
 
     @Test
