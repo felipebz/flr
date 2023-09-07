@@ -20,6 +20,6 @@
  */
 package com.felipebz.flr.internal.vm
 
-public interface MachineHandler {
+public fun interface MachineHandler {
     public fun onBacktrack(machine: Machine)
 }

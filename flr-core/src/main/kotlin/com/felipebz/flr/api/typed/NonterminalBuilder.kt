@@ -23,6 +23,6 @@ package com.felipebz.flr.api.typed
 /**
  * @since 1.21
  */
-public interface NonterminalBuilder<T> {
+public fun interface NonterminalBuilder<T> {
     public fun `is`(method: T): T
 }

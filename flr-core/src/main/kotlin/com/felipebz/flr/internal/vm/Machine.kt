@@ -66,7 +66,7 @@ public class Machine private constructor(
     public constructor(
         input: String,
         instructions: Array<Instruction>,
-        handler: MachineHandler = NOP_HANDLER
+        handler: MachineHandler = MachineHandler { }
     ) : this(input.toCharArray(), emptyArray(), instructions, handler)
 
     private fun execute(instructions: Array<Instruction>) {
@@ -244,18 +244,11 @@ public class Machine private constructor(
 
         @JvmStatic
         public fun execute(instructions: Array<Instruction>, vararg input: Token): Boolean {
-            val machine = Machine(CharArray(0), input, instructions, NOP_HANDLER)
+            val machine = Machine(CharArray(0), input, instructions, { })
             while (machine.address != -1 && machine.address < instructions.size) {
                 instructions[machine.address].execute(machine)
             }
             return machine.matched
-        }
-
-        @JvmStatic
-        private val NOP_HANDLER = object : MachineHandler {
-            override fun onBacktrack(machine: Machine) {
-                // nop
-            }
         }
     }
 }
