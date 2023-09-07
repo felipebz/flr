@@ -26,7 +26,7 @@ import com.felipebz.flr.test.minic.MiniCParser
 abstract class RuleTest {
     protected val p = MiniCParser.create()
     protected val g = p.grammar
-    val testedRule: Rule?
+    val testedRule: Rule
         get() = p.getRootRule()
 
     abstract fun init()

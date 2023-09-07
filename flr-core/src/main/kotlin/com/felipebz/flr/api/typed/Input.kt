@@ -26,7 +26,7 @@ import java.util.*
 /**
  * @since 1.21
  */
-public class Input constructor(private val inputChars: CharArray) {
+public class Input(private val inputChars: CharArray) {
     private val newLineIndexes: IntArray
 
     init {

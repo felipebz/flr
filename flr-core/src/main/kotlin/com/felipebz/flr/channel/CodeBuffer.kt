@@ -75,7 +75,7 @@ public open class CodeBuffer protected constructor(initialCodeReader: Reader, co
         val str = CharArray(4 * 1024)
         var n: Int
         while (reader.read(str).also { n = it } > 0) {
-            sb.append(str, 0, n)
+            sb.appendRange(str, 0, n)
         }
         return sb.toString().toCharArray()
     }

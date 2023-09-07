@@ -59,7 +59,7 @@ internal class AstNodeBuilder : NodeBuilder {
     ): AstNode {
         val lineAndColumn = input.lineAndColumnAt(startIndex)
         val token: Token = Token.builder()
-            .setType(type ?: UNDEFINED_TOKEN_TYPE)
+            .setType(type ?: UndefinedTokenType)
             .setLine(lineAndColumn[0])
             .setColumn(lineAndColumn[1] - 1)
             .setValueAndOriginalValue(input.substring(startIndex, endIndex))
@@ -72,7 +72,7 @@ internal class AstNodeBuilder : NodeBuilder {
         return astNode
     }
 
-    private class UndefinedTokenType : TokenType {
+    private object UndefinedTokenType : TokenType {
         override val name: String
             get() = "TOKEN"
         override val value: String
@@ -85,9 +85,5 @@ internal class AstNodeBuilder : NodeBuilder {
         override fun toString(): String {
             return UndefinedTokenType::class.java.simpleName
         }
-    }
-
-    companion object {
-        private val UNDEFINED_TOKEN_TYPE: TokenType = UndefinedTokenType()
     }
 }
