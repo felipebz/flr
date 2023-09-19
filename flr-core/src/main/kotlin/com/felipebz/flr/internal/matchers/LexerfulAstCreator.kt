@@ -34,26 +34,22 @@ public class LexerfulAstCreator private constructor(private val tokens: List<Tok
     }
 
     private fun visitNonTerminal(node: ParseNode): AstNode {
-        val astNodes = mutableListOf<AstNode>()
-        for (child in node.children) {
-            val astNode = visit(child)
-            when {
-                astNode == null -> {
-                    // skip
-                }
-                astNode.hasToBeSkippedFromAst() -> {
-                    astNodes.addAll(astNode.children)
-                }
-                else -> {
-                    astNodes.add(astNode)
-                }
-            }
-        }
         val ruleMatcher = node.matcher as RuleDefinition
         val token = if (node.startIndex < tokens.size) tokens[node.startIndex] else null
         val astNode = AstNode(ruleMatcher, ruleMatcher.getName(), token)
-        for (child in astNodes) {
-            astNode.addChild(child)
+        for (child in node.children) {
+            val internalAstNode = visit(child)
+            when {
+                internalAstNode == null -> {
+                    // skip
+                }
+                internalAstNode.hasToBeSkippedFromAst() -> {
+                    internalAstNode.children.forEach { astNode.addChild(it)  }
+                }
+                else -> {
+                    astNode.addChild(internalAstNode)
+                }
+            }
         }
         astNode.fromIndex = node.startIndex
         astNode.toIndex = node.endIndex
