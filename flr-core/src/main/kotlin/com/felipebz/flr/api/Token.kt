@@ -60,13 +60,16 @@ public class Token private constructor(builder: Builder) {
 
     init {
         var lastLineLength = 0
+        var lineCount = 1
 
-        val lines = pattern.split(value)
-        val lineCount = if (lines.size > 1) {
-            lastLineLength = lines[lines.size - 1].length
-            lines.size
-        } else {
-            1
+        if (value.indexOf('\n') != -1 || value.indexOf('\r') != -1) {
+            val lines = pattern.split(value)
+            lineCount = if (lines.size > 1) {
+                lastLineLength = lines[lines.size - 1].length
+                lines.size
+            } else {
+                1
+            }
         }
 
         endLine = line + lineCount - 1
