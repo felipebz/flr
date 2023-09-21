@@ -30,7 +30,5 @@ public class ParseNode(
      */
     public val endIndex: Int,
     public val matcher: Matcher?,
-    children: List<ParseNode> = emptyList()
-) {
-    public val children: List<ParseNode> = children.toList()
-}
+    public val children: Array<ParseNode> = emptyArray()
+)

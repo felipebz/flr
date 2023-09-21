@@ -150,7 +150,7 @@ public class Machine private constructor(
     }
 
     public fun createNode() {
-        val node = ParseNode(stack.index, index, stack.matcher, stack.subNodes)
+        val node = ParseNode(stack.index, index, stack.matcher, stack.subNodes.toTypedArray())
         stack.parent().subNodes.add(node)
         val matcher = stack.matcher
         if (matcher is MemoParsingExpression && matcher.shouldMemoize()) {
