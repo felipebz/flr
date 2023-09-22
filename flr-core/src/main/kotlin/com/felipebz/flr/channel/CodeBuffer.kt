@@ -58,9 +58,10 @@ public open class CodeBuffer protected constructor(initialCodeReader: Reader, co
                 tabWidth = configuration.getTabWidth()
                 var filteredReader = reader
 
-                /* Setup the filters on the reader */for (codeReaderFilter in configuration.getCodeReaderFilters()) {
-                filteredReader = Filter(filteredReader, codeReaderFilter, configuration)
-            }
+                /* Setup the filters on the reader */
+                for (codeReaderFilter in configuration.getCodeReaderFilters()) {
+                    filteredReader = Filter(filteredReader, codeReaderFilter, configuration)
+                }
                 filteredReader.use { usedReader -> buffer = read(usedReader) }
             }
         } catch (e: IOException) {
@@ -70,15 +71,8 @@ public open class CodeBuffer protected constructor(initialCodeReader: Reader, co
 
     public constructor(code: String, configuration: CodeReaderConfiguration) : this(StringReader(code), configuration)
 
-    @Throws(IOException::class)
     private fun read(reader: Reader): CharArray {
-        val sb = StringBuilder()
-        val str = CharArray(4 * 1024)
-        var n: Int
-        while (reader.read(str).also { n = it } > 0) {
-            sb.appendRange(str, 0, n)
-        }
-        return sb.toString().toCharArray()
+        return reader.readText().toCharArray()
     }
 
     /**
