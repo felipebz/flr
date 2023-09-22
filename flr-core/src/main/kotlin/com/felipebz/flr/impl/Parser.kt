@@ -40,6 +40,7 @@ public open class Parser<G : Grammar> {
     public lateinit var rootRule: RuleDefinition
     private val lexer: Lexer?
     private val _grammar: G
+    private lateinit var compiledGrammar: CompiledGrammar
 
     /**
      * @since 1.16
@@ -76,9 +77,10 @@ public open class Parser<G : Grammar> {
     }
 
     public open fun parse(tokens: List<Token>): AstNode {
-        // TODO can be compiled only once
-        val g: CompiledGrammar = MutableGrammarCompiler.compile(rootRule as CompilableGrammarRule)
-        return LexerfulAstCreator.create(Machine.parse(tokens, g), tokens)
+        if (::compiledGrammar.isInitialized.not()) {
+            compiledGrammar = MutableGrammarCompiler.compile(rootRule as CompilableGrammarRule)
+        }
+        return LexerfulAstCreator.create(Machine.parse(tokens, compiledGrammar), tokens)
     }
 
     public val grammar: G
