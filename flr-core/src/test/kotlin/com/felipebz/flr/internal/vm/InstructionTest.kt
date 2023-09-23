@@ -62,7 +62,6 @@ class InstructionTest {
         assertThat(instruction == call(42, mock())).isFalse()
         assertThat(instruction == call(13, matcher)).isFalse()
         assertThat(instruction == Any()).isFalse()
-        assertThat(instruction.hashCode()).isEqualTo(42)
         instruction.execute(machine)
         val inOrder = inOrder(machine)
         inOrder.verify(machine).pushReturn(1, matcher, 42)

@@ -28,7 +28,8 @@ public abstract class Instruction {
      * Executes this instruction.
      */
     public abstract fun execute(machine: Machine)
-    public class JumpInstruction(private val offset: Int) : Instruction() {
+
+    public data class JumpInstruction(private val offset: Int) : Instruction() {
         override fun execute(machine: Machine) {
             machine.jump(offset)
         }
@@ -36,17 +37,9 @@ public abstract class Instruction {
         override fun toString(): String {
             return "Jump $offset"
         }
-
-        override fun equals(other: Any?): Boolean {
-            return other is JumpInstruction && offset == other.offset
-        }
-
-        override fun hashCode(): Int {
-            return offset
-        }
     }
 
-    public class CallInstruction(private val offset: Int, private val matcher: Matcher?) : Instruction() {
+    public data class CallInstruction(private val offset: Int, private val matcher: Matcher?) : Instruction() {
         override fun execute(machine: Machine) {
             machine.pushReturn(1, matcher, offset)
         }
@@ -54,21 +47,9 @@ public abstract class Instruction {
         override fun toString(): String {
             return "Call $offset"
         }
-
-        override fun equals(other: Any?): Boolean {
-            if (other is CallInstruction) {
-                return (offset == other.offset
-                        && matcher == other.matcher)
-            }
-            return false
-        }
-
-        override fun hashCode(): Int {
-            return offset
-        }
     }
 
-    public class ChoiceInstruction(private val offset: Int) : Instruction() {
+    public data class ChoiceInstruction(private val offset: Int) : Instruction() {
         override fun execute(machine: Machine) {
             machine.pushBacktrack(offset)
             machine.jump(1)
@@ -76,14 +57,6 @@ public abstract class Instruction {
 
         override fun toString(): String {
             return "Choice $offset"
-        }
-
-        override fun equals(other: Any?): Boolean {
-            return other is ChoiceInstruction && offset == other.offset
-        }
-
-        override fun hashCode(): Int {
-            return offset
         }
     }
 
@@ -102,7 +75,7 @@ public abstract class Instruction {
      * Instruction dedicated for predicates.
      * Behaves exactly as [ChoiceInstruction], but disables error reports.
      */
-    public class PredicateChoiceInstruction(private val offset: Int) : Instruction() {
+    public data class PredicateChoiceInstruction(private val offset: Int) : Instruction() {
         override fun execute(machine: Machine) {
             machine.pushBacktrack(offset)
             machine.ignoreErrors = true
@@ -112,17 +85,9 @@ public abstract class Instruction {
         override fun toString(): String {
             return "PredicateChoice $offset"
         }
-
-        override fun equals(other: Any?): Boolean {
-            return other is PredicateChoiceInstruction && offset == other.offset
-        }
-
-        override fun hashCode(): Int {
-            return offset
-        }
     }
 
-    public class CommitInstruction(private val offset: Int) : Instruction() {
+    public data class CommitInstruction(private val offset: Int) : Instruction() {
         override fun execute(machine: Machine) {
             // add all nodes to parent
             machine.peek().parent().subNodes.addAll(machine.peek().subNodes)
@@ -133,17 +98,9 @@ public abstract class Instruction {
         override fun toString(): String {
             return "Commit $offset"
         }
-
-        override fun equals(other: Any?): Boolean {
-            return other is CommitInstruction && offset == other.offset
-        }
-
-        override fun hashCode(): Int {
-            return offset
-        }
     }
 
-    public class CommitVerifyInstruction(private val offset: Int) : Instruction() {
+    public data class CommitVerifyInstruction(private val offset: Int) : Instruction() {
         override fun execute(machine: Machine) {
             if (machine.index == machine.peek().index) {
                 // TODO better message, e.g. dump stack
@@ -157,14 +114,6 @@ public abstract class Instruction {
 
         override fun toString(): String {
             return "CommitVerify $offset"
-        }
-
-        override fun equals(other: Any?): Boolean {
-            return other is CommitVerifyInstruction && offset == other.offset
-        }
-
-        override fun hashCode(): Int {
-            return offset
         }
     }
 
@@ -218,7 +167,7 @@ public abstract class Instruction {
         }
     }
 
-    public class BackCommitInstruction(private val offset: Int) : Instruction() {
+    public data class BackCommitInstruction(private val offset: Int) : Instruction() {
         override fun execute(machine: Machine) {
             val stack = machine.peek()
             machine.index = stack.index
@@ -230,14 +179,6 @@ public abstract class Instruction {
         override fun toString(): String {
             return "BackCommit $offset"
         }
-
-        override fun equals(other: Any?): Boolean {
-            return other is BackCommitInstruction && offset == other.offset
-        }
-
-        override fun hashCode(): Int {
-            return offset
-        }
     }
 
     public companion object {
@@ -246,6 +187,7 @@ public abstract class Instruction {
         private val END: Instruction = EndInstruction()
         private val FAIL_TWICE: Instruction = FailTwiceInstruction()
         private val IGNORE_ERRORS: Instruction = IgnoreErrorsInstruction()
+
         @JvmStatic
         public fun addAll(list: MutableList<Instruction>, array: Array<Instruction>) {
             for (i in array) {
