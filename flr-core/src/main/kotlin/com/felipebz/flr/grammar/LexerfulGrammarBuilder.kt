@@ -131,7 +131,7 @@ public class LexerfulGrammarBuilder private constructor() : GrammarBuilder() {
     public fun isOneOfThem(t1: TokenType, vararg rest: TokenType): Any {
         val types = arrayOfNulls<TokenType>(1 + rest.size)
         types[0] = t1
-        System.arraycopy(rest, 0, types, 1, rest.size)
+        rest.copyInto(types, 1)
         return TokenTypesExpression(*types.requireNoNulls())
     }
 

@@ -272,12 +272,12 @@ class CodeBufferTest {
     internal inner class ReplaceNumbersFilter : CodeReaderFilter<Any>() {
         private val pattern = Pattern.compile("\\d")
         private val REPLACEMENT = "-"
-        override fun read(cbuf: CharArray, off: Int, len: Int): Int {
-            val tempBuffer = CharArray(cbuf.size)
-            val charCount = reader.read(tempBuffer, off, len)
+        override fun read(filteredBuffer: CharArray, offset: Int, length: Int): Int {
+            val tempBuffer = CharArray(filteredBuffer.size)
+            val charCount = reader.read(tempBuffer, offset, length)
             if (charCount != -1) {
                 val filteredString = pattern.matcher(String(tempBuffer)).replaceAll(REPLACEMENT)
-                System.arraycopy(filteredString.toCharArray(), 0, cbuf, 0, tempBuffer.size)
+                filteredString.toCharArray().copyInto(filteredBuffer)
             }
             return charCount
         }
@@ -286,12 +286,12 @@ class CodeBufferTest {
     internal inner class ReplaceCharFilter : CodeReaderFilter<Any>() {
         private val pattern = Pattern.compile("[a-zA-Z]")
         private val REPLACEMENT = "*"
-        override fun read(cbuf: CharArray, off: Int, len: Int): Int {
-            val tempBuffer = CharArray(cbuf.size)
-            val charCount = reader.read(tempBuffer, off, len)
+        override fun read(filteredBuffer: CharArray, offset: Int, length: Int): Int {
+            val tempBuffer = CharArray(filteredBuffer.size)
+            val charCount = reader.read(tempBuffer, offset, length)
             if (charCount != -1) {
                 val filteredString = pattern.matcher(String(tempBuffer)).replaceAll(REPLACEMENT)
-                System.arraycopy(filteredString.toCharArray(), 0, cbuf, 0, tempBuffer.size)
+                filteredString.toCharArray().copyInto(filteredBuffer)
             }
             return charCount
         }

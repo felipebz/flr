@@ -39,7 +39,7 @@ public class LocatedText(private val file: File?, private val chars: CharArray) 
 
     public fun toChars(): CharArray {
         val chars = CharArray(length)
-        System.arraycopy(this.chars, 0, chars, 0, chars.size)
+        this.chars.copyInto(chars)
         return chars
     }
 

@@ -64,7 +64,7 @@ public class TokenExpression(private val tokenType: TokenType, private val subEx
             result[0] = Instruction.call(2, expression)
             result[1] = Instruction.jump(instr.size + 3)
             result[2] = Instruction.ignoreErrors()
-            System.arraycopy(instr, 0, result, 3, instr.size)
+            instr.copyInto(result, 3)
             result[3 + instr.size] = Instruction.ret()
             return result.requireNoNulls()
         }

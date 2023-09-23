@@ -45,7 +45,7 @@ public class NextNotExpression(private val subExpression: ParsingExpression) : P
             sub.size + 2
         )
         result[0] = Instruction.predicateChoice(sub.size + 2)
-        System.arraycopy(sub, 0, result, 1, sub.size)
+        sub.copyInto(result, 1)
         result[sub.size + 1] = Instruction.failTwice()
         return result.requireNoNulls()
     }

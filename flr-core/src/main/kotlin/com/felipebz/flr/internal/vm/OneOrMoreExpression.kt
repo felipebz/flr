@@ -48,7 +48,7 @@ public class OneOrMoreExpression(private val subExpression: ParsingExpression) :
             sub.size + 5
         )
         result[0] = Instruction.choice(sub.size + 4)
-        System.arraycopy(sub, 0, result, 1, sub.size)
+        sub.copyInto(result, 1)
         result[sub.size + 1] = Instruction.commitVerify(1)
         result[sub.size + 2] = Instruction.choice(3)
         result[sub.size + 3] = Instruction.jump(-2 - sub.size)

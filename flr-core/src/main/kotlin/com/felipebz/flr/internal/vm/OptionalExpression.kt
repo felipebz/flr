@@ -37,7 +37,7 @@ public class OptionalExpression(private val subExpression: ParsingExpression) : 
             instr.size + 2
         )
         result[0] = Instruction.choice(result.size)
-        System.arraycopy(instr, 0, result, 1, instr.size)
+        instr.copyInto(result, 1)
         result[instr.size + 1] = Instruction.commit(1)
         return result.requireNoNulls()
     }

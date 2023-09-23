@@ -37,7 +37,7 @@ public class ZeroOrMoreExpression(private val subExpression: ParsingExpression) 
             sub.size + 2
         )
         result[0] = Instruction.choice(sub.size + 2)
-        System.arraycopy(sub, 0, result, 1, sub.size)
+        sub.copyInto(result, 1)
         result[sub.size + 1] = Instruction.commitVerify(-1 - sub.size)
         return result.requireNoNulls()
     }

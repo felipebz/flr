@@ -47,7 +47,7 @@ public class NextExpression(private val subExpression: ParsingExpression) : Pars
             sub.size + 3
         )
         result[0] = Instruction.choice(result.size - 1)
-        System.arraycopy(sub, 0, result, 1, sub.size)
+        sub.copyInto(result, 1)
         result[sub.size + 1] = Instruction.backCommit(2)
         result[sub.size + 2] = Instruction.backtrack()
         return result.requireNoNulls()
