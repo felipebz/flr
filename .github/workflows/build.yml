@@ -3,40 +3,45 @@ name: Build
 on:
   push:
     branches:
-    - "*"
+      - "*"
   pull_request:
     branches:
-    - main
+      - main
 
 jobs:
   build:
     name: Build and release
     runs-on: ubuntu-latest
     steps:
-    - name: checkout
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+      - name: checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Setup Gradle
-      uses: gradle/actions/setup-gradle@v3
-    
-    - name: Build with Gradle
-      run: ./gradlew build
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
 
-    - name: Run SonarQube Scanner
-      run: ./gradlew sonar
-      if: github.ref == 'refs/heads/main'
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
 
-    - name: Release artifacts
-      run: ./gradlew publish jreleaserFullRelease
-      if: github.ref == 'refs/heads/main'
-      env:
-        OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-        OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
-        JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        ORG_GRADLE_PROJECT_signingKey: ${{ secrets.GPG_SECRET_KEY }}
-        ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.GPG_KEY_PASSWORD }}
+      - name: Build with Gradle
+        run: ./gradlew build
+
+      - name: Run SonarQube Scanner
+        run: ./gradlew sonar
+        if: github.ref == 'refs/heads/main'
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+      - name: Release artifacts
+        run: ./gradlew publish jreleaserFullRelease
+        if: github.ref == 'refs/heads/main'
+        env:
+          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
+          JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.GPG_SECRET_KEY }}
+          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.GPG_KEY_PASSWORD }}
