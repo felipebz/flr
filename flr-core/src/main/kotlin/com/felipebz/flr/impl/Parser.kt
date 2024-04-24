@@ -27,7 +27,9 @@ import com.felipebz.flr.internal.vm.CompilableGrammarRule
 import com.felipebz.flr.internal.vm.CompiledGrammar
 import com.felipebz.flr.internal.vm.Machine
 import com.felipebz.flr.internal.vm.MutableGrammarCompiler
+import com.felipebz.flr.parser.NonTerminalNodeBuilder
 import com.felipebz.flr.parser.ParserAdapter
+import com.felipebz.flr.parser.TerminalNodeBuilder
 import java.io.File
 
 /**
@@ -41,6 +43,10 @@ public open class Parser<G : Grammar> {
     private val lexer: Lexer?
     private val _grammar: G
     private lateinit var compiledGrammar: CompiledGrammar
+    public var nonTerminalNodeBuilder: NonTerminalNodeBuilder =
+        NonTerminalNodeBuilder { type: AstNodeType, name: String, token: Token? -> AstNode(type, name, token) }
+    public var terminalNodeBuilder: TerminalNodeBuilder =
+        TerminalNodeBuilder { token: Token -> AstNode(token) }
 
     /**
      * @since 1.16
@@ -54,6 +60,8 @@ public open class Parser<G : Grammar> {
         lexer = builder.lexer
         _grammar = builder.grammar
         rootRule = _grammar.rootRule as RuleDefinition
+        nonTerminalNodeBuilder = builder.nonTerminalNodeBuilder ?: nonTerminalNodeBuilder
+        terminalNodeBuilder = builder.terminalNodeBuilder ?: terminalNodeBuilder
     }
 
     public open fun parse(file: File): AstNode {
@@ -80,7 +88,7 @@ public open class Parser<G : Grammar> {
         if (::compiledGrammar.isInitialized.not()) {
             compiledGrammar = MutableGrammarCompiler.compile(rootRule as CompilableGrammarRule)
         }
-        return LexerfulAstCreator.create(Machine.parse(tokens, compiledGrammar), tokens)
+        return LexerfulAstCreator.create(Machine.parse(tokens, compiledGrammar), tokens, nonTerminalNodeBuilder, terminalNodeBuilder)
     }
 
     public val grammar: G
@@ -94,6 +102,8 @@ public open class Parser<G : Grammar> {
         private var baseParser: Parser<G>? = null
         public var lexer: Lexer? = null
         public val grammar: G
+        public var nonTerminalNodeBuilder: NonTerminalNodeBuilder? = null
+        public var terminalNodeBuilder: TerminalNodeBuilder? = null
 
         public constructor(grammar: G) {
             this.grammar = grammar
@@ -113,6 +123,16 @@ public open class Parser<G : Grammar> {
 
         public fun withLexer(lexer: Lexer?): Builder<G> {
             this.lexer = lexer
+            return this
+        }
+
+        public fun withNonTerminalNodeBuilder(nonTerminalNodeBuilder: NonTerminalNodeBuilder): Builder<G> {
+            this.nonTerminalNodeBuilder = nonTerminalNodeBuilder
+            return this
+        }
+
+        public fun withTerminalNodeBuilder(terminalNodeBuilder: TerminalNodeBuilder): Builder<G> {
+            this.terminalNodeBuilder = terminalNodeBuilder
             return this
         }
     }

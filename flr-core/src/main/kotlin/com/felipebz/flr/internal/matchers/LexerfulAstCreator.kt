@@ -23,8 +23,14 @@ package com.felipebz.flr.internal.matchers
 import com.felipebz.flr.api.*
 import com.felipebz.flr.impl.matcher.RuleDefinition
 import com.felipebz.flr.internal.vm.lexerful.TokenTypeExpression
+import com.felipebz.flr.parser.NonTerminalNodeBuilder
+import com.felipebz.flr.parser.TerminalNodeBuilder
 
-public class LexerfulAstCreator private constructor(private val tokens: List<Token>) {
+public class LexerfulAstCreator private constructor(
+    private val tokens: List<Token>,
+    private val nonTerminalNodeBuilder: NonTerminalNodeBuilder,
+    private val terminalNodeBuilder: TerminalNodeBuilder
+) {
     private fun visit(node: ParseNode): AstNode? {
         return if (node.matcher is RuleDefinition) {
             visitNonTerminal(node)
@@ -36,7 +42,7 @@ public class LexerfulAstCreator private constructor(private val tokens: List<Tok
     private fun visitNonTerminal(node: ParseNode): AstNode {
         val ruleMatcher = node.matcher as RuleDefinition
         val token = if (node.startIndex < tokens.size) tokens[node.startIndex] else null
-        val astNode = AstNode(ruleMatcher, ruleMatcher.getName(), token)
+        val astNode = nonTerminalNodeBuilder.build(ruleMatcher, ruleMatcher.getName(), token)
         for (child in node.children) {
             val internalAstNode = visit(child)
             when {
@@ -62,7 +68,7 @@ public class LexerfulAstCreator private constructor(private val tokens: List<Tok
         if (node.matcher is TokenTypeExpression && token.type.hasToBeSkippedFromAst(null)) {
             return null
         }
-        val astNode = AstNode(token)
+        val astNode = terminalNodeBuilder.build(token)
         astNode.fromIndex = node.startIndex
         astNode.toIndex = node.endIndex
         return astNode
@@ -70,8 +76,13 @@ public class LexerfulAstCreator private constructor(private val tokens: List<Tok
 
     public companion object {
         @JvmStatic
-        public fun create(node: ParseNode, tokens: List<Token>): AstNode {
-            val astNode = checkNotNull(LexerfulAstCreator(tokens).visit(node))
+        public fun create(
+            node: ParseNode,
+            tokens: List<Token>,
+            nonTerminalNodeBuilder: NonTerminalNodeBuilder,
+            terminalNodeBuilder: TerminalNodeBuilder
+        ): AstNode {
+            val astNode = checkNotNull(LexerfulAstCreator(tokens, nonTerminalNodeBuilder, terminalNodeBuilder).visit(node))
             // Unwrap AstNodeType for root node:
             astNode.hasToBeSkippedFromAst()
             return astNode
