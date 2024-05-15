@@ -20,10 +20,10 @@
  */
 package com.felipebz.flr.internal.matchers
 
-import org.fest.assertions.Assertions.assertThat
-import org.junit.jupiter.api.Test
 import com.felipebz.flr.internal.matchers.TextUtils.escape
 import com.felipebz.flr.internal.matchers.TextUtils.trimTrailingLineSeparatorFrom
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
 import java.lang.reflect.Constructor
 
 class TextUtilsTest {

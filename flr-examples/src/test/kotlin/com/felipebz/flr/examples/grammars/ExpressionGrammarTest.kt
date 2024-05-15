@@ -20,10 +20,10 @@
  */
 package com.felipebz.flr.examples.grammars
 
-import org.junit.jupiter.api.Test
 import com.felipebz.flr.parser.ParserAdapter
 import com.felipebz.flr.tests.Assertions.assertThat
-import org.fest.assertions.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
 import java.nio.charset.StandardCharsets
 
 class ExpressionGrammarTest {

@@ -20,10 +20,10 @@
  */
 package com.felipebz.flr.toolkit
 
-import org.fest.assertions.Assertions.assertThat
+import com.felipebz.flr.toolkit.Validators.integerRangeValidator
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import com.felipebz.flr.toolkit.Validators.integerRangeValidator
 
 class ValidatorsTest {
     @Test

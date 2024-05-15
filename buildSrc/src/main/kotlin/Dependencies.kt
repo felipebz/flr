@@ -1,6 +1,6 @@
 object Versions {
     const val asm = "9.5"
-    const val fest = "1.4"
+    const val assertj = "3.25.3"
     const val hamcrest = "2.2"
     const val jaxen = "2.0.0"
     const val junit = "5.9.3"
@@ -10,7 +10,7 @@ object Versions {
 
 object Libs {
     const val asm = "org.ow2.asm:asm:${Versions.asm}"
-    const val fest_assert = "org.easytesting:fest-assert:${Versions.fest}"
+    const val assertj = "org.assertj:assertj-core:${Versions.assertj}"
     const val hamcrest = "org.hamcrest:hamcrest-library:${Versions.hamcrest}"
     const val jaxen = "jaxen:jaxen:${Versions.jaxen}"
     const val junit_bom = "org.junit:junit-bom:${Versions.junit}"

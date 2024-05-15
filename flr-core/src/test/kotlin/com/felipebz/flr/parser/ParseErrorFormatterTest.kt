@@ -20,11 +20,11 @@
  */
 package com.felipebz.flr.parser
 
-import org.fest.assertions.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
 import com.felipebz.flr.internal.matchers.ImmutableInputBuffer
 import com.felipebz.flr.internal.matchers.InputBuffer
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class ParseErrorFormatterTest {
     private lateinit var formatter: ParseErrorFormatter

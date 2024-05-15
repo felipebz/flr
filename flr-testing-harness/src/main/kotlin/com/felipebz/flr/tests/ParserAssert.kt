@@ -29,7 +29,7 @@ import com.felipebz.flr.internal.vm.FirstOfExpression
 import com.felipebz.flr.internal.vm.lexerful.TokenTypeExpression
 import com.felipebz.flr.tests.Assertions.assertThat
 import com.felipebz.flr.tests.RuleAssert.WithEndOfInput
-import org.fest.assertions.GenericAssert
+import org.assertj.core.api.AbstractAssert
 
 /**
  * To create a new instance of this class invoke `[assertThat]`.
@@ -39,8 +39,8 @@ import org.fest.assertions.GenericAssert
  *
  * @since 1.16
  */
-public class ParserAssert(actual: Parser<*>) : GenericAssert<ParserAssert, Parser<*>>(
-    ParserAssert::class.java, actual
+public class ParserAssert(actual: Parser<*>) : AbstractAssert<ParserAssert, Parser<*>>(
+    actual, ParserAssert::class.java
 ) {
     private fun createParserWithEofMatcher(): Parser<*> {
         val rule = actual.rootRule

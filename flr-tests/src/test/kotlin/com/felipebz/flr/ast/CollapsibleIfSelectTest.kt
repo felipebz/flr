@@ -23,7 +23,7 @@ package com.felipebz.flr.ast
 import com.felipebz.flr.api.AstNode
 import com.felipebz.flr.test.minic.MiniCGrammar
 import com.felipebz.flr.test.minic.MiniCParser
-import org.fest.assertions.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.io.File
 

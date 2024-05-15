@@ -26,7 +26,7 @@ import com.felipebz.flr.impl.ast.AstXmlPrinter.Companion.print
 import com.felipebz.flr.impl.matcher.RuleDefinition
 import com.felipebz.flr.test.lexer.MockHelper.mockToken
 import com.felipebz.flr.test.lexer.MockHelper.mockTokenBuilder
-import org.fest.assertions.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 class AstXmlPrinterTest {

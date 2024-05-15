@@ -21,13 +21,13 @@
 package com.felipebz.flr.internal.vm
 
 import com.felipebz.flr.api.Trivia.TriviaKind
-import org.fest.assertions.Assertions.assertThat
-import org.junit.jupiter.api.Test
-import org.mockito.kotlin.mock
 import com.felipebz.flr.internal.vm.Instruction.Companion.call
 import com.felipebz.flr.internal.vm.Instruction.Companion.ignoreErrors
 import com.felipebz.flr.internal.vm.Instruction.Companion.jump
 import com.felipebz.flr.internal.vm.Instruction.Companion.ret
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
+import org.mockito.kotlin.mock
 
 class TriviaExpressionTest {
     @Test

@@ -20,7 +20,7 @@
  */
 package com.felipebz.flr.api
 
-import org.fest.assertions.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever

@@ -22,10 +22,10 @@ package com.felipebz.flr.examples.grammars.typed
 
 import com.felipebz.flr.api.RecognitionException
 import com.felipebz.flr.api.typed.ActionParser
-import org.fest.assertions.Assertions.assertThat
+import com.felipebz.flr.examples.grammars.typed.api.*
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import com.felipebz.flr.examples.grammars.typed.api.*
 import java.nio.charset.StandardCharsets
 
 class JsonGrammarTest {

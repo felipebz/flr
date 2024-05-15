@@ -20,11 +20,11 @@
  */
 package com.felipebz.flr.internal.vm
 
-import org.fest.assertions.Assertions.assertThat
+import com.felipebz.flr.grammar.GrammarRuleKey
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.mock
-import com.felipebz.flr.grammar.GrammarRuleKey
 
 class RuleRefExpressionTest {
     private val ruleKey = mock<GrammarRuleKey>()

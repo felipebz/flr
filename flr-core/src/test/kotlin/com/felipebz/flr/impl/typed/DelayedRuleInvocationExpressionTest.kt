@@ -20,15 +20,15 @@
  */
 package com.felipebz.flr.impl.typed
 
-import org.fest.assertions.Assertions.assertThat
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
-import org.mockito.kotlin.*
 import com.felipebz.flr.grammar.GrammarRuleKey
 import com.felipebz.flr.grammar.LexerlessGrammarBuilder
 import com.felipebz.flr.internal.grammar.MutableParsingRule
 import com.felipebz.flr.internal.vm.CompilationHandler
 import com.felipebz.flr.internal.vm.ParsingExpression
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import org.mockito.kotlin.*
 
 class DelayedRuleInvocationExpressionTest {
     @Test

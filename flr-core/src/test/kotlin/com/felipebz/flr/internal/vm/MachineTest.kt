@@ -20,13 +20,13 @@
  */
 package com.felipebz.flr.internal.vm
 
-import org.fest.assertions.Assertions.assertThat
+import com.felipebz.flr.grammar.GrammarException
+import com.felipebz.flr.internal.matchers.Matcher
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
-import com.felipebz.flr.grammar.GrammarException
-import com.felipebz.flr.internal.matchers.Matcher
 
 class MachineTest {
     @Test

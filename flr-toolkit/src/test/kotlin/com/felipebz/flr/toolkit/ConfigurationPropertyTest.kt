@@ -20,7 +20,7 @@
  */
 package com.felipebz.flr.toolkit
 
-import org.fest.assertions.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 

@@ -24,7 +24,7 @@ import com.felipebz.flr.api.GenericTokenType
 import com.felipebz.flr.api.RecognitionException
 import com.felipebz.flr.test.minic.MiniCParser.parseFile
 import com.felipebz.flr.test.minic.MiniCParser.parseString
-import org.fest.assertions.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 

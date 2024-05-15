@@ -24,7 +24,7 @@ import com.felipebz.flr.api.AstNode
 import com.felipebz.flr.test.minic.MiniCGrammar
 import com.felipebz.flr.test.minic.MiniCParser.parseFile
 import com.felipebz.flr.xpath.api.AstNodeXPathQuery.Companion.create
-import org.fest.assertions.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 

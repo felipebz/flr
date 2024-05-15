@@ -22,12 +22,12 @@ package com.felipebz.flr.internal.vm
 
 import com.felipebz.flr.api.GenericTokenType
 import com.felipebz.flr.api.Trivia.TriviaKind
-import org.fest.assertions.Assertions.assertThat
+import com.felipebz.flr.grammar.GrammarException
+import com.felipebz.flr.internal.vm.Machine.Companion.execute
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Timeout
 import org.junit.jupiter.api.assertThrows
-import com.felipebz.flr.grammar.GrammarException
-import com.felipebz.flr.internal.vm.Machine.Companion.execute
 import java.util.concurrent.TimeUnit
 
 // TODO this test should also check state of machine after execution

@@ -21,7 +21,7 @@
 package com.felipebz.flr.impl.ast
 
 import com.felipebz.flr.api.AstNode
-import org.fest.assertions.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 

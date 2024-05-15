@@ -26,7 +26,7 @@ import com.felipebz.flr.api.TokenType
 import com.felipebz.flr.internal.vm.CompilationHandler
 import com.felipebz.flr.internal.vm.Machine.Companion.execute
 import com.felipebz.flr.internal.vm.SequenceExpression
-import org.fest.assertions.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever

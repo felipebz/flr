@@ -21,12 +21,12 @@
 package com.felipebz.flr.parser
 
 import com.felipebz.flr.api.Rule
-import org.fest.assertions.Assertions.assertThat
+import com.felipebz.flr.grammar.GrammarException
+import com.felipebz.flr.internal.grammar.MutableParsingRule
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.mock
-import com.felipebz.flr.grammar.GrammarException
-import com.felipebz.flr.internal.grammar.MutableParsingRule
 
 class LexerlessGrammarTest {
     @Test

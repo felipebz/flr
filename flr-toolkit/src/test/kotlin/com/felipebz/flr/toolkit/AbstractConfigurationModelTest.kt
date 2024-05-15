@@ -22,7 +22,7 @@ package com.felipebz.flr.toolkit
 
 import com.felipebz.flr.api.Grammar
 import com.felipebz.flr.impl.Parser
-import org.fest.assertions.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 

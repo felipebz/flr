@@ -24,12 +24,12 @@ import com.felipebz.flr.api.AstNode
 import com.felipebz.flr.api.AstNodeType
 import com.felipebz.flr.api.GenericTokenType
 import com.felipebz.flr.api.RecognitionException
-import org.fest.assertions.Assertions.assertThat
+import com.felipebz.flr.grammar.GrammarRuleKey
+import com.felipebz.flr.grammar.LexerlessGrammarBuilder
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.fail
-import com.felipebz.flr.grammar.GrammarRuleKey
-import com.felipebz.flr.grammar.LexerlessGrammarBuilder
 import java.io.File
 import java.nio.charset.StandardCharsets
 import java.nio.file.NoSuchFileException

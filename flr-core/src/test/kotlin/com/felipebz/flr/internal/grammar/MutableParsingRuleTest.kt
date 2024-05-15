@@ -21,15 +21,15 @@
 package com.felipebz.flr.internal.grammar
 
 import com.felipebz.flr.api.AstNode
-import org.fest.assertions.Assertions.assertThat
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 import com.felipebz.flr.grammar.GrammarException
 import com.felipebz.flr.grammar.GrammarRuleKey
 import com.felipebz.flr.internal.vm.ParsingExpression
 import com.felipebz.flr.internal.vm.SequenceExpression
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 
 class MutableParsingRuleTest {
     @Test

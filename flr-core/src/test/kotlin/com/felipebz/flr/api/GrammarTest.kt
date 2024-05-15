@@ -22,14 +22,14 @@ package com.felipebz.flr.api
 
 import com.felipebz.flr.api.Grammar.Companion.getAllRuleFields
 import com.felipebz.flr.api.Grammar.Companion.getRuleFields
+import com.felipebz.flr.grammar.GrammarException
 import com.felipebz.flr.impl.matcher.RuleDefinition
-import org.fest.assertions.Assertions.assertThat
+import com.felipebz.flr.internal.grammar.MutableParsingRule
+import com.felipebz.flr.parser.LexerlessGrammar
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.mock
-import com.felipebz.flr.grammar.GrammarException
-import com.felipebz.flr.internal.grammar.MutableParsingRule
-import com.felipebz.flr.parser.LexerlessGrammar
 import java.lang.reflect.Field
 
 class GrammarTest {

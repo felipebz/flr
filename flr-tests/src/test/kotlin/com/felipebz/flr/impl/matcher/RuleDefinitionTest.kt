@@ -23,7 +23,7 @@ package com.felipebz.flr.impl.matcher
 import com.felipebz.flr.api.AstNode
 import com.felipebz.flr.api.GenericTokenType
 import com.felipebz.flr.test.lexer.MockHelper.mockToken
-import org.fest.assertions.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows

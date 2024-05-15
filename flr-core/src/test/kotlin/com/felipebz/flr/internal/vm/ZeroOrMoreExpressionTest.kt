@@ -20,10 +20,10 @@
  */
 package com.felipebz.flr.internal.vm
 
-import org.fest.assertions.Assertions.assertThat
-import org.junit.jupiter.api.Test
 import com.felipebz.flr.internal.vm.Instruction.Companion.choice
 import com.felipebz.flr.internal.vm.Instruction.Companion.commitVerify
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
 
 class ZeroOrMoreExpressionTest {
     @Test

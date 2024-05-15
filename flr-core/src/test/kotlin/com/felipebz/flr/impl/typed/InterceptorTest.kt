@@ -21,7 +21,7 @@
 package com.felipebz.flr.impl.typed
 
 import com.felipebz.flr.impl.typed.Interceptor.create
-import org.fest.assertions.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test

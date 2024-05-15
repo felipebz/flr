@@ -23,7 +23,7 @@ package com.felipebz.flr.impl.xpath
 import com.felipebz.flr.api.AstNode
 import com.felipebz.flr.api.GenericTokenType
 import com.felipebz.flr.api.Token
-import org.fest.assertions.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows

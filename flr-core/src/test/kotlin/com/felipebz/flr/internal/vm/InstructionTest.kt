@@ -20,10 +20,6 @@
  */
 package com.felipebz.flr.internal.vm
 
-import org.fest.assertions.Assertions.assertThat
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
-import org.mockito.kotlin.*
 import com.felipebz.flr.grammar.GrammarException
 import com.felipebz.flr.internal.matchers.Matcher
 import com.felipebz.flr.internal.vm.Instruction.*
@@ -34,6 +30,10 @@ import com.felipebz.flr.internal.vm.Instruction.Companion.commit
 import com.felipebz.flr.internal.vm.Instruction.Companion.commitVerify
 import com.felipebz.flr.internal.vm.Instruction.Companion.jump
 import com.felipebz.flr.internal.vm.Instruction.Companion.predicateChoice
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import org.mockito.kotlin.*
 
 class InstructionTest {
     private val machine = mock<Machine>()

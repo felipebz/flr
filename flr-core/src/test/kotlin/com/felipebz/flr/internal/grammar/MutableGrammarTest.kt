@@ -20,11 +20,11 @@
  */
 package com.felipebz.flr.internal.grammar
 
-import org.fest.assertions.Assertions.assertThat
-import org.junit.jupiter.api.Test
-import org.mockito.kotlin.mock
 import com.felipebz.flr.grammar.GrammarRuleKey
 import com.felipebz.flr.internal.vm.CompilableGrammarRule
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
+import org.mockito.kotlin.mock
 
 class MutableGrammarTest {
     @Test

@@ -27,7 +27,7 @@ import com.felipebz.flr.internal.grammar.MutableParsingRule
 import com.felipebz.flr.internal.vm.EndOfInputExpression
 import com.felipebz.flr.parser.ParseErrorFormatter
 import com.felipebz.flr.parser.ParseRunner
-import org.fest.assertions.GenericAssert
+import org.assertj.core.api.AbstractAssert
 
 /**
  * To create a new instance of this class invoke `[Assertions.assertThat]`.
@@ -37,8 +37,8 @@ import org.fest.assertions.GenericAssert
  *
  * @since 1.16
  */
-public class RuleAssert(actual: Rule?) : GenericAssert<RuleAssert, Rule>(
-    RuleAssert::class.java, actual
+public class RuleAssert(actual: Rule?) : AbstractAssert<RuleAssert, Rule>(
+    actual, RuleAssert::class.java
 ) {
     internal class WithEndOfInput(private val ruleKey: GrammarRuleKey?) : GrammarRuleKey {
         override fun toString(): String {

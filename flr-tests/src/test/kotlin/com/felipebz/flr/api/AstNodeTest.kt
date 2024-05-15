@@ -23,7 +23,7 @@ package com.felipebz.flr.api
 import com.felipebz.flr.test.lexer.MockHelper.mockToken
 import com.felipebz.flr.test.minic.MiniCGrammar
 import com.felipebz.flr.test.minic.MiniCParser.parseString
-import org.fest.assertions.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 class AstNodeTest {

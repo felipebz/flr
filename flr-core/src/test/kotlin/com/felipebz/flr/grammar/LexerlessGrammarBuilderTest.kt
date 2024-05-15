@@ -25,7 +25,7 @@ import com.felipebz.flr.api.Trivia.TriviaKind
 import com.felipebz.flr.internal.grammar.MutableGrammar
 import com.felipebz.flr.internal.grammar.MutableParsingRule
 import com.felipebz.flr.internal.vm.*
-import org.fest.assertions.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.mock

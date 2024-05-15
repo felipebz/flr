@@ -23,7 +23,7 @@ package com.felipebz.flr.internal.vm.lexerful
 import com.felipebz.flr.api.Token
 import com.felipebz.flr.internal.vm.CompilationHandler
 import com.felipebz.flr.internal.vm.Machine
-import org.fest.assertions.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.inOrder
 import org.mockito.kotlin.mock

@@ -25,7 +25,7 @@ import com.felipebz.flr.impl.matcher.RuleDefinition
 import com.felipebz.flr.internal.grammar.MutableGrammar
 import com.felipebz.flr.internal.vm.*
 import com.felipebz.flr.internal.vm.lexerful.*
-import org.fest.assertions.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.mock

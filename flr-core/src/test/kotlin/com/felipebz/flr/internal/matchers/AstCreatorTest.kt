@@ -24,15 +24,15 @@ import com.felipebz.flr.api.AstNodeType
 import com.felipebz.flr.api.GenericTokenType
 import com.felipebz.flr.api.TokenType
 import com.felipebz.flr.impl.ast.AstXmlPrinter.Companion.print
-import org.fest.assertions.Assertions.assertThat
-import org.junit.jupiter.api.Test
-import org.mockito.kotlin.any
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 import com.felipebz.flr.internal.grammar.MutableParsingRule
 import com.felipebz.flr.internal.matchers.AstCreator.Companion.create
 import com.felipebz.flr.internal.vm.TokenExpression
 import com.felipebz.flr.parser.ParsingResult
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
+import org.mockito.kotlin.any
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 
 class AstCreatorTest {
     @Test

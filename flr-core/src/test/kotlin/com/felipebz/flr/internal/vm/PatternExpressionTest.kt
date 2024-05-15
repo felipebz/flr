@@ -20,12 +20,12 @@
  */
 package com.felipebz.flr.internal.vm
 
-import org.fest.assertions.Assertions.assertThat
+import com.felipebz.flr.grammar.GrammarException
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.fail
 import org.mockito.kotlin.*
-import com.felipebz.flr.grammar.GrammarException
 
 class PatternExpressionTest {
     private val expression = PatternExpression("foo|bar")

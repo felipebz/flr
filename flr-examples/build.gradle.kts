@@ -1,6 +1,6 @@
 dependencies {
     implementation(project(":flr-core"))
-    testImplementation(Libs.fest_assert)
+    testImplementation(Libs.assertj)
     testImplementation(Libs.mockito)
     testImplementation(project(":flr-testing-harness"))
 }

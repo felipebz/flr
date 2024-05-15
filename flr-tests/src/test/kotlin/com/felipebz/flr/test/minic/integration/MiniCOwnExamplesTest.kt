@@ -21,7 +21,7 @@
 package com.felipebz.flr.test.minic.integration
 
 import com.felipebz.flr.test.minic.MiniCParser
-import org.fest.assertions.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.io.File
 
