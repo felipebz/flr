@@ -21,8 +21,7 @@
 package com.felipebz.flr.channel
 
 import com.felipebz.flr.channel.ChannelDispatcher.Companion.builder
-import org.hamcrest.MatcherAssert
-import org.hamcrest.Matchers
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -41,9 +40,7 @@ class ChannelDispatcherTest {
     fun shouldAddChannels() {
         val dispatcher = builder<StringBuilder>().addChannels(SpaceDeletionChannel(), FakeChannel()).build()
         assertEquals(dispatcher.channels.size, 2)
-        MatcherAssert.assertThat(
-            dispatcher.channels[0], Matchers.instanceOf(SpaceDeletionChannel::class.java)
-        )
+        assertThat(dispatcher.channels[0]).isInstanceOf(SpaceDeletionChannel::class.java)
         assertTrue(dispatcher.channels[1] is FakeChannel)
     }
 

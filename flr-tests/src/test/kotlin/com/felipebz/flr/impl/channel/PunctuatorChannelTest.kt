@@ -24,9 +24,7 @@ import com.felipebz.flr.api.AstNode
 import com.felipebz.flr.api.TokenType
 import com.felipebz.flr.channel.CodeReader
 import com.felipebz.flr.impl.LexerOutput
-import com.felipebz.flr.test.channel.ChannelMatchers.consume
-import com.felipebz.flr.test.lexer.LexerMatchers.hasToken
-import org.hamcrest.MatcherAssert.assertThat
+import com.felipebz.flr.tests.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Test
 
@@ -35,16 +33,16 @@ class PunctuatorChannelTest {
     private val output = LexerOutput()
     @Test
     fun testConsumeSpecialCharacters() {
-        assertThat(channel, consume("**=", output))
-        assertThat(output.tokens, hasToken("*", MyPunctuatorAndOperator.STAR))
-        assertThat(channel, consume(",=", output))
-        assertThat(output.tokens, hasToken(",", MyPunctuatorAndOperator.COLON))
-        assertThat(channel, consume("=*", output))
-        assertThat(output.tokens, hasToken("=", MyPunctuatorAndOperator.EQUAL))
-        assertThat(channel, consume("==,", output))
-        assertThat(output.tokens, hasToken("==", MyPunctuatorAndOperator.EQUAL_OP))
-        assertThat(channel, consume("*=,", output))
-        assertThat(output.tokens, hasToken("*=", MyPunctuatorAndOperator.MUL_ASSIGN))
+        assertThat(channel).consume("**=", output)
+        assertThat(output.tokens).hasToken("*", MyPunctuatorAndOperator.STAR)
+        assertThat(channel).consume(",=", output)
+        assertThat(output.tokens).hasToken(",", MyPunctuatorAndOperator.COLON)
+        assertThat(channel).consume("=*", output)
+        assertThat(output.tokens).hasToken("=", MyPunctuatorAndOperator.EQUAL)
+        assertThat(channel).consume("==,", output)
+        assertThat(output.tokens).hasToken("==", MyPunctuatorAndOperator.EQUAL_OP)
+        assertThat(channel).consume("*=,", output)
+        assertThat(output.tokens).hasToken("*=", MyPunctuatorAndOperator.MUL_ASSIGN)
         assertFalse(channel.consume(CodeReader("!"), output))
     }
 

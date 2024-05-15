@@ -20,39 +20,35 @@
  */
 package com.felipebz.flr.test.channel
 
-import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
 import com.felipebz.flr.channel.Channel
 import com.felipebz.flr.channel.CodeReader
+import com.felipebz.flr.tests.Assertions.assertThat
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 
 class ChannelMatchersTest {
     @Test
     fun testConsumeMatcher() {
-        val numberChannel: Channel<StringBuilder> = object :
-            Channel<StringBuilder> {
-            override fun consume(code: CodeReader, output: StringBuilder): Boolean {
+        val numberChannel: Channel<StringBuilder> = Channel { code, output ->
                 if (Character.isDigit(code.peek())) {
                     output.append(code.pop().toChar())
-                    return true
+                    return@Channel true
                 }
-                return false
+                false
             }
-        }
         var output = StringBuilder()
-        assertThat(numberChannel, ChannelMatchers.consume("3", output))
+        assertThat(numberChannel).consume("3", output)
         assertEquals(output.toString(), "3")
-        assertThat(numberChannel, ChannelMatchers.consume(CodeReader("333333"), output))
+        assertThat(numberChannel).consume(CodeReader("333333"), output)
         output = StringBuilder()
-        assertThat(numberChannel, Matchers.not(ChannelMatchers.consume("n", output)))
+        assertThat(numberChannel).doesNotConsume("n", output)
         assertEquals(output.toString(), "")
-        assertThat(numberChannel, Matchers.not(ChannelMatchers.consume(CodeReader("n"), output)))
+        assertThat(numberChannel).doesNotConsume(CodeReader("n"), output)
     }
 
     @Test
     fun testHasNextChar() {
-        assertThat(CodeReader("123"), ChannelMatchers.hasNextChar('1'))
-        assertThat(CodeReader("123"), Matchers.not(ChannelMatchers.hasNextChar('n')))
+        assertThat(CodeReader("123")).hasNextChar('1')
+        assertThat(CodeReader("123")).doesNotHaveNextChar('n')
     }
 }

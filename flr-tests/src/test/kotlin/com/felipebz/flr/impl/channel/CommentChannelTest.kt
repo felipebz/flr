@@ -22,24 +22,20 @@ package com.felipebz.flr.impl.channel
 
 import com.felipebz.flr.api.GenericTokenType
 import com.felipebz.flr.impl.LexerOutput
-import com.felipebz.flr.test.channel.ChannelMatchers.consume
-import com.felipebz.flr.test.lexer.LexerMatchers.hasComment
-import com.felipebz.flr.test.lexer.LexerMatchers.hasOriginalComment
 import com.felipebz.flr.test.lexer.MockHelper.mockToken
-import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers
+import com.felipebz.flr.tests.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 class CommentChannelTest {
-    private var channel: CommentRegexpChannel? = null
-    private val output = LexerOutput()
     @Test
     fun testCommentRegexp() {
-        channel = CommentRegexpChannel("//.*")
-        assertThat(channel, Matchers.not(consume("This is not a comment", output)))
-        assertThat(channel, consume("//My Comment\n second line", output))
+        val channel = CommentRegexpChannel("//.*")
+        val output = LexerOutput()
+
+        assertThat(channel).doesNotConsume("This is not a comment", output)
+        assertThat(channel).consume("//My Comment\n second line", output)
         output.addToken(mockToken(GenericTokenType.EOF, "EOF"))
-        assertThat(output.tokens, hasComment("//My Comment"))
-        assertThat(output.tokens, hasOriginalComment("//My Comment"))
+        assertThat(output.tokens).hasComment("//My Comment")
+        assertThat(output.tokens).hasOriginalComment("//My Comment")
     }
 }
