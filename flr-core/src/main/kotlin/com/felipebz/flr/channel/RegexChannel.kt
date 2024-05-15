@@ -27,12 +27,11 @@ import java.util.regex.Pattern
  * The RegexChannel can be used to be called each time the next characters in the character stream match a regular expression
  */
 public abstract class RegexChannel<O>(regex: String) : Channel<O> {
-    private val tmpBuilder = StringBuilder()
     private val matcher: Matcher = Pattern.compile(regex).matcher("")
     override fun consume(code: CodeReader, output: O): Boolean {
+        val tmpBuilder = StringBuilder()
         if (code.popTo(matcher, tmpBuilder) > 0) {
             consume(tmpBuilder, output)
-            tmpBuilder.delete(0, tmpBuilder.length)
             return true
         }
         return false

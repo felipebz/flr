@@ -51,7 +51,6 @@ public class CommentRegexpChannel(private val regexp: String) : Channel<LexerOut
                     .setColumn(code.previousCursor.column)
                     .build()
                 output.addTrivia(Trivia.createComment(token))
-                tmpBuilder.delete(0, tmpBuilder.length)
                 return true
             }
             false

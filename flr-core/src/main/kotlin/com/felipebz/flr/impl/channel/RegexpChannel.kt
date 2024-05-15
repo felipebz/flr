@@ -51,7 +51,6 @@ public class RegexpChannel(private val type: TokenType, private val regexp: Stri
                     .setColumn(code.previousCursor.column)
                     .build()
                 output.addToken(token)
-                tmpBuilder.delete(0, tmpBuilder.length)
                 return true
             }
             false
