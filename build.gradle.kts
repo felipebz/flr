@@ -44,7 +44,6 @@ subprojects {
     dependencies {
         implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
         testImplementation(platform(Libs.junit_bom))
-        testImplementation(Libs.junit_jupiter)
     }
 
     kotlin {
@@ -57,11 +56,21 @@ subprojects {
         }
     }
 
-    tasks.test {
-        useJUnitPlatform()
-        testLogging {
-            events("passed", "skipped", "failed")
+    testing {
+        suites {
+            val test by getting(JvmTestSuite::class) {
+                useJUnitJupiter()
+
+                dependencies {
+                    implementation(Libs.assertj)
+                    implementation(Libs.mockito)
+                    implementation(Libs.mockito_kotlin)
+                }
+            }
         }
+    }
+
+    tasks.test {
         finalizedBy(tasks.jacocoTestReport)
     }
 
