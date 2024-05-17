@@ -8,7 +8,7 @@ plugins {
     `maven-publish`
     signing
     jacoco
-    kotlin("jvm") version "1.9.22"
+    kotlin("jvm") version "1.9.24"
     id("org.jetbrains.dokka") version ("1.9.20")
     id("com.github.hierynomus.license") version "0.16.1"
     id("org.sonarqube") version "5.0.0.4638"
