@@ -1,6 +1,6 @@
 import com.hierynomus.gradle.license.tasks.LicenseCheck
 import com.hierynomus.gradle.license.tasks.LicenseFormat
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.util.*
 
 plugins {
@@ -8,7 +8,7 @@ plugins {
     `maven-publish`
     signing
     jacoco
-    kotlin("jvm") version "1.9.24"
+    kotlin("jvm") version "2.0.0"
     id("org.jetbrains.dokka") version ("1.9.20")
     id("com.github.hierynomus.license") version "0.16.1"
     id("org.sonarqube") version "5.0.0.4638"
@@ -48,11 +48,9 @@ subprojects {
 
     kotlin {
         explicitApi()
-    }
-
-    tasks.withType<KotlinCompile>().configureEach {
-        kotlinOptions {
-            this.jvmTarget = "11"
+        jvmToolchain(11)
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_11)
         }
     }
 
