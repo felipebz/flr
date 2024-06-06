@@ -55,6 +55,7 @@ public class GrammarBuilderInterceptor<T>(private val b: LexerlessGrammarBuilder
         return nonterminal(DummyGrammarRuleKey(buildingMethod))
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun <U> nonterminal(ruleKey: GrammarRuleKey): NonterminalBuilder<U> {
         this.ruleKey = ruleKey
         mappedRuleKeys.add(ruleKey)

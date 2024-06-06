@@ -50,6 +50,7 @@ public class AstNodeXPathQuery<T> private constructor(xpath: String) {
      * The AstNode on which to evaluate the query against to.
      * @return The first result or null if there was no result.
      */
+    @Suppress("UNCHECKED_CAST")
     public fun selectSingleNode(astNode: AstNode): T {
         return try {
             astNodeNavigator.reset()
@@ -76,6 +77,7 @@ public class AstNodeXPathQuery<T> private constructor(xpath: String) {
      * The AstNode on which to evaluate the query against to.
      * @return The list of resulting elements, empty when no result available.
      */
+    @Suppress("UNCHECKED_CAST")
     public fun selectNodes(astNode: AstNode): List<T> {
         return try {
             astNodeNavigator.reset()

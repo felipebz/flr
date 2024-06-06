@@ -42,6 +42,7 @@ public class SyntaxTreeCreator<T>(
     private val trivias = mutableListOf<Trivia>()
     private lateinit var input: Input
 
+    @Suppress("UNCHECKED_CAST")
     public fun create(node: ParseNode, input: Input): T? {
         this.input = input
         trivias.clear()
