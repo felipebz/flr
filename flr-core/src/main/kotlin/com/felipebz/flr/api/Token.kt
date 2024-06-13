@@ -134,8 +134,6 @@ public class Token private constructor(builder: Builder) {
         }
 
         public fun setValueAndOriginalValue(value: String, originalValue: String): Builder {
-            Objects.requireNonNull(value, "value cannot be null")
-            Objects.requireNonNull(originalValue, "originalValue cannot be null")
             this.value = value
             this.originalValue = originalValue
             return this
@@ -170,9 +168,6 @@ public class Token private constructor(builder: Builder) {
         }
 
         public fun build(): Token {
-            Objects.requireNonNull(type, "type must be set")
-            Objects.requireNonNull(value, "value must be set")
-            Objects.requireNonNull(originalValue, "originalValue must be set")
             require(line >= 1) { "line must be greater or equal than 1" }
             require(column >= 0) { "column must be greater or equal than 0" }
             return Token(this)

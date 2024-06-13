@@ -24,7 +24,6 @@ import com.felipebz.flr.api.AstNode
 import com.felipebz.flr.api.RecognitionException
 import com.felipebz.flr.api.Token
 import com.felipebz.flr.impl.Parser
-import com.felipebz.flr.impl.matcher.RuleDefinition
 import com.felipebz.flr.internal.matchers.AstCreator
 import com.felipebz.flr.internal.matchers.LocatedText
 import java.io.File
@@ -32,7 +31,6 @@ import java.io.IOException
 import java.nio.charset.Charset
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.util.*
 
 /**
  * Adapts [ParseRunner] to be used as [Parser].
@@ -42,9 +40,8 @@ import java.util.*
  *
  * @since 1.16
  */
-public class ParserAdapter<G : LexerlessGrammar>(charset: Charset, grammar: G) :
-    Parser<G>(Objects.requireNonNull(grammar, "grammar")) {
-    private val charset: Charset = Objects.requireNonNull(charset, "charset")
+public class ParserAdapter<G : LexerlessGrammar>(private val charset: Charset, grammar: G) :
+    Parser<G>(grammar) {
     private val parseRunner: ParseRunner = ParseRunner(grammar.rootRule)
 
     /**

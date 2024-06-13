@@ -20,8 +20,6 @@
  */
 package com.felipebz.flr.api
 
-import java.util.*
-
 public class Trivia private constructor(
     private val kind: TriviaKind,
     vararg tokens: Token
@@ -69,7 +67,6 @@ public class Trivia private constructor(
         }
 
         public fun createSkippedText(tokens: List<Token>): Trivia {
-            Objects.requireNonNull(tokens, "tokens cannot be null")
             return createSkippedText(*tokens.toTypedArray())
         }
 
