@@ -35,22 +35,25 @@ public class RecognitionException : RuntimeException {
      */
     public val line: Int
 
+    /**
+     * Column where the parsing error has occurred.
+     *
+     * @return column
+     */
+    public val column: Int
+
     public constructor(e: LexerException) : super("Lexer error: " + e.message, e) {
         line = 0
+        column = 0
     }
 
     /**
      * @since 1.16
      */
-    public constructor(line: Int, message: String?) : super(message) {
+    @JvmOverloads
+    public constructor(line: Int, column: Int, message: String, cause: Throwable? = null) : super(message, cause) {
         this.line = line
-    }
-
-    /**
-     * @since 1.16
-     */
-    public constructor(line: Int, message: String?, cause: Throwable?) : super(message, cause) {
-        this.line = line
+        this.column = column
     }
 
 }

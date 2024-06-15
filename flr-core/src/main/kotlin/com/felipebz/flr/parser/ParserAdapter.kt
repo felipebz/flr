@@ -71,9 +71,11 @@ public class ParserAdapter<G : LexerlessGrammar>(private val charset: Charset, g
         } else {
             val parseError = checkNotNull(result.getParseError())
             val inputBuffer = parseError.getInputBuffer()
-            val line = inputBuffer.getPosition(parseError.getErrorIndex()).getLine()
+            val position = inputBuffer.getPosition(parseError.getErrorIndex())
+            val line = position.getLine()
+            val column = position.getColumn()
             val message = ParseErrorFormatter().format(parseError)
-            throw RecognitionException(line, message)
+            throw RecognitionException(line, column, message)
         }
     }
 
@@ -86,7 +88,7 @@ public class ParserAdapter<G : LexerlessGrammar>(private val charset: Charset, g
             return try {
                 String(Files.readAllBytes(Paths.get(file.path)), charset).toCharArray()
             } catch (e: IOException) {
-                throw RecognitionException(0, e.message, e)
+                throw RecognitionException(0, 0, e.message ?: "Unable to read file", e)
             }
         }
     }

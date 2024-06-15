@@ -202,13 +202,20 @@ public class Machine private constructor(
             } else {
                 if (tokens.isEmpty()) {
                     // Godin: weird situation - I expect that list of tokens contains at least EOF, but this is not the case in C Parser
-                    throw RecognitionException(1, "No tokens")
+                    throw RecognitionException(1, 0, "No tokens")
                 } else {
                     val errorIndex = errorLocatingHandler.getErrorIndex()
                     val errorMsg = LexerfulParseErrorFormatter().format(tokens, errorIndex)
-                    val errorLine =
-                        if (errorIndex < tokens.size) tokens[errorIndex].line else tokens[tokens.size - 1].line
-                    throw RecognitionException(errorLine, errorMsg)
+                    val errorLine: Int
+                    val errorColumn: Int
+                    if (errorIndex < tokens.size) {
+                        errorLine = tokens[errorIndex].line
+                        errorColumn = tokens[errorIndex].column
+                    } else {
+                        errorLine = tokens[tokens.size - 1].line
+                        errorColumn = tokens[tokens.size - 1].column
+                    }
+                    throw RecognitionException(errorLine, errorColumn, errorMsg)
                 }
             }
         }

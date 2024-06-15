@@ -91,9 +91,11 @@ public class ActionParser<N>(
         if (!result.isMatched()) {
             val parseError = checkNotNull(result.getParseError())
             val inputBuffer = parseError.getInputBuffer()
-            val line = inputBuffer.getPosition(parseError.getErrorIndex()).getLine()
+            val position = inputBuffer.getPosition(parseError.getErrorIndex())
+            val line = position.getLine()
+            val column = position.getColumn()
             val message = ParseErrorFormatter().format(parseError)
-            throw RecognitionException(line, message)
+            throw RecognitionException(line, column, message)
         }
         return syntaxTreeCreator.create(result.getParseTreeRoot(), input)
     }
