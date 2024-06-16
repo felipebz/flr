@@ -33,7 +33,7 @@ public class LexerfulParseErrorFormatter {
         sb.append("Parse error at line ").append(errorPos.line)
             .append(" column ").append(errorPos.column)
             .append(":\n\n")
-        appendSnippet(sb, tokens, errorIndex, errorPos.line)
+        appendSnippet(sb, tokens, errorIndex, errorPos.line, errorPos.column)
         return sb.toString()
     }
 
@@ -73,19 +73,20 @@ public class LexerfulParseErrorFormatter {
             return pos
         }
 
-        private fun appendSnippet(sb: StringBuilder, tokens: List<Token>, errorIndex: Int, errorLine: Int) {
-            var tokens = tokens
+        private fun appendSnippet(sb: StringBuilder, tokens: List<Token>, errorIndex: Int, errorLine: Int,
+                                  errorColumn: Int) {
+            var tokenList = tokens
             val startToken = max(errorIndex - SNIPPET_SIZE, 0)
-            val endToken = min(errorIndex + SNIPPET_SIZE, tokens.size)
-            tokens = tokens.subList(startToken, endToken)
-            var line = tokens[0].line
-            var column = tokens[0].column
-            sb.append(formatLineNumber(line, errorLine))
-            for (token in tokens) {
+            val endToken = min(errorIndex + SNIPPET_SIZE, tokenList.size)
+            tokenList = tokenList.subList(startToken, endToken)
+            var line = tokenList[0].line
+            var column = tokenList[0].column
+            sb.append(formatLineNumber(line, errorLine, errorColumn))
+            for (token in tokenList) {
                 while (line < token.line) {
                     line++
                     column = 0
-                    sb.append('\n').append(formatLineNumber(line, errorLine))
+                    sb.append('\n').append(formatLineNumber(line, errorLine, errorColumn))
                 }
                 while (column < token.column) {
                     sb.append(' ')
@@ -96,17 +97,29 @@ public class LexerfulParseErrorFormatter {
                 column += tokenLines[0].length
                 for (j in 1 until tokenLines.size) {
                     line++
-                    sb.append('\n').append(formatLineNumber(line, errorLine)).append(
+                    sb.append('\n').append(formatLineNumber(line, errorLine, errorColumn)).append(
                         tokenLines[j]
                     )
                     column = tokenLines[j].length
                 }
             }
+            if (line == errorLine) {
+                sb.append('\n').append(" ".repeat(7 + errorColumn)).append("^ error location")
+            }
             sb.append('\n')
         }
 
-        private fun formatLineNumber(line: Int, errorLine: Int): String {
-            return if (line == errorLine) String.format("%1$5s  ", "-->") else String.format("%1$5d: ", line)
+        private fun formatLineNumber(line: Int, errorLine: Int, errorColumn: Int): String {
+            return if (line == errorLine) {
+                String.format("%1$5s  ", "-->")
+            } else {
+                val columnIndicator = if (line == errorLine + 1) {
+                    " ".repeat(7 + errorColumn) + "^ error location" + "\n"
+                } else {
+                    ""
+                }
+                String.format("%s%2$5d: ", columnIndicator, line)
+            }
         }
     }
 }

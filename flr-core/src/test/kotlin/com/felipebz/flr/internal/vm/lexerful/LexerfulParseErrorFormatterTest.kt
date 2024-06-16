@@ -40,6 +40,7 @@ class LexerfulParseErrorFormatterTest {
             .append("    2: foo\n")
             .append("    3: bar\n")
             .append("  -->  baz   qux\n")
+            .append("             ^ error location\n")
             .append("    5: \n")
             .append("    6:    end\n")
             .toString()
