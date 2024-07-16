@@ -1,6 +1,6 @@
 dependencies {
     implementation(project(":flr-core"))
-    implementation(Libs.jaxen)
+    implementation(libs.jaxen)
 }
 
 description = "FLR :: XPath"

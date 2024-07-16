@@ -8,11 +8,11 @@ plugins {
     `maven-publish`
     signing
     jacoco
-    kotlin("jvm") version "2.0.0"
-    id("org.jetbrains.dokka") version ("1.9.20")
-    id("com.github.hierynomus.license") version "0.16.1"
-    id("org.sonarqube") version "5.0.0.4638"
-    id("org.jreleaser") version "1.12.0"
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.dokka)
+    alias(libs.plugins.license)
+    alias(libs.plugins.sonarqube)
+    alias(libs.plugins.jreleaser)
 }
 
 allprojects {
@@ -43,7 +43,6 @@ subprojects {
 
     dependencies {
         implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
-        testImplementation(platform(Libs.junit_bom))
     }
 
     kotlin {
@@ -60,9 +59,9 @@ subprojects {
                 useJUnitJupiter()
 
                 dependencies {
-                    implementation(Libs.assertj)
-                    implementation(Libs.mockito)
-                    implementation(Libs.mockito_kotlin)
+                    implementation(rootProject.libs.assertj)
+                    implementation(rootProject.libs.mockito)
+                    implementation(rootProject.libs.mockito.kotlin)
                 }
             }
         }

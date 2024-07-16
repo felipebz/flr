@@ -1,5 +1,5 @@
 dependencies {
-    implementation(Libs.asm)
+    implementation(libs.asm)
 }
 
 description = "FLR :: Core"
