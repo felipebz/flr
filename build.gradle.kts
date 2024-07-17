@@ -56,7 +56,7 @@ subprojects {
     testing {
         suites {
             val test by getting(JvmTestSuite::class) {
-                useJUnitJupiter()
+                useJUnitJupiter(rootProject.libs.versions.junit)
 
                 dependencies {
                     implementation(rootProject.libs.assertj)
