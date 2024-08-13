@@ -62,8 +62,8 @@ public class Token private constructor(builder: Builder) {
         var lastLineLength = 0
         var lineCount = 1
 
-        if (value.indexOf('\n') != -1 || value.indexOf('\r') != -1) {
-            val lines = pattern.split(value)
+        if (originalValue.indexOf('\n') != -1 || originalValue.indexOf('\r') != -1) {
+            val lines = pattern.split(originalValue)
             lineCount = if (lines.size > 1) {
                 lastLineLength = lines[lines.size - 1].length
                 lines.size
@@ -76,7 +76,7 @@ public class Token private constructor(builder: Builder) {
         val endLineOffset = if (endLine != line) {
             lastLineLength
         } else {
-            column + value.length
+            column + originalValue.length
         }
 
         endColumn = endLineOffset
