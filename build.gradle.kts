@@ -167,7 +167,7 @@ jreleaser {
         authors.set(listOf("felipebz"))
         license.set("LGPL-3.0")
         links {
-            homepage.set("https://felipezorzo.com.br/zpa/")
+            homepage.set("https://github.com/felipebz/flr")
         }
         inceptionYear.set("2021")
         snapshot {
