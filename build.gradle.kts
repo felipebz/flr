@@ -41,10 +41,6 @@ subprojects {
     apply(plugin = "org.jetbrains.dokka")
     apply(plugin = "signing")
 
-    dependencies {
-        implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
-    }
-
     kotlin {
         explicitApi()
         jvmToolchain(11)
