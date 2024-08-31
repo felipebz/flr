@@ -1,7 +1,7 @@
 [versions]
 kotlin = "2.0.20"
 dokka = "1.9.20"
-jreleaser = "1.13.1"
+jreleaser = "1.14.0"
 license = "0.16.1"
 sonarscanner = "5.1.0.4882"
 
@@ -11,8 +11,8 @@ jaxen = "2.0.0"
 
 # testing
 assertj = "3.26.3"
-junit = "5.10.3"
-mockito = "5.12.0"
+junit = "5.11.0"
+mockito = "5.13.0"
 mockito-kotlin = "5.4.0"
 
 [libraries]
