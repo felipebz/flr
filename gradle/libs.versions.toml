@@ -1,9 +1,9 @@
 [versions]
-kotlin = "2.0.21"
+kotlin = "2.1.0"
 dokka = "1.9.20"
 jreleaser = "1.15.0"
 license = "0.16.1"
-sonarscanner = "6.0.0.5145"
+sonarscanner = "6.0.1.5171"
 
 # libs
 asm = "9.7.1"
