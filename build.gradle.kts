@@ -9,7 +9,7 @@ plugins {
     signing
     jacoco
     alias(libs.plugins.kotlin.jvm)
-    alias(libs.plugins.dokka)
+    alias(libs.plugins.dokka.javadoc)
     alias(libs.plugins.license)
     alias(libs.plugins.sonarqube)
     alias(libs.plugins.jreleaser)
@@ -38,7 +38,7 @@ subprojects {
     apply(plugin = "com.github.hierynomus.license")
     apply(plugin = "org.jetbrains.kotlin.jvm")
     apply(plugin = "jacoco")
-    apply(plugin = "org.jetbrains.dokka")
+    apply(plugin = "org.jetbrains.dokka-javadoc")
     apply(plugin = "signing")
 
     kotlin {
@@ -93,8 +93,8 @@ subprojects {
     }
 
     val dokka by tasks.register<Jar>("dokka") {
-        dependsOn(tasks.dokkaJavadoc)
-        from(tasks.dokkaJavadoc.flatMap { it.outputDirectory })
+        dependsOn(tasks.dokkaGenerateModuleJavadoc)
+        from(tasks.dokkaGenerateModuleJavadoc.flatMap { it.outputDirectory })
         archiveClassifier.set("javadoc")
     }
 

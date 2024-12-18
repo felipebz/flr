@@ -1,6 +1,6 @@
 [versions]
 kotlin = "2.1.0"
-dokka = "1.9.20"
+dokka = "2.0.0"
 jreleaser = "1.15.0"
 license = "0.16.1"
 sonarscanner = "6.0.1.5171"
@@ -26,7 +26,7 @@ mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
-dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
+dokka-javadoc = { id = "org.jetbrains.dokka-javadoc", version.ref = "dokka" }
 jreleaser = { id = "org.jreleaser", version.ref = "jreleaser" }
 license = { id = "com.github.hierynomus.license", version.ref = "license" }
 sonarqube = { id = "org.sonarqube", version.ref = "sonarscanner" }
