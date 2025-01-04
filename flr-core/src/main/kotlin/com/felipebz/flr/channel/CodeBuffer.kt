@@ -1,7 +1,7 @@
 /**
  * FLR
  * Copyright (C) 2010-2023 SonarSource SA
- * Copyright (C) 2021-2023 Felipe Zorzo
+ * Copyright (C) 2021-2025 Felipe Zorzo
  * mailto:felipe AT felipezorzo DOT com DOT br
  *
  * This program is free software; you can redistribute it and/or
@@ -24,6 +24,7 @@ import java.io.FilterReader
 import java.io.IOException
 import java.io.Reader
 import java.io.StringReader
+import kotlin.Throws
 
 /**
  * The CodeBuffer class provides all the basic features required to manipulate a source code character stream. Those features are :

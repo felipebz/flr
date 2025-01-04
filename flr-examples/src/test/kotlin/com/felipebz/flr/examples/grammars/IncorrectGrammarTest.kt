@@ -1,7 +1,7 @@
 /**
  * FLR
  * Copyright (C) 2010-2023 SonarSource SA
- * Copyright (C) 2021-2023 Felipe Zorzo
+ * Copyright (C) 2021-2025 Felipe Zorzo
  * mailto:felipe AT felipezorzo DOT com DOT br
  *
  * This program is free software; you can redistribute it and/or
@@ -20,12 +20,12 @@
  */
 package com.felipebz.flr.examples.grammars
 
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import com.felipebz.flr.examples.grammars.IncorrectGrammar.Companion.infiniteOneOrMore
 import com.felipebz.flr.examples.grammars.IncorrectGrammar.Companion.infiniteZeroOrMore
 import com.felipebz.flr.grammar.GrammarException
 import com.felipebz.flr.parser.ParseRunner
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import java.util.regex.PatternSyntaxException
 
 class IncorrectGrammarTest {

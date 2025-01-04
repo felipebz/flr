@@ -1,7 +1,7 @@
 /**
  * FLR
  * Copyright (C) 2010-2023 SonarSource SA
- * Copyright (C) 2021-2023 Felipe Zorzo
+ * Copyright (C) 2021-2025 Felipe Zorzo
  * mailto:felipe AT felipezorzo DOT com DOT br
  *
  * This program is free software; you can redistribute it and/or
@@ -21,9 +21,9 @@
 package com.felipebz.flr.internal.toolkit
 
 import com.felipebz.flr.api.AstNode
-import com.felipebz.flr.xpath.api.AstNodeXPathQuery.Companion.create
 import com.felipebz.flr.toolkit.ConfigurationModel
 import com.felipebz.flr.toolkit.ConfigurationProperty
+import com.felipebz.flr.xpath.api.AstNodeXPathQuery.Companion.create
 import java.awt.Point
 import java.io.IOException
 import java.io.PrintWriter

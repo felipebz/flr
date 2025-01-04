@@ -1,7 +1,7 @@
 /**
  * FLR
  * Copyright (C) 2010-2023 SonarSource SA
- * Copyright (C) 2021-2023 Felipe Zorzo
+ * Copyright (C) 2021-2025 Felipe Zorzo
  * mailto:felipe AT felipezorzo DOT com DOT br
  *
  * This program is free software; you can redistribute it and/or
@@ -20,7 +20,8 @@
  */
 package com.felipebz.flr.test.minic
 
-import com.felipebz.flr.api.*
+import com.felipebz.flr.api.AstNode
+import com.felipebz.flr.api.Grammar
 import com.felipebz.flr.impl.Parser
 import java.io.File
 

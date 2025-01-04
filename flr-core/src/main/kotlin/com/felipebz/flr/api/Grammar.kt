@@ -1,7 +1,7 @@
 /**
  * FLR
  * Copyright (C) 2010-2023 SonarSource SA
- * Copyright (C) 2021-2023 Felipe Zorzo
+ * Copyright (C) 2021-2025 Felipe Zorzo
  * mailto:felipe AT felipezorzo DOT com DOT br
  *
  * This program is free software; you can redistribute it and/or
@@ -20,9 +20,11 @@
  */
 package com.felipebz.flr.api
 
-import com.felipebz.flr.impl.matcher.RuleDefinition
+import com.felipebz.flr.api.Grammar.Companion.getAllRuleFields
+import com.felipebz.flr.api.Grammar.Companion.getRuleFields
 import com.felipebz.flr.grammar.GrammarException
 import com.felipebz.flr.grammar.GrammarRuleKey
+import com.felipebz.flr.impl.matcher.RuleDefinition
 import com.felipebz.flr.internal.grammar.MutableParsingRule
 import com.felipebz.flr.parser.LexerlessGrammar
 import java.lang.reflect.Field

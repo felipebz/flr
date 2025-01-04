@@ -1,7 +1,7 @@
 /**
  * FLR
  * Copyright (C) 2010-2023 SonarSource SA
- * Copyright (C) 2021-2023 Felipe Zorzo
+ * Copyright (C) 2021-2025 Felipe Zorzo
  * mailto:felipe AT felipezorzo DOT com DOT br
  *
  * This program is free software; you can redistribute it and/or
@@ -20,13 +20,13 @@
  */
 package com.felipebz.flr.grammar
 
+import com.felipebz.flr.grammar.GrammarBuilder.RuleBuilder
+import com.felipebz.flr.internal.vm.CompilableGrammarRule
+import com.felipebz.flr.internal.vm.ParsingExpression
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito
 import org.mockito.kotlin.*
-import com.felipebz.flr.grammar.GrammarBuilder.RuleBuilder
-import com.felipebz.flr.internal.vm.CompilableGrammarRule
-import com.felipebz.flr.internal.vm.ParsingExpression
 
 class RuleBuilderTest {
 

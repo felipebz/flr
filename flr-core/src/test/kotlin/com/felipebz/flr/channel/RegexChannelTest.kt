@@ -1,7 +1,7 @@
 /**
  * FLR
  * Copyright (C) 2010-2023 SonarSource SA
- * Copyright (C) 2021-2023 Felipe Zorzo
+ * Copyright (C) 2021-2025 Felipe Zorzo
  * mailto:felipe AT felipezorzo DOT com DOT br
  *
  * This program is free software; you can redistribute it and/or
@@ -20,9 +20,9 @@
  */
 package com.felipebz.flr.channel
 
+import com.felipebz.flr.channel.ChannelDispatcher.Companion.builder
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import com.felipebz.flr.channel.ChannelDispatcher.Companion.builder
 
 class RegexChannelTest {
     @Test

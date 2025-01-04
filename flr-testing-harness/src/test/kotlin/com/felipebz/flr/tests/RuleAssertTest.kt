@@ -1,7 +1,7 @@
 /**
  * FLR
  * Copyright (C) 2010-2023 SonarSource SA
- * Copyright (C) 2021-2023 Felipe Zorzo
+ * Copyright (C) 2021-2025 Felipe Zorzo
  * mailto:felipe AT felipezorzo DOT com DOT br
  *
  * This program is free software; you can redistribute it and/or
@@ -21,12 +21,12 @@
 package com.felipebz.flr.tests
 
 import com.felipebz.flr.api.Rule
+import com.felipebz.flr.internal.grammar.MutableParsingRule
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import com.felipebz.flr.internal.grammar.MutableParsingRule
 
 class RuleAssertTest {
     private lateinit var rule: Rule

@@ -1,7 +1,7 @@
 /**
  * FLR
  * Copyright (C) 2010-2023 SonarSource SA
- * Copyright (C) 2021-2023 Felipe Zorzo
+ * Copyright (C) 2021-2025 Felipe Zorzo
  * mailto:felipe AT felipezorzo DOT com DOT br
  *
  * This program is free software; you can redistribute it and/or
@@ -22,10 +22,10 @@ package com.felipebz.flr.test.minic
 
 import com.felipebz.flr.api.GenericTokenType
 import com.felipebz.flr.api.Grammar
-import com.felipebz.flr.test.minic.MiniCLexer.Literals
-import com.felipebz.flr.test.minic.MiniCLexer.Punctuators
 import com.felipebz.flr.grammar.GrammarRuleKey
 import com.felipebz.flr.grammar.LexerfulGrammarBuilder
+import com.felipebz.flr.test.minic.MiniCLexer.Literals
+import com.felipebz.flr.test.minic.MiniCLexer.Punctuators
 
 public enum class MiniCGrammar : GrammarRuleKey {
     BIN_TYPE,
