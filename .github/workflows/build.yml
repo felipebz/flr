@@ -27,7 +27,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew build jreleaserAssemble
 
       - name: Run SonarQube Scanner
         run: ./gradlew sonar
