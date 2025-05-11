@@ -141,7 +141,7 @@ class InterceptorTest {
      */
     @Test
     fun requires_final_methods_to_be_non_public() {
-        val thrown = assertThrows<VerifyError> {
+        val thrown = assertThrows<IncompatibleClassChangeError> {
             create(PublicFinalMethod::class.java, arrayOf(), arrayOf(), methodInterceptor)
         }
         assertThat(thrown.message) // Note that details of the message are different between JDK versions
