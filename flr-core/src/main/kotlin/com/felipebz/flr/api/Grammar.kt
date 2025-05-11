@@ -20,8 +20,6 @@
  */
 package com.felipebz.flr.api
 
-import com.felipebz.flr.api.Grammar.Companion.getAllRuleFields
-import com.felipebz.flr.api.Grammar.Companion.getRuleFields
 import com.felipebz.flr.grammar.GrammarException
 import com.felipebz.flr.grammar.GrammarRuleKey
 import com.felipebz.flr.impl.matcher.RuleDefinition

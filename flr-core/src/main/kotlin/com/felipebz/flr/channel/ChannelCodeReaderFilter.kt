@@ -22,7 +22,6 @@ package com.felipebz.flr.channel
 
 import java.io.IOException
 import java.io.Reader
-import kotlin.Throws
 
 /**
  * This class is a special CodeReaderFilter that uses Channels to filter the character stream before it is passed to the main channels

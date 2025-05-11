@@ -24,7 +24,6 @@ import java.io.FilterReader
 import java.io.IOException
 import java.io.Reader
 import java.io.StringReader
-import kotlin.Throws
 
 /**
  * The CodeBuffer class provides all the basic features required to manipulate a source code character stream. Those features are :
