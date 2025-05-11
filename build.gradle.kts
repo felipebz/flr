@@ -26,7 +26,7 @@ allprojects {
     java {
         withSourcesJar()
         toolchain {
-            languageVersion.set(JavaLanguageVersion.of(11))
+            languageVersion.set(JavaLanguageVersion.of(17))
         }
     }
 
@@ -43,9 +43,9 @@ subprojects {
 
     kotlin {
         explicitApi()
-        jvmToolchain(11)
+        jvmToolchain(17)
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
+            jvmTarget.set(JvmTarget.JVM_17)
         }
     }
 
