@@ -98,26 +98,10 @@ subprojects {
         archiveClassifier.set("javadoc")
     }
 
-    signing {
-        setRequired({
-            gradle.taskGraph.hasTask("publish")
-        })
-        val signingKey: String? by project
-        val signingPassword: String? by project
-        useInMemoryPgpKeys(signingKey, signingPassword)
-        sign(publishing.publications)
-    }
-
     publishing {
         repositories {
             maven {
-                val releaseRepo = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-                val snapshotRepo = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
-                url = if (project.version.toString().endsWith("SNAPSHOT")) snapshotRepo else releaseRepo
-                credentials {
-                    username = project.findProperty("ossrh.user") as String? ?: System.getenv("OSSRH_USERNAME")
-                    password = project.findProperty("ossrh.password") as String? ?: System.getenv("OSSRH_PASSWORD")
-                }
+                url = rootProject.layout.buildDirectory.dir("staging-deploy").get().asFile.toURI()
             }
         }
         publications {
@@ -184,6 +168,34 @@ jreleaser {
                 }
                 hide {
                     uncategorized.set(true)
+                }
+            }
+        }
+    }
+    signing {
+        active.set(org.jreleaser.model.Active.ALWAYS)
+        armored.set(true)
+    }
+    deploy {
+        maven {
+            mavenCentral {
+                create("sonatype") {
+                    active.set(org.jreleaser.model.Active.RELEASE)
+                    snapshotSupported.set(true)
+                    url.set("https://central.sonatype.com/api/v1/publisher")
+                    stagingRepository("build/staging-deploy")
+                }
+            }
+            nexus2 {
+                create("snapshot-deploy") {
+                    active.set(org.jreleaser.model.Active.SNAPSHOT)
+                    url.set("https://central.sonatype.com/repository/maven-snapshots")
+                    snapshotUrl.set("https://central.sonatype.com/repository/maven-snapshots")
+                    applyMavenCentralRules.set(true)
+                    snapshotSupported.set(true)
+                    closeRepository.set(true)
+                    releaseRepository.set(true)
+                    stagingRepository("build/staging-deploy")
                 }
             }
         }
