@@ -6,7 +6,7 @@ license = "0.16.1"
 sonarscanner = "7.3.0.8198"
 
 # libs
-asm = "9.10"
+asm = "9.10.1"
 jaxen = "2.0.3"
 
 # testing
