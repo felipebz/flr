@@ -7,7 +7,7 @@ sonarscanner = "7.3.1.8318"
 
 # libs
 asm = "9.10.1"
-jaxen = "2.0.3"
+jaxen = "2.0.6"
 
 # testing
 assertj = "3.27.7"
