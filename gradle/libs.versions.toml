@@ -3,7 +3,7 @@ kotlin = "2.3.21"
 dokka = "2.2.0"
 jreleaser = "1.25.0"
 license = "0.16.1"
-sonarscanner = "7.3.1.8318"
+sonarscanner = "7.4.0.8496"
 
 # libs
 asm = "9.10.1"
