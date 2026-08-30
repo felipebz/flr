@@ -4,6 +4,7 @@ dokka = "2.2.0"
 jreleaser = "1.25.0"
 license = "0.16.1"
 sonarscanner = "7.4.0.8496"
+jmh-plugin = "0.7.3"
 
 # libs
 asm = "9.10.1"
@@ -30,3 +31,4 @@ dokka-javadoc = { id = "org.jetbrains.dokka-javadoc", version.ref = "dokka" }
 jreleaser = { id = "org.jreleaser", version.ref = "jreleaser" }
 license = { id = "com.github.hierynomus.license", version.ref = "license" }
 sonarqube = { id = "org.sonarqube", version.ref = "sonarscanner" }
+jmh = { id = "me.champeau.jmh", version.ref = "jmh-plugin" }

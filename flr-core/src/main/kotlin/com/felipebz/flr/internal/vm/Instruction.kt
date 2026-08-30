@@ -156,8 +156,6 @@ public abstract class Instruction {
             // restore state of machine to correctly report error during backtrack
             // note that there is no need restore value of "IgnoreErrors", because this will be done during backtrack
             machine.index = machine.peek().index
-            machine.restoreContextFromCheckpoint()
-
             // remove pending alternative pushed by Choice instruction
             machine.pop()
             machine.backtrack()
@@ -173,13 +171,16 @@ public abstract class Instruction {
             val stack = machine.peek()
             machine.index = stack.index
             machine.ignoreErrors = stack.ignoreErrors
-            machine.restoreContextFromCheckpoint()
             machine.pop()
             machine.jump(offset)
         }
 
         override fun toString(): String {
             return "BackCommit $offset"
+        }
+
+        internal fun offset(): Int {
+            return offset
         }
     }
 

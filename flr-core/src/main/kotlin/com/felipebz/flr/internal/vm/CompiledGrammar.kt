@@ -27,8 +27,16 @@ public class CompiledGrammar(
     public val instructions: Array<Instruction>,
     private val rules: Map<GrammarRuleKey, CompilableGrammarRule>,
     public val rootRuleKey: GrammarRuleKey,
-    public val rootRuleOffset: Int
+    public val rootRuleOffset: Int,
+    internal val usesParserContext: Boolean
 ) {
+    public constructor(
+        instructions: Array<Instruction>,
+        rules: Map<GrammarRuleKey, CompilableGrammarRule>,
+        rootRuleKey: GrammarRuleKey,
+        rootRuleOffset: Int
+    ) : this(instructions, rules, rootRuleKey, rootRuleOffset, false)
+
     public fun getMatcher(ruleKey: GrammarRuleKey): Matcher? {
         return rules[ruleKey]
     }

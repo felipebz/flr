@@ -29,6 +29,7 @@ internal class ContextExpression(
     private val subExpression: ParsingExpression
 ) : ParsingExpression {
     override fun compile(compiler: CompilationHandler): Array<Instruction> {
+        compiler.markParserContextUsed()
         val sub = compiler.compile(subExpression)
         val result = arrayOfNulls<Instruction>(sub.size + 2)
         result[0] = ContextEnterInstruction(key, value, present)
@@ -51,6 +52,11 @@ internal class ContextPredicateExpression(
     private val expected: Any?,
     private val requirePresent: Boolean
 ) : NativeExpression() {
+    override fun compile(compiler: CompilationHandler): Array<Instruction> {
+        compiler.markParserContextUsed()
+        return super.compile(compiler)
+    }
+
     override fun execute(machine: Machine) {
         val matches = if (requirePresent) {
             machine.containsContext(key)
@@ -100,5 +106,33 @@ internal object ContextExitInstruction : Instruction() {
 
     override fun toString(): String {
         return "ContextExit"
+    }
+}
+
+internal object ContextFailTwiceInstruction : Instruction() {
+    override fun execute(machine: Machine) {
+        machine.index = machine.peek().index
+        machine.restoreContextFromCheckpoint()
+        machine.pop()
+        machine.backtrack()
+    }
+
+    override fun toString(): String {
+        return "ContextFailTwice"
+    }
+}
+
+internal class ContextBackCommitInstruction(private val offset: Int) : Instruction() {
+    override fun execute(machine: Machine) {
+        val stack = machine.peek()
+        machine.index = stack.index
+        machine.ignoreErrors = stack.ignoreErrors
+        machine.restoreContextFromCheckpoint()
+        machine.pop()
+        machine.jump(offset)
+    }
+
+    override fun toString(): String {
+        return "ContextBackCommit $offset"
     }
 }

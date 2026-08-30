@@ -51,7 +51,24 @@ public class MutableGrammarCompiler : CompilationHandler() {
                 result[i] = Instruction.call(offset - i, matchers[ruleKey])
             }
         }
-        return CompiledGrammar(result, matchers, start.ruleKey, checkNotNull(offsets[start.ruleKey]))
+        val specializedResult = if (usesParserContext) {
+            result.map { instruction ->
+                when (instruction) {
+                    is Instruction.FailTwiceInstruction -> ContextFailTwiceInstruction
+                    is Instruction.BackCommitInstruction -> ContextBackCommitInstruction(instruction.offset())
+                    else -> instruction
+                }
+            }.toTypedArray()
+        } else {
+            result
+        }
+        return CompiledGrammar(
+            specializedResult,
+            matchers,
+            start.ruleKey,
+            checkNotNull(offsets[start.ruleKey]),
+            usesParserContext
+        )
     }
 
     override fun compile(expression: ParsingExpression): Array<Instruction> {

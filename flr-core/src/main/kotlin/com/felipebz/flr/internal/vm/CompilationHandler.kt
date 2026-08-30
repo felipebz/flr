@@ -21,6 +21,13 @@
 package com.felipebz.flr.internal.vm
 
 public open class CompilationHandler {
+    internal var usesParserContext: Boolean = false
+        private set
+
+    internal fun markParserContextUsed() {
+        usesParserContext = true
+    }
+
     public open fun compile(expression: ParsingExpression): Array<Instruction> {
         return expression.compile(this)
     }

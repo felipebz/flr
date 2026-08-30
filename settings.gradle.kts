@@ -1,5 +1,6 @@
 rootProject.name = "flr"
 include(":flr-core")
+include(":flr-benchmarks")
 include(":flr-examples")
 include(":flr-testing-harness")
 include(":flr-tests")

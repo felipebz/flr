@@ -32,20 +32,20 @@ import com.felipebz.flr.internal.vm.lexerful.LexerfulParseErrorFormatter
 import com.felipebz.flr.parser.ParseError
 import com.felipebz.flr.parser.ParsingResult
 
-public class Machine private constructor(
-    private val input: CharArray,
+public open class Machine protected constructor(
+    protected val input: CharArray,
     private val tokens: Array<out Token>,
     instructions: Array<Instruction>,
-    private val handler: MachineHandler
+    protected val handler: MachineHandler,
+    ordinaryMemoization: Boolean
 ) : CharSequence {
     private var inputLength = if (input.isNotEmpty()) input.size else tokens.size
-    private var stack = MachineStack().getOrCreateChild()
-    private var matched = true
-    private val memos: Array<MemoizedParseNode?> = arrayOfNulls(inputLength + 1)
-    private var context: ParsingContext = ParsingContext.EMPTY
+    protected var stack: MachineStack = MachineStack().getOrCreateChild()
+    protected var matched: Boolean = true
+    private val memos: Array<ParseNode?> = if (ordinaryMemoization) arrayOfNulls(inputLength + 1) else emptyArray()
 
     // Number of instructions in grammar for Java is about 2000.
-    private val calls: IntArray = IntArray(instructions.size)
+    protected val calls: IntArray = IntArray(instructions.size)
 
     public var address: Int = 0
     public var index: Int = 0
@@ -69,7 +69,7 @@ public class Machine private constructor(
         input: String,
         instructions: Array<Instruction>,
         handler: MachineHandler = MachineHandler { }
-    ) : this(input.toCharArray(), emptyArray(), instructions, handler)
+    ) : this(input.toCharArray(), emptyArray(), instructions, handler, true)
 
     private fun execute(instructions: Array<Instruction>) {
         while (address != -1) {
@@ -81,25 +81,24 @@ public class Machine private constructor(
         address += offset
     }
 
-    private fun push(address: Int) {
+    protected fun push(address: Int) {
         stack = stack.getOrCreateChild()
         stack.subNodes.clear()
         stack.address = address
         stack.index = index
         stack.ignoreErrors = ignoreErrors
-        stack.context = context
     }
 
-    public fun popReturn() {
+    public open fun popReturn() {
         calls[stack.calledAddress] = stack.leftRecursion
         stack = stack.parent()
     }
 
-    public fun pushReturn(returnOffset: Int, matcher: Matcher?, callOffset: Int) {
+    public open fun pushReturn(returnOffset: Int, matcher: Matcher?, callOffset: Int) {
         val memo = memos[index]
-        if (memo != null && memo.node.matcher === matcher && memo.context == context) {
-            stack.subNodes.add(memo.node)
-            index = memo.node.endIndex
+        if (memo != null && memo.matcher === matcher) {
+            stack.subNodes.add(memo)
+            index = memo.endIndex
             address += returnOffset
         } else {
             push(address + returnOffset)
@@ -115,12 +114,12 @@ public class Machine private constructor(
         }
     }
 
-    public fun pushBacktrack(offset: Int) {
+    public open fun pushBacktrack(offset: Int) {
         push(address + offset)
         stack.matcher = null
     }
 
-    public fun pop() {
+    public open fun pop() {
         stack = stack.parent()
     }
 
@@ -128,27 +127,27 @@ public class Machine private constructor(
         return stack
     }
 
-    internal fun enterContext(key: ContextKey<*>, value: Any?, present: Boolean) {
-        context = if (present) context.with(key, value) else context.without(key)
+    internal open fun enterContext(key: ContextKey<*>, value: Any?, present: Boolean) {
+        error("Parser-context instruction executed by an ordinary machine")
     }
 
-    internal fun exitContext() {
-        context = context.parent()
+    internal open fun exitContext() {
+        error("Parser-context instruction executed by an ordinary machine")
     }
 
-    internal fun containsContext(key: ContextKey<*>): Boolean {
-        return context.contains(key)
+    internal open fun containsContext(key: ContextKey<*>): Boolean {
+        error("Parser-context instruction executed by an ordinary machine")
     }
 
-    internal fun matchesContext(key: ContextKey<*>, expected: Any?): Boolean {
-        return context.matches(key, expected)
+    internal open fun matchesContext(key: ContextKey<*>, expected: Any?): Boolean {
+        error("Parser-context instruction executed by an ordinary machine")
     }
 
-    internal fun restoreContextFromCheckpoint() {
-        context = stack.context
+    internal open fun restoreContextFromCheckpoint() {
+        error("Parser-context instruction executed by an ordinary machine")
     }
 
-    public fun backtrack() {
+    public open fun backtrack() {
         // pop any return addresses from the top of the stack
         while (stack.isReturn()) {
 
@@ -161,7 +160,6 @@ public class Machine private constructor(
         }
         if (stack.isEmpty()) {
             // input does not match
-            context = ParsingContext.EMPTY
             address = -1
             matched = false
         } else {
@@ -169,17 +167,16 @@ public class Machine private constructor(
             index = stack.index
             address = stack.address
             ignoreErrors = stack.ignoreErrors
-            context = stack.context
             stack = stack.parent()
         }
     }
 
-    public fun createNode() {
+    public open fun createNode() {
         val node = ParseNode(stack.index, index, stack.matcher, stack.subNodes.toTypedArray())
         stack.parent().subNodes.add(node)
         val matcher = stack.matcher
         if (matcher is MemoParsingExpression && matcher.shouldMemoize()) {
-            memos[stack.index] = MemoizedParseNode(node, stack.context)
+            memos[stack.index] = node
         }
     }
 
@@ -220,7 +217,7 @@ public class Machine private constructor(
         public fun parse(tokens: List<Token>, grammar: CompiledGrammar): ParseNode {
             val inputTokens: Array<Token> = tokens.toTypedArray()
             val errorLocatingHandler = ErrorLocatingHandler()
-            val machine = Machine(CharArray(0), inputTokens, grammar.instructions, errorLocatingHandler)
+            val machine = createMachine(CharArray(0), inputTokens, grammar, errorLocatingHandler)
             machine.execute(grammar.getMatcher(grammar.rootRuleKey), grammar.rootRuleOffset, grammar.instructions)
             return if (machine.matched) {
                 machine.stack.subNodes[0]
@@ -249,7 +246,7 @@ public class Machine private constructor(
         public fun parse(input: CharArray, grammar: CompiledGrammar): ParsingResult {
             val instructions = grammar.instructions
             val errorLocatingHandler = ErrorLocatingHandler()
-            val machine = Machine(input, emptyArray(), instructions, errorLocatingHandler)
+            val machine = createMachine(input, emptyArray(), grammar, errorLocatingHandler)
             machine.execute(grammar.getMatcher(grammar.rootRuleKey), grammar.rootRuleOffset, instructions)
             return if (machine.matched) {
                 ParsingResult(
@@ -276,16 +273,24 @@ public class Machine private constructor(
 
         @JvmStatic
         public fun execute(instructions: Array<Instruction>, vararg input: Token): Boolean {
-            val machine = Machine(CharArray(0), input, instructions, { })
+            val machine = Machine(CharArray(0), input, instructions, { }, true)
             while (machine.address != -1 && machine.address < instructions.size) {
                 instructions[machine.address].execute(machine)
             }
             return machine.matched
         }
-    }
 
-    private data class MemoizedParseNode(
-        val node: ParseNode,
-        val context: ParsingContext
-    )
+        internal fun createMachine(
+            input: CharArray,
+            tokens: Array<out Token>,
+            grammar: CompiledGrammar,
+            handler: MachineHandler
+        ): Machine {
+            return if (grammar.usesParserContext) {
+                ContextAwareMachine(input, tokens, grammar.instructions, handler)
+            } else {
+                Machine(input, tokens, grammar.instructions, handler, true)
+            }
+        }
+    }
 }
