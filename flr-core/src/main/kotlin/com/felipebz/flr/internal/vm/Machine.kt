@@ -22,6 +22,7 @@ package com.felipebz.flr.internal.vm
 
 import com.felipebz.flr.api.RecognitionException
 import com.felipebz.flr.api.Token
+import com.felipebz.flr.grammar.ContextKey
 import com.felipebz.flr.grammar.GrammarException
 import com.felipebz.flr.internal.matchers.ImmutableInputBuffer
 import com.felipebz.flr.internal.matchers.InputBuffer
@@ -40,7 +41,8 @@ public class Machine private constructor(
     private var inputLength = if (input.isNotEmpty()) input.size else tokens.size
     private var stack = MachineStack().getOrCreateChild()
     private var matched = true
-    private val memos: Array<ParseNode?> = arrayOfNulls(inputLength + 1)
+    private val memos: Array<MemoizedParseNode?> = arrayOfNulls(inputLength + 1)
+    private var context: ParsingContext = ParsingContext.EMPTY
 
     // Number of instructions in grammar for Java is about 2000.
     private val calls: IntArray = IntArray(instructions.size)
@@ -85,6 +87,7 @@ public class Machine private constructor(
         stack.address = address
         stack.index = index
         stack.ignoreErrors = ignoreErrors
+        stack.context = context
     }
 
     public fun popReturn() {
@@ -94,9 +97,9 @@ public class Machine private constructor(
 
     public fun pushReturn(returnOffset: Int, matcher: Matcher?, callOffset: Int) {
         val memo = memos[index]
-        if (memo != null && memo.matcher === matcher) {
-            stack.subNodes.add(memo)
-            index = memo.endIndex
+        if (memo != null && memo.node.matcher === matcher && memo.context == context) {
+            stack.subNodes.add(memo.node)
+            index = memo.node.endIndex
             address += returnOffset
         } else {
             push(address + returnOffset)
@@ -125,6 +128,26 @@ public class Machine private constructor(
         return stack
     }
 
+    internal fun enterContext(key: ContextKey<*>, value: Any?, present: Boolean) {
+        context = if (present) context.with(key, value) else context.without(key)
+    }
+
+    internal fun exitContext() {
+        context = context.parent()
+    }
+
+    internal fun containsContext(key: ContextKey<*>): Boolean {
+        return context.contains(key)
+    }
+
+    internal fun matchesContext(key: ContextKey<*>, expected: Any?): Boolean {
+        return context.matches(key, expected)
+    }
+
+    internal fun restoreContextFromCheckpoint() {
+        context = stack.context
+    }
+
     public fun backtrack() {
         // pop any return addresses from the top of the stack
         while (stack.isReturn()) {
@@ -138,6 +161,7 @@ public class Machine private constructor(
         }
         if (stack.isEmpty()) {
             // input does not match
+            context = ParsingContext.EMPTY
             address = -1
             matched = false
         } else {
@@ -145,6 +169,7 @@ public class Machine private constructor(
             index = stack.index
             address = stack.address
             ignoreErrors = stack.ignoreErrors
+            context = stack.context
             stack = stack.parent()
         }
     }
@@ -154,7 +179,7 @@ public class Machine private constructor(
         stack.parent().subNodes.add(node)
         val matcher = stack.matcher
         if (matcher is MemoParsingExpression && matcher.shouldMemoize()) {
-            memos[stack.index] = node
+            memos[stack.index] = MemoizedParseNode(node, stack.context)
         }
     }
 
@@ -258,4 +283,9 @@ public class Machine private constructor(
             return machine.matched
         }
     }
+
+    private data class MemoizedParseNode(
+        val node: ParseNode,
+        val context: ParsingContext
+    )
 }

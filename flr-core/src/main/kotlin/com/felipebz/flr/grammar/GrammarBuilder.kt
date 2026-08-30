@@ -249,6 +249,74 @@ public abstract class GrammarBuilder {
         return NothingExpression
     }
 
+    /**
+     * Creates a parsing expression which evaluates its sub-expression with a
+     * context value temporarily associated with [key]. The previous value is
+     * restored when the sub-expression completes or backtracks.
+     *
+     * @param key context key
+     * @param value context value
+     * @param e sub-expression
+     */
+    public fun <T> withContext(key: ContextKey<T>, value: T, e: Any): Any {
+        return ContextExpression(key, value, true, convertToExpression(e))
+    }
+
+    /**
+     * Creates a context-scoped sequence.
+     *
+     * @param key context key
+     * @param value context value
+     * @param e1 first sub-expression
+     * @param rest remaining sub-expressions
+     */
+    public fun <T> withContext(key: ContextKey<T>, value: T, e1: Any, vararg rest: Any): Any {
+        return ContextExpression(key, value, true, SequenceExpression(*convertToExpressions(e1, rest)))
+    }
+
+    /**
+     * Creates a parsing expression which masks [key] inside its
+     * sub-expression, even if an outer scope has a value for the key.
+     *
+     * @param key context key
+     * @param e sub-expression
+     */
+    public fun <T> withoutContext(key: ContextKey<T>, e: Any): Any {
+        return ContextExpression(key, null, false, convertToExpression(e))
+    }
+
+    /**
+     * Creates a context-isolated sequence.
+     *
+     * @param key context key
+     * @param e1 first sub-expression
+     * @param rest remaining sub-expressions
+     */
+    public fun <T> withoutContext(key: ContextKey<T>, e1: Any, vararg rest: Any): Any {
+        return ContextExpression(key, null, false, SequenceExpression(*convertToExpressions(e1, rest)))
+    }
+
+    /**
+     * Creates a predicate which succeeds only when [key] has the expected
+     * [value] in the current parser context.
+     *
+     * @param key context key
+     * @param value expected context value
+     */
+    public fun <T> requireContext(key: ContextKey<T>, value: T): Any {
+        return ContextPredicateExpression(key, value, false)
+    }
+
+    /**
+     * Creates a predicate which succeeds when [key] is present in the current
+     * parser context, regardless of its value.
+     *
+     * @param key context key
+     */
+    public fun <T> requireContext(key: ContextKey<T>): Any {
+        return ContextPredicateExpression(key, null, true)
+    }
+
     public abstract fun convertToExpression(e: Any): ParsingExpression
 
     public fun convertToExpressions(e1: Any, rest: Array<out Any>): Array<out ParsingExpression> {

@@ -33,6 +33,7 @@ public class MachineStack {
     public var matcher: Matcher? = null
     public var leftRecursion: Int = 0
     public var calledAddress: Int = 0
+    internal var context: ParsingContext = ParsingContext.EMPTY
 
     public constructor() {
         parent = null

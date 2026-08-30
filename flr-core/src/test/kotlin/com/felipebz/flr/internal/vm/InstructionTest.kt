@@ -210,6 +210,7 @@ class InstructionTest {
         val inOrder = inOrder(machine)
         inOrder.verify(machine).peek()
         inOrder.verify(machine).index = 13
+        inOrder.verify(machine).restoreContextFromCheckpoint()
         inOrder.verify(machine).pop()
         inOrder.verify(machine).backtrack()
         verifyNoMoreInteractions(machine)
@@ -233,6 +234,7 @@ class InstructionTest {
         inOrder.verify(machine).peek()
         inOrder.verify(machine).index = 13
         inOrder.verify(machine).ignoreErrors = true
+        inOrder.verify(machine).restoreContextFromCheckpoint()
         inOrder.verify(machine).pop()
         inOrder.verify(machine).jump(42)
         verifyNoMoreInteractions(machine)
