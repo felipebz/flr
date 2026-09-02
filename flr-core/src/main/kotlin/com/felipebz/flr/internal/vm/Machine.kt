@@ -42,7 +42,7 @@ public open class Machine protected constructor(
     private var inputLength = if (input.isNotEmpty()) input.size else tokens.size
     protected var stack: MachineStack = MachineStack().getOrCreateChild()
     protected var matched: Boolean = true
-    private val memos: Array<ParseNode?> = if (ordinaryMemoization) arrayOfNulls(inputLength + 1) else emptyArray()
+    internal val memos: Array<ParseNode?> = if (ordinaryMemoization) arrayOfNulls(inputLength + 1) else emptyArray()
 
     // Number of instructions in grammar for Java is about 2000.
     protected val calls: IntArray = IntArray(instructions.size)

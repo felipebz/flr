@@ -52,8 +52,8 @@ import java.util.concurrent.TimeUnit
 @Fork(3)
 public open class ParserContextBenchmark {
     @JvmField
-    @Param("false", "true")
-    public var context: Boolean = false
+    @Param("A_NO_CONTEXT", "B_CONTEXT_UNREACHABLE", "C_CONTEXT_USED")
+    public var scenario: String = ""
 
     @JvmField
     @Param("false", "true")
@@ -64,9 +64,9 @@ public open class ParserContextBenchmark {
 
     @Setup
     public fun setUp(): Unit {
-        val grammar = grammar(context, memoized)
+        val grammar = grammar(scenario, memoized)
         compiled = MutableGrammarCompiler.compile(grammar.rootRule as CompilableGrammarRule)
-        inputTokens = tokens()
+        inputTokens = tokens(scenario == "C_CONTEXT_USED")
     }
 
     @Benchmark
@@ -74,7 +74,7 @@ public open class ParserContextBenchmark {
         return Machine.parse(inputTokens, compiled)
     }
 
-    private fun grammar(context: Boolean, memoized: Boolean): com.felipebz.flr.api.Grammar {
+    private fun grammar(scenario: String, memoized: Boolean): com.felipebz.flr.api.Grammar {
         val b = LexerfulGrammarBuilder.create()
         b.rule(Rules.ATOM).`is`(b.firstOf(Rules.PARENTHESIZED, Tokens.IDENTIFIER, Tokens.NUMBER))
         b.rule(Rules.PARENTHESIZED).`is`(Tokens.LPAREN, Rules.EXPRESSION, Tokens.RPAREN)
@@ -103,8 +103,11 @@ public open class ParserContextBenchmark {
             Rules.EXPRESSION,
             Tokens.SEMICOLON
         )
-        val contextualAssignment = if (context) contextualAssignment(b, assignment) else assignment
-        b.rule(Rules.STATEMENT).`is`(b.firstOf(Rules.LATE_FAILURE, contextualAssignment))
+        val rareAssignment = b.sequence(
+            Tokens.CONTEXT,
+            if (scenario == "A_NO_CONTEXT") assignment else contextualAssignment(b, assignment)
+        )
+        b.rule(Rules.STATEMENT).`is`(b.firstOf(Rules.LATE_FAILURE, rareAssignment, assignment))
         b.rule(Rules.ROOT).`is`(
             b.oneOrMore(b.next(Rules.STATEMENT), Rules.STATEMENT),
             GenericTokenType.EOF
@@ -135,9 +138,12 @@ public open class ParserContextBenchmark {
         )
     }
 
-    private fun tokens(): List<Token> {
-        val result = ArrayList<Token>(STATEMENTS * 10 + 1)
+    private fun tokens(useContext: Boolean): List<Token> {
+        val result = ArrayList<Token>(STATEMENTS * (if (useContext) 11 else 10) + 1)
         repeat(STATEMENTS) { statement ->
+            if (useContext) {
+                add(result, Tokens.CONTEXT, "context", statement)
+            }
             add(result, Tokens.LET, "let", statement)
             add(result, Tokens.IDENTIFIER, "name", statement)
             add(result, Tokens.EQUALS, "=", statement)
@@ -176,6 +182,7 @@ public open class ParserContextBenchmark {
 
     private enum class Tokens(override val value: String) : TokenType {
         LET("let"),
+        CONTEXT("context"),
         IDENTIFIER("identifier"),
         NUMBER("number"),
         EQUALS("="),

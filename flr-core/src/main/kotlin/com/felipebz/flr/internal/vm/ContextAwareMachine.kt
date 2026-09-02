@@ -30,28 +30,31 @@ import com.felipebz.flr.internal.matchers.ParseNode
  * VM selected once for compiled grammars that contain parser-context expressions.
  * Context checkpoints and context-bearing memo entries deliberately live outside
  * [MachineStack], leaving the ordinary VM's frames and memo representation unchanged.
+ * Until context is first activated, this machine uses the ordinary memo representation
+ * and avoids allocating or writing context snapshots.
  */
 internal class ContextAwareMachine(
     input: CharArray,
     tokens: Array<out Token>,
     instructions: Array<Instruction>,
     handler: MachineHandler
-) : Machine(input, tokens, instructions, handler, false) {
+) : Machine(input, tokens, instructions, handler, true) {
     private var context: ParsingContext = ParsingContext.EMPTY
     // Machine.execute pushes the root frame directly; start at its resulting depth.
     private var contextDepth = 2
-    private var contextSnapshots: Array<ParsingContext?> = arrayOfNulls(64)
-    private val contextMemos: Array<MemoizedParseNode?> = arrayOfNulls((if (input.isNotEmpty()) input.size else tokens.size) + 1)
-
-    init {
-        contextSnapshots[contextDepth] = context
-    }
+    private var contextEverActivated: Boolean = false
+    private var contextSnapshots: Array<ParsingContext?>? = null
+    private val memoCapacity: Int = (if (input.isNotEmpty()) input.size else tokens.size) + 1
+    private var memoContexts: Array<ParsingContext?>? = null
 
     override fun pushReturn(returnOffset: Int, matcher: Matcher?, callOffset: Int) {
-        val memo = contextMemos[index]
-        if (memo != null && memo.node.matcher === matcher && memo.context == context) {
-            stack.subNodes.add(memo.node)
-            index = memo.node.endIndex
+        val memoNode = memos[index]?.takeIf {
+            it.matcher === matcher &&
+                (!contextEverActivated || memoContexts?.get(index) == context)
+        }
+        if (memoNode != null) {
+            stack.subNodes.add(memoNode)
+            index = memoNode.endIndex
             address += returnOffset
         } else {
             pushWithContext(address + returnOffset)
@@ -74,10 +77,10 @@ internal class ContextAwareMachine(
     private fun pushWithContext(address: Int) {
         push(address)
         contextDepth++
-        if (contextDepth == contextSnapshots.size) {
-            contextSnapshots = contextSnapshots.copyOf(contextSnapshots.size * 2)
+        if (contextEverActivated) {
+            ensureSnapshotCapacity()
+            checkNotNull(contextSnapshots)[contextDepth] = context
         }
-        contextSnapshots[contextDepth] = context
     }
 
     override fun popReturn() {
@@ -106,7 +109,7 @@ internal class ContextAwareMachine(
             index = stack.index
             address = stack.address
             ignoreErrors = stack.ignoreErrors
-            context = checkNotNull(contextSnapshots[contextDepth])
+            restoreContextFromCheckpoint()
             stack = stack.parent()
             contextDepth--
         }
@@ -117,16 +120,33 @@ internal class ContextAwareMachine(
         stack.parent().subNodes.add(node)
         val matcher = stack.matcher
         if (matcher is MemoParsingExpression && matcher.shouldMemoize()) {
-            contextMemos[stack.index] = MemoizedParseNode(node, checkNotNull(contextSnapshots[contextDepth]))
+            memos[stack.index] = node
+            if (contextEverActivated) {
+                checkNotNull(memoContexts)[stack.index] = contextAtCheckpoint()
+            }
         }
     }
 
     override fun enterContext(key: ContextKey<*>, value: Any?, present: Boolean) {
+        // Masking a key in EMPTY cannot change any predicate result. Keeping this
+        // scope as EMPTY also lets ordinary top-level isolation scopes stay on the
+        // never-activated memo and checkpoint paths.
+        if (!present && context === ParsingContext.EMPTY) {
+            return
+        }
+        if (!contextEverActivated) {
+            contextEverActivated = true
+            memos.fill(null)
+            memoContexts = arrayOfNulls(memoCapacity)
+            ensureSnapshotCapacity()
+        }
         context = if (present) context.with(key, value) else context.without(key)
     }
 
     override fun exitContext() {
-        context = context.parent()
+        if (context !== ParsingContext.EMPTY) {
+            context = context.parent()
+        }
     }
 
     override fun containsContext(key: ContextKey<*>): Boolean {
@@ -138,12 +158,24 @@ internal class ContextAwareMachine(
     }
 
     override fun restoreContextFromCheckpoint() {
-        context = checkNotNull(contextSnapshots[contextDepth])
+        if (contextEverActivated) {
+            context = contextAtCheckpoint()
+        }
     }
 
-    private data class MemoizedParseNode(
-        val node: ParseNode,
-        val context: ParsingContext
-    )
+    private fun contextAtCheckpoint(): ParsingContext {
+        return contextSnapshots?.get(contextDepth) ?: ParsingContext.EMPTY
+    }
+
+    private fun ensureSnapshotCapacity() {
+        val snapshots = contextSnapshots
+        if (snapshots == null || contextDepth >= snapshots.size) {
+            var newSize = snapshots?.size ?: 64
+            while (contextDepth >= newSize) {
+                newSize *= 2
+            }
+            contextSnapshots = snapshots?.copyOf(newSize) ?: arrayOfNulls(newSize)
+        }
+    }
 
 }

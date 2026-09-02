@@ -193,6 +193,24 @@ class ContextExpressionTest {
     }
 
     @Test
+    fun empty_context_mask_remains_isolated_around_a_nested_value() {
+        val key = ContextKey<Boolean>()
+        val b = LexerlessGrammarBuilder.create()
+        b.rule(Rules.ROOT).`is`(
+            b.withoutContext(
+                key,
+                b.nextNot(b.requireContext(key)),
+                b.withContext(key, true, b.requireContext(key)),
+                b.nextNot(b.requireContext(key))
+            ),
+            b.endOfInput()
+        )
+        b.setRootRule(Rules.ROOT)
+
+        assertThat(ParseRunner(b.build().rootRule).matches("")).isTrue()
+    }
+
+    @Test
     fun independent_context_keys_do_not_interfere() {
         val first = ContextKey<String>()
         val second = ContextKey<String>()
