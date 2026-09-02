@@ -37,7 +37,9 @@ jobs:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
       - name: Release artifacts
-        run: ./gradlew publish jreleaserFullRelease
+        run: |
+          ./gradlew publish
+          ./gradlew jreleaserFullRelease
         if: github.ref == 'refs/heads/main'
         env:
           JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.MAVEN_USERNAME }}
