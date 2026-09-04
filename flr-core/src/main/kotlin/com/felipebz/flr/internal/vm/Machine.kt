@@ -83,7 +83,9 @@ public open class Machine protected constructor(
 
     protected fun push(address: Int) {
         stack = stack.getOrCreateChild()
-        stack.subNodes.clear()
+        if (stack.subNodes.isNotEmpty()) {
+            stack.subNodes.clear()
+        }
         stack.address = address
         stack.index = index
         stack.ignoreErrors = ignoreErrors
