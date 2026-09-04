@@ -239,4 +239,96 @@ class MachineTest {
         assertThat(machine.index).isEqualTo(0)
         assertThat(machine.peek().subNodes).isEmpty()
     }
+
+    @Test
+    fun should_clear_stale_subnodes_when_reusing_stack_frame() {
+        val machine = Machine("foo", arrayOf(mock(), mock(), mock()))
+        val matcher = mock<Matcher>()
+        machine.pushReturn(0, matcher, 0)
+        machine.createLeafNode(mock(), 1)
+        assertThat(machine.peek().subNodes).hasSize(1)
+        machine.popReturn()
+        assertThat(machine.peek().isEmpty()).isTrue()
+
+        // Reusing the same child frame at depth 1
+        machine.pushReturn(0, matcher, 0)
+        assertThat(machine.peek().subNodes).isEmpty()
+    }
+
+    @Test
+    fun should_not_leak_stale_children_when_backtrack_frame_reuses_return_frame() {
+        val machine = Machine("foobar", arrayOf(mock(), mock(), mock(), mock()))
+        val matcher = mock<Matcher>()
+        // Frame 1 as return frame with child
+        machine.pushReturn(0, matcher, 0)
+        machine.createLeafNode(mock(), 1)
+        assertThat(machine.peek().subNodes).hasSize(1)
+        machine.popReturn()
+
+        // Frame 1 reused as backtrack frame
+        machine.pushBacktrack(10)
+        assertThat(machine.peek().matcher).isNull()
+        // If child matches and commits, it should only have its own child, not the stale one
+        val leafMatcher = mock<Matcher>()
+        machine.createLeafNode(leafMatcher, 2)
+        Instruction.CommitInstruction(0).execute(machine)
+        // Root frame should now have only the new leaf node
+        assertThat(machine.peek().subNodes).hasSize(1)
+        assertThat(machine.peek().subNodes[0].matcher).isSameAs(leafMatcher)
+    }
+
+    @Test
+    fun should_start_with_empty_subnodes_when_return_frame_reuses_backtrack_frame() {
+        val machine = Machine("foobar", Array(10) { mock() })
+        // Frame 1 as backtrack frame that failed and backtracked
+        machine.pushBacktrack(1)
+        machine.createLeafNode(mock(), 1)
+        machine.backtrack()
+
+        // Frame 1 reused as return frame
+        val matcher = mock<Matcher>()
+        machine.pushReturn(0, matcher, 0)
+        assertThat(machine.peek().matcher).isSameAs(matcher)
+        assertThat(machine.peek().subNodes).isEmpty()
+        val leafMatcher = mock<Matcher>()
+        machine.createLeafNode(leafMatcher, 2)
+        machine.createNode()
+        assertThat(machine.peek().parent().subNodes[0].children).hasSize(1)
+        assertThat(machine.peek().parent().subNodes[0].children[0].matcher).isSameAs(leafMatcher)
+    }
+
+    @Test
+    fun should_handle_nested_choice_and_rule_frame_reuse() {
+        val machine = Machine("foobar", Array(20) { mock() })
+        val rule1 = mock<Matcher>()
+        val rule2 = mock<Matcher>()
+
+        // Depth 1: Return frame
+        machine.pushReturn(0, rule1, 1)
+        // Depth 2: Backtrack frame
+        machine.pushBacktrack(1)
+        // Depth 3: Return frame with leaf
+        machine.pushReturn(0, rule2, 2)
+        machine.createLeafNode(mock(), 1)
+        machine.createNode()
+        machine.popReturn()
+        // Commit depth 2
+        Instruction.CommitInstruction(0).execute(machine)
+        machine.createNode()
+        machine.popReturn()
+
+        // Now reuse frames with roles swapped, advancing index to avoid left recursion
+        machine.advanceIndex(1)
+        // Depth 1: Backtrack frame
+        machine.pushBacktrack(1)
+        // Depth 2: Return frame
+        machine.pushReturn(0, rule2, 3)
+        assertThat(machine.peek().subNodes).isEmpty()
+        machine.createLeafNode(mock(), 2)
+        machine.createNode()
+        machine.popReturn()
+        // Commit depth 1
+        Instruction.CommitInstruction(0).execute(machine)
+        assertThat(machine.peek().subNodes).hasSize(2)
+    }
 }
