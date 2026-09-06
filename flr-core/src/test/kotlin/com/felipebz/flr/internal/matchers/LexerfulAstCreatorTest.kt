@@ -80,6 +80,161 @@ class LexerfulAstCreatorTest {
         assertThat(ast.children[0].parent).isSameAs(ast)
     }
 
+    @Test
+    fun preservesSkipIfOneChildWithNoEffectiveChildren() {
+        val root = RuleDefinition("root")
+        val skipIfOneChild = RuleDefinition("skipIfOneChild").also { it.skipIfOneChild() }
+        val emptyAlwaysSkip = RuleDefinition("emptyAlwaysSkip").also { it.skip() }
+
+        val ast = create(
+            ParseNode(
+                0,
+                0,
+                root,
+                arrayOf(ParseNode(0, 0, skipIfOneChild, arrayOf(ParseNode(0, 0, emptyAlwaysSkip))))
+            ),
+            emptyList()
+        )
+
+        assertThat(ast.children).hasSize(1)
+        assertThat(ast.children[0].name).isEqualTo("skipIfOneChild")
+        assertThat(ast.children[0].children).isEmpty()
+        assertThat(ast.children[0].fromIndex).isZero()
+        assertThat(ast.children[0].toIndex).isZero()
+        assertThat(ast.children[0].parent).isSameAs(ast)
+    }
+
+    @Test
+    fun collapsesSkipIfOneChildWithOneRetainedNonTerminalChild() {
+        val root = RuleDefinition("root")
+        val skipIfOneChild = RuleDefinition("skipIfOneChild").also { it.skipIfOneChild() }
+        val retained = RuleDefinition("retained")
+
+        val ast = create(
+            ParseNode(
+                0,
+                1,
+                root,
+                arrayOf(ParseNode(0, 1, skipIfOneChild, arrayOf(ParseNode(0, 1, retained, arrayOf(terminal(0))))))
+            ),
+            listOf(token(0))
+        )
+
+        assertThat(ast.children).hasSize(1)
+        val child = ast.children[0]
+        assertThat(child.name).isEqualTo("retained")
+        assertThat(child.fromIndex).isEqualTo(0)
+        assertThat(child.toIndex).isEqualTo(1)
+        assertThat(child.parent).isSameAs(ast)
+        assertThat(child.children[0].parent).isSameAs(child)
+    }
+
+    @Test
+    fun preservesSkipIfOneChildWithMultipleEffectiveChildren() {
+        val tokens = List(3) { token(it) }
+        val root = RuleDefinition("root")
+        val skipIfOneChild = RuleDefinition("skipIfOneChild").also { it.skipIfOneChild() }
+
+        val ast = create(
+            ParseNode(0, 3, root, arrayOf(ParseNode(0, 3, skipIfOneChild, arrayOf(terminal(0), terminal(1), terminal(2))))),
+            tokens
+        )
+
+        assertThat(ast.children).hasSize(1)
+        val skipped = ast.children[0]
+        assertThat(skipped.name).isEqualTo("skipIfOneChild")
+        assertThat(skipped.fromIndex).isEqualTo(0)
+        assertThat(skipped.toIndex).isEqualTo(3)
+        assertThat(skipped.children).extracting<String> { it.tokenOriginalValue }
+            .containsExactly("token0", "token1", "token2")
+        assertThat(skipped.children).allMatch { it.parent === skipped }
+    }
+
+    @Test
+    fun collapsesNestedSkipIfOneChildNodes() {
+        val root = RuleDefinition("root")
+        val outer = RuleDefinition("outer").also { it.skipIfOneChild() }
+        val middle = RuleDefinition("middle").also { it.skipIfOneChild() }
+        val inner = RuleDefinition("inner").also { it.skipIfOneChild() }
+
+        val ast = create(
+            ParseNode(
+                0,
+                1,
+                root,
+                arrayOf(ParseNode(0, 1, outer, arrayOf(ParseNode(0, 1, middle, arrayOf(ParseNode(0, 1, inner, arrayOf(terminal(0))))))))
+            ),
+            listOf(token(0))
+        )
+
+        assertThat(ast.children).hasSize(1)
+        assertThat(ast.children[0].tokenOriginalValue).isEqualTo("token0")
+        assertThat(ast.children[0].parent).isSameAs(ast)
+    }
+
+    @Test
+    fun collapsesSkipIfOneChildAroundAnAlwaysSkipNode() {
+        val root = RuleDefinition("root")
+        val skipIfOneChild = RuleDefinition("skipIfOneChild").also { it.skipIfOneChild() }
+        val alwaysSkip = RuleDefinition("alwaysSkip").also { it.skip() }
+
+        val ast = create(
+            ParseNode(
+                0,
+                1,
+                root,
+                arrayOf(ParseNode(0, 1, skipIfOneChild, arrayOf(ParseNode(0, 1, alwaysSkip, arrayOf(terminal(0))))))
+            ),
+            listOf(token(0))
+        )
+
+        assertThat(ast.children).hasSize(1)
+        assertThat(ast.children[0].tokenOriginalValue).isEqualTo("token0")
+        assertThat(ast.children[0].parent).isSameAs(ast)
+    }
+
+    @Test
+    fun retainsSkipIfOneChildAroundAnAlwaysSkipNodeWithMultipleChildren() {
+        val tokens = List(2) { token(it) }
+        val root = RuleDefinition("root")
+        val skipIfOneChild = RuleDefinition("skipIfOneChild").also { it.skipIfOneChild() }
+        val alwaysSkip = RuleDefinition("alwaysSkip").also { it.skip() }
+
+        val ast = create(
+            ParseNode(
+                0,
+                2,
+                root,
+                arrayOf(
+                    ParseNode(
+                        0,
+                        2,
+                        skipIfOneChild,
+                        arrayOf(ParseNode(0, 2, alwaysSkip, arrayOf(terminal(0), terminal(1))))
+                    )
+                )
+            ),
+            tokens
+        )
+
+        assertThat(ast.children).hasSize(1)
+        val skipped = ast.children[0]
+        assertThat(skipped.name).isEqualTo("skipIfOneChild")
+        assertThat(skipped.children).extracting<String> { it.tokenOriginalValue }
+            .containsExactly("token0", "token1")
+        assertThat(skipped.parent).isSameAs(ast)
+    }
+
+    @Test
+    fun preservesSkipIfOneChildRoot() {
+        val root = RuleDefinition("root").also { it.skipIfOneChild() }
+        val ast = create(ParseNode(0, 1, root, arrayOf(terminal(0))), listOf(token(0)))
+
+        assertThat(ast.name).isEqualTo("root")
+        assertThat(ast.children).hasSize(1)
+        assertThat(ast.children[0].parent).isSameAs(ast)
+    }
+
     private fun create(parseTree: ParseNode, tokens: List<Token>): AstNode {
         return LexerfulAstCreator.create(
             parseTree,

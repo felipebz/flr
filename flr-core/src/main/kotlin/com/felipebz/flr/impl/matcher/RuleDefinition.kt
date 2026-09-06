@@ -98,6 +98,10 @@ public class RuleDefinition : Rule, AstNodeSkippingPolicy, GrammarRuleKey, Compi
         return astNodeSkippingPolicy === AlwaysSkipFromAst
     }
 
+    internal fun isSkipIfOneChildFromAst(): Boolean {
+        return astNodeSkippingPolicy === SkipFromAstIfOnlyOneChild
+    }
+
     /**
      * @since 1.18
      */
