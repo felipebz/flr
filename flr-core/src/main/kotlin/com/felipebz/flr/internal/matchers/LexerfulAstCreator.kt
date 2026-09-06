@@ -32,12 +32,23 @@ public class LexerfulAstCreator private constructor(
     private val nonTerminalNodeBuilder: NonTerminalNodeBuilder,
     private val terminalNodeBuilder: TerminalNodeBuilder
 ) {
-    private fun visit(node: ParseNode): AstNode? {
-        return if (node.matcher is RuleDefinition) {
+    private fun visit(node: ParseNode, parent: AstNode? = null): AstNode? {
+        if (parent != null && node.matcher is RuleDefinition && node.matcher.isAlwaysSkipFromAst()) {
+            for (child in node.children) {
+                visit(child, parent)
+            }
+            return null
+        }
+
+        val astNode = if (node.matcher is RuleDefinition) {
             visitNonTerminal(node)
         } else {
             visitTerminal(node)
         }
+        if (parent != null) {
+            parent.addChild(astNode)
+        }
+        return astNode
     }
 
     private fun visitNonTerminal(node: ParseNode): AstNode {
@@ -45,18 +56,7 @@ public class LexerfulAstCreator private constructor(
         val token = if (node.startIndex < tokens.size) tokens[node.startIndex] else null
         val astNode = nonTerminalNodeBuilder.build(ruleMatcher, ruleMatcher.getName(), token)
         for (child in node.children) {
-            val internalAstNode = visit(child)
-            when {
-                internalAstNode == null -> {
-                    // skip
-                }
-                internalAstNode.hasToBeSkippedFromAst() -> {
-                    internalAstNode.children.forEach { astNode.addChild(it)  }
-                }
-                else -> {
-                    astNode.addChild(internalAstNode)
-                }
-            }
+            visit(child, astNode)
         }
         astNode.fromIndex = node.startIndex
         astNode.toIndex = node.endIndex

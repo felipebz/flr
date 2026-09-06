@@ -94,6 +94,10 @@ public class RuleDefinition : Rule, AstNodeSkippingPolicy, GrammarRuleKey, Compi
         } else false
     }
 
+    internal fun isAlwaysSkipFromAst(): Boolean {
+        return astNodeSkippingPolicy === AlwaysSkipFromAst
+    }
+
     /**
      * @since 1.18
      */
