@@ -32,6 +32,8 @@ import com.felipebz.flr.internal.vm.lexerful.LexerfulParseErrorFormatter
 import com.felipebz.flr.parser.ParseError
 import com.felipebz.flr.parser.ParsingResult
 
+private val EMPTY_PARSE_NODES = emptyArray<ParseNode>()
+
 public open class Machine protected constructor(
     protected val input: CharArray,
     private val tokens: Array<out Token>,
@@ -174,7 +176,15 @@ public open class Machine protected constructor(
     }
 
     public open fun createNode() {
-        val node = ParseNode(stack.index, index, stack.matcher, stack.subNodes.toTypedArray())
+        val subNodes = stack.subNodes
+        val children = when (subNodes.size) {
+            0 -> EMPTY_PARSE_NODES
+            1 -> arrayOf(subNodes[0])
+            2 -> arrayOf(subNodes[0], subNodes[1])
+            3 -> arrayOf(subNodes[0], subNodes[1], subNodes[2])
+            else -> subNodes.toTypedArray()
+        }
+        val node = ParseNode(stack.index, index, stack.matcher, children)
         stack.parent().subNodes.add(node)
         val matcher = stack.matcher
         if (matcher is MemoParsingExpression && matcher.shouldMemoize()) {

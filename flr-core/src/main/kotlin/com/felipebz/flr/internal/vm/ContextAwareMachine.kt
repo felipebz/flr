@@ -26,6 +26,8 @@ import com.felipebz.flr.grammar.GrammarException
 import com.felipebz.flr.internal.matchers.Matcher
 import com.felipebz.flr.internal.matchers.ParseNode
 
+private val EMPTY_PARSE_NODES = emptyArray<ParseNode>()
+
 /**
  * VM selected once for compiled grammars that contain parser-context expressions.
  * Context checkpoints and context-bearing memo entries deliberately live outside
@@ -116,7 +118,15 @@ internal class ContextAwareMachine(
     }
 
     override fun createNode() {
-        val node = ParseNode(stack.index, index, stack.matcher, stack.subNodes.toTypedArray())
+        val subNodes = stack.subNodes
+        val children = when (subNodes.size) {
+            0 -> EMPTY_PARSE_NODES
+            1 -> arrayOf(subNodes[0])
+            2 -> arrayOf(subNodes[0], subNodes[1])
+            3 -> arrayOf(subNodes[0], subNodes[1], subNodes[2])
+            else -> subNodes.toTypedArray()
+        }
+        val node = ParseNode(stack.index, index, stack.matcher, children)
         stack.parent().subNodes.add(node)
         val matcher = stack.matcher
         if (matcher is MemoParsingExpression && matcher.shouldMemoize()) {
