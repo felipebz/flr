@@ -3,7 +3,7 @@ kotlin = "2.4.10"
 dokka = "2.2.0"
 jreleaser = "1.25.0"
 license = "0.16.1"
-sonarscanner = "7.4.0.8496"
+sonarscanner = "7.5.0.8588"
 jmh-plugin = "0.7.3"
 
 # libs
