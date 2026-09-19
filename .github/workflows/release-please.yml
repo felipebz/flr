@@ -1,0 +1,252 @@
+name: Release Please
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  release_please:
+    name: Create or update Release Please draft
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+      version: ${{ steps.release.outputs.version }}
+      sha: ${{ steps.release.outputs.sha }}
+    steps:
+      - id: release
+        uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+          token: ${{ github.token }}
+
+  prepare_release:
+    name: Prepare and verify stable Maven staging
+    if: needs.release_please.outputs.release_created == 'true'
+    needs: release_please
+    runs-on: ubuntu-latest
+    outputs:
+      release_version: ${{ steps.release.outputs.release_version }}
+      release_tag: ${{ steps.release.outputs.release_tag }}
+      release_sha: ${{ steps.release.outputs.release_sha }}
+    env:
+      RELEASE_VERSION: ${{ needs.release_please.outputs.version }}
+      RELEASE_TAG: ${{ needs.release_please.outputs.tag_name }}
+      RELEASE_SHA: ${{ needs.release_please.outputs.sha }}
+    steps:
+      - name: Checkout exact release commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ needs.release_please.outputs.sha }}
+          fetch-depth: 0
+
+      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6
+
+      - name: Verify exact Release Please commit and version
+        id: release
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          [[ ${RELEASE_SHA} =~ ^[0-9a-f]{40}$ ]] || {
+            printf 'Release Please returned an invalid commit SHA: %s\n' "${RELEASE_SHA}" >&2
+            exit 1
+          }
+          [[ $(git rev-parse HEAD) == "${RELEASE_SHA}" ]] || {
+            printf 'Checked out commit does not match Release Please SHA\n' >&2
+            exit 1
+          }
+          [[ ${RELEASE_VERSION} =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || {
+            printf 'Release version must be a stable X.Y.Z: %s\n' "${RELEASE_VERSION}" >&2
+            exit 1
+          }
+          [[ ${RELEASE_TAG} == "${RELEASE_VERSION}" ]] || {
+            printf 'Release tag %s does not match release version %s\n' "${RELEASE_TAG}" "${RELEASE_VERSION}" >&2
+            exit 1
+          }
+          [[ ${RELEASE_TAG} =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || {
+            printf 'Release tag must be an unprefixed stable X.Y.Z: %s\n' "${RELEASE_TAG}" >&2
+            exit 1
+          }
+
+          project_version=$(./gradlew properties --console=plain | awk '$1 == "version:" { value=$2 } END { print value }')
+          [[ ${project_version} == "${RELEASE_VERSION}" ]] || {
+            printf 'Gradle project version %s does not match Release Please version %s\n' "${project_version}" "${RELEASE_VERSION}" >&2
+            exit 1
+          }
+          [[ ${project_version} != *-SNAPSHOT ]] || {
+            printf 'Stable release must not use a SNAPSHOT project version: %s\n' "${project_version}" >&2
+            exit 1
+          }
+
+          {
+            printf 'release_version=%s\n' "${RELEASE_VERSION}"
+            printf 'release_tag=%s\n' "${RELEASE_TAG}"
+            printf 'release_sha=%s\n' "${RELEASE_SHA}"
+          } >> "${GITHUB_OUTPUT}"
+
+      - name: Build with Gradle
+        run: ./gradlew build
+
+      - name: Run SonarQube Scanner
+        run: ./gradlew sonar
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+      - name: Publish to local Maven staging
+        run: ./gradlew publish
+
+      - name: Verify Maven staging contents
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          staging_root=build/staging-deploy
+          group_root=${staging_root}/com/felipebz/flr
+          expected_modules=(
+            flr-core
+            flr-xpath
+            flr-toolkit
+            flr-testing-harness
+            flr-examples
+            flr-tests
+          )
+
+          [[ -d ${group_root} ]] || {
+            printf 'Maven staging group directory is missing: %s\n' "${group_root}" >&2
+            exit 1
+          }
+          [[ ! -e ${group_root}/flr-benchmarks ]] || {
+            printf 'Unexpected benchmark module in Maven staging\n' >&2
+            exit 1
+          }
+
+          mapfile -t actual_modules < <(find "${group_root}" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort)
+          mapfile -t sorted_expected_modules < <(printf '%s\n' "${expected_modules[@]}" | sort)
+          [[ "${actual_modules[*]}" == "${sorted_expected_modules[*]}" ]] || {
+            printf 'Staged modules do not match expected modules\nExpected: %s\nActual: %s\n' "${expected_modules[*]}" "${actual_modules[*]}" >&2
+            exit 1
+          }
+
+          for module in "${expected_modules[@]}"; do
+            module_root=${group_root}/${module}
+            mapfile -t versions < <(find "${module_root}" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort)
+            [[ ${#versions[@]} -eq 1 && ${versions[0]} == "${RELEASE_VERSION}" ]] || {
+              printf 'Unexpected staged versions for %s: %s\n' "${module}" "${versions[*]}" >&2
+              exit 1
+            }
+
+            version_root=${module_root}/${RELEASE_VERSION}
+            for artifact in \
+              "${module}-${RELEASE_VERSION}.jar" \
+              "${module}-${RELEASE_VERSION}-sources.jar" \
+              "${module}-${RELEASE_VERSION}-javadoc.jar" \
+              "${module}-${RELEASE_VERSION}.pom" \
+              "${module}-${RELEASE_VERSION}.module"; do
+              [[ -f ${version_root}/${artifact} ]] || {
+                printf 'Expected staged file is missing: %s\n' "${version_root}/${artifact}" >&2
+                exit 1
+              }
+            done
+            while IFS= read -r -d '' staged_file; do
+              staged_name=$(basename "${staged_file}")
+              case ${staged_name} in
+                maven-metadata.xml*|${module}-${RELEASE_VERSION}*) ;;
+                *)
+                  printf 'Staged file has an unexpected coordinate: %s\n' "${staged_file}" >&2
+                  exit 1
+                  ;;
+              esac
+            done < <(find "${version_root}" -mindepth 1 -maxdepth 1 -type f -print0)
+          done
+
+          unexpected_snapshot=$(find "${staging_root}" -name '*SNAPSHOT*' -print -quit)
+          [[ -z ${unexpected_snapshot} ]] || {
+            printf 'Snapshot path found in stable Maven staging: %s\n' "${unexpected_snapshot}" >&2
+            exit 1
+          }
+
+          printf 'Verified Maven staging for %s: %s\n' "${RELEASE_VERSION}" "${expected_modules[*]}"
+
+      - name: Upload validated Maven staging
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: maven-staging-${{ env.RELEASE_VERSION }}-${{ env.RELEASE_SHA }}
+          path: build/staging-deploy
+          if-no-files-found: error
+
+  deploy_maven:
+    name: Deploy stable Maven artifacts
+    if: needs.prepare_release.result == 'success'
+    needs: prepare_release
+    runs-on: ubuntu-latest
+    outputs:
+      release_version: ${{ needs.prepare_release.outputs.release_version }}
+      release_tag: ${{ needs.prepare_release.outputs.release_tag }}
+      release_sha: ${{ needs.prepare_release.outputs.release_sha }}
+    env:
+      RELEASE_VERSION: ${{ needs.prepare_release.outputs.release_version }}
+      RELEASE_TAG: ${{ needs.prepare_release.outputs.release_tag }}
+      RELEASE_SHA: ${{ needs.prepare_release.outputs.release_sha }}
+    steps:
+      - name: Checkout exact release commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ needs.prepare_release.outputs.release_sha }}
+          fetch-depth: 0
+
+      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6
+
+      - name: Download validated Maven staging
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          name: maven-staging-${{ env.RELEASE_VERSION }}-${{ env.RELEASE_SHA }}
+          path: build/staging-deploy
+
+      - name: Deploy to Maven Central
+        run: ./gradlew jreleaserDeploy
+        env:
+          JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.MAVEN_USERNAME }}
+          JRELEASER_MAVENCENTRAL_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
+          JRELEASER_GPG_PUBLIC_KEY: ${{ secrets.GPG_PUBLIC_KEY }}
+          JRELEASER_GPG_SECRET_KEY: ${{ secrets.GPG_SECRET_KEY }}
+          JRELEASER_GPG_PASSPHRASE: ${{ secrets.GPG_KEY_PASSWORD }}
+
+  publish_github:
+    name: Publish GitHub Release
+    if: needs.deploy_maven.result == 'success'
+    needs: deploy_maven
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      RELEASE_TAG: ${{ needs.deploy_maven.outputs.release_tag }}
+    steps:
+      - name: Publish GitHub release draft
+        uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64
+        with:
+          token: ${{ github.token }}
+          tag_name: ${{ env.RELEASE_TAG }}
+          draft: false

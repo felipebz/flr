@@ -1,16 +1,23 @@
 name: Build
 
 on:
-  push:
-    branches:
-      - "*"
   pull_request:
     branches:
       - main
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: build-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+
+permissions:
+  contents: read
 
 jobs:
   build:
-    name: Build and release
+    name: Build and verify
     runs-on: ubuntu-latest
     steps:
       - name: checkout
@@ -27,30 +34,49 @@ jobs:
         uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6
 
       - name: Build with Gradle
-        run: ./gradlew build jreleaserAssemble
+        run: ./gradlew build
 
       - name: Run SonarQube Scanner
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: ./gradlew sonar
-        if: github.ref == 'refs/heads/main'
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
-      - name: Release artifacts
+      - name: Detect project version
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        id: version
+        shell: bash
+        run: |
+          set -euo pipefail
+          version=$(sed -n 's/^version=//p' gradle.properties)
+          if [[ ${version} =~ ^[0-9]+\.[0-9]+\.[0-9]+-SNAPSHOT$ ]]; then
+            is_snapshot=true
+          elif [[ ${version} =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            is_snapshot=false
+          else
+            printf 'Unsupported project version: %s\n' "${version}" >&2
+            exit 1
+          fi
+          printf 'version=%s\nis_snapshot=%s\n' "${version}" "${is_snapshot}"
+          {
+            printf 'version=%s\n' "${version}"
+            printf 'is_snapshot=%s\n' "${is_snapshot}"
+          } >> "${GITHUB_OUTPUT}"
+
+      - name: Publish snapshot artifacts
+        if: steps.version.outputs.is_snapshot == 'true'
         run: |
           ./gradlew publish
-          ./gradlew jreleaserFullRelease
-        if: github.ref == 'refs/heads/main'
+          ./gradlew jreleaserDeploy
         env:
           JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.MAVEN_USERNAME }}
           JRELEASER_MAVENCENTRAL_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
           JRELEASER_NEXUS2_USERNAME: ${{ secrets.MAVEN_USERNAME }}
           JRELEASER_NEXUS2_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
-          JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           JRELEASER_GPG_PUBLIC_KEY: ${{ secrets.GPG_PUBLIC_KEY }}
           JRELEASER_GPG_SECRET_KEY: ${{ secrets.GPG_SECRET_KEY }}
           JRELEASER_GPG_PASSPHRASE: ${{ secrets.GPG_KEY_PASSWORD }}
-
   dependency-submission:
     runs-on: ubuntu-latest
     permissions:

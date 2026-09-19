@@ -15,6 +15,15 @@ plugins {
     alias(libs.plugins.jreleaser)
 }
 
+val publishedProjects = setOf(
+    ":flr-core",
+    ":flr-xpath",
+    ":flr-toolkit",
+    ":flr-testing-harness",
+    ":flr-examples",
+    ":flr-tests",
+)
+
 allprojects {
     apply(plugin = "java")
     apply(plugin = "maven-publish")
@@ -31,7 +40,7 @@ allprojects {
     }
 
     group = "com.felipebz.flr"
-    version = "1.6.0-SNAPSHOT"
+    version = providers.gradleProperty("version").get()
 }
 
 subprojects {
@@ -94,41 +103,43 @@ subprojects {
         archiveClassifier.set("javadoc")
     }
 
-    publishing {
-        repositories {
-            maven {
-                url = rootProject.layout.buildDirectory.dir("staging-deploy").get().asFile.toURI()
+    if (path in publishedProjects) {
+        publishing {
+            repositories {
+                maven {
+                    url = rootProject.layout.buildDirectory.dir("staging-deploy").get().asFile.toURI()
+                }
             }
-        }
-        publications {
-            create<MavenPublication>("maven") {
-                from(components["java"])
-                artifact(dokka)
-                pom {
-                    name.set(provider { project.description })
-                    description.set(provider { project.description })
-                    url.set("https://github.com/felipebz/flr")
-                    organization {
-                        name.set("Felipe Zorzo")
-                        url.set("https://felipezorzo.com.br")
-                    }
-                    licenses {
-                        license {
-                            name.set("GNU LGPL 3")
-                            url.set("https://www.gnu.org/licenses/lgpl.txt")
-                            distribution.set("repo")
-                        }
-                    }
-                    scm {
+            publications {
+                create<MavenPublication>("maven") {
+                    from(components["java"])
+                    artifact(dokka)
+                    pom {
+                        name.set(provider { project.description })
+                        description.set(provider { project.description })
                         url.set("https://github.com/felipebz/flr")
-                        connection.set("scm:git:https://github.com/felipebz/flr.git")
-                        developerConnection.set("scm:git:https://github.com/felipebz/flr.git")
-                    }
-                    developers {
-                        developer {
-                            id.set("felipebz")
+                        organization {
                             name.set("Felipe Zorzo")
                             url.set("https://felipezorzo.com.br")
+                        }
+                        licenses {
+                            license {
+                                name.set("GNU LGPL 3")
+                                url.set("https://www.gnu.org/licenses/lgpl.txt")
+                                distribution.set("repo")
+                            }
+                        }
+                        scm {
+                            url.set("https://github.com/felipebz/flr")
+                            connection.set("scm:git:https://github.com/felipebz/flr.git")
+                            developerConnection.set("scm:git:https://github.com/felipebz/flr.git")
+                        }
+                        developers {
+                            developer {
+                                id.set("felipebz")
+                                name.set("Felipe Zorzo")
+                                url.set("https://felipezorzo.com.br")
+                            }
                         }
                     }
                 }
@@ -152,20 +163,15 @@ jreleaser {
     }
     release {
         github {
-            overwrite.set(true)
-            tagName.set("{{projectVersion}}")
-            draft.set(true)
-            changelog {
-                formatted.set(org.jreleaser.model.Active.ALWAYS)
-                preset.set("conventional-commits")
-                format.set("- {{commitShortHash}} {{commitTitle}}")
-                contributors {
-                    enabled.set(false)
-                }
-                hide {
-                    uncategorized.set(true)
-                }
-            }
+            token.set("unused") // JReleaser requires a configured provider even for deploy tasks.
+            skipTag.set(true)
+            skipRelease.set(true)
+            artifacts.set(false)
+            files.set(false)
+            checksums.set(false)
+            catalogs.set(false)
+            signatures.set(false)
+            uploadAssets.set(org.jreleaser.model.Active.NEVER)
         }
     }
     signing {
