@@ -44,12 +44,15 @@ public class ParserAssert(actual: Parser<*>) : AbstractAssert<ParserAssert, Pars
 ) {
     private fun createParserWithEofMatcher(): Parser<*> {
         val rule = actual.rootRule
+        val cache = eofParsers.get()
+        cache[actual]?.let { (cachedRule, parser) -> if (cachedRule === rule) return parser }
         val builder = LexerfulGrammarBuilder.create()
         val withEndOfInputKey = WithEndOfInput(rule.ruleKey)
         builder.rule(withEndOfInputKey).`is`(rule, FirstOfExpression(EndOfInputExpression, TokenTypeExpression(GenericTokenType.EOF)))
         builder.setRootRule(withEndOfInputKey)
         val parser: Parser<*> = Parser.builder(actual).build()
         parser.setRootRule(builder.build().rootRule)
+        cache[actual] = rule to parser
         return parser
     }
 
@@ -104,5 +107,10 @@ public class ParserAssert(actual: Parser<*>) : AbstractAssert<ParserAssert, Pars
 
     private fun getRuleName(): String {
         return actual.rootRule.getName()
+    }
+
+    private companion object {
+        val eofParsers: ThreadLocal<MutableMap<Parser<*>, Pair<Any, Parser<*>>>> =
+            ThreadLocal.withInitial { java.util.WeakHashMap() }
     }
 }
