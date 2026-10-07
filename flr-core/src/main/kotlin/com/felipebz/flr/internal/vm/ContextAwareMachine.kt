@@ -38,9 +38,9 @@ private val EMPTY_PARSE_NODES = emptyArray<ParseNode>()
 internal class ContextAwareMachine(
     input: CharArray,
     tokens: Array<out Token>,
-    instructions: Array<Instruction>,
+    program: InstructionProgram,
     handler: MachineHandler
-) : Machine(input, tokens, instructions, handler, true) {
+) : Machine(input, tokens, program, handler, true) {
     private var context: ParsingContext = ParsingContext.EMPTY
     // Machine.execute pushes the root frame directly; start at its resulting depth.
     private var contextDepth = 2
@@ -49,7 +49,7 @@ internal class ContextAwareMachine(
     private val memoCapacity: Int = (if (input.isNotEmpty()) input.size else tokens.size) + 1
     private var memoContexts: Array<ParsingContext?>? = null
 
-    override fun pushReturn(returnOffset: Int, matcher: Matcher?, callOffset: Int) {
+    override fun pushReturn(returnOffset: Int, matcher: Matcher?, callOffset: Int, targetId: Int) {
         val memoNode = memos[index]?.takeIf {
             it.matcher === matcher &&
                 (!contextEverActivated || memoContexts?.get(index) == context)
@@ -62,12 +62,13 @@ internal class ContextAwareMachine(
             pushWithContext(address + returnOffset)
             stack.matcher = matcher
             address += callOffset
-            if (calls[address] == index) {
+            val callState = index + 1
+            if (calls[targetId] == callState) {
                 throw GrammarException("Left recursion has been detected, involved rule: " + matcher.toString())
             }
-            stack.calledAddress = address
-            stack.leftRecursion = calls[address]
-            calls[address] = index
+            stack.calledTargetId = targetId
+            stack.previousCallState = calls[targetId]
+            calls[targetId] = callState
         }
     }
 

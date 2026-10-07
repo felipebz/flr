@@ -39,14 +39,24 @@ public abstract class Instruction {
         }
     }
 
-    public data class CallInstruction(private val offset: Int, private val matcher: Matcher?) : Instruction() {
+    public data class CallInstruction(
+        internal val offset: Int,
+        internal val matcher: Matcher?,
+        public val targetId: Int
+    ) : Instruction() {
         override fun execute(machine: Machine) {
-            machine.pushReturn(1, matcher, offset)
+            machine.pushReturn(1, matcher, offset, targetId)
         }
 
         override fun toString(): String {
             return "Call $offset"
         }
+    }
+
+    internal data class UnlinkedCallInstruction(val offset: Int, val matcher: Matcher?) : Instruction() {
+        override fun execute(machine: Machine): Unit = error("Call instruction must be linked before execution")
+
+        override fun toString(): String = "Call $offset"
     }
 
     public data class ChoiceInstruction(private val offset: Int) : Instruction() {
@@ -205,7 +215,7 @@ public abstract class Instruction {
 
         @JvmStatic
         public fun call(offset: Int, matcher: Matcher?): Instruction {
-            return CallInstruction(offset, matcher)
+            return UnlinkedCallInstruction(offset, matcher)
         }
 
         @JvmStatic

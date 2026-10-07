@@ -36,7 +36,7 @@ class MachineIntegrationTest {
 
     @Test
     fun pattern() {
-        val instructions = PatternExpression("foo|bar").compile(CompilationHandler())
+        val instructions = InstructionProgram.link(PatternExpression("foo|bar").compile(CompilationHandler()))
         assertThat(execute("foo", instructions)).isTrue()
         assertThat(execute("bar", instructions)).isTrue()
         assertThat(execute("baz", instructions)).isFalse()
@@ -44,27 +44,27 @@ class MachineIntegrationTest {
 
     @Test
     fun string() {
-        val instructions = StringExpression("foo").compile(CompilationHandler())
+        val instructions = InstructionProgram.link(StringExpression("foo").compile(CompilationHandler()))
         assertThat(execute("foo", instructions)).isTrue()
         assertThat(execute("bar", instructions)).isFalse()
     }
 
     @Test
     fun sequence() {
-        val instructions = SequenceExpression(
+        val instructions = InstructionProgram.link(SequenceExpression(
             StringExpression("foo"), StringExpression("bar")
-        ).compile(CompilationHandler())
+        ).compile(CompilationHandler()))
         assertThat(execute("foobar", instructions)).isTrue()
         assertThat(execute("baz", instructions)).isFalse()
     }
 
     @Test
     fun firstOf() {
-        val instructions = FirstOfExpression(
+        val instructions = InstructionProgram.link(FirstOfExpression(
             StringExpression("foo"),
             StringExpression("bar"),
             StringExpression("baz")
-        ).compile(CompilationHandler())
+        ).compile(CompilationHandler()))
         assertThat(execute("foo", instructions)).isTrue()
         assertThat(execute("bar", instructions)).isTrue()
         assertThat(execute("baz", instructions)).isTrue()
@@ -73,28 +73,28 @@ class MachineIntegrationTest {
 
     @Test
     fun optional() {
-        val instructions = OptionalExpression(StringExpression("a")).compile(CompilationHandler())
+        val instructions = InstructionProgram.link(OptionalExpression(StringExpression("a")).compile(CompilationHandler()))
         assertThat(execute("", instructions)).isTrue()
         assertThat(execute("a", instructions)).isTrue()
     }
 
     @Test
     operator fun next() {
-        val instructions = NextExpression(StringExpression("foo")).compile(CompilationHandler())
+        val instructions = InstructionProgram.link(NextExpression(StringExpression("foo")).compile(CompilationHandler()))
         assertThat(execute("foo", instructions)).isTrue()
         assertThat(execute("bar", instructions)).isFalse()
     }
 
     @Test
     fun nextNot() {
-        val instructions = NextNotExpression(StringExpression("foo")).compile(CompilationHandler())
+        val instructions = InstructionProgram.link(NextNotExpression(StringExpression("foo")).compile(CompilationHandler()))
         assertThat(execute("foo", instructions)).isFalse()
         assertThat(execute("bar", instructions)).isTrue()
     }
 
     @Test
     fun zeroOrMore() {
-        val instructions = ZeroOrMoreExpression(StringExpression("a")).compile(CompilationHandler())
+        val instructions = InstructionProgram.link(ZeroOrMoreExpression(StringExpression("a")).compile(CompilationHandler()))
         assertThat(execute("", instructions)).isTrue()
         assertThat(execute("a", instructions)).isTrue()
         assertThat(execute("aa", instructions)).isTrue()
@@ -102,12 +102,12 @@ class MachineIntegrationTest {
 
     @Test
     fun zeroOrMore_should_not_cause_infinite_loop() {
-        val instructions = ZeroOrMoreExpression(
+        val instructions = InstructionProgram.link(ZeroOrMoreExpression(
             FirstOfExpression(
                 StringExpression("foo"),
                 StringExpression("")
             )
-        ).compile(CompilationHandler())
+        ).compile(CompilationHandler()))
         assertThrows<GrammarException>("The inner part of ZeroOrMore and OneOrMore must not allow empty matches") {
             execute("foo", instructions)
         }
@@ -115,7 +115,7 @@ class MachineIntegrationTest {
 
     @Test
     fun oneOrMore() {
-        val instructions = OneOrMoreExpression(StringExpression("a")).compile(CompilationHandler())
+        val instructions = InstructionProgram.link(OneOrMoreExpression(StringExpression("a")).compile(CompilationHandler()))
         assertThat(execute("", instructions)).isFalse()
         assertThat(execute("a", instructions)).isTrue()
         assertThat(execute("aa", instructions)).isTrue()
@@ -123,12 +123,12 @@ class MachineIntegrationTest {
 
     @Test
     fun oneOrMore_should_not_cause_infinite_loop() {
-        val instructions = OneOrMoreExpression(
+        val instructions = InstructionProgram.link(OneOrMoreExpression(
             FirstOfExpression(
                 StringExpression("foo"),
                 StringExpression("")
             )
-        ).compile(CompilationHandler())
+        ).compile(CompilationHandler()))
         assertThrows<GrammarException>("The inner part of ZeroOrMore and OneOrMore must not allow empty matches") {
             execute("foo", instructions)
         }
@@ -137,14 +137,14 @@ class MachineIntegrationTest {
     @Test
     fun token() {
         val instructions =
-            TokenExpression(GenericTokenType.IDENTIFIER, StringExpression("foo")).compile(CompilationHandler())
+            InstructionProgram.link(TokenExpression(GenericTokenType.IDENTIFIER, StringExpression("foo")).compile(CompilationHandler()))
         assertThat(execute("foo", instructions)).isTrue()
         assertThat(execute("bar", instructions)).isFalse()
     }
 
     @Test
     fun trivia() {
-        val instructions = TriviaExpression(TriviaKind.COMMENT, StringExpression("foo")).compile(CompilationHandler())
+        val instructions = InstructionProgram.link(TriviaExpression(TriviaKind.COMMENT, StringExpression("foo")).compile(CompilationHandler()))
         assertThat(execute("foo", instructions)).isTrue()
         assertThat(execute("bar", instructions)).isFalse()
     }

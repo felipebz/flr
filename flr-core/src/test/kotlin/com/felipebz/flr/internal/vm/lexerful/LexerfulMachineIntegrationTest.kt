@@ -24,6 +24,7 @@ import com.felipebz.flr.api.GenericTokenType
 import com.felipebz.flr.api.Token
 import com.felipebz.flr.api.TokenType
 import com.felipebz.flr.internal.vm.CompilationHandler
+import com.felipebz.flr.internal.vm.InstructionProgram
 import com.felipebz.flr.internal.vm.Machine.Companion.execute
 import com.felipebz.flr.internal.vm.SequenceExpression
 import org.assertj.core.api.Assertions.assertThat
@@ -34,7 +35,7 @@ import org.mockito.kotlin.whenever
 class LexerfulMachineIntegrationTest {
     @Test
     fun tokenType() {
-        val instructions = TokenTypeExpression(GenericTokenType.IDENTIFIER).compile(CompilationHandler())
+        val instructions = InstructionProgram.link(TokenTypeExpression(GenericTokenType.IDENTIFIER).compile(CompilationHandler()))
         assertThat(execute(instructions, token(GenericTokenType.IDENTIFIER))).isTrue()
         assertThat(execute(instructions, token(GenericTokenType.LITERAL))).isFalse()
     }
@@ -42,7 +43,7 @@ class LexerfulMachineIntegrationTest {
     @Test
     fun tokenTypes() {
         val instructions =
-            TokenTypesExpression(GenericTokenType.IDENTIFIER, GenericTokenType.LITERAL).compile(CompilationHandler())
+            InstructionProgram.link(TokenTypesExpression(GenericTokenType.IDENTIFIER, GenericTokenType.LITERAL).compile(CompilationHandler()))
         var tokens = arrayOf(token(GenericTokenType.IDENTIFIER))
         assertThat(execute(instructions, *tokens)).isTrue()
         tokens = arrayOf(token(GenericTokenType.LITERAL))
@@ -53,21 +54,21 @@ class LexerfulMachineIntegrationTest {
 
     @Test
     fun tokenValue() {
-        val instructions = TokenValueExpression("foo").compile(CompilationHandler())
+        val instructions = InstructionProgram.link(TokenValueExpression("foo").compile(CompilationHandler()))
         assertThat(execute(instructions, token("foo"))).isTrue()
         assertThat(execute(instructions, token("bar"))).isFalse()
     }
 
     @Test
     fun anyToken() {
-        val instructions = AnyTokenExpression.compile(CompilationHandler())
+        val instructions = InstructionProgram.link(AnyTokenExpression.compile(CompilationHandler()))
         assertThat(execute(instructions, token("foo"))).isTrue()
     }
 
     @Test
     fun tokensBridge() {
         val instructions =
-            TokensBridgeExpression(GenericTokenType.IDENTIFIER, GenericTokenType.LITERAL).compile(CompilationHandler())
+            InstructionProgram.link(TokensBridgeExpression(GenericTokenType.IDENTIFIER, GenericTokenType.LITERAL).compile(CompilationHandler()))
         var tokens = arrayOf(token(GenericTokenType.IDENTIFIER), token(GenericTokenType.LITERAL))
         assertThat(execute(instructions, *tokens)).isTrue()
         tokens = arrayOf(
@@ -93,20 +94,20 @@ class LexerfulMachineIntegrationTest {
 
     @Test
     fun tokenTypeClass() {
-        val instructions = TokenTypeClassExpression(
+        val instructions = InstructionProgram.link(TokenTypeClassExpression(
             GenericTokenType::class.java
-        ).compile(CompilationHandler())
+        ).compile(CompilationHandler()))
         val tokens = arrayOf(token(GenericTokenType.IDENTIFIER))
         assertThat(execute(instructions, *tokens)).isTrue()
     }
 
     @Test
     fun adjacent() {
-        val instructions = SequenceExpression(
+        val instructions = InstructionProgram.link(SequenceExpression(
             TokenValueExpression("foo"),
             AdjacentExpression,
             TokenValueExpression("bar")
-        ).compile(CompilationHandler())
+        ).compile(CompilationHandler()))
         var tokens = arrayOf(token(1, 1, "foo"), token(1, 4, "bar"))
         assertThat(execute(instructions, *tokens)).isTrue()
         tokens = arrayOf(token(1, 1, "foo"), token(1, 5, "bar"))

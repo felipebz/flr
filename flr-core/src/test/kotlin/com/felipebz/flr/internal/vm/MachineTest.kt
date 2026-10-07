@@ -31,7 +31,7 @@ import org.mockito.kotlin.whenever
 class MachineTest {
     @Test
     fun subSequence_not_supported() {
-        val machine = Machine("", emptyArray())
+        val machine = Machine("", InstructionProgram.link(emptyArray()))
         assertThrows<UnsupportedOperationException> {
             machine.subSequence(0, 0)
         }
@@ -39,7 +39,7 @@ class MachineTest {
 
     @Test
     fun test_initial_state() {
-        val machine = Machine("", arrayOf(mock(), mock()))
+        val machine = Machine("", InstructionProgram.link(Array(2) { Instruction.call(0, null) }))
         assertThat(machine.address).isEqualTo(0)
         assertThat(machine.index).isEqualTo(0)
         assertThat(machine.peek().isEmpty()).isTrue()
@@ -47,7 +47,7 @@ class MachineTest {
 
     @Test
     fun should_jump() {
-        val machine = Machine("", arrayOf(mock(), mock()))
+        val machine = Machine("", InstructionProgram.link(Array(2) { Instruction.call(0, null) }))
         assertThat(machine.address).isEqualTo(0)
         machine.jump(42)
         assertThat(machine.address).isEqualTo(42)
@@ -57,7 +57,7 @@ class MachineTest {
 
     @Test
     fun should_advanceIndex() {
-        val machine = Machine("foo bar", arrayOf(mock(), mock()))
+        val machine = Machine("foo bar", InstructionProgram.link(Array(2) { Instruction.call(0, null) }))
         assertThat(machine.index).isEqualTo(0)
         assertThat(machine.length).isEqualTo(7)
         assertThat(machine[0]).isEqualTo('f')
@@ -76,12 +76,12 @@ class MachineTest {
 
     @Test
     fun should_pushReturn() {
-        val machine = Machine("foo", arrayOf(mock(), mock(), mock()))
+        val machine = Machine("foo", InstructionProgram.link(Array(3) { Instruction.call(0, null) }))
         val matcher = mock<Matcher>()
         machine.advanceIndex(1)
         machine.jump(1)
         val previousStack = machine.peek()
-        machine.pushReturn(2, matcher, 1)
+        machine.pushReturn(2, matcher, 1, 2)
         assertThat(machine.address).`as`("new address").isEqualTo(2)
         assertThat(machine.peek()).isNotSameAs(previousStack)
         assertThat(machine.peek().parent()).isSameAs(previousStack)
@@ -92,28 +92,29 @@ class MachineTest {
 
     @Test
     fun should_detect_left_recursion() {
-        val machine = Machine("foo", arrayOf(mock(), mock()))
+        val machine = Machine("foo", InstructionProgram.link(Array(2) { Instruction.call(0, null) }))
         val matcher = mock<Matcher>()
         machine.advanceIndex(1)
-        machine.pushReturn(0, matcher, 1)
-        assertThat(machine.peek().calledAddress).isEqualTo(1)
-        assertThat(machine.peek().leftRecursion).isEqualTo(-1)
+        machine.pushReturn(0, matcher, 1, 1)
+        assertThat(machine.peek().calledTargetId).isEqualTo(1)
+        assertThat(machine.peek().previousCallState).isZero()
 
         // same rule, but another index of input sequence
         machine.advanceIndex(1)
-        machine.pushReturn(0, matcher, 0)
-        assertThat(machine.peek().calledAddress).isEqualTo(1)
-        assertThat(machine.peek().leftRecursion).isEqualTo(1)
+        machine.pushReturn(0, matcher, 0, 1)
+        assertThat(machine.peek().calledTargetId).isEqualTo(1)
+        assertThat(machine.peek().previousCallState).isEqualTo(2)
 
         // same rule and index of input sequence
-        assertThrows<GrammarException>("Left recursion has been detected, involved rule: $matcher") {
-            machine.pushReturn(0, matcher, 0)
+        val error = assertThrows<GrammarException> {
+            machine.pushReturn(0, matcher, 0, 1)
         }
+        assertThat(error).hasMessage("Left recursion has been detected, involved rule: $matcher")
     }
 
     @Test
     fun should_pushBacktrack() {
-        val machine = Machine("foo", arrayOf(mock(), mock()))
+        val machine = Machine("foo", InstructionProgram.link(Array(2) { Instruction.call(0, null) }))
         machine.advanceIndex(1)
         machine.jump(42)
         val previousStack = machine.peek()
@@ -127,7 +128,7 @@ class MachineTest {
 
     @Test
     fun should_pop() {
-        val machine = Machine("", arrayOf(mock(), mock()))
+        val machine = Machine("", InstructionProgram.link(Array(2) { Instruction.call(0, null) }))
         val previousStack = machine.peek()
         machine.pushBacktrack(13)
         assertThat(machine.peek()).isNotSameAs(previousStack)
@@ -137,10 +138,10 @@ class MachineTest {
 
     @Test
     fun should_fail() {
-        val machine = Machine("", arrayOf(mock(), mock(), mock()))
+        val machine = Machine("", InstructionProgram.link(Array(3) { Instruction.call(0, null) }))
         val matcher = mock<Matcher>()
-        machine.pushReturn(13, matcher, 0)
-        machine.pushReturn(13, matcher, 1)
+        machine.pushReturn(13, matcher, 0, 0)
+        machine.pushReturn(13, matcher, 1, 1)
         machine.backtrack()
         assertThat(machine.address).isEqualTo(-1)
         // TODO matched=false
@@ -148,12 +149,12 @@ class MachineTest {
 
     @Test
     fun should_backtrack() {
-        val machine = Machine("", arrayOf(mock(), mock(), mock(), mock()))
+        val machine = Machine("", InstructionProgram.link(Array(4) { Instruction.call(0, null) }))
         val matcher = mock<Matcher>()
         val previousStack = machine.peek()
         machine.pushBacktrack(42)
-        machine.pushReturn(13, matcher, 0)
-        machine.pushReturn(13, matcher, 1)
+        machine.pushReturn(13, matcher, 0, 0)
+        machine.pushReturn(13, matcher, 1, 1)
         machine.backtrack()
         assertThat(machine.peek()).isSameAs(previousStack)
         assertThat(machine.address).isEqualTo(42)
@@ -161,7 +162,7 @@ class MachineTest {
 
     @Test
     fun should_createLeafNode() {
-        val machine = Machine("", arrayOf(mock(), mock()))
+        val machine = Machine("", InstructionProgram.link(Array(2) { Instruction.call(0, null) }))
         val matcher = mock<Matcher>()
         machine.advanceIndex(42)
         machine.createLeafNode(matcher, 13)
@@ -174,11 +175,11 @@ class MachineTest {
 
     @Test
     fun should_createNode() {
-        val machine = Machine(" ", arrayOf(mock(), mock()))
+        val machine = Machine(" ", InstructionProgram.link(Array(2) { Instruction.call(0, null) }))
         val matcher = mock<Matcher>()
         machine.advanceIndex(1)
         // remember startIndex and matcher
-        machine.pushReturn(0, matcher, 0)
+        machine.pushReturn(0, matcher, 0, 0)
         val subMatcher = mock<Matcher>()
         machine.createLeafNode(subMatcher, 2)
         machine.createLeafNode(subMatcher, 3)
@@ -192,16 +193,16 @@ class MachineTest {
 
     @Test
     fun should_use_memo() {
-        val machine = Machine("foo", arrayOf(mock(), mock(), mock()))
+        val machine = Machine("foo", InstructionProgram.link(Array(3) { Instruction.call(0, null) }))
         val matcher = mock<MemoParsingExpression>()
         whenever(matcher.shouldMemoize()).thenReturn(true)
         machine.pushBacktrack(0)
-        machine.pushReturn(1, matcher, 2)
+        machine.pushReturn(1, matcher, 2, 2)
         machine.advanceIndex(3)
         machine.createNode()
         val memo = machine.peek().parent().subNodes[0]
         machine.backtrack()
-        machine.pushReturn(2, matcher, 1)
+        machine.pushReturn(2, matcher, 1, 1)
         assertThat(machine.address).isEqualTo(2)
         assertThat(machine.index).isEqualTo(3)
         assertThat(machine.peek().subNodes).containsOnly(memo)
@@ -209,15 +210,15 @@ class MachineTest {
 
     @Test
     fun should_not_memorize() {
-        val machine = Machine("foo", arrayOf(mock(), mock(), mock()))
+        val machine = Machine("foo", InstructionProgram.link(Array(3) { Instruction.call(0, null) }))
         val matcher = mock<MemoParsingExpression>()
         whenever(matcher.shouldMemoize()).thenReturn(false)
         machine.pushBacktrack(0)
-        machine.pushReturn(1, matcher, 2)
+        machine.pushReturn(1, matcher, 2, 2)
         machine.advanceIndex(3)
         machine.createNode()
         machine.backtrack()
-        machine.pushReturn(2, matcher, 1)
+        machine.pushReturn(2, matcher, 1, 1)
         assertThat(machine.address).isEqualTo(1)
         assertThat(machine.index).isEqualTo(0)
         assertThat(machine.peek().subNodes).isEmpty()
@@ -225,16 +226,16 @@ class MachineTest {
 
     @Test
     fun should_not_use_memo() {
-        val machine = Machine("foo", arrayOf(mock(), mock(), mock()))
+        val machine = Machine("foo", InstructionProgram.link(Array(3) { Instruction.call(0, null) }))
         val matcher = mock<MemoParsingExpression>()
         whenever(matcher.shouldMemoize()).thenReturn(true)
         machine.pushBacktrack(0)
-        machine.pushReturn(2, matcher, 1)
+        machine.pushReturn(2, matcher, 1, 1)
         machine.advanceIndex(3)
         machine.createNode()
         machine.backtrack()
         val anotherMatcher = mock<Matcher>()
-        machine.pushReturn(2, anotherMatcher, 1)
+        machine.pushReturn(2, anotherMatcher, 1, 1)
         assertThat(machine.address).isEqualTo(1)
         assertThat(machine.index).isEqualTo(0)
         assertThat(machine.peek().subNodes).isEmpty()
@@ -242,25 +243,25 @@ class MachineTest {
 
     @Test
     fun should_clear_stale_subnodes_when_reusing_stack_frame() {
-        val machine = Machine("foo", arrayOf(mock(), mock(), mock()))
+        val machine = Machine("foo", InstructionProgram.link(Array(3) { Instruction.call(0, null) }))
         val matcher = mock<Matcher>()
-        machine.pushReturn(0, matcher, 0)
+        machine.pushReturn(0, matcher, 0, 0)
         machine.createLeafNode(mock(), 1)
         assertThat(machine.peek().subNodes).hasSize(1)
         machine.popReturn()
         assertThat(machine.peek().isEmpty()).isTrue()
 
         // Reusing the same child frame at depth 1
-        machine.pushReturn(0, matcher, 0)
+        machine.pushReturn(0, matcher, 0, 0)
         assertThat(machine.peek().subNodes).isEmpty()
     }
 
     @Test
     fun should_not_leak_stale_children_when_backtrack_frame_reuses_return_frame() {
-        val machine = Machine("foobar", arrayOf(mock(), mock(), mock(), mock()))
+        val machine = Machine("foobar", InstructionProgram.link(Array(4) { Instruction.call(0, null) }))
         val matcher = mock<Matcher>()
         // Frame 1 as return frame with child
-        machine.pushReturn(0, matcher, 0)
+        machine.pushReturn(0, matcher, 0, 0)
         machine.createLeafNode(mock(), 1)
         assertThat(machine.peek().subNodes).hasSize(1)
         machine.popReturn()
@@ -279,7 +280,7 @@ class MachineTest {
 
     @Test
     fun should_start_with_empty_subnodes_when_return_frame_reuses_backtrack_frame() {
-        val machine = Machine("foobar", Array(10) { mock() })
+        val machine = Machine("foobar", InstructionProgram.link(Array(10) { Instruction.call(0, null) }))
         // Frame 1 as backtrack frame that failed and backtracked
         machine.pushBacktrack(1)
         machine.createLeafNode(mock(), 1)
@@ -287,7 +288,7 @@ class MachineTest {
 
         // Frame 1 reused as return frame
         val matcher = mock<Matcher>()
-        machine.pushReturn(0, matcher, 0)
+        machine.pushReturn(0, matcher, 0, 1)
         assertThat(machine.peek().matcher).isSameAs(matcher)
         assertThat(machine.peek().subNodes).isEmpty()
         val leafMatcher = mock<Matcher>()
@@ -299,16 +300,16 @@ class MachineTest {
 
     @Test
     fun should_handle_nested_choice_and_rule_frame_reuse() {
-        val machine = Machine("foobar", Array(20) { mock() })
+        val machine = Machine("foobar", InstructionProgram.link(Array(20) { Instruction.call(0, null) }))
         val rule1 = mock<Matcher>()
         val rule2 = mock<Matcher>()
 
         // Depth 1: Return frame
-        machine.pushReturn(0, rule1, 1)
+        machine.pushReturn(0, rule1, 1, 1)
         // Depth 2: Backtrack frame
         machine.pushBacktrack(1)
         // Depth 3: Return frame with leaf
-        machine.pushReturn(0, rule2, 2)
+        machine.pushReturn(0, rule2, 2, 3)
         machine.createLeafNode(mock(), 1)
         machine.createNode()
         machine.popReturn()
@@ -322,7 +323,7 @@ class MachineTest {
         // Depth 1: Backtrack frame
         machine.pushBacktrack(1)
         // Depth 2: Return frame
-        machine.pushReturn(0, rule2, 3)
+        machine.pushReturn(0, rule2, 3, 6)
         assertThat(machine.peek().subNodes).isEmpty()
         machine.createLeafNode(mock(), 2)
         machine.createNode()

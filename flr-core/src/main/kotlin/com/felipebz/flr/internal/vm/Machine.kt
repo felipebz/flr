@@ -37,7 +37,7 @@ private val EMPTY_PARSE_NODES = emptyArray<ParseNode>()
 public open class Machine protected constructor(
     protected val input: CharArray,
     private val tokens: Array<out Token>,
-    instructions: Array<Instruction>,
+    program: InstructionProgram,
     protected val handler: MachineHandler,
     ordinaryMemoization: Boolean
 ) : CharSequence {
@@ -46,8 +46,8 @@ public open class Machine protected constructor(
     protected var matched: Boolean = true
     internal val memos: Array<ParseNode?> = if (ordinaryMemoization) arrayOfNulls(inputLength + 1) else emptyArray()
 
-    // Number of instructions in grammar for Java is about 2000.
-    protected val calls: IntArray = IntArray(instructions.size)
+    // Zero is inactive; active input positions are encoded as index + 1 (wrapping Int).
+    protected val calls: IntArray = IntArray(program.callTargetCount)
 
     public var address: Int = 0
     public var index: Int = 0
@@ -55,27 +55,27 @@ public open class Machine protected constructor(
 
     init {
         stack.index = -1
-        calls.fill(-1)
     }
 
-    private fun execute(matcher: Matcher?, offset: Int, instructions: Array<Instruction>) {
+    private fun execute(matcher: Matcher?, offset: Int, program: InstructionProgram) {
         // Place first rule on top of stack
         push(-1)
         stack.matcher = matcher
+        stack.calledTargetId = -1
         jump(offset)
-        execute(instructions)
+        execute(program)
     }
 
     @JvmOverloads
     public constructor(
         input: String,
-        instructions: Array<Instruction>,
+        program: InstructionProgram,
         handler: MachineHandler = MachineHandler { }
-    ) : this(input.toCharArray(), emptyArray(), instructions, handler, true)
+    ) : this(input.toCharArray(), emptyArray(), program, handler, true)
 
-    private fun execute(instructions: Array<Instruction>) {
+    private fun execute(program: InstructionProgram) {
         while (address != -1) {
-            instructions[address].execute(this)
+            program.instructions[address].execute(this)
         }
     }
 
@@ -94,11 +94,13 @@ public open class Machine protected constructor(
     }
 
     public open fun popReturn() {
-        calls[stack.calledAddress] = stack.leftRecursion
+        if (stack.calledTargetId >= 0) {
+            calls[stack.calledTargetId] = stack.previousCallState
+        }
         stack = stack.parent()
     }
 
-    public open fun pushReturn(returnOffset: Int, matcher: Matcher?, callOffset: Int) {
+    public open fun pushReturn(returnOffset: Int, matcher: Matcher?, callOffset: Int, targetId: Int) {
         val memo = memos[index]
         if (memo != null && memo.matcher === matcher) {
             stack.subNodes.add(memo)
@@ -108,13 +110,14 @@ public open class Machine protected constructor(
             push(address + returnOffset)
             stack.matcher = matcher
             address += callOffset
-            if (calls[address] == index) {
+            val callState = index + 1
+            if (calls[targetId] == callState) {
                 // TODO better message, e.g. dump stack
                 throw GrammarException("Left recursion has been detected, involved rule: " + matcher.toString())
             }
-            stack.calledAddress = address
-            stack.leftRecursion = calls[address]
-            calls[address] = index
+            stack.calledTargetId = targetId
+            stack.previousCallState = calls[targetId]
+            calls[targetId] = callState
         }
     }
 
@@ -230,7 +233,7 @@ public open class Machine protected constructor(
             val inputTokens: Array<Token> = tokens.toTypedArray()
             val errorLocatingHandler = ErrorLocatingHandler()
             val machine = createMachine(CharArray(0), inputTokens, grammar, errorLocatingHandler)
-            machine.execute(grammar.getMatcher(grammar.rootRuleKey), grammar.rootRuleOffset, grammar.instructions)
+            machine.execute(grammar.getMatcher(grammar.rootRuleKey), grammar.rootRuleOffset, grammar.program)
             return if (machine.matched) {
                 machine.stack.subNodes[0]
             } else {
@@ -256,10 +259,9 @@ public open class Machine protected constructor(
 
         @JvmStatic
         public fun parse(input: CharArray, grammar: CompiledGrammar): ParsingResult {
-            val instructions = grammar.instructions
             val errorLocatingHandler = ErrorLocatingHandler()
             val machine = createMachine(input, emptyArray(), grammar, errorLocatingHandler)
-            machine.execute(grammar.getMatcher(grammar.rootRuleKey), grammar.rootRuleOffset, instructions)
+            machine.execute(grammar.getMatcher(grammar.rootRuleKey), grammar.rootRuleOffset, grammar.program)
             return if (machine.matched) {
                 ParsingResult(
                     ImmutableInputBuffer(checkNotNull(machine.input)),
@@ -275,19 +277,19 @@ public open class Machine protected constructor(
         }
 
         @JvmStatic
-        public fun execute(input: String, instructions: Array<Instruction>): Boolean {
-            val machine = Machine(input, instructions)
-            while (machine.address != -1 && machine.address < instructions.size) {
-                instructions[machine.address].execute(machine)
+        public fun execute(input: String, program: InstructionProgram): Boolean {
+            val machine = Machine(input, program)
+            while (machine.address != -1 && machine.address < program.instructions.size) {
+                program.instructions[machine.address].execute(machine)
             }
             return machine.matched
         }
 
         @JvmStatic
-        public fun execute(instructions: Array<Instruction>, vararg input: Token): Boolean {
-            val machine = Machine(CharArray(0), input, instructions, { }, true)
-            while (machine.address != -1 && machine.address < instructions.size) {
-                instructions[machine.address].execute(machine)
+        public fun execute(program: InstructionProgram, vararg input: Token): Boolean {
+            val machine = Machine(CharArray(0), input, program, { }, true)
+            while (machine.address != -1 && machine.address < program.instructions.size) {
+                program.instructions[machine.address].execute(machine)
             }
             return machine.matched
         }
@@ -299,9 +301,9 @@ public open class Machine protected constructor(
             handler: MachineHandler
         ): Machine {
             return if (grammar.usesParserContext) {
-                ContextAwareMachine(input, tokens, grammar.instructions, handler)
+                ContextAwareMachine(input, tokens, grammar.program, handler)
             } else {
-                Machine(input, tokens, grammar.instructions, handler, true)
+                Machine(input, tokens, grammar.program, handler, true)
             }
         }
     }

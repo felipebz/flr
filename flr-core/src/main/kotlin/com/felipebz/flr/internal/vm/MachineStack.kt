@@ -31,8 +31,8 @@ public class MachineStack {
     public var index: Int = 0
     public var ignoreErrors: Boolean = false
     public var matcher: Matcher? = null
-    public var leftRecursion: Int = 0
-    public var calledAddress: Int = 0
+    public var previousCallState: Int = 0
+    public var calledTargetId: Int = -1
     public constructor() {
         parent = null
         subNodes = mutableListOf()

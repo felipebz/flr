@@ -24,18 +24,24 @@ import com.felipebz.flr.grammar.GrammarRuleKey
 import com.felipebz.flr.internal.matchers.Matcher
 
 public class CompiledGrammar(
-    public val instructions: Array<Instruction>,
+    public val program: InstructionProgram,
     private val rules: Map<GrammarRuleKey, CompilableGrammarRule>,
     public val rootRuleKey: GrammarRuleKey,
     public val rootRuleOffset: Int,
     internal val usesParserContext: Boolean
 ) {
     public constructor(
-        instructions: Array<Instruction>,
+        program: InstructionProgram,
         rules: Map<GrammarRuleKey, CompilableGrammarRule>,
         rootRuleKey: GrammarRuleKey,
         rootRuleOffset: Int
-    ) : this(instructions, rules, rootRuleKey, rootRuleOffset, false)
+    ) : this(program, rules, rootRuleKey, rootRuleOffset, false)
+
+    public val instructions: Array<Instruction>
+        get() = program.instructions
+
+    public val callTargetCount: Int
+        get() = program.callTargetCount
 
     public fun getMatcher(ruleKey: GrammarRuleKey): Matcher? {
         return rules[ruleKey]

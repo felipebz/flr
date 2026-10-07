@@ -62,11 +62,13 @@ public class MutableGrammarCompiler : CompilationHandler() {
         } else {
             result
         }
+        val rootRuleOffset = checkNotNull(offsets[start.ruleKey])
+        val program = InstructionProgram.link(specializedResult)
         return CompiledGrammar(
-            specializedResult,
+            program,
             matchers,
             start.ruleKey,
-            checkNotNull(offsets[start.ruleKey]),
+            rootRuleOffset,
             usesParserContext
         )
     }

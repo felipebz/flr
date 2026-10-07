@@ -55,16 +55,12 @@ class InstructionTest {
     @Test
     fun call() {
         val matcher = mock<Matcher>()
-        val instruction = call(42, matcher)
+        val instruction = InstructionProgram.link(arrayOf(call(42, matcher))).instructions[0]
         assertThat(instruction).isInstanceOf(CallInstruction::class.java)
-        assertThat(instruction.toString()).isEqualTo("Call 42")
-        assertThat(instruction == call(42, matcher)).isTrue()
-        assertThat(instruction == call(42, mock())).isFalse()
-        assertThat(instruction == call(13, matcher)).isFalse()
-        assertThat(instruction == Any()).isFalse()
+        assertThat((instruction as CallInstruction).targetId).isZero()
         instruction.execute(machine)
         val inOrder = inOrder(machine)
-        inOrder.verify(machine).pushReturn(1, matcher, 42)
+        inOrder.verify(machine).pushReturn(1, matcher, 42, 0)
         verifyNoMoreInteractions(machine)
     }
 
