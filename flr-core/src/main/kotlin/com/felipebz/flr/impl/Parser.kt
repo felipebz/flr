@@ -30,6 +30,7 @@ import com.felipebz.flr.internal.vm.MutableGrammarCompiler
 import com.felipebz.flr.parser.NonTerminalNodeBuilder
 import com.felipebz.flr.parser.ParserAdapter
 import com.felipebz.flr.parser.TerminalNodeBuilder
+import com.felipebz.flr.profiler.ParsingProfiler
 import java.io.File
 
 /**
@@ -65,30 +66,81 @@ public open class Parser<G : Grammar> {
     }
 
     public open fun parse(file: File): AstNode {
+        return parse(lex(file))
+    }
+
+    public open fun parse(source: String): AstNode {
+        return parse(lex(source))
+    }
+
+    public open fun parse(tokens: List<Token>): AstNode {
+        return parseTokens(tokens, null)
+    }
+
+    /**
+     * Same as [parse], recording rule and memoization counters into [profiler].
+     *
+     * Lexes like [parse] and continues through the overridable [parse] with `tokens` and [profiler].
+     * See that overload for the extension contract.
+     *
+     * @since 1.7
+     */
+    public open fun parse(file: File, profiler: ParsingProfiler): AstNode {
+        return parse(lex(file), profiler)
+    }
+
+    /**
+     * Same as [parse], recording rule and memoization counters into [profiler].
+     *
+     * Lexes like [parse] and continues through the overridable [parse] with `tokens` and [profiler].
+     * See that overload for the extension contract.
+     *
+     * @since 1.7
+     */
+    public open fun parse(source: String, profiler: ParsingProfiler): AstNode {
+        return parse(lex(source), profiler)
+    }
+
+    /**
+     * Same as [parse], recording rule and memoization counters into [profiler].
+     *
+     * **Extension contract.** The profiled overloads form their own family and never call the unprofiled ones:
+     * `parse(file, profiler)` and `parse(source, profiler)` call this method, which parses directly.
+     * It does not call [parse] with `tokens`. A subclass that overrides [parse] with `tokens` (or any other
+     * unprofiled overload) to customize parsing must also override the matching profiled overload to get the same
+     * customization when profiling; otherwise its override is bypassed by profiled parses. The unprofiled
+     * overloads are unchanged: `parse(file)` and `parse(source)` still call the overridable [parse] with `tokens`.
+     *
+     * @since 1.7
+     */
+    public open fun parse(tokens: List<Token>, profiler: ParsingProfiler): AstNode {
+        return parseTokens(tokens, profiler)
+    }
+
+    private fun lex(file: File): List<Token> {
         checkNotNull(lexer) { "a lexer should be provided" }
-        val tokens = try {
+        return try {
             lexer.lex(file)
         } catch (e: LexerException) {
             throw RecognitionException(e)
         }
-        return parse(tokens)
     }
 
-    public open fun parse(source: String): AstNode {
+    private fun lex(source: String): List<Token> {
         checkNotNull(lexer) { "a lexer should be provided" }
-        val tokens = try {
+        return try {
             lexer.lex(source)
         } catch (e: LexerException) {
             throw RecognitionException(e)
         }
-        return parse(tokens)
     }
 
-    public open fun parse(tokens: List<Token>): AstNode {
+    private fun parseTokens(tokens: List<Token>, profiler: ParsingProfiler?): AstNode {
         if (::compiledGrammar.isInitialized.not()) {
             compiledGrammar = MutableGrammarCompiler.compile(rootRule as CompilableGrammarRule)
         }
-        return LexerfulAstCreator.create(Machine.parse(tokens, compiledGrammar), tokens, nonTerminalNodeBuilder, terminalNodeBuilder)
+        val parseTree = Machine.parse(tokens, compiledGrammar, profiler?.countersFor(compiledGrammar))
+        return LexerfulAstCreator.create(parseTree, tokens, nonTerminalNodeBuilder, terminalNodeBuilder)
     }
 
     public val grammar: G

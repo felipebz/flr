@@ -230,9 +230,14 @@ public open class Machine protected constructor(
     public companion object {
         @JvmStatic
         public fun parse(tokens: List<Token>, grammar: CompiledGrammar): ParseNode {
+            return parse(tokens, grammar, null)
+        }
+
+        /** [profile] selects the specialized profiling machines; `null` is the ordinary, unprofiled parse. */
+        internal fun parse(tokens: List<Token>, grammar: CompiledGrammar, profile: ProgramCounters?): ParseNode {
             val inputTokens: Array<Token> = tokens.toTypedArray()
             val errorLocatingHandler = ErrorLocatingHandler()
-            val machine = createMachine(CharArray(0), inputTokens, grammar, errorLocatingHandler)
+            val machine = createMachine(CharArray(0), inputTokens, grammar, errorLocatingHandler, profile)
             machine.execute(grammar.getMatcher(grammar.rootRuleKey), grammar.rootRuleOffset, grammar.program)
             return if (machine.matched) {
                 machine.stack.subNodes[0]
@@ -259,8 +264,13 @@ public open class Machine protected constructor(
 
         @JvmStatic
         public fun parse(input: CharArray, grammar: CompiledGrammar): ParsingResult {
+            return parse(input, grammar, null)
+        }
+
+        /** [profile] selects the specialized profiling machines; `null` is the ordinary, unprofiled parse. */
+        internal fun parse(input: CharArray, grammar: CompiledGrammar, profile: ProgramCounters?): ParsingResult {
             val errorLocatingHandler = ErrorLocatingHandler()
-            val machine = createMachine(input, emptyArray(), grammar, errorLocatingHandler)
+            val machine = createMachine(input, emptyArray(), grammar, errorLocatingHandler, profile)
             machine.execute(grammar.getMatcher(grammar.rootRuleKey), grammar.rootRuleOffset, grammar.program)
             return if (machine.matched) {
                 ParsingResult(
@@ -300,6 +310,24 @@ public open class Machine protected constructor(
             grammar: CompiledGrammar,
             handler: MachineHandler
         ): Machine {
+            return createMachine(input, tokens, grammar, handler, null)
+        }
+
+        internal fun createMachine(
+            input: CharArray,
+            tokens: Array<out Token>,
+            grammar: CompiledGrammar,
+            handler: MachineHandler,
+            profile: ProgramCounters?
+        ): Machine {
+            if (profile != null) {
+                profile.parseStarted()
+                return if (grammar.usesParserContext) {
+                    ProfilingContextAwareMachine(input, tokens, grammar.program, handler, profile)
+                } else {
+                    ProfilingMachine(input, tokens, grammar.program, handler, profile)
+                }
+            }
             return if (grammar.usesParserContext) {
                 ContextAwareMachine(input, tokens, grammar.program, handler)
             } else {

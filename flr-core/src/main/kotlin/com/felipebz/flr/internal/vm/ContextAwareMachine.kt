@@ -34,20 +34,23 @@ private val EMPTY_PARSE_NODES = emptyArray<ParseNode>()
  * [MachineStack], leaving the ordinary VM's frames and memo representation unchanged.
  * Until context is first activated, this machine uses the ordinary memo representation
  * and avoids allocating or writing context snapshots.
+ *
+ * Open only so that [ProfilingContextAwareMachine] can specialize it; the three fields it must read
+ * are [JvmField]s so the ordinary machine's bytecode keeps direct field access.
  */
-internal class ContextAwareMachine(
+internal open class ContextAwareMachine(
     input: CharArray,
     tokens: Array<out Token>,
     program: InstructionProgram,
     handler: MachineHandler
 ) : Machine(input, tokens, program, handler, true) {
-    private var context: ParsingContext = ParsingContext.EMPTY
+    @JvmField internal var context: ParsingContext = ParsingContext.EMPTY
     // Machine.execute pushes the root frame directly; start at its resulting depth.
     private var contextDepth = 2
-    private var contextEverActivated: Boolean = false
+    @JvmField internal var contextEverActivated: Boolean = false
     private var contextSnapshots: Array<ParsingContext?>? = null
     private val memoCapacity: Int = (if (input.isNotEmpty()) input.size else tokens.size) + 1
-    private var memoContexts: Array<ParsingContext?>? = null
+    @JvmField internal var memoContexts: Array<ParsingContext?>? = null
 
     override fun pushReturn(returnOffset: Int, matcher: Matcher?, callOffset: Int, targetId: Int) {
         val memoNode = memos[index]?.takeIf {

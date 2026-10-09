@@ -26,6 +26,7 @@ import com.felipebz.flr.api.Token
 import com.felipebz.flr.impl.Parser
 import com.felipebz.flr.internal.matchers.AstCreator
 import com.felipebz.flr.internal.matchers.LocatedText
+import com.felipebz.flr.profiler.ParsingProfiler
 import java.io.File
 import java.io.IOException
 import java.nio.charset.Charset
@@ -51,7 +52,7 @@ public class ParserAdapter<G : LexerlessGrammar>(private val charset: Charset, g
     override fun parse(source: String): AstNode {
         // LocatedText is used in order to be able to retrieve TextLocation
         val text = LocatedText(null, source.toCharArray())
-        return parse(text)
+        return parse(text, null)
     }
 
     /**
@@ -60,12 +61,32 @@ public class ParserAdapter<G : LexerlessGrammar>(private val charset: Charset, g
      */
     override fun parse(file: File): AstNode {
         val text = LocatedText(file, fileToCharArray(file, charset))
-        return parse(text)
+        return parse(text, null)
     }
 
-    private fun parse(input: LocatedText): AstNode {
+    /**
+     * Same as [parse] with a source, recording counters into [profiler]. Like the unprofiled overload it parses the
+     * characters directly through [ParseRunner]; no token-based overload is involved.
+     *
+     * @since 1.7
+     */
+    override fun parse(source: String, profiler: ParsingProfiler): AstNode {
+        return parse(LocatedText(null, source.toCharArray()), profiler)
+    }
+
+    /**
+     * Same as [parse] with a file, recording counters into [profiler]. Like the unprofiled overload it parses the
+     * characters directly through [ParseRunner]; no token-based overload is involved.
+     *
+     * @since 1.7
+     */
+    override fun parse(file: File, profiler: ParsingProfiler): AstNode {
+        return parse(LocatedText(file, fileToCharArray(file, charset)), profiler)
+    }
+
+    private fun parse(input: LocatedText, profiler: ParsingProfiler?): AstNode {
         val chars = input.toChars()
-        val result = parseRunner.parse(chars)
+        val result = if (profiler == null) parseRunner.parse(chars) else parseRunner.parse(chars, profiler)
         return if (result.isMatched()) {
             AstCreator.create(result, input)
         } else {
@@ -79,7 +100,18 @@ public class ParserAdapter<G : LexerlessGrammar>(private val charset: Charset, g
         }
     }
 
+    /**
+     * @throws UnsupportedOperationException always: a lexerless grammar parses characters, not tokens
+     */
     override fun parse(tokens: List<Token>): AstNode {
+        throw UnsupportedOperationException()
+    }
+
+    /**
+     * @throws UnsupportedOperationException always: a lexerless grammar parses characters, not tokens
+     * @since 1.7
+     */
+    override fun parse(tokens: List<Token>, profiler: ParsingProfiler): AstNode {
         throw UnsupportedOperationException()
     }
 

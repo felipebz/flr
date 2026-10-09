@@ -25,6 +25,7 @@ import com.felipebz.flr.internal.vm.CompilableGrammarRule
 import com.felipebz.flr.internal.vm.CompiledGrammar
 import com.felipebz.flr.internal.vm.Machine
 import com.felipebz.flr.internal.vm.MutableGrammarCompiler
+import com.felipebz.flr.profiler.ParsingProfiler
 
 /**
  * Performs parsing of a given grammar rule on a given input text.
@@ -39,6 +40,15 @@ public class ParseRunner(rule: Rule) {
 
     public fun parse(input: CharArray): ParsingResult {
         return Machine.parse(input, compiledGrammar)
+    }
+
+    /**
+     * Same as [parse], recording rule and memoization counters into [profiler].
+     *
+     * @since 1.7
+     */
+    public fun parse(input: CharArray, profiler: ParsingProfiler): ParsingResult {
+        return Machine.parse(input, compiledGrammar, profiler.countersFor(compiledGrammar))
     }
 
 }
