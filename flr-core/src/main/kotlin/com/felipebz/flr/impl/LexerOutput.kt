@@ -32,6 +32,15 @@ public class LexerOutput(public val uri: URI = URI("tests://unittest")) {
     public val tokens: List<Token>
         get() = _tokens.toList()
 
+    public val tokenCount: Int
+        get() = _tokens.size
+
+    public val lastToken: Token?
+        get() = _tokens.lastOrNull()
+
+    public fun tokenAtOrNull(index: Int): Token? =
+        _tokens.getOrNull(index)
+
     public fun addTrivia(trivia: Trivia) {
         this.trivia.add(trivia)
     }
