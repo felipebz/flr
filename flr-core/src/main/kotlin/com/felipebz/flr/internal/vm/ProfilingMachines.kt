@@ -46,9 +46,11 @@ internal class ProfilingMachine(
 
     override fun pushReturn(returnOffset: Int, matcher: Matcher?, callOffset: Int, targetId: Int) {
         val memo = memos[index]
-        val kind = if (memo == null) ProgramCounters.EMPTY_MISSES
-        else if (memo.matcher === matcher) ProgramCounters.HITS
-        else ProgramCounters.MATCHER_MISSES
+        val kind = when {
+            memo == null -> ProgramCounters.EMPTY_MISSES
+            memo.matcher === matcher -> ProgramCounters.HITS
+            else -> ProgramCounters.MATCHER_MISSES
+        }
         counters[targetId * ProgramCounters.STRIDE + kind]++
         super.pushReturn(returnOffset, matcher, callOffset, targetId)
     }
@@ -71,11 +73,13 @@ internal class ProfilingContextAwareMachine(
 
     override fun pushReturn(returnOffset: Int, matcher: Matcher?, callOffset: Int, targetId: Int) {
         val memo = memos[index]
-        val kind = if (memo == null) ProgramCounters.EMPTY_MISSES
-        else if (memo.matcher !== matcher) ProgramCounters.MATCHER_MISSES
-        // same predicate as ContextAwareMachine.pushReturn
-        else if (!contextEverActivated || memoContexts?.get(index) == context) ProgramCounters.HITS
-        else ProgramCounters.CONTEXT_MISSES
+        val kind = when {
+            memo == null -> ProgramCounters.EMPTY_MISSES
+            memo.matcher !== matcher -> ProgramCounters.MATCHER_MISSES
+            // same predicate as ContextAwareMachine.pushReturn
+            !contextEverActivated || memoContexts?.get(index) == context -> ProgramCounters.HITS
+            else -> ProgramCounters.CONTEXT_MISSES
+        }
         counters[targetId * ProgramCounters.STRIDE + kind]++
         super.pushReturn(returnOffset, matcher, callOffset, targetId)
     }
@@ -99,10 +103,12 @@ internal class ProfilingRetainingMachine(
 
     override fun pushReturn(returnOffset: Int, matcher: Matcher?, callOffset: Int, targetId: Int) {
         val memo = memos[index]
-        val kind = if (memo != null && memo.matcher === matcher) ProgramCounters.HITS
-        else if (retainedHit(matcher, targetId) != null) ProgramCounters.HITS
-        else if (memo == null) ProgramCounters.EMPTY_MISSES
-        else ProgramCounters.MATCHER_MISSES
+        val kind = when {
+            memo != null && memo.matcher === matcher -> ProgramCounters.HITS
+            retainedHit(matcher, targetId) != null -> ProgramCounters.HITS
+            memo == null -> ProgramCounters.EMPTY_MISSES
+            else -> ProgramCounters.MATCHER_MISSES
+        }
         counters[targetId * ProgramCounters.STRIDE + kind]++
         super.pushReturn(returnOffset, matcher, callOffset, targetId)
     }
@@ -126,12 +132,14 @@ internal class ProfilingRetainingContextAwareMachine(
 
     override fun pushReturn(returnOffset: Int, matcher: Matcher?, callOffset: Int, targetId: Int) {
         val memo = memos[index]
-        val kind = if (retainedHit(matcher, targetId) != null) ProgramCounters.HITS
-        else if (memo == null) ProgramCounters.EMPTY_MISSES
-        else if (memo.matcher !== matcher) ProgramCounters.MATCHER_MISSES
-        // same predicate as ContextAwareMachine.pushReturn
-        else if (!contextEverActivated || memoContexts?.get(index) == context) ProgramCounters.HITS
-        else ProgramCounters.CONTEXT_MISSES
+        val kind = when {
+            retainedHit(matcher, targetId) != null -> ProgramCounters.HITS
+            memo == null -> ProgramCounters.EMPTY_MISSES
+            memo.matcher !== matcher -> ProgramCounters.MATCHER_MISSES
+            // same predicate as ContextAwareMachine.pushReturn
+            !contextEverActivated || memoContexts?.get(index) == context -> ProgramCounters.HITS
+            else -> ProgramCounters.CONTEXT_MISSES
+        }
         counters[targetId * ProgramCounters.STRIDE + kind]++
         super.pushReturn(returnOffset, matcher, callOffset, targetId)
     }
