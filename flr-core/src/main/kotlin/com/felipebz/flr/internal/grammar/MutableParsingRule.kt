@@ -38,6 +38,7 @@ public class MutableParsingRule : CompilableGrammarRule, Matcher, Rule, AstNodeS
     private val name: String
     override var expression: ParsingExpression? = null
     private var astNodeSkippingPolicy: AstNodeSkippingPolicy = NeverSkipFromAst
+    private var retainMemo = false
 
     public constructor(name: String) {
         ruleKey = this
@@ -96,6 +97,14 @@ public class MutableParsingRule : CompilableGrammarRule, Matcher, Rule, AstNodeS
 
     override fun shouldMemoize(): Boolean {
         return true
+    }
+
+    override fun shouldRetainMemo(): Boolean {
+        return retainMemo
+    }
+
+    internal fun enableMemoRetention() {
+        retainMemo = true
     }
 
     private fun sequence(vararg e: Any): ParsingExpression {

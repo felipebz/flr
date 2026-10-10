@@ -320,15 +320,28 @@ public open class Machine protected constructor(
             handler: MachineHandler,
             profile: ProgramCounters?
         ): Machine {
+            val retention = grammar.memoRetention
             if (profile != null) {
                 profile.parseStarted()
-                return if (grammar.usesParserContext) {
+                return if (retention != null) {
+                    if (grammar.usesParserContext) {
+                        ProfilingRetainingContextAwareMachine(input, tokens, grammar.program, handler, retention, profile)
+                    } else {
+                        ProfilingRetainingMachine(input, tokens, grammar.program, handler, retention, profile)
+                    }
+                } else if (grammar.usesParserContext) {
                     ProfilingContextAwareMachine(input, tokens, grammar.program, handler, profile)
                 } else {
                     ProfilingMachine(input, tokens, grammar.program, handler, profile)
                 }
             }
-            return if (grammar.usesParserContext) {
+            return if (retention != null) {
+                if (grammar.usesParserContext) {
+                    RetainingContextAwareMachine(input, tokens, grammar.program, handler, retention)
+                } else {
+                    RetainingMachine(input, tokens, grammar.program, handler, retention)
+                }
+            } else if (grammar.usesParserContext) {
                 ContextAwareMachine(input, tokens, grammar.program, handler)
             } else {
                 Machine(input, tokens, grammar.program, handler, true)

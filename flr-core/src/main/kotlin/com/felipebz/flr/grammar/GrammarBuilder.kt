@@ -20,6 +20,8 @@
  */
 package com.felipebz.flr.grammar
 
+import com.felipebz.flr.impl.matcher.RuleDefinition
+import com.felipebz.flr.internal.grammar.MutableParsingRule
 import com.felipebz.flr.internal.vm.*
 
 /**
@@ -371,6 +373,14 @@ public abstract class GrammarBuilder {
 
         override fun skipIfOneChild() {
             delegate.skipIfOneChild()
+        }
+
+        override fun enableMemoRetention() {
+            when (delegate) {
+                is RuleDefinition -> delegate.enableMemoRetention()
+                is MutableParsingRule -> delegate.enableMemoRetention()
+                else -> throw GrammarException("The rule '${delegate.ruleKey}' does not support memo retention.")
+            }
         }
     }
 }

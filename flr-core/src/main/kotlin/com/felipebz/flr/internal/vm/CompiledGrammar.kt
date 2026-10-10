@@ -30,6 +30,9 @@ public class CompiledGrammar(
     public val rootRuleOffset: Int,
     internal val usesParserContext: Boolean
 ) {
+    /** Resolved once per compiled grammar; `null` selects the ordinary machines. */
+    internal val memoRetention: MemoRetention? = MemoRetention.of(program)
+
     public constructor(
         program: InstructionProgram,
         rules: Map<GrammarRuleKey, CompilableGrammarRule>,

@@ -101,7 +101,9 @@ public enum class TargetKind {
  *
  * The memo is one slot per input position holding the result of whichever memoizing rule stored there last,
  * so a [memoMatcherMisses] count is a rule finding another rule's result in its slot, not necessarily a
- * result that would have been reusable.
+ * result that would have been reusable. For rules with memo retention
+ * ([com.felipebz.flr.grammar.GrammarRuleBuilder.enableMemoRetention]), a lookup that misses the slot but reuses the
+ * rule's retained result counts as a hit; the miss counters then only cover lookups that executed the rule.
  *
  * @since 1.7
  */
@@ -128,7 +130,10 @@ public class TargetProfile internal constructor(
      * and the derived [memoStores] may not be exact.
      */
     public val ambiguousMatchers: Boolean,
-    /** Lookups that reused a memo (matching matcher and, for parser-context grammars, a compatible context). */
+    /**
+     * Lookups that reused a memo (matching matcher and, for parser-context grammars, a compatible context), including
+     * retained results.
+     */
     public val memoHits: Long,
     /** Lookups that found an empty slot. */
     public val memoEmptyMisses: Long,

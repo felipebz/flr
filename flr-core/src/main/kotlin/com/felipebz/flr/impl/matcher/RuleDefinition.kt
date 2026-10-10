@@ -40,6 +40,7 @@ public class RuleDefinition : Rule, AstNodeSkippingPolicy, GrammarRuleKey, Compi
     override var expression: ParsingExpression? = null
     private var astNodeSkippingPolicy: AstNodeType = NeverSkipFromAst
     private var memoize = false
+    private var retainMemo = false
 
     public constructor(name: String) {
         ruleKey = this
@@ -123,6 +124,15 @@ public class RuleDefinition : Rule, AstNodeSkippingPolicy, GrammarRuleKey, Compi
 
     public fun enableMemoization() {
         memoize = true
+    }
+
+    override fun shouldRetainMemo(): Boolean {
+        return retainMemo
+    }
+
+    internal fun enableMemoRetention() {
+        memoize = true
+        retainMemo = true
     }
 
     private fun convertToSingleExpression(e: Array<out Any>): ParsingExpression {

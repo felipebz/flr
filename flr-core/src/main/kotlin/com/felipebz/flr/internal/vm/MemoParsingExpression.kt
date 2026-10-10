@@ -24,4 +24,12 @@ import com.felipebz.flr.internal.matchers.Matcher
 
 public interface MemoParsingExpression : ParsingExpression, Matcher {
     public fun shouldMemoize(): Boolean
+
+    /**
+     * Whether successful matches stay reusable after another rule's match replaces them in the memo.
+     * Only honoured when [shouldMemoize] is also true.
+     *
+     * @since 1.7
+     */
+    public fun shouldRetainMemo(): Boolean = false
 }

@@ -35,7 +35,7 @@ private val EMPTY_PARSE_NODES = emptyArray<ParseNode>()
  * Until context is first activated, this machine uses the ordinary memo representation
  * and avoids allocating or writing context snapshots.
  *
- * Open only so that [ProfilingContextAwareMachine] can specialize it; the three fields it must read
+ * Open only so that [ProfilingContextAwareMachine] and [RetainingContextAwareMachine] can specialize it; the three fields they must read
  * are [JvmField]s so the ordinary machine's bytecode keeps direct field access.
  */
 internal open class ContextAwareMachine(

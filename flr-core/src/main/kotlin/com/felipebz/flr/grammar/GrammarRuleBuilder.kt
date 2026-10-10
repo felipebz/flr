@@ -88,4 +88,35 @@ public interface GrammarRuleBuilder {
      * Indicates that grammar rule should not lead to creation of AST node if it has exactly one child.
      */
     public fun skipIfOneChild()
+
+    /**
+     * Memoizes successful matches of this rule, like [LexerfulGrammarBuilder.buildWithMemoizationOfMatchesForAllRules]
+     * does for every rule, and also keeps them reusable after another rule's match replaces them.
+     *
+     * The memo holds one result per input position: whichever memoizing rule matched there last. A later call of this
+     * rule at that position finds another rule's result and runs again, which can make nested constructs parse in
+     * exponential time. A retained result is reused under the same conditions as a memo entry (same rule, equal parser
+     * context); a result produced while parse errors are ignored (inside `nextNot` or a lexerless `token`) is only
+     * reused while errors are ignored, because running the rule with error reporting can record a further error position.
+     *
+     * **Eligibility.** Reusing a result means the rule body does not run again. That is only equivalent to running
+     * it when the outcome depends on nothing but the input position, the rule and the parser context: no mutable state
+     * outside the parse, and no custom `NativeExpression` with observable side effects
+     * or state that persists between runs. Retention makes none of that safe; it only extends the lifetime of results
+     * that the memo would already have reused had they not been replaced.
+     *
+     * **Memory.** Per parse, each retaining rule needs up to one reference per input position, allocated on the first
+     * time a result of that rule is replaced. Once a parser context has been activated, an equally sized array of
+     * contexts is added, plus one bit per input position for results created while errors were ignored. Retained
+     * results stay reachable until the parse ends. Only one result per rule and position is kept: replacing a
+     * retained result of the same rule (created in another parser context) drops the older one. Retaining rules do not
+     * displace each other. Grammars without retaining rules use the unchanged machines and allocate nothing extra.
+     *
+     * Retention only pays off for rules whose replaced results are requested again; `ParsingProfiler` shows these as
+     * memo matcher misses. Configure it before the grammar is compiled; the choice is fixed per compiled grammar.
+     *
+     * @throws GrammarException if the rule implementation does not support memo retention
+     * @since 1.7
+     */
+    public fun enableMemoRetention()
 }
