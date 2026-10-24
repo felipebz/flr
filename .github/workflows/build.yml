@@ -18,7 +18,7 @@ permissions:
 jobs:
   build:
     name: Build and verify
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
       - name: checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -78,7 +78,7 @@ jobs:
           JRELEASER_GPG_SECRET_KEY: ${{ secrets.GPG_SECRET_KEY }}
           JRELEASER_GPG_PASSPHRASE: ${{ secrets.GPG_KEY_PASSWORD }}
   dependency-submission:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     permissions:
       contents: write
     steps:
