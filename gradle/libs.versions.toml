@@ -7,7 +7,7 @@ sonarscanner = "7.5.0.8588"
 jmh-plugin = "0.7.3"
 
 # libs
-asm = "9.10.1"
+asm = "9.11.1"
 jaxen = "2.0.6"
 
 # testing
