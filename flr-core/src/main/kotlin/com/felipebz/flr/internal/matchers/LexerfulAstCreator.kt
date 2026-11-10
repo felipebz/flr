@@ -33,113 +33,58 @@ public class LexerfulAstCreator private constructor(
     private val terminalNodeBuilder: TerminalNodeBuilder
 ) {
     /**
-     * Projects a parse node to zero, one, or several effective AST children.
-     *
-     * The common one-child result is represented by the child itself. A list is
-     * created only when an always-skipped node produces several children.
+     * Effective AST children projected so far and not yet given to their parent. Each node being built owns the
+     * entries from the size it saw on entry, and gives them to its AST node in one call once all are projected.
      */
-    private fun project(node: ParseNode, forceNode: Boolean = false): Any? {
+    private val pending = ArrayList<AstNode>()
+
+    /**
+     * Appends to [pending] the zero, one, or several effective AST children that a parse node projects to.
+     */
+    private fun project(node: ParseNode) {
         val ruleMatcher = node.matcher as? RuleDefinition
-        if (!forceNode && ruleMatcher != null) {
-            if (ruleMatcher.isAlwaysSkipFromAst()) {
-                return projectAlwaysSkipped(node)
+        if (ruleMatcher == null) {
+            val terminal = projectTerminal(node)
+            if (terminal != null) {
+                pending.add(terminal)
             }
-            if (ruleMatcher.isSkipIfOneChildFromAst()) {
-                return projectSkipIfOneChild(node, ruleMatcher)
-            }
-        }
-
-        return if (ruleMatcher != null) {
-            projectNonTerminal(node, ruleMatcher)
+        } else if (ruleMatcher.isAlwaysSkipFromAst()) {
+            projectChildren(node)
+        } else if (ruleMatcher.isSkipIfOneChildFromAst()) {
+            projectSkipIfOneChild(node, ruleMatcher)
         } else {
-            projectTerminal(node)
+            pending.add(projectNonTerminal(node, ruleMatcher))
         }
     }
 
-    private fun projectAlwaysSkipped(node: ParseNode): Any? {
-        var firstChild: AstNode? = null
-        var multipleChildren: ArrayList<AstNode>? = null
-
+    private fun projectChildren(node: ParseNode) {
         for (child in node.children) {
-            val projection = project(child)
-            if (projection is AstNode) {
-                if (firstChild == null) {
-                    firstChild = projection
-                } else {
-                    if (multipleChildren == null) {
-                        multipleChildren = ArrayList()
-                        multipleChildren.add(firstChild)
-                    }
-                    multipleChildren.add(projection)
-                }
-            } else if (projection is List<*>) {
-                for (projectedChild in projection) {
-                    val astChild = projectedChild as AstNode
-                    if (firstChild == null) {
-                        firstChild = astChild
-                    } else {
-                        if (multipleChildren == null) {
-                            multipleChildren = ArrayList()
-                            multipleChildren.add(firstChild)
-                        }
-                        multipleChildren.add(astChild)
-                    }
-                }
-            }
+            project(child)
         }
-
-        return multipleChildren ?: firstChild
     }
 
-    private fun projectSkipIfOneChild(node: ParseNode, ruleMatcher: RuleDefinition): Any {
-        var firstChild: AstNode? = null
-        var retainedNode: AstNode? = null
-
-        for (child in node.children) {
-            val projection = project(child)
-            if (projection is AstNode) {
-                if (retainedNode != null) {
-                    addChild(retainedNode, projection)
-                } else if (firstChild == null) {
-                    firstChild = projection
-                } else {
-                    retainedNode = buildNonTerminal(node, ruleMatcher)
-                    addChild(retainedNode, checkNotNull(firstChild))
-                    addChild(retainedNode, projection)
-                }
-            } else if (projection is List<*>) {
-                for (projectedChild in projection) {
-                    val astChild = projectedChild as AstNode
-                    if (retainedNode != null) {
-                        addChild(retainedNode, astChild)
-                    } else if (firstChild == null) {
-                        firstChild = astChild
-                    } else {
-                        retainedNode = buildNonTerminal(node, ruleMatcher)
-                        addChild(retainedNode, checkNotNull(firstChild))
-                        addChild(retainedNode, astChild)
-                    }
-                }
-            }
+    private fun projectSkipIfOneChild(node: ParseNode, ruleMatcher: RuleDefinition) {
+        val start = pending.size
+        projectChildren(node)
+        val count = pending.size - start
+        if (count == 1) {
+            // the only child stays in pending, in place of this node
+            return
         }
-
-        if (retainedNode == null) {
-            if (firstChild != null) {
-                return firstChild
-            }
-            return buildNonTerminal(node, ruleMatcher)
+        val astNode = buildNonTerminal(node, ruleMatcher)
+        if (count > 1) {
+            takeChildren(astNode, start)
+            astNode.fromIndex = node.startIndex
+            astNode.toIndex = node.endIndex
         }
-
-        retainedNode.fromIndex = node.startIndex
-        retainedNode.toIndex = node.endIndex
-        return retainedNode
+        pending.add(astNode)
     }
 
     private fun projectNonTerminal(node: ParseNode, ruleMatcher: RuleDefinition): AstNode {
         val astNode = buildNonTerminal(node, ruleMatcher)
-        for (child in node.children) {
-            attachProjection(astNode, project(child))
-        }
+        val start = pending.size
+        projectChildren(node)
+        takeChildren(astNode, start)
         astNode.fromIndex = node.startIndex
         astNode.toIndex = node.endIndex
         return astNode
@@ -150,19 +95,14 @@ public class LexerfulAstCreator private constructor(
         return nonTerminalNodeBuilder.build(ruleMatcher, ruleMatcher.getName(), token)
     }
 
-    private fun attachProjection(parent: AstNode, projection: Any?) {
-        when (projection) {
-            is AstNode -> addChild(parent, projection)
-            is List<*> -> {
-                for (child in projection) {
-                    addChild(parent, child as AstNode)
-                }
-            }
+    /**
+     * Gives the entries of [pending] from [start] to [parent], then removes them from [pending].
+     */
+    private fun takeChildren(parent: AstNode, start: Int) {
+        parent.setChildren(pending, start, pending.size)
+        for (i in pending.size - 1 downTo start) {
+            pending.removeAt(i)
         }
-    }
-
-    private fun addChild(parent: AstNode, child: AstNode) {
-        parent.addChild(child)
     }
 
     private fun projectTerminal(node: ParseNode): AstNode? {
@@ -185,10 +125,14 @@ public class LexerfulAstCreator private constructor(
             nonTerminalNodeBuilder: NonTerminalNodeBuilder,
             terminalNodeBuilder: TerminalNodeBuilder
         ): AstNode {
-            val astNode = checkNotNull(
-                LexerfulAstCreator(tokens, nonTerminalNodeBuilder, terminalNodeBuilder).project(node, forceNode = true)
-                    as? AstNode
-            )
+            val creator = LexerfulAstCreator(tokens, nonTerminalNodeBuilder, terminalNodeBuilder)
+            // The root is always a node, whatever its skipping policy
+            val ruleMatcher = node.matcher as? RuleDefinition
+            val astNode = if (ruleMatcher != null) {
+                creator.projectNonTerminal(node, ruleMatcher)
+            } else {
+                checkNotNull(creator.projectTerminal(node))
+            }
             // Unwrap AstNodeType for root node:
             astNode.hasToBeSkippedFromAst()
             return astNode

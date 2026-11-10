@@ -42,9 +42,8 @@ internal class AstNodeBuilder : NodeBuilder {
             }
         }
         val astNode = AstNode(rule, ruleKey.toString(), token)
-        for (child in children) {
-            astNode.addChild(child as AstNode?)
-        }
+        @Suppress("UNCHECKED_CAST")
+        astNode.setChildren(children as List<AstNode?>)
         astNode.fromIndex = startIndex
         astNode.toIndex = endIndex
         return astNode

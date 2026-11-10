@@ -62,6 +62,13 @@ internal class AstCreator private constructor(private val input: LocatedText) {
 
     private val tokenBuilder = Token.builder()
     private val trivias = mutableListOf<Trivia>()
+
+    /**
+     * Children visited so far and not yet given to their parent. Each non-terminal being built owns the entries from
+     * the size it saw on entry, and gives them to its AST node in one call once all are visited.
+     */
+    private val pending = ArrayList<AstNode>()
+
     private fun visit(node: ParseNode): AstNode? {
         return if (node.matcher is MutableParsingRule) {
             visitNonTerminal(node)
@@ -120,27 +127,32 @@ internal class AstCreator private constructor(private val input: LocatedText) {
 
     private fun visitNonTerminal(node: ParseNode): AstNode {
         val ruleMatcher = node.matcher as MutableParsingRule
-        val astNodes = mutableListOf<AstNode>()
+        val start = pending.size
         for (child in node.children) {
             val astNode = visit(child)
             if (astNode != null) {
                 if (astNode.hasToBeSkippedFromAst()) {
-                    astNodes.addAll(astNode.children)
+                    val subChildren = astNode.children
+                    for (i in 0 until subChildren.size) {
+                        pending.add(subChildren[i])
+                    }
                 } else {
-                    astNodes.add(astNode)
+                    pending.add(astNode)
                 }
             }
         }
         var token: Token? = null
-        for (child in astNodes) {
+        for (i in start until pending.size) {
+            val child = pending[i]
             if (child.hasToken()) {
                 token = child.token
                 break
             }
         }
         val astNode = AstNode(ruleMatcher, ruleMatcher.getName(), token)
-        for (child in astNodes) {
-            astNode.addChild(child)
+        astNode.setChildren(pending, start, pending.size)
+        for (i in pending.size - 1 downTo start) {
+            pending.removeAt(i)
         }
         astNode.fromIndex = node.startIndex
         astNode.toIndex = node.endIndex

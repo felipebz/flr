@@ -44,11 +44,18 @@ public open class AstNode(
         private set
 
     /**
-     * Get the list of children.
+     * Children of this node: a shared empty list, a single child, or an array of the exact size. Only [addChild] on a
+     * node that already has children leaves spare capacity, so that adding children one by one stays cheap.
+     */
+    private var childStorage: List<AstNode> = ChildArray.EMPTY
+
+    /**
+     * Get the list of children. The list is read-only; use [addChild] to add a child.
      *
      * @return list of children
      */
-    public val children: MutableList<AstNode> = mutableListOf()
+    public val children: List<AstNode>
+        get() = childStorage
     private var childIndex = -1
 
     /**
@@ -65,31 +72,105 @@ public open class AstNode(
     public fun addChild(child: AstNode?) {
         if (child != null) {
             if (child.hasToBeSkippedFromAst()) {
-                for (subChild in child.children) {
-                    addChildToList(subChild)
+                val subChildren = child.childStorage
+                for (i in 0 until subChildren.size) {
+                    appendChild(subChildren[i])
                 }
             } else {
-                addChildToList(child)
+                appendChild(child)
             }
         }
     }
 
-    private fun addChildToList(child: AstNode) {
-        children.add(child)
-        child.childIndex = children.size - 1
-        child.parentOrNull = this
+    private fun appendChild(child: AstNode) {
+        val current = childStorage
+        val index = current.size
+        when {
+            current is GrowableChildArray -> current.add(child)
+            index == 0 -> childStorage = SingleChild(child)
+            else -> childStorage = GrowableChildArray(current, child)
+        }
+        child.attachTo(this, index)
+    }
+
+    private fun attachTo(parent: AstNode, index: Int) {
+        childIndex = index
+        parentOrNull = parent
+    }
+
+    /**
+     * Sets the children of this node in one go, in storage of the exact size. The candidates are read from [from]
+     * (inclusive) to [to] (exclusive) in [candidates]: null ones are ignored, and each other one is checked with
+     * [hasToBeSkippedFromAst] and replaced by its own children when it has to be skipped, as [addChild] does.
+     * A node that already has children gets the candidates appended with [addChild].
+     */
+    internal fun setChildren(candidates: List<AstNode?>, from: Int = 0, to: Int = candidates.size) {
+        if (childStorage.isNotEmpty()) {
+            for (i in from until to) {
+                addChild(candidates[i])
+            }
+            return
+        }
+        var count = 0
+        var skipped: BooleanArray? = null
+        for (i in from until to) {
+            val candidate = candidates[i] ?: continue
+            if (candidate.hasToBeSkippedFromAst()) {
+                if (skipped == null) {
+                    skipped = BooleanArray(to - from)
+                }
+                skipped[i - from] = true
+                count += candidate.childStorage.size
+            } else {
+                count++
+            }
+        }
+        if (count == 0) {
+            return
+        }
+        if (count == 1) {
+            for (i in from until to) {
+                val candidate = candidates[i] ?: continue
+                val only = if (skipped != null && skipped[i - from]) {
+                    candidate.childStorage.firstOrNull() ?: continue
+                } else {
+                    candidate
+                }
+                childStorage = SingleChild(only)
+                only.attachTo(this, 0)
+                return
+            }
+        }
+        val array = arrayOfNulls<AstNode>(count)
+        var index = 0
+        for (i in from until to) {
+            val candidate = candidates[i] ?: continue
+            if (skipped != null && skipped[i - from]) {
+                val subChildren = candidate.childStorage
+                for (j in 0 until subChildren.size) {
+                    val subChild = subChildren[j]
+                    array[index] = subChild
+                    subChild.attachTo(this, index++)
+                }
+            } else {
+                array[index] = candidate
+                candidate.attachTo(this, index++)
+            }
+        }
+        @Suppress("UNCHECKED_CAST")
+        childStorage = ChildArray(array as Array<AstNode>)
     }
 
     /**
      * @return true if this AstNode has some children.
      */
     public fun hasChildren(): Boolean {
-        return children.isNotEmpty()
+        return childStorage.isNotEmpty()
     }
 
     public val numberOfChildren: Int
         get() {
-            return children.size
+            return childStorage.size
         }
 
     /**
