@@ -312,7 +312,12 @@ public open class AstNode(
      * @since 1.17
      */
     public fun getFirstChild(vararg nodeTypes: AstNodeType): AstNode {
-        return children.first { nodeTypes.isEmpty() || it.type in nodeTypes }
+        val children = childStorage
+        for (i in 0 until children.size) {
+            val child = children[i]
+            if (nodeTypes.isEmpty() || child.type in nodeTypes) return child
+        }
+        throw NoSuchElementException("List contains no element matching the predicate.")
     }
 
     /**
@@ -332,7 +337,12 @@ public open class AstNode(
      * @since 1.17
      */
     public fun getFirstChildOrNull(vararg nodeTypes: AstNodeType): AstNode? {
-        return children.firstOrNull { nodeTypes.isEmpty() || it.type in nodeTypes }
+        val children = childStorage
+        for (i in 0 until children.size) {
+            val child = children[i]
+            if (nodeTypes.isEmpty() || child.type in nodeTypes) return child
+        }
+        return null
     }
 
     /**
@@ -352,7 +362,9 @@ public open class AstNode(
      * @since 1.17
      */
     public fun getFirstDescendantOrNull(vararg nodeTypes: AstNodeType): AstNode? {
-        for (child in children) {
+        val children = childStorage
+        for (i in 0 until children.size) {
+            val child = children[i]
             if (child.`is`(*nodeTypes)) {
                 return child
             }
@@ -428,8 +440,9 @@ public open class AstNode(
      */
     public fun getDescendants(vararg nodeTypes: AstNodeType): List<AstNode> {
         val result = mutableListOf<AstNode>()
-        for (child in children) {
-            child.getDescendants(result, *nodeTypes)
+        val children = childStorage
+        for (i in 0 until children.size) {
+            children[i].getDescendants(result, *nodeTypes)
         }
         return result
     }
@@ -440,8 +453,9 @@ public open class AstNode(
                 result.add(this)
             }
         }
-        for (child in children) {
-            child.getDescendants(result, *nodeTypes)
+        val children = childStorage
+        for (i in 0 until children.size) {
+            children[i].getDescendants(result, *nodeTypes)
         }
     }
 
@@ -602,8 +616,9 @@ public open class AstNode(
                 tokens.add(token)
             }
         } else {
-            for (i in children) {
-                i.getTokens(tokens)
+            val children = childStorage
+            for (i in 0 until children.size) {
+                children[i].getTokens(tokens)
             }
         }
     }
@@ -626,7 +641,13 @@ public open class AstNode(
             }
             var currentNode = this
             while (currentNode.hasChildren()) {
-                currentNode = currentNode.children.last { it.hasToken() }
+                val children = currentNode.childStorage
+                var i = children.size - 1
+                while (i >= 0 && !children[i].hasToken()) {
+                    i--
+                }
+                if (i < 0) throw NoSuchElementException("List contains no element matching the predicate.")
+                currentNode = children[i]
             }
             return currentNode.token
         }

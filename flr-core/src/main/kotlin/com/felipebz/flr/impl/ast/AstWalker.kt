@@ -68,8 +68,9 @@ public class AstWalker(vararg visitors: AstVisitor) {
     }
 
     private fun visitChildren(ast: AstNode) {
-        for (child in ast.children) {
-            visit(child)
+        val children = ast.children
+        for (i in 0 until children.size) {
+            visit(children[i])
         }
     }
 
