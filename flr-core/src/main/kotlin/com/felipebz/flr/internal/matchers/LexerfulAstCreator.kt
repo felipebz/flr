@@ -74,8 +74,6 @@ public class LexerfulAstCreator private constructor(
         val astNode = buildNonTerminal(node, ruleMatcher)
         if (count > 1) {
             takeChildren(astNode, start)
-            astNode.fromIndex = node.startIndex
-            astNode.toIndex = node.endIndex
         }
         pending.add(astNode)
     }
@@ -85,8 +83,6 @@ public class LexerfulAstCreator private constructor(
         val start = pending.size
         projectChildren(node)
         takeChildren(astNode, start)
-        astNode.fromIndex = node.startIndex
-        astNode.toIndex = node.endIndex
         return astNode
     }
 
@@ -111,10 +107,7 @@ public class LexerfulAstCreator private constructor(
         if (node.matcher is TokenTypeExpression && token.type.hasToBeSkippedFromAst(null)) {
             return null
         }
-        val astNode = terminalNodeBuilder.build(token)
-        astNode.fromIndex = node.startIndex
-        astNode.toIndex = node.endIndex
-        return astNode
+        return terminalNodeBuilder.build(token)
     }
 
     public companion object {

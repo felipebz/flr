@@ -64,8 +64,6 @@ public open class AstNode(
     public var parentOrNull: AstNode? = null
         private set
     public val parent: AstNode get() = checkNotNull(parentOrNull)
-    public var fromIndex: Int = 0
-    public var toIndex: Int = 0
 
     public constructor(token: Token) : this(token.type, token.type.name, token)
 

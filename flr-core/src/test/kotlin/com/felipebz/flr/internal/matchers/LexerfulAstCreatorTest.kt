@@ -53,8 +53,6 @@ class LexerfulAstCreatorTest {
         val ast = create(parseTree, tokens)
 
         assertThat(ast.name).isEqualTo("root")
-        assertThat(ast.fromIndex).isEqualTo(0)
-        assertThat(ast.toIndex).isEqualTo(6)
         assertThat(ast.children).hasSize(5)
         assertThat(ast.children[0].tokenOriginalValue).isEqualTo("token0")
         assertThat(ast.children[1].tokenOriginalValue).isEqualTo("token1")
@@ -99,8 +97,6 @@ class LexerfulAstCreatorTest {
         assertThat(ast.children).hasSize(1)
         assertThat(ast.children[0].name).isEqualTo("skipIfOneChild")
         assertThat(ast.children[0].children).isEmpty()
-        assertThat(ast.children[0].fromIndex).isZero()
-        assertThat(ast.children[0].toIndex).isZero()
         assertThat(ast.children[0].parent).isSameAs(ast)
     }
 
@@ -123,8 +119,6 @@ class LexerfulAstCreatorTest {
         assertThat(ast.children).hasSize(1)
         val child = ast.children[0]
         assertThat(child.name).isEqualTo("retained")
-        assertThat(child.fromIndex).isEqualTo(0)
-        assertThat(child.toIndex).isEqualTo(1)
         assertThat(child.parent).isSameAs(ast)
         assertThat(child.children[0].parent).isSameAs(child)
     }
@@ -143,8 +137,6 @@ class LexerfulAstCreatorTest {
         assertThat(ast.children).hasSize(1)
         val skipped = ast.children[0]
         assertThat(skipped.name).isEqualTo("skipIfOneChild")
-        assertThat(skipped.fromIndex).isEqualTo(0)
-        assertThat(skipped.toIndex).isEqualTo(3)
         assertThat(skipped.children).extracting<String> { it.tokenOriginalValue }
             .containsExactly("token0", "token1", "token2")
         assertThat(skipped.children).allMatch { it.parent === skipped }

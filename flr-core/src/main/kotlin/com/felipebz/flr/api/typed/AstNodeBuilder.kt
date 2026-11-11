@@ -44,8 +44,6 @@ internal class AstNodeBuilder : NodeBuilder {
         val astNode = AstNode(rule, ruleKey.toString(), token)
         @Suppress("UNCHECKED_CAST")
         astNode.setChildren(children as List<AstNode?>)
-        astNode.fromIndex = startIndex
-        astNode.toIndex = endIndex
         return astNode
     }
 
@@ -66,8 +64,6 @@ internal class AstNodeBuilder : NodeBuilder {
             .setTrivia(trivias)
             .build()
         val astNode = AstNode(token)
-        astNode.fromIndex = startIndex
-        astNode.toIndex = endIndex
         return astNode
     }
 

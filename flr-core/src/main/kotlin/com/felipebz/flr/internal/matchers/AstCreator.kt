@@ -111,8 +111,6 @@ internal class AstCreator private constructor(private val input: LocatedText) {
         val token = tokenBuilder.setTrivia(trivias).build()
         trivias.clear()
         val astNode = AstNode(token)
-        astNode.fromIndex = node.startIndex
-        astNode.toIndex = node.endIndex
         return astNode
     }
 
@@ -154,8 +152,6 @@ internal class AstCreator private constructor(private val input: LocatedText) {
         for (i in pending.size - 1 downTo start) {
             pending.removeAt(i)
         }
-        astNode.fromIndex = node.startIndex
-        astNode.toIndex = node.endIndex
         return astNode
     }
 

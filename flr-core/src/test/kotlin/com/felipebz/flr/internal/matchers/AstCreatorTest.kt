@@ -52,8 +52,6 @@ class AstCreatorTest {
         println(print(astNode))
         assertThat(astNode.type).isSameAs(realAstNodeType)
         assertThat(astNode.name).isEqualTo("rule")
-        assertThat(astNode.fromIndex).isEqualTo(0)
-        assertThat(astNode.toIndex).isEqualTo(7)
         assertThat(astNode.hasChildren()).isTrue()
         assertThat(astNode.tokens).hasSize(1)
         val token = astNode.tokens[0]
@@ -88,8 +86,6 @@ class AstCreatorTest {
         println(print(astNode))
         assertThat(astNode.type).isSameAs(realAstNodeType)
         assertThat(astNode.name).isEqualTo("rule")
-        assertThat(astNode.fromIndex).isEqualTo(0)
-        assertThat(astNode.toIndex).isEqualTo(6)
         assertThat(astNode.hasChildren()).isTrue()
         assertThat(astNode.tokens).hasSize(2)
         var token = astNode.tokens[0]
@@ -124,8 +120,6 @@ class AstCreatorTest {
         println(print(astNode))
         assertThat(astNode.type).isSameAs(realAstNodeType)
         assertThat(astNode.name).isEqualTo("rule2")
-        assertThat(astNode.fromIndex).isEqualTo(0)
-        assertThat(astNode.toIndex).isEqualTo(3)
         assertThat(astNode.hasChildren()).isFalse()
         assertThat(astNode.hasToken()).isFalse()
     }
