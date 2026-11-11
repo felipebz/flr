@@ -38,12 +38,12 @@ public class CommentRegexpChannel(private val regexp: String) : Channel<LexerOut
     private val pattern = Pattern.compile(regexp)
 
     override fun consume(code: CodeReader, output: LexerOutput): Boolean {
-        val tmpBuilder = StringBuilder()
+        val tmpBuilder = output.tokenText()
         val matcher = pattern.matcher("")
 
         return try {
             if (code.popTo(matcher, tmpBuilder) > 0) {
-                val value = tmpBuilder.toString()
+                val value = output.sharedString(tmpBuilder)
                 val token = Token.builder()
                     .setType(GenericTokenType.COMMENT)
                     .setValueAndOriginalValue(value)

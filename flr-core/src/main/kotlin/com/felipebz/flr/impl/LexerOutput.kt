@@ -28,6 +28,8 @@ public class LexerOutput(public val uri: URI = URI("tests://unittest")) {
 
     private val trivia = LinkedList<Trivia>()
     private var _tokens = mutableListOf<Token>()
+    private val strings = SharedStrings()
+    private val tokenText = TokenTextBuilder()
 
     public val tokens: List<Token>
         get() = _tokens.toList()
@@ -40,6 +42,34 @@ public class LexerOutput(public val uri: URI = URI("tests://unittest")) {
 
     public fun tokenAtOrNull(index: Int): Token? =
         _tokens.getOrNull(index)
+
+    /**
+     * A string equal to [text]: the one this output already gave for an equal text, or a new one that it gives for
+     * the next equal texts. Channels use it for the values of the tokens and trivia they create, so that the tokens of
+     * one lexed source share their strings; a text built in [tokenText] is found without creating a string. The
+     * strings are kept only as long as this output, and only one thread may use it, as for the rest of the output.
+     */
+    public fun sharedString(text: CharSequence): String =
+        strings.share(text)
+
+    /**
+     * What [compute] makes from the string that [sharedString] gives for [text], made for the first text equal to it
+     * with this [key]: later equal texts with the same key get that same result without calling [compute] again. It
+     * is meant for what depends only on the text, such as the value and type of a word, with the channel as the key;
+     * one result is kept per text, so another key computes and replaces it.
+     */
+    public fun <T : Any> sharedResult(text: CharSequence, key: Any, compute: LexerOutput.(String) -> T): T =
+        strings.shareResult(text, key, this, compute)
+
+    /**
+     * The builder in which a channel appends the characters of the token it reads, before giving it to
+     * [sharedString]. This output has a single one: each call empties it and returns it again, so a channel uses it
+     * for one text at a time.
+     */
+    public fun tokenText(): TokenTextBuilder {
+        tokenText.clear()
+        return tokenText
+    }
 
     public fun addTrivia(trivia: Trivia) {
         this.trivia.add(trivia)

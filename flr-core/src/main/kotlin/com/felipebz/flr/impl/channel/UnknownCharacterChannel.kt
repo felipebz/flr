@@ -35,10 +35,10 @@ import com.felipebz.flr.impl.LexerOutput
 public class UnknownCharacterChannel public constructor() : Channel<LexerOutput> {
     override fun consume(code: CodeReader, output: LexerOutput): Boolean {
         if (code.peek() != -1) {
-            val unknownChar = code.pop().toChar()
+            val unknownChar = output.tokenText().append(code.pop().toChar())
             val token = Token.builder()
                 .setType(GenericTokenType.UNKNOWN_CHAR)
-                .setValueAndOriginalValue(unknownChar.toString())
+                .setValueAndOriginalValue(output.sharedString(unknownChar))
                 .setLine(code.getLinePosition())
                 .setColumn(code.getColumnPosition() - 1)
                 .build()
