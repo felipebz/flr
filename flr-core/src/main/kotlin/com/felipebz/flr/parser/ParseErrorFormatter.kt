@@ -22,6 +22,7 @@ package com.felipebz.flr.parser
 
 import com.felipebz.flr.internal.matchers.InputBuffer
 import com.felipebz.flr.internal.matchers.TextUtils
+import java.util.*
 import kotlin.math.max
 import kotlin.math.min
 
@@ -57,7 +58,7 @@ public class ParseErrorFormatter {
             val padding = endLine.toString().length
             val lineNumberFormat = "%1$" + padding + "d: "
             for (line in startLine..endLine) {
-                sb.append(String.format(lineNumberFormat, line))
+                sb.append(String.format(Locale.ROOT, lineNumberFormat, line))
                 sb.append(TextUtils.trimTrailingLineSeparatorFrom(inputBuffer.extractLine(line)).replace("\t", " "))
                     .append('\n')
                 if (line == position.getLine()) {

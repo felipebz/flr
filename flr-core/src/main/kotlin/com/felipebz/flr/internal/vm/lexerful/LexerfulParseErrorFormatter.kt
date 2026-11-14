@@ -21,6 +21,7 @@
 package com.felipebz.flr.internal.vm.lexerful
 
 import com.felipebz.flr.api.Token
+import java.util.*
 import kotlin.math.max
 import kotlin.math.min
 
@@ -111,14 +112,14 @@ public class LexerfulParseErrorFormatter {
 
         private fun formatLineNumber(line: Int, errorLine: Int, errorColumn: Int): String {
             return if (line == errorLine) {
-                String.format("%1$5s  ", "-->")
+                String.format(Locale.ROOT, "%1$5s  ", "-->")
             } else {
                 val columnIndicator = if (line == errorLine + 1) {
                     " ".repeat(7 + errorColumn) + "^ error location" + "\n"
                 } else {
                     ""
                 }
-                String.format("%s%2$5d: ", columnIndicator, line)
+                String.format(Locale.ROOT, "%s%2$5d: ", columnIndicator, line)
             }
         }
     }

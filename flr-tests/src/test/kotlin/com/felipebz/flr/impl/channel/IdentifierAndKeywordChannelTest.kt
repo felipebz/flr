@@ -28,6 +28,7 @@ import com.felipebz.flr.impl.LexerOutput
 import com.felipebz.flr.tests.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import java.util.*
 
 class IdentifierAndKeywordChannelTest {
     private val channel = IdentifierAndKeywordChannel("[a-zA-Z_][a-zA-Z_0-9]*", true, MyKeywords.entries.toTypedArray())
@@ -60,6 +61,27 @@ class IdentifierAndKeywordChannelTest {
     }
 
     @Test
+    fun testConsumeNotCaseSensitiveWordsUnderTurkishLocale() {
+        val previous = Locale.getDefault()
+        Locale.setDefault(Locale.forLanguageTag("tr-TR"))
+        try {
+            val channel = IdentifierAndKeywordChannel("[a-zA-Z_][a-zA-Z_0-9]*", false, MyKeywords.entries.toTypedArray())
+            for (word in listOf("INFO", "info", "Info")) {
+                val output = LexerOutput()
+                assertThat(channel).consume(word, output)
+                assertThat(output.tokens).hasToken("INFO", MyKeywords.INFO)
+            }
+            for (word in listOf("ITEM", "item")) {
+                val output = LexerOutput()
+                assertThat(channel).consume(word, output)
+                assertThat(output.tokens).hasToken("ITEM", GenericTokenType.IDENTIFIER)
+            }
+        } finally {
+            Locale.setDefault(previous)
+        }
+    }
+
+    @Test
     fun testColumnAndLineNumbers() {
         val reader = CodeReader("\n\n  keyword1")
         reader.pop()
@@ -78,7 +100,7 @@ class IdentifierAndKeywordChannelTest {
     }
 
     private enum class MyKeywords : TokenType {
-        KEYWORD1, KeyWord2;
+        KEYWORD1, KeyWord2, INFO;
 
         override val value: String
             get() = name

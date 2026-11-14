@@ -26,13 +26,12 @@ import com.felipebz.flr.api.TokenType
 import com.felipebz.flr.channel.Channel
 import com.felipebz.flr.channel.CodeReader
 import com.felipebz.flr.impl.LexerOutput
-import java.util.*
 import java.util.regex.Pattern
 
 public class IdentifierAndKeywordChannel(regexp: String, private val caseSensitive: Boolean, vararg keywordSets: Array<out TokenType>) :
     Channel<LexerOutput> {
     private val keywordsMap = keywordSets.flatten().associateBy(
-        { if (caseSensitive) it.value else it.value.uppercase(Locale.getDefault()) },
+        { if (caseSensitive) it.value else it.value.uppercase() },
         { it })
     private val pattern = Pattern.compile(regexp)
 
@@ -44,7 +43,7 @@ public class IdentifierAndKeywordChannel(regexp: String, private val caseSensiti
             var word = tmpBuilder.toString()
             val wordOriginal = word
             if (!caseSensitive) {
-                word = word.uppercase(Locale.getDefault())
+                word = word.uppercase()
             }
             val keywordType = keywordsMap[word]
             val token = Token.builder()
