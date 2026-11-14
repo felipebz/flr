@@ -27,6 +27,30 @@ import org.mockito.kotlin.whenever
 
 class AstNodeTest {
     /**
+     * Matches nested in matches, and a node matching several of the requested types, keep the walk's order: a node
+     * before its descendants, once per requested type it has.
+     */
+    @Test
+    fun descendantsInWalkOrder() {
+        val x = mock<AstNodeType>()
+        val y = mock<AstNodeType>()
+        val root = AstNode(x, "r", null)
+        val y1 = AstNode(y, "y1", null)
+        val x1 = AstNode(x, "x1", null)
+        val y2 = AstNode(y, "y2", null)
+        val x2 = AstNode(x, "x2", null)
+        val y3 = AstNode(y, "y3", null)
+        root.addChild(y1)
+        y1.addChild(x1)
+        x1.addChild(y2)
+        root.addChild(x2)
+        x2.addChild(y3)
+        assertThat(root.getDescendants(y)).containsExactly(y1, y2, y3)
+        assertThat(root.getDescendants(x, y)).containsExactly(y1, x1, y2, x2, y3)
+        assertThat(root.getDescendants(y, y)).containsExactly(y1, y1, y2, y2, y3, y3)
+    }
+
+    /**
      * <pre>
      * A1
      * |- A2

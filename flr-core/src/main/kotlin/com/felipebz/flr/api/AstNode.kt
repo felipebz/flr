@@ -286,13 +286,12 @@ public open class AstNode(
         return result
     }
 
-    public fun `is`(vararg types: AstNodeType): Boolean {
-        return types.any { type === it }
-    }
+    public fun `is`(vararg types: AstNodeType): Boolean = isAnyOf(types)
 
-    public fun isNot(vararg types: AstNodeType): Boolean {
-        return !`is`(*types)
-    }
+    public fun isNot(vararg types: AstNodeType): Boolean = !isAnyOf(types)
+
+    // The walks below pass the caller's array on as it is: spreading a vararg array into another call copies it.
+    private fun isAnyOf(types: Array<out AstNodeType>): Boolean = types.any { type === it }
 
     /**
      * Returns first child of one of specified types.
@@ -361,14 +360,16 @@ public open class AstNode(
      * @return first descendant of one of specified types, or null if not found
      * @since 1.17
      */
-    public fun getFirstDescendantOrNull(vararg nodeTypes: AstNodeType): AstNode? {
+    public fun getFirstDescendantOrNull(vararg nodeTypes: AstNodeType): AstNode? = firstDescendantOrNull(nodeTypes)
+
+    private fun firstDescendantOrNull(nodeTypes: Array<out AstNodeType>): AstNode? {
         val children = childStorage
         for (i in 0 until children.size) {
             val child = children[i]
-            if (child.`is`(*nodeTypes)) {
+            if (child.isAnyOf(nodeTypes)) {
                 return child
             }
-            val node = child.getFirstDescendantOrNull(*nodeTypes)
+            val node = child.firstDescendantOrNull(nodeTypes)
             if (node != null) {
                 return node
             }
@@ -377,7 +378,7 @@ public open class AstNode(
     }
 
     public fun getFirstDescendant(vararg nodeTypes: AstNodeType): AstNode =
-        checkNotNull(getFirstDescendantOrNull(*nodeTypes))
+        checkNotNull(firstDescendantOrNull(nodeTypes))
 
     /**
      * Returns the first child of this node.
@@ -442,20 +443,20 @@ public open class AstNode(
         val result = mutableListOf<AstNode>()
         val children = childStorage
         for (i in 0 until children.size) {
-            children[i].getDescendants(result, *nodeTypes)
+            children[i].collectDescendants(result, nodeTypes)
         }
         return result
     }
 
-    private fun getDescendants(result: MutableList<AstNode>, vararg nodeTypes: AstNodeType) {
+    private fun collectDescendants(result: MutableList<AstNode>, nodeTypes: Array<out AstNodeType>) {
         for (nodeType in nodeTypes) {
-            if (`is`(nodeType)) {
+            if (type === nodeType) {
                 result.add(this)
             }
         }
         val children = childStorage
         for (i in 0 until children.size) {
-            children[i].getDescendants(result, *nodeTypes)
+            children[i].collectDescendants(result, nodeTypes)
         }
     }
 
@@ -535,7 +536,7 @@ public open class AstNode(
      * @since 1.17
      */
     public fun hasDescendant(vararg nodeTypes: AstNodeType): Boolean {
-        return getFirstDescendantOrNull(*nodeTypes) != null
+        return firstDescendantOrNull(nodeTypes) != null
     }
 
     /**
@@ -543,7 +544,7 @@ public open class AstNode(
      */
     public fun hasParent(vararg nodeTypes: AstNodeType): Boolean {
         val parent = this.parentOrNull
-        return parent != null && parent.`is`(*nodeTypes)
+        return parent != null && parent.isAnyOf(nodeTypes)
     }
 
     /**
@@ -559,7 +560,7 @@ public open class AstNode(
      * @since 1.19.2
      */
     public fun hasAncestor(vararg nodeTypes: AstNodeType): Boolean {
-        return getFirstAncestorOrNull(*nodeTypes) != null
+        return firstAncestorOrNull(nodeTypes) != null
     }
 
     /**
@@ -572,7 +573,7 @@ public open class AstNode(
             parent == null -> {
                 null
             }
-            parent.`is`(nodeType) -> {
+            parent.type === nodeType -> {
                 parent
             }
             else -> {
@@ -587,10 +588,12 @@ public open class AstNode(
      * @return first ancestor of one of specified types, or null if not found
      * @since 1.19.2
      */
-    public fun getFirstAncestorOrNull(vararg nodeTypes: AstNodeType): AstNode? {
+    public fun getFirstAncestorOrNull(vararg nodeTypes: AstNodeType): AstNode? = firstAncestorOrNull(nodeTypes)
+
+    private fun firstAncestorOrNull(nodeTypes: Array<out AstNodeType>): AstNode? {
         var result = parentOrNull
         while (result != null) {
-            if (result.`is`(*nodeTypes)) {
+            if (result.isAnyOf(nodeTypes)) {
                 return result
             }
             result = result.parentOrNull
@@ -598,7 +601,7 @@ public open class AstNode(
         return null
     }
 
-    public fun getFirstAncestor(vararg nodeTypes: AstNodeType): AstNode = checkNotNull(getFirstAncestorOrNull(*nodeTypes))
+    public fun getFirstAncestor(vararg nodeTypes: AstNodeType): AstNode = checkNotNull(firstAncestorOrNull(nodeTypes))
 
     /**
      * Return all tokens contained in this tree node. Those tokens can be directly or indirectly attached to this node.
