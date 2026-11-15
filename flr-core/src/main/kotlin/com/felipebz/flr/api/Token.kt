@@ -76,7 +76,7 @@ public class Token private constructor(builder: Builder) {
     }
 
     public fun isOnSameLineThan(other: Token?): Boolean {
-        return if (other == null) false else line == other.line
+        return other != null && line == other.line
     }
 
     override fun toString(): String {

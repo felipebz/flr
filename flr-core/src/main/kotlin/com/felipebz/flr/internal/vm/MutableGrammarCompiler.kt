@@ -19,7 +19,7 @@ public class MutableGrammarCompiler : CompilationHandler() {
         // Compile
         compilationQueue.add(start)
         matchers[start.ruleKey] = start
-        while (!compilationQueue.isEmpty()) {
+        while (compilationQueue.isNotEmpty()) {
             val rule = compilationQueue.poll()
             val ruleKey = checkNotNull(rule).ruleKey
             offsets[ruleKey] = instructions.size

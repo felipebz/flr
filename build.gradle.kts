@@ -130,6 +130,8 @@ subprojects {
     }
 
     val dokka = tasks.register<Jar>("dokka") {
+        group = "documentation"
+        description = "Assembles the Javadoc jar from the Dokka output."
         dependsOn(tasks.dokkaGenerateModuleJavadoc)
         from(tasks.dokkaGenerateModuleJavadoc.flatMap { it.outputDirectory })
         archiveClassifier.set("javadoc")

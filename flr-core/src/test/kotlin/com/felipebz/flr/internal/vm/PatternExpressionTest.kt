@@ -40,7 +40,7 @@ class PatternExpressionTest {
 
         // Should reset matcher with empty string:
         try {
-            expression.getMatcher().find(1)
+            expression.matcher.find(1)
             fail("exception expected")
         } catch (e: IndexOutOfBoundsException) {
             assertThat(e.message).isEqualTo("Illegal start index")
@@ -60,7 +60,7 @@ class PatternExpressionTest {
 
         // Should reset matcher with empty string:
         try {
-            expression.getMatcher().find(1)
+            expression.matcher.find(1)
             fail("exception expected")
         } catch (e: IndexOutOfBoundsException) {
             assertThat(e.message).isEqualTo("Illegal start index")

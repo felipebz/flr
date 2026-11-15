@@ -29,17 +29,11 @@ public class LexerfulAstCreator private constructor(
      */
     private fun project(node: ParseNode) {
         val ruleMatcher = node.matcher as? RuleDefinition
-        if (ruleMatcher == null) {
-            val terminal = projectTerminal(node)
-            if (terminal != null) {
-                pending.add(terminal)
-            }
-        } else if (ruleMatcher.isAlwaysSkipFromAst()) {
-            projectChildren(node)
-        } else if (ruleMatcher.isSkipIfOneChildFromAst()) {
-            projectSkipIfOneChild(node, ruleMatcher)
-        } else {
-            pending.add(projectNonTerminal(node, ruleMatcher))
+        when {
+            ruleMatcher == null -> projectTerminal(node)?.let(pending::add)
+            ruleMatcher.isAlwaysSkipFromAst() -> projectChildren(node)
+            ruleMatcher.isSkipIfOneChildFromAst() -> projectSkipIfOneChild(node, ruleMatcher)
+            else -> pending.add(projectNonTerminal(node, ruleMatcher))
         }
     }
 
@@ -74,7 +68,7 @@ public class LexerfulAstCreator private constructor(
 
     private fun buildNonTerminal(node: ParseNode, ruleMatcher: RuleDefinition): AstNode {
         val token = if (node.startIndex < tokens.size) tokens[node.startIndex] else null
-        return nonTerminalNodeBuilder.build(ruleMatcher, ruleMatcher.getName(), token)
+        return nonTerminalNodeBuilder.build(ruleMatcher, ruleMatcher.name, token)
     }
 
     /**

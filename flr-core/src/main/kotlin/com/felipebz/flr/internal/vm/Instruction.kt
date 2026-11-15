@@ -99,7 +99,6 @@ public abstract class Instruction {
     public data class CommitVerifyInstruction(private val offset: Int) : Instruction() {
         override fun execute(machine: Machine) {
             if (machine.index == machine.peek().index) {
-                // TODO better message, e.g. dump stack
                 throw GrammarException("The inner part of ZeroOrMore and OneOrMore must not allow empty matches")
             }
             // add all nodes to parent

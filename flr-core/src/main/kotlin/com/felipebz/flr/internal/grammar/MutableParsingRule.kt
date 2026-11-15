@@ -20,7 +20,7 @@ import com.felipebz.flr.internal.vm.*
 public class MutableParsingRule : CompilableGrammarRule, Matcher, Rule, AstNodeSkippingPolicy, MemoParsingExpression,
     GrammarRuleKey {
     override val ruleKey: GrammarRuleKey
-    private val name: String
+    public val name: String
     override var expression: ParsingExpression? = null
     private var astNodeSkippingPolicy: AstNodeSkippingPolicy = NeverSkipFromAst
     private var retainMemo = false
@@ -33,10 +33,6 @@ public class MutableParsingRule : CompilableGrammarRule, Matcher, Rule, AstNodeS
     public constructor(ruleKey: GrammarRuleKey) {
         this.ruleKey = ruleKey
         name = ruleKey.toString()
-    }
-
-    public fun getName(): String {
-        return name
     }
 
     public fun getRealAstNodeType(): AstNodeType {
@@ -60,7 +56,7 @@ public class MutableParsingRule : CompilableGrammarRule, Matcher, Rule, AstNodeS
     }
 
     override fun toString(): String {
-        return getName()
+        return name
     }
 
     override fun shouldMemoize(): Boolean {

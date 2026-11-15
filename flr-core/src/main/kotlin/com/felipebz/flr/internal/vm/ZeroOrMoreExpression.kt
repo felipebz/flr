@@ -17,7 +17,6 @@ public class ZeroOrMoreExpression(private val subExpression: ParsingExpression) 
     </pre> *
      */
     override fun compile(compiler: CompilationHandler): Array<Instruction> {
-        // TODO maybe can be optimized by introduction of new instruction PartialCommit
         val sub = compiler.compile(subExpression)
         val result = arrayOfNulls<Instruction>(
             sub.size + 2

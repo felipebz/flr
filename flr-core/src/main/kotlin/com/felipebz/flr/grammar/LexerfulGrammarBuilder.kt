@@ -167,7 +167,6 @@ public class LexerfulGrammarBuilder private constructor() : GrammarBuilder() {
      * @throws IllegalArgumentException if given argument is not a parsing expression
      */
     public fun till(e: Any): Any {
-        // TODO repeated expression
         val expression = convertToExpression(e)
         return SequenceExpression(
             ZeroOrMoreExpression(

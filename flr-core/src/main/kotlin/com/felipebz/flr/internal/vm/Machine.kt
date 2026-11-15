@@ -98,7 +98,6 @@ public open class Machine protected constructor(
             address += callOffset
             val callState = index + 1
             if (calls[targetId] == callState) {
-                // TODO better message, e.g. dump stack
                 throw GrammarException("Left recursion has been detected, involved rule: " + matcher.toString())
             }
             stack.calledTargetId = targetId
@@ -144,7 +143,8 @@ public open class Machine protected constructor(
         // pop any return addresses from the top of the stack
         while (stack.isReturn()) {
 
-            // TODO we must have this inside of loop, otherwise report won't be generated in case of input "foo" and rule "nextNot(foo)"
+            // Restored at each return popped, not once after the loop: otherwise no error is reported for input "foo"
+            // and rule "nextNot(foo)".
             ignoreErrors = stack.ignoreErrors
             if (!ignoreErrors) {
                 handler.onBacktrack(this)
@@ -260,13 +260,14 @@ public open class Machine protected constructor(
             machine.execute(grammar.getMatcher(grammar.rootRuleKey), grammar.rootRuleOffset, grammar.program)
             return if (machine.matched) {
                 ParsingResult(
-                    ImmutableInputBuffer(checkNotNull(machine.input)),
-                    machine.matched,  // TODO what if there is no nodes, or more than one?
+                    ImmutableInputBuffer(machine.input),
+                    machine.matched,
+                    // The call of the root rule leaves exactly its own node.
                     machine.stack.subNodes[0],
                     null
                 )
             } else {
-                val inputBuffer: InputBuffer = ImmutableInputBuffer(checkNotNull(machine.input))
+                val inputBuffer: InputBuffer = ImmutableInputBuffer(machine.input)
                 val parseError = ParseError(inputBuffer, errorLocatingHandler.getErrorIndex())
                 ParsingResult(inputBuffer, machine.matched, null, parseError)
             }

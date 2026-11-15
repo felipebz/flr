@@ -78,7 +78,7 @@ internal class AstCreator private constructor(private val input: LocatedText) {
                     null
                 }
                 else -> {
-                    throw IllegalStateException("Unexpected trivia kind: " + ruleMatcher.getTriviaKind())
+                    error("Unexpected trivia kind: " + ruleMatcher.getTriviaKind())
                 }
             }
         } else if (node.matcher is TokenExpression) {
@@ -133,7 +133,7 @@ internal class AstCreator private constructor(private val input: LocatedText) {
                 break
             }
         }
-        val astNode = AstNode(ruleMatcher, ruleMatcher.getName(), token)
+        val astNode = AstNode(ruleMatcher, ruleMatcher.name, token)
         astNode.setChildren(pending, start, pending.size)
         for (i in pending.size - 1 downTo start) {
             pending.removeAt(i)

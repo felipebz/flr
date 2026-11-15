@@ -56,7 +56,7 @@ object ParseTreePrinter {
     private fun matcherToString(matcher: Matcher?): String {
         return when (matcher) {
             is MutableParsingRule -> {
-                matcher.getName()
+                matcher.name
             }
             is TokenExpression -> {
                 matcher.getTokenType().name

@@ -220,7 +220,7 @@ internal class ToolkitViewImpl(@Transient val presenter: ToolkitPresenter) : JFr
             return
         }
         val startToken = astNode.token
-        val endToken = checkNotNull(astNode.lastToken)
+        val endToken = astNode.lastToken
         val startOffset = lineOffsets.getStartOffset(startToken)
         val endOffset = lineOffsets.getEndOffset(endToken)
         try {

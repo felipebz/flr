@@ -112,7 +112,7 @@ class AstCreatorTest {
 
     companion object {
         private fun mockRuleMatcher(name: String): MutableParsingRule {
-            return whenever(mock<MutableParsingRule>().getName()).thenReturn(name).getMock()
+            return whenever(mock<MutableParsingRule>().name).thenReturn(name).getMock()
         }
 
         private fun mockTokenMatcher(tokenType: TokenType): TokenExpression {

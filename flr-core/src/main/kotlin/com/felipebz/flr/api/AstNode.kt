@@ -109,22 +109,30 @@ public open class AstNode(
                 count++
             }
         }
-        if (count == 0) {
+        when (count) {
+            0 -> Unit
+            1 -> attachSingle(candidates, from, to, skipped)
+            else -> attachAll(candidates, from, to, skipped, count)
+        }
+    }
+
+    /** The only child among the candidates of [setChildren] ([skipped] marks those replaced by their children). */
+    private fun attachSingle(candidates: List<AstNode?>, from: Int, to: Int, skipped: BooleanArray?) {
+        for (i in from until to) {
+            val candidate = candidates[i] ?: continue
+            val only = if (skipped != null && skipped[i - from]) {
+                candidate.childStorage.firstOrNull() ?: continue
+            } else {
+                candidate
+            }
+            childStorage = SingleChild(only)
+            only.attachTo(this, 0)
             return
         }
-        if (count == 1) {
-            for (i in from until to) {
-                val candidate = candidates[i] ?: continue
-                val only = if (skipped != null && skipped[i - from]) {
-                    candidate.childStorage.firstOrNull() ?: continue
-                } else {
-                    candidate
-                }
-                childStorage = SingleChild(only)
-                only.attachTo(this, 0)
-                return
-            }
-        }
+    }
+
+    /** The [count] children the candidates of [setChildren] give ([skipped] marks those replaced by their children). */
+    private fun attachAll(candidates: List<AstNode?>, from: Int, to: Int, skipped: BooleanArray?, count: Int) {
         val array = arrayOfNulls<AstNode>(count)
         var index = 0
         for (i in from until to) {

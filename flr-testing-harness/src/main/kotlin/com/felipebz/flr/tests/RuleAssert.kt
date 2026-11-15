@@ -117,6 +117,6 @@ public class RuleAssert(actual: Rule?) : AbstractAssert<RuleAssert, Rule>(
     }
 
     private fun getRuleName(): String {
-        return (actual as MutableParsingRule).getName()
+        return (actual as MutableParsingRule).name
     }
 }

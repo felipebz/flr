@@ -26,16 +26,6 @@ public object TextUtils {
         return ch.toString()
     }
 
-    // TODO Godin: can be replaced by com.google.common.base.CharMatcher.anyOf("\n\r").trimTrailingFrom(string)
     @JvmStatic
-    public fun trimTrailingLineSeparatorFrom(string: String): String {
-        var last: Int = string.length - 1
-        while (last >= 0) {
-            if (string[last] != LF && string[last] != CR) {
-                break
-            }
-            last--
-        }
-        return string.substring(0, last + 1)
-    }
+    public fun trimTrailingLineSeparatorFrom(string: String): String = string.trimEnd(LF, CR)
 }

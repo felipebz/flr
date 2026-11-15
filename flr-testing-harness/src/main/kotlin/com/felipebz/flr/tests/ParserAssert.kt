@@ -90,7 +90,7 @@ public class ParserAssert(actual: Parser<*>) : AbstractAssert<ParserAssert, Pars
     }
 
     private fun getRuleName(): String {
-        return actual.rootRule.getName()
+        return actual.rootRule.name
     }
 
     private companion object {

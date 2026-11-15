@@ -42,7 +42,6 @@ public class TokenExpression(private val tokenType: TokenType, private val subEx
             expression: Matcher,
             subExpression: ParsingExpression
         ): Array<Instruction> {
-            // TODO maybe can be optimized
             val instr = compiler.compile(subExpression)
             val result = arrayOfNulls<Instruction>(
                 instr.size + 4

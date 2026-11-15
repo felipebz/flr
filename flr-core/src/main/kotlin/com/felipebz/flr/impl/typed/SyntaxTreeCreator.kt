@@ -47,34 +47,24 @@ public class SyntaxTreeCreator<T>(
         val rule = node.matcher as MutableParsingRule
         val ruleKey = rule.ruleKey
         val children = node.children
-        return if (mapping.hasMethodForRuleKey(ruleKey)) {
-            // TODO Drop useless intermediate nodes
-            check(children.size == 1)
-            visit(children[0])
-        } else if (mapping.isOptionalRule(ruleKey)) {
-            check(children.size <= 1)
-            if (children.isEmpty()) {
-                Optional.empty()
-            } else {
-                Optional.of(visit(children[0]) as Any)
+        return when {
+            mapping.hasMethodForRuleKey(ruleKey) -> {
+                check(children.size == 1)
+                visit(children[0])
             }
-        } else {
-            val method = mapping.actionForRuleKey(ruleKey)
-            val convertedChildren = children.map { visit(it) }
-            if (mapping.isOneOrMoreRule(ruleKey)) {
-                convertedChildren
-            } else if (mapping.isZeroOrMoreRule(ruleKey)) {
-                if (convertedChildren.isEmpty()) Optional.empty() else Optional.of(convertedChildren)
-            } else if (method == null) {
-                nodeBuilder.createNonTerminal(
-                    ruleKey,
-                    rule,
-                    convertedChildren,
-                    node.startIndex,
-                    node.endIndex
-                )
-            } else {
-                ReflectionUtils.invokeMethod(method, treeFactory, *convertedChildren.toTypedArray())
+            mapping.isOptionalRule(ruleKey) -> {
+                check(children.size <= 1)
+                if (children.isEmpty()) Optional.empty() else Optional.of(visit(children[0]) as Any)
+            }
+            else -> {
+                val method = mapping.actionForRuleKey(ruleKey)
+                val convertedChildren = children.map { visit(it) }
+                when {
+                    mapping.isOneOrMoreRule(ruleKey) -> convertedChildren
+                    mapping.isZeroOrMoreRule(ruleKey) -> if (convertedChildren.isEmpty()) Optional.empty() else Optional.of(convertedChildren)
+                    method == null -> nodeBuilder.createNonTerminal(ruleKey, rule, convertedChildren, node.startIndex, node.endIndex)
+                    else -> ReflectionUtils.invokeMethod(method, treeFactory, *convertedChildren.toTypedArray())
+                }
             }
         }
     }

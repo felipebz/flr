@@ -22,7 +22,7 @@ import com.felipebz.flr.internal.vm.*
  */
 public class RuleDefinition : Rule, AstNodeSkippingPolicy, GrammarRuleKey, CompilableGrammarRule, MemoParsingExpression {
     override val ruleKey: GrammarRuleKey
-    private val name: String
+    public val name: String
     override var expression: ParsingExpression? = null
     private var astNodeSkippingPolicy: AstNodeType = NeverSkipFromAst
     private var memoize = false
@@ -36,10 +36,6 @@ public class RuleDefinition : Rule, AstNodeSkippingPolicy, GrammarRuleKey, Compi
     public constructor(ruleKey: GrammarRuleKey) {
         this.ruleKey = ruleKey
         name = ruleKey.toString()
-    }
-
-    public fun getName(): String {
-        return name
     }
 
     override fun skip() {
@@ -73,7 +69,7 @@ public class RuleDefinition : Rule, AstNodeSkippingPolicy, GrammarRuleKey, Compi
     }
 
     override fun toString(): String {
-        return getName()
+        return name
     }
 
     override fun shouldMemoize(): Boolean {

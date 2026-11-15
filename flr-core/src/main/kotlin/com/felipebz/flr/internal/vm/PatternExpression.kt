@@ -11,7 +11,8 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 public class PatternExpression(regex: String) : NativeExpression(), com.felipebz.flr.internal.matchers.Matcher {
-    private val matcher: Matcher = Pattern.compile(regex).matcher("")
+    /** Visible for testing. */
+    internal val matcher: Matcher = Pattern.compile(regex).matcher("")
 
     /**
      * @throws GrammarException if execution of regular expression has led to StackOverflowError
@@ -27,7 +28,7 @@ public class PatternExpression(regex: String) : NativeExpression(), com.felipebz
             )
         }
         if (result) {
-            // TODO what if end == 0 ???
+            // An empty match (`\s*` on no blank) is a leaf of no characters.
             machine.createLeafNode(this, matcher.end())
             machine.jump(1)
         } else {
@@ -40,13 +41,6 @@ public class PatternExpression(regex: String) : NativeExpression(), com.felipebz
 
     override fun toString(): String {
         return "Pattern " + matcher.pattern().pattern()
-    }
-
-    /**
-     * Visible for testing.
-     */
-    public fun getMatcher(): Matcher {
-        return matcher
     }
 
 }
