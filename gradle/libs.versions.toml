@@ -5,6 +5,8 @@ jreleaser = "1.27.0"
 sonarscanner = "7.6.0.18749"
 spotless = "8.11.0"
 jmh-plugin = "0.7.4"
+# JGit on the build class path: JReleaser needs JGit 5 (JGit 7 removed classes it uses).
+jgit = "5.13.5.202508271544-r"
 
 # libs
 asm = "9.11.1"

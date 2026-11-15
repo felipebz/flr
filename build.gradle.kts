@@ -1,7 +1,18 @@
 import com.diffplug.gradle.spotless.KotlinExtension
 import com.diffplug.gradle.spotless.SpotlessExtension
 import com.diffplug.spotless.LineEnding
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
+buildscript {
+    dependencies {
+        constraints {
+            // Spotless and JReleaser share this class path. JReleaser needs JGit 5 (JGit 7 removed classes it uses), so
+            // the version is pinned to its own; Spotless does not load JGit with `LineEnding.PRESERVE` and no ratchet.
+            classpath("org.eclipse.jgit:org.eclipse.jgit") {
+                version { strictly(libs.versions.jgit.get()) }
+            }
+        }
+    }
+}
 
 plugins {
     `java-library`
@@ -56,7 +67,7 @@ subprojects {
 
     testing {
         suites {
-            val test by getting(JvmTestSuite::class) {
+            named<JvmTestSuite>("test") {
                 useJUnitJupiter(rootProject.libs.versions.junit)
 
                 dependencies {
@@ -68,8 +79,18 @@ subprojects {
         }
     }
 
+    // Mockito's inline mock maker needs an agent: started with the JVM rather than attached at run time, which the JDK
+    // warns about and will refuse by default.
+    val mockitoAgent = configurations.create("mockitoAgent")
+    dependencies {
+        mockitoAgent(rootProject.libs.mockito) { isTransitive = false }
+    }
+
     tasks.test {
         finalizedBy(tasks.jacocoTestReport)
+        jvmArgumentProviders.add(CommandLineArgumentProvider { listOf("-javaagent:${mockitoAgent.singleFile}") })
+        // The agent appends to the boot class path, after which the JVM cannot share classes and warns: share none.
+        jvmArgs("-Xshare:off")
     }
 
     jacoco {
@@ -108,7 +129,7 @@ subprojects {
         }
     }
 
-    val dokka by tasks.register<Jar>("dokka") {
+    val dokka = tasks.register<Jar>("dokka") {
         dependsOn(tasks.dokkaGenerateModuleJavadoc)
         from(tasks.dokkaGenerateModuleJavadoc.flatMap { it.outputDirectory })
         archiveClassifier.set("javadoc")
@@ -187,7 +208,9 @@ jreleaser {
     }
     signing {
         active.set(org.jreleaser.model.Active.ALWAYS)
-        armored.set(true)
+        pgp {
+            armored.set(true)
+        }
     }
     deploy {
         maven {
