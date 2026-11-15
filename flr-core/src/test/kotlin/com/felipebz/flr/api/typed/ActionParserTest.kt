@@ -134,7 +134,7 @@ class ActionParserTest {
     private fun <T : AstNode> parse(ruleKey: GrammarRuleKey, toParse: String, expectedClass: Class<T>): T {
         val astNode = parse(ruleKey, toParse)
         assertThat(astNode).isInstanceOf(expectedClass)
-        return astNode as T
+        return expectedClass.cast(astNode)
     }
 
     private fun parse(ruleKey: GrammarRuleKey, toParse: String): AstNode {

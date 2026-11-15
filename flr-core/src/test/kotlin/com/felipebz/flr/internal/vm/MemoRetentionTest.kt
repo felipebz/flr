@@ -8,12 +8,7 @@ package com.felipebz.flr.internal.vm
 import com.felipebz.flr.api.GenericTokenType
 import com.felipebz.flr.api.RecognitionException
 import com.felipebz.flr.api.Token
-import com.felipebz.flr.grammar.ContextKey
-import com.felipebz.flr.grammar.GrammarBuilder
-import com.felipebz.flr.grammar.GrammarException
-import com.felipebz.flr.grammar.GrammarRuleKey
-import com.felipebz.flr.grammar.LexerfulGrammarBuilder
-import com.felipebz.flr.grammar.LexerlessGrammarBuilder
+import com.felipebz.flr.grammar.*
 import com.felipebz.flr.impl.matcher.RuleDefinition
 import com.felipebz.flr.internal.matchers.ParseNode
 import com.felipebz.flr.parser.ParseRunner
@@ -397,7 +392,7 @@ class MemoRetentionTest {
         nested.expression = alt(seq(s("("), nested, s(")")), s("a"))
         val called = MutableGrammarCompiler.compile(nested)
         assertThat(called.memoRetention!!.slots).isEqualTo(1)
-        assertThat(called.memoRetention!!.slotByTarget).containsExactly(0)
+        assertThat(called.memoRetention.slotByTarget).containsExactly(0)
         assertThat(Machine.parse("((a))".toCharArray(), called).isMatched()).isTrue()
     }
 

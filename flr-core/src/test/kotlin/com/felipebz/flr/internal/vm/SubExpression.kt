@@ -29,8 +29,8 @@ class SubExpression(private vararg val ids: Int) : ParsingExpression {
             throw UnsupportedOperationException()
         }
 
-        override fun equals(obj: Any?): Boolean {
-            return obj is MockInstruction && id == obj.id
+        override fun equals(other: Any?): Boolean {
+            return other is MockInstruction && id == other.id
         }
 
         override fun hashCode(): Int {

@@ -32,8 +32,8 @@ class TextUtilsTest {
     @Test
     fun private_constructor() {
         val constructor: Constructor<*> = TextUtils::class.java.getDeclaredConstructor()
-        assertThat(constructor.isAccessible).isFalse()
-        constructor.isAccessible = true
+        assertThat(constructor.canAccess(null)).isFalse()
+        assertThat(constructor.trySetAccessible()).isTrue()
         constructor.newInstance()
     }
 }
