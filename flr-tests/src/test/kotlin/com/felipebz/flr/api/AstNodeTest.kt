@@ -20,9 +20,9 @@
  */
 package com.felipebz.flr.api
 
-import com.felipebz.flr.test.lexer.MockHelper.mockToken
 import com.felipebz.flr.test.minic.MiniCGrammar
 import com.felipebz.flr.test.minic.MiniCParser.parseString
+import com.felipebz.flr.test.testToken
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -74,7 +74,7 @@ class AstNodeTest {
 
     @Test
     fun testGetLastToken() {
-        val lastToken = mockToken(GenericTokenType.IDENTIFIER, "LAST_TOKEN")
+        val lastToken = testToken(GenericTokenType.IDENTIFIER, "LAST_TOKEN")
         val parent = AstNode(NodeType(), "parent", lastToken)
         val child1 = AstNode(NodeType(), "child1", null)
         val child2 = AstNode(NodeType(), "child2", lastToken)
@@ -86,8 +86,8 @@ class AstNodeTest {
 
     @Test
     fun testGetTokens() {
-        val child1Token = mockToken(GenericTokenType.IDENTIFIER, "CHILD 1")
-        val child2Token = mockToken(GenericTokenType.IDENTIFIER, "CHILD 2")
+        val child1Token = testToken(GenericTokenType.IDENTIFIER, "CHILD 1")
+        val child2Token = testToken(GenericTokenType.IDENTIFIER, "CHILD 2")
         val parent = AstNode(NodeType(), "parent", null)
         val child1 = AstNode(NodeType(), "child1", child1Token)
         val child2 = AstNode(NodeType(), "child2", child2Token)

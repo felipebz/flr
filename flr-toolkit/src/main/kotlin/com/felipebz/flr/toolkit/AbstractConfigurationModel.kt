@@ -28,8 +28,6 @@ import java.nio.charset.Charset
  *
  * It will call the [.doGetParser] and [.doGetTokenizers] methods only when a change
  * to the configuration has been made.
- *
- * @since 1.17
  */
 public abstract class AbstractConfigurationModel : ConfigurationModel {
     private var updatedFlag = true

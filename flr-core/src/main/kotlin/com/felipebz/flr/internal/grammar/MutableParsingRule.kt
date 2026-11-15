@@ -24,7 +24,6 @@ import com.felipebz.flr.api.AstNode
 import com.felipebz.flr.api.AstNodeSkippingPolicy
 import com.felipebz.flr.api.AstNodeType
 import com.felipebz.flr.api.Rule
-import com.felipebz.flr.grammar.GrammarException
 import com.felipebz.flr.grammar.GrammarRuleKey
 import com.felipebz.flr.impl.ast.AlwaysSkipFromAst
 import com.felipebz.flr.impl.ast.NeverSkipFromAst
@@ -58,27 +57,10 @@ public class MutableParsingRule : CompilableGrammarRule, Matcher, Rule, AstNodeS
         return ruleKey
     }
 
-    @Deprecated("in 1.19, use {@link com.felipebz.flr.grammar.GrammarRuleBuilder#is(Object)} instead.")
-    override fun `is`(vararg e: Any): Rule {
-        if (expression != null) {
-            throw GrammarException("The rule '$ruleKey' has already been defined somewhere in the grammar.")
-        }
-        expression = sequence(*e)
-        return this
-    }
-
-    @Deprecated("in 1.19, use {@link com.felipebz.flr.grammar.GrammarRuleBuilder#override(Object)} instead.")
-    override fun override(vararg e: Any): Rule {
-        expression = sequence(*e)
-        return this
-    }
-
-    @Deprecated("in 1.19, use {@link com.felipebz.flr.grammar.GrammarRuleBuilder#skip()} instead.")
     override fun skip() {
         astNodeSkippingPolicy = AlwaysSkipFromAst
     }
 
-    @Deprecated("in 1.19, use {@link com.felipebz.flr.grammar.GrammarRuleBuilder#skipIfOneChild()} instead.")
     override fun skipIfOneChild() {
         astNodeSkippingPolicy = SkipFromAstIfOnlyOneChild
     }
@@ -105,41 +87,5 @@ public class MutableParsingRule : CompilableGrammarRule, Matcher, Rule, AstNodeS
 
     internal fun enableMemoRetention() {
         retainMemo = true
-    }
-
-    private fun sequence(vararg e: Any): ParsingExpression {
-        return convertToSingleExpression(*e)
-    }
-
-    private fun convertToSingleExpression(vararg elements: Any): ParsingExpression {
-        return if (elements.size == 1) {
-            convertToExpression(elements[0])
-        } else SequenceExpression(*convertToExpressions(*elements))
-    }
-
-    private fun convertToExpressions(vararg elements: Any): Array<ParsingExpression> {
-        require(elements.isNotEmpty())
-        val matchers = arrayOfNulls<ParsingExpression>(elements.size)
-        for (i in matchers.indices) {
-            matchers[i] = convertToExpression(elements[i])
-        }
-        return matchers.requireNoNulls()
-    }
-
-    private fun convertToExpression(e: Any): ParsingExpression {
-        return when (e) {
-            is ParsingExpression -> {
-                e
-            }
-            is String -> {
-                StringExpression(e)
-            }
-            is Char -> {
-                StringExpression(e.toString())
-            }
-            else -> {
-                throw IllegalArgumentException("Incorrect type of parsing expression: " + e.javaClass.toString())
-            }
-        }
     }
 }

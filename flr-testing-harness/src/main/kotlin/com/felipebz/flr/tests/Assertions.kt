@@ -26,9 +26,6 @@ import com.felipebz.flr.channel.Channel
 import com.felipebz.flr.channel.CodeReader
 import com.felipebz.flr.impl.Parser
 
-/**
- * @since 1.16
- */
 public object Assertions {
     /**
      * Creates a new instance of `[RuleAssert]`.

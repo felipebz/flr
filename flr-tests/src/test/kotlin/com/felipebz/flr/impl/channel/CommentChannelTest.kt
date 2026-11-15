@@ -22,7 +22,7 @@ package com.felipebz.flr.impl.channel
 
 import com.felipebz.flr.api.GenericTokenType
 import com.felipebz.flr.impl.LexerOutput
-import com.felipebz.flr.test.lexer.MockHelper.mockToken
+import com.felipebz.flr.test.testToken
 import com.felipebz.flr.tests.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -34,7 +34,7 @@ class CommentChannelTest {
 
         assertThat(channel).doesNotConsume("This is not a comment", output)
         assertThat(channel).consume("//My Comment\n second line", output)
-        output.addToken(mockToken(GenericTokenType.EOF, "EOF"))
+        output.addToken(testToken(GenericTokenType.EOF, "EOF"))
         assertThat(output.tokens).hasComment("//My Comment")
         assertThat(output.tokens).hasOriginalComment("//My Comment")
     }

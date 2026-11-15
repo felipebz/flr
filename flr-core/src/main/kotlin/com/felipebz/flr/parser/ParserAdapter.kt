@@ -38,8 +38,6 @@ import java.nio.file.Paths
  *
  *
  * This class is not intended to be subclassed by clients.
- *
- * @since 1.16
  */
 public class ParserAdapter<G : LexerlessGrammar>(private val charset: Charset, grammar: G) :
     Parser<G>(grammar) {

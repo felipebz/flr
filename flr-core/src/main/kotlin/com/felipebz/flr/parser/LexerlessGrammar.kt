@@ -27,7 +27,5 @@ import com.felipebz.flr.api.Grammar
  *
  *
  * This class is not intended to be instantiated or subclassed by clients.
- *
- * @since 1.16
  */
 public abstract class LexerlessGrammar : Grammar()

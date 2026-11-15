@@ -21,7 +21,8 @@
 package com.felipebz.flr.tests
 
 import com.felipebz.flr.api.Rule
-import com.felipebz.flr.internal.grammar.MutableParsingRule
+import com.felipebz.flr.grammar.GrammarRuleKey
+import com.felipebz.flr.grammar.LexerlessGrammarBuilder
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -32,7 +33,12 @@ class RuleAssertTest {
     private lateinit var rule: Rule
     @BeforeEach
     fun setUp() {
-        rule = MutableParsingRule("ruleName").`is`("foo")
+        val key = object : GrammarRuleKey {
+            override fun toString() = "ruleName"
+        }
+        val b = LexerlessGrammarBuilder.create()
+        b.rule(key).`is`("foo")
+        rule = b.build().rule(key)
     }
 
     @Test

@@ -37,9 +37,6 @@ import java.nio.charset.Charset
 import java.nio.file.Files
 import java.nio.file.Paths
 
-/**
- * @since 1.21
- */
 public class ActionParser<N>(
     private val charset: Charset,
     b: LexerlessGrammarBuilder,

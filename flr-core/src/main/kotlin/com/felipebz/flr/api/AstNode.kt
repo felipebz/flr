@@ -173,8 +173,6 @@ public open class AstNode(
 
     /**
      * Get the next sibling AstNode in the tree and if this node doesn't exist try to get the next AST Node of the parent.
-     *
-     * @since 1.17
      */
     public val nextAstNodeOrNUll: AstNode?
         get() {
@@ -186,8 +184,6 @@ public open class AstNode(
 
     /**
      * Get the previous sibling AstNode in the tree and if this node doesn't exist try to get the next AST Node of the parent.
-     *
-     * @since 1.17
      */
     public val previousAstNodeOrNull: AstNode?
         get() {
@@ -201,7 +197,6 @@ public open class AstNode(
      * Get the next sibling AstNode if exists in the tree.
      *
      * @return next sibling, or null if not exists
-     * @since 1.17
      */
     public val nextSiblingOrNull: AstNode?
         get() {
@@ -218,7 +213,6 @@ public open class AstNode(
      * Get the previous sibling AstNode if exists in the tree.
      *
      * @return previous sibling, or null if not exists
-     * @since 1.17
      */
     public val previousSiblingOrNull: AstNode?
         get() {
@@ -308,7 +302,6 @@ public open class AstNode(
      *
      * @return first child of one of specified types
      * @throws [NoSuchElementException] if no such element is found.
-     * @since 1.17
      */
     public fun getFirstChild(vararg nodeTypes: AstNodeType): AstNode {
         val children = childStorage
@@ -333,7 +326,6 @@ public open class AstNode(
     </pre> *
      *
      * @return first child of one of specified types, or null if not found
-     * @since 1.17
      */
     public fun getFirstChildOrNull(vararg nodeTypes: AstNodeType): AstNode? {
         val children = childStorage
@@ -358,7 +350,6 @@ public open class AstNode(
     </pre> *
      *
      * @return first descendant of one of specified types, or null if not found
-     * @since 1.17
      */
     public fun getFirstDescendantOrNull(vararg nodeTypes: AstNodeType): AstNode? = firstDescendantOrNull(nodeTypes)
 
@@ -415,7 +406,6 @@ public open class AstNode(
     </pre> *
      *
      * @return children of specified types, never null
-     * @since 1.17
      */
     public fun getChildren(vararg nodeTypes: AstNodeType): List<AstNode> {
         return children.filter { nodeTypes.isEmpty() || it.type in nodeTypes }
@@ -437,7 +427,6 @@ public open class AstNode(
     </pre> *
      *
      * @return descendants of specified types, never null
-     * @since 1.17
      */
     public fun getDescendants(vararg nodeTypes: AstNodeType): List<AstNode> {
         val result = mutableListOf<AstNode>()
@@ -497,7 +486,6 @@ public open class AstNode(
      *
      * @return last child of one of specified types
      * @throws [NoSuchElementException] if no such element is found.
-     * @since 1.20
      */
     public fun getLastChild(vararg nodeTypes: AstNodeType): AstNode {
         return children.last { nodeTypes.isEmpty() || it.type in nodeTypes }
@@ -518,7 +506,6 @@ public open class AstNode(
     </pre> *
      *
      * @return last child of one of specified types, or null if not found
-     * @since 1.20
      */
     public fun getLastChildOrNull(vararg nodeTypes: AstNodeType): AstNode? {
         return children.lastOrNull { nodeTypes.isEmpty() || it.type in nodeTypes }
@@ -533,15 +520,11 @@ public open class AstNode(
 
     /**
      * @return true if this node has a descendant of one of specified types
-     * @since 1.17
      */
     public fun hasDescendant(vararg nodeTypes: AstNodeType): Boolean {
         return firstDescendantOrNull(nodeTypes) != null
     }
 
-    /**
-     * @since 1.19.2
-     */
     public fun hasParent(vararg nodeTypes: AstNodeType): Boolean {
         val parent = this.parentOrNull
         return parent != null && parent.isAnyOf(nodeTypes)
@@ -549,7 +532,6 @@ public open class AstNode(
 
     /**
      * @return true if this node has an ancestor of the specified type
-     * @since 1.17
      */
     public fun hasAncestor(nodeType: AstNodeType): Boolean {
         return getFirstAncestorOrNull(nodeType) != null
@@ -557,7 +539,6 @@ public open class AstNode(
 
     /**
      * @return true if this node has an ancestor of one of specified types
-     * @since 1.19.2
      */
     public fun hasAncestor(vararg nodeTypes: AstNodeType): Boolean {
         return firstAncestorOrNull(nodeTypes) != null
@@ -565,7 +546,6 @@ public open class AstNode(
 
     /**
      * @return first ancestor of the specified type, or null if not found
-     * @since 1.17
      */
     public fun getFirstAncestorOrNull(nodeType: AstNodeType): AstNode? {
         val parent = this.parentOrNull
@@ -586,7 +566,6 @@ public open class AstNode(
 
     /**
      * @return first ancestor of one of specified types, or null if not found
-     * @since 1.19.2
      */
     public fun getFirstAncestorOrNull(vararg nodeTypes: AstNodeType): AstNode? = firstAncestorOrNull(nodeTypes)
 

@@ -26,8 +26,6 @@ import java.nio.charset.UnsupportedCharsetException
 
 /**
  * Provides a few handy configuration property validators out-of-the-box.
- *
- * @since 1.17
  */
 public object Validators {
     private val CHARSET_VALIDATOR = CharsetValidator()

@@ -49,9 +49,6 @@ public open class Parser<G : Grammar> {
     public var terminalNodeBuilder: TerminalNodeBuilder =
         TerminalNodeBuilder { token: Token -> AstNode(token) }
 
-    /**
-     * @since 1.16
-     */
     protected constructor(grammar: G) {
         this._grammar = grammar
         lexer = null

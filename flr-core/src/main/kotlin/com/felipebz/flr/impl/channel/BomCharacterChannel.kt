@@ -26,8 +26,6 @@ import com.felipebz.flr.impl.LexerOutput
 
 /**
  * Ignores all BOM characters.
- *
- * @since 1.17
  */
 public class BomCharacterChannel : Channel<LexerOutput> {
     override fun consume(code: CodeReader, output: LexerOutput): Boolean {

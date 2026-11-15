@@ -25,8 +25,6 @@ package com.felipebz.flr.internal.matchers
  *
  *
  * This interface is not intended to be implemented by clients.
- *
- * @since 1.16
  */
 public interface InputBuffer {
     public fun length(): Int

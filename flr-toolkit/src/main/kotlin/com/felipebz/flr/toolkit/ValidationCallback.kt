@@ -24,8 +24,6 @@ package com.felipebz.flr.toolkit
  * This interface is used to validate values that are to be assigned to configuration properties.
  *
  * The [Validators] class provides out-of-the-box handy validators.
- *
- * @since 1.17
  */
 public fun interface ValidationCallback {
     /**

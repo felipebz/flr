@@ -23,9 +23,6 @@ package com.felipebz.flr.api.typed
 import java.io.File
 import java.util.*
 
-/**
- * @since 1.21
- */
 public class Input(private val inputChars: CharArray) {
     private val newLineIndexes: IntArray
 

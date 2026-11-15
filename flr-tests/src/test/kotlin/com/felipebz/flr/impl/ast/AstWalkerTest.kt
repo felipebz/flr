@@ -25,7 +25,7 @@ import com.felipebz.flr.api.AstNode
 import com.felipebz.flr.api.AstNodeType
 import com.felipebz.flr.api.AstVisitor
 import com.felipebz.flr.impl.MockTokenType
-import com.felipebz.flr.test.lexer.MockHelper.mockToken
+import com.felipebz.flr.test.testToken
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.*
@@ -39,7 +39,7 @@ class AstWalkerTest {
     private lateinit var ast122: AstNode
     private lateinit var ast13: AstNode
     private lateinit var astNodeWithToken: AstNode
-    private val token = mockToken(MockTokenType.WORD, "word")
+    private val token = testToken(MockTokenType.WORD, "word")
     private val animal: AstNodeType = object : AstNodeType {}
     private val dog: AstNodeType = object : AstNodeType {}
     private val cat: AstNodeType = object : AstNodeType {}

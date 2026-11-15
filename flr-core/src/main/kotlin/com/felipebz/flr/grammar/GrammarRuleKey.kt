@@ -32,7 +32,5 @@ import com.felipebz.flr.api.AstNodeType
  * YOUR_RULE_KEY;
  * }
 </pre> *
- *
- * @since 1.18
  */
 public interface GrammarRuleKey : AstNodeType

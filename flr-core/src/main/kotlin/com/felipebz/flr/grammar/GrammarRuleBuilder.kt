@@ -26,7 +26,6 @@ package com.felipebz.flr.grammar
  *
  * This interface is not intended to be implemented by clients.
  *
- * @since 1.18
  * @see LexerlessGrammarBuilder.rule
  * @see LexerfulGrammarBuilder.rule
  */

@@ -32,8 +32,6 @@ import com.felipebz.flr.profiler.ParsingProfiler
  *
  *
  * This class is not intended to be subclassed by clients.
- *
- * @since 1.16
  */
 public class ParseRunner(rule: Rule) {
     private val compiledGrammar: CompiledGrammar = MutableGrammarCompiler.compile(rule as CompilableGrammarRule)

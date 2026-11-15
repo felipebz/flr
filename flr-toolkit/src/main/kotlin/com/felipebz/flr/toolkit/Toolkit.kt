@@ -31,8 +31,6 @@ import javax.swing.UIManager
  *
  * @param title
  * @param configurationModel
- *
- * @since 1.17
  */
 public class Toolkit(private val title: String, private val configurationModel: ConfigurationModel) {
     public fun run() {

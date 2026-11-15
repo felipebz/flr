@@ -24,8 +24,8 @@ import com.felipebz.flr.api.AstNode
 import com.felipebz.flr.api.TokenType
 import com.felipebz.flr.impl.ast.AstXmlPrinter.Companion.print
 import com.felipebz.flr.impl.matcher.RuleDefinition
-import com.felipebz.flr.test.lexer.MockHelper.mockToken
-import com.felipebz.flr.test.lexer.MockHelper.mockTokenBuilder
+import com.felipebz.flr.test.testToken
+import com.felipebz.flr.test.testTokenBuilder
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -33,7 +33,7 @@ class AstXmlPrinterTest {
     @Test
     fun testPrintRuleAstNode() {
         val root = AstNode(
-            RuleDefinition("expr"), "expr", mockTokenBuilder(WordTokenType(), "word").setLine(34)
+            RuleDefinition("expr"), "expr", testTokenBuilder(WordTokenType(), "word").setLine(34)
                 .setColumn(12).build()
         )
         assertThat(print(root)).isEqualTo("<expr tokenValue=\"word\" tokenLine=\"34\" tokenColumn=\"12\"/>")
@@ -41,17 +41,17 @@ class AstXmlPrinterTest {
 
     @Test
     fun testPrintWordAstNode() {
-        val root = AstNode(mockToken(WordTokenType(), "myword"))
+        val root = AstNode(testToken(WordTokenType(), "myword"))
         assertThat(print(root)).isEqualTo("<WORD tokenValue=\"myword\" tokenLine=\"1\" tokenColumn=\"1\"/>")
     }
 
     @Test
     fun testPrintFullAstNode() {
         val astNode = AstNode(RuleDefinition("expr"), "expr", null)
-        astNode.addChild(AstNode(mockToken(WordTokenType(), "x")))
-        astNode.addChild(AstNode(mockToken(WordTokenType(), "=")))
-        astNode.addChild(AstNode(mockToken(WordTokenType(), "4")))
-        astNode.addChild(AstNode(mockToken(WordTokenType(), "WORD")))
+        astNode.addChild(AstNode(testToken(WordTokenType(), "x")))
+        astNode.addChild(AstNode(testToken(WordTokenType(), "=")))
+        astNode.addChild(AstNode(testToken(WordTokenType(), "4")))
+        astNode.addChild(AstNode(testToken(WordTokenType(), "WORD")))
         val expectedResult = StringBuilder()
             .append("<expr>\n")
             .append("  <WORD tokenValue=\"x\" tokenLine=\"1\" tokenColumn=\"1\"/>\n")

@@ -20,15 +20,15 @@
  */
 package com.felipebz.flr.impl.matcher
 
-import com.felipebz.flr.api.*
+import com.felipebz.flr.api.AstNode
+import com.felipebz.flr.api.AstNodeSkippingPolicy
+import com.felipebz.flr.api.AstNodeType
+import com.felipebz.flr.api.Rule
 import com.felipebz.flr.grammar.GrammarRuleKey
 import com.felipebz.flr.impl.ast.AlwaysSkipFromAst
 import com.felipebz.flr.impl.ast.NeverSkipFromAst
 import com.felipebz.flr.impl.ast.SkipFromAstIfOnlyOneChild
 import com.felipebz.flr.internal.vm.*
-import com.felipebz.flr.internal.vm.lexerful.TokenTypeClassExpression
-import com.felipebz.flr.internal.vm.lexerful.TokenTypeExpression
-import com.felipebz.flr.internal.vm.lexerful.TokenValueExpression
 
 /**
  *
@@ -56,37 +56,12 @@ public class RuleDefinition : Rule, AstNodeSkippingPolicy, GrammarRuleKey, Compi
         return name
     }
 
-    @Deprecated("in 1.19, use {@link com.felipebz.flr.grammar.GrammarRuleBuilder#is(Object)} instead.")
-    override fun `is`(vararg e: Any): RuleDefinition {
-        throwExceptionIfRuleAlreadyDefined("The rule '$ruleKey' has already been defined somewhere in the grammar.")
-        throwExceptionIfEmptyListOfMatchers(e)
-        expression = convertToSingleExpression(e)
-        return this
-    }
-
-    @Deprecated("in 1.19, use {@link com.felipebz.flr.grammar.GrammarRuleBuilder#override(Object)} instead.")
-    override fun override(vararg e: Any): RuleDefinition {
-        throwExceptionIfEmptyListOfMatchers(e)
-        expression = convertToSingleExpression(e)
-        return this
-    }
-
-    @Deprecated("in 1.19, use {@link com.felipebz.flr.grammar.GrammarRuleBuilder#skip()} instead.")
     override fun skip() {
         astNodeSkippingPolicy = AlwaysSkipFromAst
     }
 
-    @Deprecated("in 1.19, use {@link com.felipebz.flr.grammar.GrammarRuleBuilder#skipIfOneChild()} instead.")
     override fun skipIfOneChild() {
         astNodeSkippingPolicy = SkipFromAstIfOnlyOneChild
-    }
-
-    private fun throwExceptionIfRuleAlreadyDefined(exceptionMessage: String) {
-        check(expression == null) { exceptionMessage }
-    }
-
-    private fun throwExceptionIfEmptyListOfMatchers(matchers: Array<out Any>) {
-        check(matchers.isNotEmpty()) { "The rule '$ruleKey' should at least contains one matcher." }
     }
 
     override fun hasToBeSkippedFromAst(node: AstNode): Boolean {
@@ -103,9 +78,6 @@ public class RuleDefinition : Rule, AstNodeSkippingPolicy, GrammarRuleKey, Compi
         return astNodeSkippingPolicy === SkipFromAstIfOnlyOneChild
     }
 
-    /**
-     * @since 1.18
-     */
     public fun getRealAstNodeType(): AstNodeType {
         return ruleKey
     }
@@ -133,50 +105,5 @@ public class RuleDefinition : Rule, AstNodeSkippingPolicy, GrammarRuleKey, Compi
     internal fun enableMemoRetention() {
         memoize = true
         retainMemo = true
-    }
-
-    private fun convertToSingleExpression(e: Array<out Any>): ParsingExpression {
-        checkSize(e)
-        return if (e.size == 1) {
-            convertToExpression(e[0])
-        } else {
-            SequenceExpression(*convertToExpressions(e))
-        }
-    }
-
-    private fun convertToExpressions(e: Array<out Any>): Array<out ParsingExpression> {
-        checkSize(e)
-        val matchers = arrayOfNulls<ParsingExpression>(e.size)
-        for (i in matchers.indices) {
-            matchers[i] = convertToExpression(e[i])
-        }
-        return matchers.requireNoNulls()
-    }
-
-    private fun convertToExpression(e: Any): ParsingExpression {
-        return when (e) {
-            is String -> {
-                TokenValueExpression(e)
-            }
-            is TokenType -> {
-                TokenTypeExpression(e)
-            }
-            is RuleDefinition -> {
-                e
-            }
-            is Class<*> -> {
-                TokenTypeClassExpression(e)
-            }
-            is ParsingExpression -> {
-                e
-            }
-            else -> {
-                throw IllegalArgumentException("The matcher object can't be anything else than a Rule, Matcher, String, TokenType or Class. Object = $e")
-            }
-        }
-    }
-
-    private fun checkSize(e: Array<out Any>) {
-        require(e.isNotEmpty()) { "You must define at least one matcher." }
     }
 }

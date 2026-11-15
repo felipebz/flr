@@ -47,9 +47,6 @@ public class RecognitionException : RuntimeException {
         column = 0
     }
 
-    /**
-     * @since 1.16
-     */
     @JvmOverloads
     public constructor(line: Int, column: Int, message: String, cause: Throwable? = null) : super(message, cause) {
         this.line = line

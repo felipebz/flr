@@ -28,8 +28,6 @@ import com.felipebz.flr.internal.matchers.ParseNode
  *
  *
  * This class is not intended to be instantiated or subclassed by clients.
- *
- * @since 1.16
  */
 public class ParsingResult(
     private val inputBuffer: InputBuffer,

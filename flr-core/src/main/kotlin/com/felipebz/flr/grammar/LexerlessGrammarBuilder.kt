@@ -38,7 +38,6 @@ import com.felipebz.flr.parser.LexerlessGrammar
  *  * Character
  *
  *
- * @since 1.18
  * @see LexerfulGrammarBuilder
  */
 public class LexerlessGrammarBuilder private constructor() : GrammarBuilder() {

@@ -30,4 +30,10 @@ import com.felipebz.flr.internal.matchers.Matcher
 public interface CompilableGrammarRule : Matcher, Rule, ParsingExpression {
     public val ruleKey: GrammarRuleKey
     public var expression: ParsingExpression?
+
+    /** The rule creates no AST node: its children are attached to its parent. */
+    public fun skip()
+
+    /** The rule creates no AST node when it has exactly one child. */
+    public fun skipIfOneChild()
 }

@@ -26,8 +26,6 @@ package com.felipebz.flr.grammar
  *
  *
  * This class is not intended to be instantiated or subclassed by clients.
- *
- * @since 1.18
  */
 public class GrammarException : RuntimeException {
     public constructor(message: String?) : super(message)

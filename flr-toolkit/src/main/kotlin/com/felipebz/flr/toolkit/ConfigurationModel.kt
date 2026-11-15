@@ -30,8 +30,6 @@ import java.nio.charset.Charset
  * For example, a parser could depend on a charset configuration property.
  *
  * End-users should extend [AbstractConfigurationModel] instead of implementing this interface.
- *
- * @since 1.17
  */
 public interface ConfigurationModel {
     /**
@@ -50,8 +48,6 @@ public interface ConfigurationModel {
      * Gets the character set reflecting the current configuration state.
      *
      * @return Charset for the current configuration
-     *
-     * @since 1.18
      */
     public val charset: Charset
 

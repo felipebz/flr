@@ -36,8 +36,6 @@ import org.assertj.core.api.AbstractAssert
  *
  *
  * This class is not intended to be instantiated or subclassed by clients.
- *
- * @since 1.16
  */
 public class ParserAssert(actual: Parser<*>) : AbstractAssert<ParserAssert, Parser<*>>(
     actual, ParserAssert::class.java

@@ -34,8 +34,6 @@ import org.assertj.core.api.AbstractAssert
  *
  *
  * This class is not intended to be instantiated or subclassed by clients.
- *
- * @since 1.16
  */
 public class RuleAssert(actual: Rule?) : AbstractAssert<RuleAssert, Rule>(
     actual, RuleAssert::class.java

@@ -29,8 +29,6 @@ import com.felipebz.flr.impl.LexerOutput
 /**
  * Creates token with type [com.felipebz.flr.api.GenericTokenType.UNKNOWN_CHAR] for any character.
  * This channel, if present, should be the last one.
- *
- * @since 1.2
  */
 public class UnknownCharacterChannel public constructor() : Channel<LexerOutput> {
     override fun consume(code: CodeReader, output: LexerOutput): Boolean {

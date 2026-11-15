@@ -28,7 +28,6 @@ package com.felipebz.flr.toolkit
  * @param description
  * @param defaultValue
  * @param validationCallback The validation callback. Note that handy ones are available out-of-the-box by the [Validators] class.
- * @since 1.17
  */
 public class ConfigurationProperty @JvmOverloads constructor(
     name: String,

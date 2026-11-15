@@ -39,7 +39,6 @@ import com.felipebz.flr.internal.vm.lexerful.*
  *  * String
  *
  *
- * @since 1.18
  * @see LexerlessGrammarBuilder
  */
 public class LexerfulGrammarBuilder private constructor() : GrammarBuilder() {

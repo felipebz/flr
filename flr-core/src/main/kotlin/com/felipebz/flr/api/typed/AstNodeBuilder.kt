@@ -23,9 +23,6 @@ package com.felipebz.flr.api.typed
 import com.felipebz.flr.api.*
 import com.felipebz.flr.grammar.GrammarRuleKey
 
-/**
- * @since 1.21
- */
 internal class AstNodeBuilder : NodeBuilder {
     override fun createNonTerminal(
         ruleKey: GrammarRuleKey,

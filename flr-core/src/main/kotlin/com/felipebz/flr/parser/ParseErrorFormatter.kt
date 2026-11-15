@@ -31,8 +31,6 @@ import kotlin.math.min
  *
  *
  * This class is not intended to be subclassed by clients.
- *
- * @since 1.16
  */
 public class ParseErrorFormatter {
     public fun format(parseError: ParseError?): String {

@@ -21,40 +21,13 @@
 package com.felipebz.flr.internal.grammar
 
 import com.felipebz.flr.api.AstNode
-import com.felipebz.flr.grammar.GrammarException
 import com.felipebz.flr.grammar.GrammarRuleKey
-import com.felipebz.flr.internal.vm.ParsingExpression
-import com.felipebz.flr.internal.vm.SequenceExpression
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 
 class MutableParsingRuleTest {
-    @Test
-    fun should_not_allow_redefinition() {
-        val ruleKey = mock<GrammarRuleKey>()
-        val rule = MutableParsingRule(ruleKey)
-        rule.`is`(mock<ParsingExpression>())
-        assertThrows<GrammarException>("The rule '$ruleKey' has already been defined somewhere in the grammar.") {
-            rule.`is`(mock<ParsingExpression>())
-        }
-    }
-
-    @Test
-    fun should_override() {
-        val ruleKey = mock<GrammarRuleKey>()
-        val rule = MutableParsingRule(ruleKey)
-        val e1 = mock<ParsingExpression>()
-        val e2 = mock<ParsingExpression>()
-        rule.`is`(e1, e2)
-        rule.override(e2)
-        assertThat(rule.expression).isSameAs(e2)
-        rule.override(e1, e2)
-        assertThat(rule.expression).isInstanceOf(SequenceExpression::class.java)
-    }
-
     @Test
     fun should_not_skip_from_AST() {
         val ruleKey = mock<GrammarRuleKey>()

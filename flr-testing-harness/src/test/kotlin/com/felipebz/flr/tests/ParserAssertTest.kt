@@ -21,13 +21,12 @@
 package com.felipebz.flr.tests
 
 import com.felipebz.flr.api.GenericTokenType
-import com.felipebz.flr.api.Grammar
-import com.felipebz.flr.api.Rule
+import com.felipebz.flr.grammar.GrammarRuleKey
+import com.felipebz.flr.grammar.LexerfulGrammarBuilder
 import com.felipebz.flr.impl.Lexer
 import com.felipebz.flr.impl.Parser
 import com.felipebz.flr.impl.channel.BlackHoleChannel
 import com.felipebz.flr.impl.channel.RegexpChannel
-import com.felipebz.flr.impl.matcher.RuleDefinition
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -35,20 +34,26 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
 class ParserAssertTest {
-    private lateinit var rule: Rule
     private lateinit var parser: Parser<*>
     @BeforeEach
     fun setUp() {
+        parser = parser("foo")
+    }
+
+    /** A parser whose root rule `ruleName` is the sequence [first], [rest]. */
+    private fun parser(first: Any, vararg rest: Any): Parser<*> {
         val lexer = Lexer.builder()
             .withFailIfNoChannelToConsumeOneCharacter(true)
             .withChannel(RegexpChannel(GenericTokenType.IDENTIFIER, "[a-z]++"))
             .withChannel(BlackHoleChannel(" "))
             .build()
-        rule = RuleDefinition("ruleName").`is`("foo")
-        val grammar: Grammar = object : Grammar() {
-            override val rootRule = rule
+        val key = object : GrammarRuleKey {
+            override fun toString() = "ruleName"
         }
-        parser = Parser.builder(grammar).withLexer(lexer).build()
+        val b = LexerfulGrammarBuilder.create()
+        b.rule(key).`is`(first, *rest)
+        b.setRootRule(key)
+        return Parser.builder(b.build()).withLexer(lexer).build()
     }
 
     @Test
@@ -85,7 +90,7 @@ class ParserAssertTest {
 
     @Test
     fun test_notMatches_failure2() {
-        rule.override("foo", GenericTokenType.EOF)
+        parser = parser("foo", GenericTokenType.EOF)
         val thrown = assertThrows<AssertionError> {
             ParserAssert(parser).notMatches("foo")
         }

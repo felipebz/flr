@@ -25,8 +25,6 @@ import org.opentest4j.AssertionFailedError
 /**
  *
  * This class is not intended to be instantiated or subclassed by clients.
- *
- * @since 1.16
  */
 public class ParsingResultComparisonFailure(override val message: String, expected: String?, actual: String?) :
     AssertionFailedError(

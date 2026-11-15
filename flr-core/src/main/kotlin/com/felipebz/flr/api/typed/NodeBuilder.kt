@@ -25,9 +25,6 @@ import com.felipebz.flr.api.TokenType
 import com.felipebz.flr.api.Trivia
 import com.felipebz.flr.grammar.GrammarRuleKey
 
-/**
- * @since 1.21
- */
 public interface NodeBuilder {
     public fun createNonTerminal(
         ruleKey: GrammarRuleKey,

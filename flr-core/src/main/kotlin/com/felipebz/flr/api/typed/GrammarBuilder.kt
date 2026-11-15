@@ -24,9 +24,6 @@ import com.felipebz.flr.api.AstNode
 import com.felipebz.flr.grammar.GrammarRuleKey
 import java.util.*
 
-/**
- * @since 1.21
- */
 public interface GrammarBuilder<T> {
     public fun <U> nonterminal(): NonterminalBuilder<U>
     public fun <U> nonterminal(ruleKey: GrammarRuleKey): NonterminalBuilder<U>
