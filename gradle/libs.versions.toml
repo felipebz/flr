@@ -1,6 +1,6 @@
 [versions]
 kotlin = "2.4.21"
-dokka = "2.2.0"
+dokka = "2.3.0"
 jreleaser = "1.27.0"
 license = "0.16.1"
 sonarscanner = "7.6.0.18749"
