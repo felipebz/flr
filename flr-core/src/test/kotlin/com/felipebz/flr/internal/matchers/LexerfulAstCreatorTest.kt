@@ -1,13 +1,8 @@
-/**
- * FLR
- * Copyright (C) 2021-2026 Felipe Zorzo
- * mailto:felipe AT felipezorzo DOT com DOT br
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or (at your option) any later version.
- */
+//
+// SPDX-FileCopyrightText: 2021 Felipe Zorzo
+// SPDX-License-Identifier: LGPL-3.0-or-later
+//
+
 package com.felipebz.flr.internal.matchers
 
 import com.felipebz.flr.api.AstNode

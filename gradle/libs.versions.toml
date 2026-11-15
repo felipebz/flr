@@ -2,8 +2,8 @@
 kotlin = "2.4.21"
 dokka = "2.3.0"
 jreleaser = "1.27.0"
-license = "0.16.1"
 sonarscanner = "7.6.0.18749"
+spotless = "8.11.0"
 jmh-plugin = "0.7.4"
 
 # libs
@@ -29,6 +29,6 @@ mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 dokka-javadoc = { id = "org.jetbrains.dokka-javadoc", version.ref = "dokka" }
 jreleaser = { id = "org.jreleaser", version.ref = "jreleaser" }
-license = { id = "com.github.hierynomus.license", version.ref = "license" }
 sonarqube = { id = "org.sonarqube", version.ref = "sonarscanner" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 jmh = { id = "me.champeau.jmh", version.ref = "jmh-plugin" }

@@ -1,7 +1,7 @@
-import com.hierynomus.gradle.license.tasks.LicenseCheck
-import com.hierynomus.gradle.license.tasks.LicenseFormat
+import com.diffplug.gradle.spotless.KotlinExtension
+import com.diffplug.gradle.spotless.SpotlessExtension
+import com.diffplug.spotless.LineEnding
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import java.util.*
 
 plugins {
     `java-library`
@@ -10,7 +10,7 @@ plugins {
     jacoco
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.dokka.javadoc)
-    alias(libs.plugins.license)
+    alias(libs.plugins.spotless) apply false
     alias(libs.plugins.sonarqube)
     alias(libs.plugins.jreleaser)
 }
@@ -44,7 +44,7 @@ allprojects {
 }
 
 subprojects {
-    apply(plugin = "com.github.hierynomus.license")
+    apply(plugin = "com.diffplug.spotless")
     apply(plugin = "org.jetbrains.kotlin.jvm")
     apply(plugin = "jacoco")
     apply(plugin = "org.jetbrains.dokka-javadoc")
@@ -83,18 +83,29 @@ subprojects {
         }
     }
 
-    tasks.withType<LicenseFormat>().configureEach {
-        extra.set("year", Calendar.getInstance().get(Calendar.YEAR))
-        header = File(this.project.rootDir, "LICENSE_HEADER")
-        include("**/*.kt")
-        skipExistingHeaders = true
+    configure<SpotlessExtension> {
+        // The default (Git attributes) loads JGit, which is pinned to the version JReleaser needs.
+        lineEndings = LineEnding.PRESERVE
+        val lines = rootProject.file("LICENSE_HEADER").readLines().filter { it.isNotBlank() }
+        fun header(vararg extra: String) = (extra.toList() + lines).joinToString("", prefix = "//\n", postfix = "//\n\n") { "// $it\n" }
+        val sources = fileTree("src") { include("**/*.kt") }
+        val sslrDerived = sources.filter { file ->
+            file.useLines { text -> text.takeWhile { !it.startsWith("package ") }.any { "SonarSource SA" in it } }
+        }
+        kotlin {
+            target(sources.minus(sslrDerived))
+            licenseHeader(header())
+        }
+        format("kotlinDerivedFromSslr", KotlinExtension::class.java) {
+            target(sslrDerived)
+            licenseHeader(header("SPDX-FileCopyrightText: 2010-2021 SonarSource SA"))
+        }
     }
 
-    tasks.withType<LicenseCheck>().configureEach {
-        extra.set("year", Calendar.getInstance().get(Calendar.YEAR))
-        header = File(this.project.rootDir, "LICENSE_HEADER")
-        include("**/*.kt")
-        skipExistingHeaders = true
+    tasks.withType<Jar>().configureEach {
+        into("META-INF") {
+            from(rootProject.file("LICENSE"), rootProject.file("COPYING"))
+        }
     }
 
     val dokka by tasks.register<Jar>("dokka") {
