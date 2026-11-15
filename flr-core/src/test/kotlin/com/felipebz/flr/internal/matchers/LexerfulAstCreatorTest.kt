@@ -222,6 +222,24 @@ class LexerfulAstCreatorTest {
         assertThat(ast.children[0].parent).isSameAs(ast)
     }
 
+    @Test
+    fun aRuleThatMatchedNoTokenHoldsNoToken() {
+        val root = RuleDefinition("root")
+        val empty = RuleDefinition("empty")
+        val next = RuleDefinition("next")
+        val tokens = listOf(token(0), token(1))
+
+        val ast = create(
+            ParseNode(0, 2, root, arrayOf(terminal(0), ParseNode(1, 1, empty), ParseNode(1, 2, next, arrayOf(terminal(1))))),
+            tokens
+        )
+
+        assertThat(ast.children[1].name).isEqualTo("empty")
+        assertThat(ast.children[1].tokenOrNull).isNull()
+        assertThat(ast.children[2].token).isSameAs(tokens[1])
+        assertThat(ast.tokens).containsExactlyElementsOf(tokens)
+    }
+
     private fun create(parseTree: ParseNode, tokens: List<Token>): AstNode {
         return LexerfulAstCreator.create(
             parseTree,

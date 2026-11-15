@@ -67,7 +67,7 @@ public class LexerfulAstCreator private constructor(
     }
 
     private fun buildNonTerminal(node: ParseNode, ruleMatcher: RuleDefinition): AstNode {
-        val token = if (node.startIndex < tokens.size) tokens[node.startIndex] else null
+        val token = if (node.startIndex < node.endIndex && node.startIndex < tokens.size) tokens[node.startIndex] else null
         return nonTerminalNodeBuilder.build(ruleMatcher, ruleMatcher.name, token)
     }
 
